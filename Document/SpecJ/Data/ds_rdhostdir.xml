@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_rdhostdir</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_rdhostdir(unsigned short FlibHndl, short type,
+                    long offset, short *number, ODBHOSTDIR *hostdir, long timeout); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+        ホストコンピュータ側のファイル情報を取得します。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        取得するファイル情報の種類を指定します。以下に示す何れかを指定して下さい。
+                        <table border="0" class="dd">
+                            <tr> <td>0</td><td>：</td><td>ファイル名</td> </tr>
+                            <tr> <td>1</td><td>：</td><td>詳細情報</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>offset</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            取得するファイル情報の先頭ファイルからのオフセットファイル数を指定します。<br/>
+                            実際に存在しないオフセットファイル数を与えた場合、EW_NUMBERのエラーとなります。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            取得するファイル情報の個数が格納されているshort型変数へのポイン
+                            タを指定します。1～32の値を指定して下さい。
+                            関数終了時に、ポインタが示す変数には実際に取得したファイル情報
+                            の個数がセットされます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hostdir</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            取得したファイル情報を格納するためのODBHOSTDIR構造体の配列への
+                            ポインタを指定します。ODBHOSTDIR構造体を以下に示します。
+                        </p>
+<pre>
+typedef struct _odbhostdir {
+    char    host_file[128];
+} ODBHOSTDIR;
+</pre>
+<dl>
+                        hostdir.host_file[128]
+                        <dd>ファイル名または詳細情報がNULLを含めて128文字以内のアスキー文字列でセットされます。</dd>
+</dl>
+                    </content>
+                </item>
+                <item>
+                    <name>timeout</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            タイムアウト処理の時間を正の値（秒単位）で指定します。
+                            0以下を指定すると、タイムアウト処理は行われません。
+                            タイムアウト処理が実行された場合、次の２通りの戻り値が返されます。
+                            <table border="0" class="dd">
+                                <tr> <td valign="top">EW_RESET</td><td>ホストコンピュータと通信中にタイムアウト</td> </tr>
+                                <tr> <td valign="top">EW_DTSRVR</td><td>ホストコンピュータが見つからないままタイムアウト</td> </tr>
+                            </table>
+                            なお、ホストと通信している最中にホストコンピュータの電源を落とすと、
+                            タイムアウト処理が実行されます。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>実行中断<br/>
+                    ホストコンピュータと通信中にタイムアウト処理が行われました。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データ長の誤り<br/>
+                    取得するファイル情報の個数（*number）に不正な値が指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>実際に存在しないオフセットファイル数(offset)が指定されました。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>
+                    取得するファイル情報の種類（type）に不正な値が指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>
+                     現在データサーバが処理中です。
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>データサーバエラー<br/>
+                     データサーバでエラーが発生しました。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

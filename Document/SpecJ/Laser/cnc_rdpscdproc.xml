@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpscdproc</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpscdproc(unsigned short FlibHndl,short s_no, short *number, IODBPSCD *pscd); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> 加工条件ファイルの加工データを読み出します。
+                データはIODBPSCD内の各メンバに格納されます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            読み込むデータ組番号を指定します。
+                        </p>
+                        <p>
+                            ・Series 16i/18i-Lの場合
+                            <table border="0" class="dd">
+                                <tr> <td>1 ～  10</td><td>  加工データ組番号</td>   </tr>
+                            </table>
+                        <p>
+                        </p>
+                            ・Series 30i/31i-LBの場合
+                        </p>
+                        <p>
+                            加工条件登録数追加オプションなし
+                            <table border="0" class="dd">
+                                <tr> <td>1 ～  10</td><td>  加工データ組番号</td>   </tr>
+                            </table>
+                        </p>
+                        <p>
+                            加工条件登録数追加オプションあり
+                            <table border="0" class="dd">
+                                <tr> <td>1 ～  30</td><td>  加工データ組番号</td>   </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                             加工データ個数のポインタを指定します。
+                             関数コール前に読みたい個数を指定し、関数コール後に実際に読み取った個数が設定されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pscd</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            加工条件ファイル加工データ組を返すIODBPSCD構造体配列へのポインタです。
+                            IODBPSCD構造体は次の通りです。
+                        </p>
+<pre>
+・Series 16i/18i-Lの場合
+typedef struct iodbpscd {
+    short   slct;       /* データ有効フラグ */
+    long    feed;       /* 送り速度 */
+    short   power;      /* 加工ピーク値 */
+    short   freq;       /* 加工パルス周波数 */
+    short   duty;       /* 加工パルスデューティ */
+    short   g_press;    /* アシストガス圧力 */
+    short   g_kind;     /* アシストガス種類 */
+    short   g_ready_t;  /* アシストガス整定時間 */
+    short   displace;   /* 基準変位量 */
+    long    supple;     /* ビーム径補正量 */
+    short   edge_slt;   /* エッジ加工選択 */
+    short   appr_slt;   /* アプローチ加工選択 */
+    short   pwr_ctrl;   /* パワーコントロール選択 */
+    short   reserve[4]; /* リザーブ */
+} IODBPSCD ;
+
+・Series 30i/31i-LBの場合
+typedef struct iodbpscd {
+    short   slct;       /* データ有効フラグ         */
+    long    feed;       /* 送り速度                 */
+    short   power;      /* 加工ピーク値             */
+    short   freq;       /* 加工パルス周波数         */
+    short   duty;       /* 加工パルスデューティ     */
+    short   g_press;    /* アシストガス圧力         */
+    short   g_kind;     /* アシストガス種類         */
+    short   g_ready_t;  /* アシストガス整定時間     */
+    short   displace;   /* 基準変位量               */
+    long    supple;     /* ビーム径補正量           */
+    short   edge_slt;   /* エッジ加工選択           */
+    short   appr_slt;   /* アプローチ加工選択       */
+    short   pwr_ctrl;   /* パワーコントロール選択   */
+    long    displace2;  /* 基準変位量               */
+    char    gap_axis;   /* ギャップ制御軸の設定     */
+    char    feed_dec;   /* 小数点以下桁数部         */
+    char    supple_dec; /* 小数点以下桁数部         */
+    char    dsp2_dec;   /* 小数点以下桁数部         */
+} IODBPSCD ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>データ有効フラグがセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>送り速度</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>加工ピーク値</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>加工パルス周波数</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>加工パルスデューティ</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>アシストガス圧力</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>アシストガス種類</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>アシストガス整定時間</td> </tr>
+                                <tr> <td>bit 7</td><td>：</td><td>基準変位量</td> </tr>
+                                <tr> <td>bit 8</td><td>：</td><td>ビーム径補正量</td> </tr>
+                                <tr> <td>bit 9</td><td>：</td><td>エッジ加工選択</td> </tr>
+                                <tr> <td>bit10</td><td>：</td><td>アプローチ加工選択</td> </tr>
+                                <tr> <td>bit11</td><td>：</td><td>パワーコントロール選択</td> </tr>
+                                <tr> <td>bit12 ～ 15</td><td>：</td><td>リザーブ</td> </tr>
+                            </table></dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>送り速度</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>加工ピーク値</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>加工パルス周波数</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>加工パルスデューティ</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>アシストガス圧力</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>アシストガス種類</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>アシストガス整定時間</td> </tr>
+                                <tr> <td>bit 7</td><td>：</td><td>基準変位量</td> </tr>
+                                <tr> <td>bit 8</td><td>：</td><td>ビーム径補正量</td> </tr>
+                                <tr> <td>bit 9</td><td>：</td><td>エッジ加工選択</td> </tr>
+                                <tr> <td>bit10</td><td>：</td><td>アプローチ加工選択</td> </tr>
+                                <tr> <td>bit11</td><td>：</td><td>パワーコントロール選択</td> </tr>
+                                <tr> <td>bit12</td><td>：</td><td>基準変位量2</td> </tr>
+                                <tr> <td>bit13</td><td>：</td><td>ギャップ制御軸の設定</td> </tr>
+                                <tr> <td>bit14 ～ 15</td><td>：</td><td>リザーブ</td> </tr>
+                            </table></dd>
+                            <dd>※  各データに対応するビットが0の時は、そのデータは無効になります。</dd>
+                            <dt>feed</dt>
+                                <dd>送り速度がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：0 ～ 240000，設定単位：mm/min)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>(出力範囲：0～999999999，設定単位：mm/min、inch/min(入力単位))</dd>
+                            <dt>power</dt>
+                                <dd>輪郭加工用ピーク値がセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 9999，設定単位：W)</dd>
+                            <dt>freq</dt>
+                                <dd>輪郭加工用パルス周波数がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：5 ～ 2000，設定単位：Hz)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>(出力範囲：1 ～ 32767，設定単位：Hz)</dd>
+                            <dt>duty</dt>
+                                <dd>輪郭加工用パルスデューティがセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 100，設定単位：%)</dd>
+                            <dt>g_press</dt>
+                                <dd>アシストガスの圧力がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：0 ～ 255，設定単位：0.1Kg/cm2)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>(出力範囲：0 ～ 9999，設定単位：0.01MPa、0.1Kg/cm2)</dd>
+                            <dt>g_kind</dt>
+                                <dd>アシストガスの種類がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：1 ～ 7，設定単位：種類)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>(出力範囲：1 ～ 15，設定単位：種類)</dd>
+                            <dt>g_ready_t</dt>
+                                <dd>アシストガスの整定時間がセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 99，設定単位：0.1秒)</dd>
+                            <dt>displace</dt>
+                                <dd>基準変位量がセットされます。</dd>
+                                <dd>(出力範囲：-32767 ～ 32767，設定単位：0.001mm)</dd>
+                            <dt>supple</dt>
+                                <dd>ビーム径補正量がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：-9999 ～ 9999，設定単位：0.001mm)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>(出力範囲：-999999999 ～ 999999999，設定単位：mm、inch(入力単位))</dd>
+                            <dt>edge_slt</dt>
+                                <dd>エッジ加工選択がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：0, 201 ～ 205)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>加工条件登録数追加オプションなし</dd>
+                                <dd>  (出力範囲：0, 201 ～ 205)</dd>
+                                <dd>加工条件登録数追加オプションあり</dd>
+                                <dd>  (出力範囲：0, 201 ～ 210)</dd>
+                            <dt>appr_slt</dt>
+                                <dd>アプローチ加工選択がセットされます。</dd>
+                                <dd>・Series 16i/18i-Lの場合</dd>
+                                <dd>(出力範囲：0, 201 ～ 205)</dd>
+                                <dd>・Series 30i/31i-LBの場合</dd>
+                                <dd>加工条件登録数追加オプションなし</dd>
+                                <dd>  (出力範囲：0, 201 ～ 205)</dd>
+                                <dd>加工条件登録数追加オプションあり</dd>
+                                <dd>  (出力範囲：0, 201 ～ 210)</dd>
+                            <dt>pwr_ctrl</dt>
+                                <dd>パワーコントロール選択がセットされます。</dd>
+                                <dd>(出力範囲：0, 901 ～ 910)</dd>
+                            <dt>displace2</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>基準変位量がセットされます。</dd>
+                                <dd>(出力範囲：-999999999 ～ 999999999，設定単位：mm、inch(入力単位))</dd>
+                            <dt>gap_axis</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>ギャップ制御軸が第1ギャップ制御軸、第2ギャップ制御軸どちらで指令されているかセットされます。</dd>
+                                <dd>gap_axisは以下のように設定されます。</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>gap_axis</th> <th>ギャップ制御軸の設定 </th>
+                                    </tr>
+                                    <tr> <td >0</td><td>第2ギャップ制御軸</td>  </tr>
+                                    <tr> <td >1</td><td>第1ギャップ制御軸</td> </tr>
+                                    <tr> <td >-1</td><td>ギャップ制御軸が無効</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <dt>feed_dec</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>送り速度の小数点以下桁数部がセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 9)</dd>
+                            <dt>supple_dec</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>ビーム径補正量の小数点以下桁数部がセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 9)</dd>
+                            <dt>dsp2_dec</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>基準変位量の小数点以下桁数部がセットされます。</dd>
+                                <dd>(出力範囲：0 ～ 9)</dd>
+                                <dd>対応するデータ部は以下の通りです。</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>小数点以下桁数部</th> <th>対応するデータ部</th>
+                                    </tr>
+                                    <tr> <td >feed_dec</td><td>feed</td>  </tr>
+                                    <tr> <td >supple_dec</td><td>supple</td> </tr>
+                                    <tr> <td >dsp2_dec</td><td>displace2</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <dt>reserve</dt>
+                                <dd>・Series 16i/18i-Lの場合のみ使用可能</dd>
+                                <dd>リザーブです。</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                16i/18i-L、30i/31i-LB以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                データ個数(number)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                開始番号(s_no)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                加工条件設定機能、及び拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り(Series 30i/31i-LBのみ)<br/>
+                レーザ発振器(パラメータNo.15030)の誤り
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>加工条件設定機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrpscdproc</name>
+            <file>Laser/cnc_wrpscdproc.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

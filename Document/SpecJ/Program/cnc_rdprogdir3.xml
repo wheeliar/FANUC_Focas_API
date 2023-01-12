@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdprogdir3</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprogdir3(unsigned short FlibHndl, short type, long *top_prog, short *num_prog, PRGDIR3 *buf);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側に登録されている全ての加工プログラムのプログラム番号一覧を読み出します。指定されたプログラム番号から、指定された個数のプログラム番号、コメント、日付（作成日、更新日）、サイズを読み出します。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                        <p>読み出すプログラム一覧の形式を指定します。</p>
+                       <content>
+                            <table class="dd">
+                                <tr>
+                                    <td>0   </td><td>:  </td><td>プログラム番号のみ</td>
+                                </tr>
+                                <tr>
+                                    <td>1   </td><td>:  </td><td>プログラム番号とコメント</td>
+                                </tr>
+                                <tr>
+                                    <td>2   </td><td>:  </td><td>プログラム番号、コメント、日付、サイズ</td>
+                                </tr>
+                           </table>
+                        </content>
+                </item>
+                <item>
+                    <name>top_prog</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>
+                            開始プログラム番号のポインタを指定します。<br/>
+                            関数コール後に、実際に読み取った開始プログラム番号が設定されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_prog</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>
+                            読み取り個数のポインタを指定します。<br/>
+                            関数コール後に、実際に読み取った個数が設定されます。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>out</type>
+                    <content>
+                        <div class="dd">
+                        <p>プログラムディレトクリを返すPRGDIR3構造体へのポインタです。<br/>
+                            PRGDIR3構造体は次の通りです。</p>
+<pre>
+typedef struct prgdir3 {
+        long    number;
+        long    length;
+        long    page;
+        char    comment[52];
+        struct{
+                short   year;
+                short   month;
+                short   day;
+                short   hour;
+                short   minute;
+                short   dummy;
+        } mdate;
+        struct{
+                short   year;
+                short   month;
+                short   day;
+                short   hour;
+                short   minute;
+                short   dummy;
+        } cdate;
+} PRGDIR3;
+</pre>
+
+                        <dl>
+                            <dt>number</dt>
+                                <dd>プログラム番号</dd>
+                                <dd>プログラム番号を返します。</dd>
+
+                            <dt>length</dt>
+                                <dd>プログラムサイズ(文字数)</dd>
+                                <dd>文字数単位のプログラムサイズを返します。</dd>
+                                <dd>引数typeが2の時、有効です。</dd>
+
+                            <dt>page</dt>
+                                <dd>プログラムサイズ(ページ数)</dd>
+                                <dd>(16i/18i-Wのみ)</dd>
+                                <dd>ページ数単位のプログラムサイズを返します。</dd>
+                                <dd>引数typeが2の時、有効です。</dd>
+
+                            <dt>comment</dt>
+                                <dd>コメント</dd>
+                                <dd>プログラム番号の直後に記憶されているものが格納されます。<br/>
+                                コメント本体の最大長は48文字です(前後のカッコを含めると最大50文字)。48文字以上のコメントが記憶されている場合は、48文字を越えた部分は出力されません。プログラムにコメントがない場合はカッコのみ(&quot;()&quot;)が格納されます。</dd>
+                                <dd>文字列はNULLで終端されます。</dd><br/>
+                                <dd>引数typeが1、または2の時、有効です。</dd>
+
+                            <dt>mdate</dt>
+                                <dd>更新日(Series 15iでは無効)</dd>
+                                <dd>プログラムの更新日を返します。</dd>
+                                <dd>引数typeが2の時、有効です。</dd>
+                                <dd>構造体の内容は、以下のようになっています。</dd>
+                                <dd><table class="dd">
+                                    <tr><td>year    </td><td>:</td><td>西暦4桁      </td></tr>
+                                    <tr><td>month   </td><td>:</td><td>月           </td></tr>
+                                    <tr><td>day     </td><td>:</td><td>日           </td></tr>
+                                    <tr><td>hour    </td><td>:</td><td>時(16i/18i-Wでは無効)</td></tr>
+                                    <tr><td>minute  </td><td>:</td><td>分(16i/18i-Wでは無効)</td></tr>
+                                    </table>
+                                </dd>
+                                
+                            <dt>cdate</dt>
+                                <dd>作成日(16i/18i-Wのみ)</dd>
+                                <dd>プログラムの更新日を返します。</dd>
+                                <dd>引数typeが2の時、有効です。</dd>
+                                <dd>構造体の内容は、mdateと同じです。</dd>
+                        </dl>
+                        <p>
+                        いずれの指定でも、プログラムが全く登録されていない場合や指定された範囲のプログラムが存在しない場合はnum_progが0になります。</p>
+                        </div>
+                    </content>
+                </item>
+            </vc>
+        </common>
+        
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                           <content>
+                                <p>読み出すプログラム一覧の形式を指定します。</p>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0   </td><td>:  </td><td>プログラム番号のみ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1   </td><td>:  </td><td>プログラム番号とコメント</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2   </td><td>:  </td><td>プログラム番号、コメント、日付、サイズ</td>
+                                    </tr>
+                               </table>
+                            </content>
+                    </item>
+                    <item>
+                        <name>top_prog</name>
+                        <type>in / out</type>
+                        <content>
+                            <p>
+                                開始プログラム番号のポインタを指定します。<br/>
+                                関数コール後に、実際に読み取った開始プログラム番号が設定されます。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>num_prog</name>
+                        <type>in / out</type>
+                        <content>
+                            <p>
+                                読み取り個数のポインタを指定します。<br/>
+                                関数コール後に、実際に読み取った個数が設定されます。 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>buf</name>
+                        <type>out</type>
+                        <content>
+                            <p>プログラムディレトクリを返すPRGDIR3構造体へのポインタです。<br/>
+                                PRGDIR3構造体は次の通りです。</p>
+<pre>
+typedef struct prgdir3 {
+        long    number;
+        long    length;
+        long    page;
+        char    comment[52];
+        struct{
+                short   year;
+                short   month;
+                short   day;
+                short   hour;
+                short   minute;
+                short   dummy;
+        } mdate;
+        struct{
+                short   year;
+                short   month;
+                short   day;
+                short   hour;
+                short   minute;
+                short   dummy;
+        } cdate;
+} PRGDIR3;
+</pre>
+                            <dl>
+                                <dt>number</dt>
+                                    <dd>プログラム番号</dd>
+                                    <dd>プログラム番号を返します。</dd>
+
+                                <dt>length</dt>
+                                    <dd>プログラムサイズ(文字数)</dd>
+                                    <dd>文字数単位のプログラムサイズを返します。</dd>
+                                    <dd>引数typeが2の時、有効です。</dd>
+
+                                <dt>page</dt>
+                                    <dd>未使用</dd>
+
+                                <dt>comment</dt>
+                                    <dd>コメント</dd>
+                                    <dd>プログラム番号の直後に記憶されているものが格納されます。<br/>
+                                    コメント本体の最大長は48文字です(前後のカッコを含めると最大50文字)。48文字以上のコメントが記憶されている場合は、48文字を越えた部分は出力されません。プログラムにコメントがない場合はカッコのみ(&quot;()&quot;)が格納されます。</dd>
+                                    <dd>文字列はNULLで終端されます。</dd><br/>
+                                    <dd>引数typeが1、または2の時、有効です。</dd>
+
+                                <dt>mdate</dt>
+                                    <dd>更新日</dd>
+                                    <dd>プログラムの更新日を返します。</dd>
+                                    <dd>引数typeが2の時、有効です。</dd>
+                                    <dd>構造体の内容は、以下のようになっています。</dd>
+                                    <dd><table class="dd">
+                                        <tr><td>year    </td><td>:</td><td>西暦4桁      </td></tr>
+                                        <tr><td>month   </td><td>:</td><td>月           </td></tr>
+                                        <tr><td>day     </td><td>:</td><td>日           </td></tr>
+                                        <tr><td>hour    </td><td>:</td><td>時</td></tr>
+                                        <tr><td>minute  </td><td>:</td><td>分</td></tr>
+                                        </table>
+                                    </dd>
+                                    
+                                <dt>cdate</dt>
+                                    <dd>未使用</dd>
+                            </dl>
+                            <p>
+                            いずれの指定でも、プログラムが全く登録されていない場合や指定された範囲のプログラムが存在しない場合はnum_progが0になります。</p>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                読み取り個数(num_prog)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                開始プログラム番号(top_prog)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                出力フォーマット(type)が不正です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+       
+       <type>
+            <li> Series 15/15i</li><br/>
+            <ul>
+                プログラム名称48文字<br/>
+                このオプションが無い場合、プログラム名称は最大16文字です。
+            </ul>
+       </type>
+
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>E</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item class="xis">
+            <name>cnc_rdprogdir</name>
+            <file>Program/cnc_rdprogdir.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogdir2</name>
+            <file>Program/cnc_rdprogdir2.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdprogdir4</name>
+            <file>Program/cnc_rdprogdir4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+以下のプログラムは全てのNCプログラムの登録状況を読みだし、プログラム番号一覧を表示します。
+
+#include "fwlib32.h"
+
+#define BUFSIZE 100
+
+void example()
+{
+        PRGDIR3 prg[BUFSIZE];
+        short i, num;
+        short top = 0;
+
+        do {
+                num = BUFSIZE;
+                ret = cnc_rdprogdir3( h, 0, &#38;top, &#38;num, prg );
+                if ( ret == EW_NUMBER ) {
+                        break;
+                }
+                if ( ret ) {
+                        printf( "ERROR: %d\n", ret );
+                        break;
+                }
+                for ( i = 0 ; i &#60; num ; i++ ) {
+                        printf( "O%d\n", prg[i].number );
+                }
+                top = prg[num-1].number + 1;
+        } while ( num &#62;= BUFSIZE );
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

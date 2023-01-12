@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_getfrominfo</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_getfrominfo(unsigned short FlibHndl, short slotno, short *num, ODBFINFORM *finfo);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC制御部のFROM情報を読み出します。各種情報はODBFINFORM内の各メンバに格納されます。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+           <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slotno</name>
+                    <type>in</type>
+                    <content>
+                        <p>物理スロット番号(0,1,2,...,15 または-1)<br></br>
+                        FROMが実装されている制御部プリント板の物理スロット番号を指定します。<br></br>
+                        特に-1を与えた場合には、そのCNC制御部にある全てのFROM情報を読み出すことができます。<br>
+                        </br>slotno = -1として本関数を実行した場合、有効なFROM情報が本引数で示されるアドレスの先頭から詰めて返されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>out</type>
+                    <content>
+                        <p>実際に読み出されたFROM情報(ODBFINFORM構造体)の個数を格納する変数へのポインタです。<br/>
+                        slotnoに存在しない制御部プリント板の物理スロット番号を指定した場合、*num = 0となります。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>finfo</name>
+                    <type>out</type>
+                    <content>
+                        <p>FROM情報を返すODBFINFORM構造体の配列の先頭アドレスを指定します。配列はslotnoに応じて１個、あるいは16個用意してください。ODBFINFORM構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbfinform {
+    long slotno;             /* スロット番号 */
+    char slotname[12];       /* スロット名称 */
+    long fromnum;            /* FROMシステムデータの個数 */
+    struct {
+        char sysname[12];    /* FROMデータ名称 */
+        long fromsize;       /* FROMデータサイズ */
+        long fromattrib;     /* FROMデータ属性 */
+    } info[32];
+} ODBFINFORM;
+</pre>
+                    <dl>
+                        <dt>slotno</dt>
+                            <dd>読取ったFROM情報の属するスロット番号</dd>
+                        <dt>slotname</dt>
+                            <dd>スロットの名称</dd>
+                            <dd>名称の末尾は 'NULL' です。</dd>
+                        <dt>fromnum</dt>
+                            <dd>FROMに格納されているデータ(コントロールソフトウェア、ラダープログラム等)の個数</dd>
+                        <dt>sysname</dt>
+                            <dd>FROMに格納されているデータの名称</dd>
+                            <dd>FROMデータの読み込みの時にはこの名称を指定します。</dd>
+                            <dd>名称の末尾は 'NULL' です。</dd>
+                        <dt>fromsize</dt>
+                            <dd>システムデータを格納するためのFROMサイズ(単位：バイト)</dd>
+                            <dd>読み込みサイズ、書き込みサイズのチェックとして使用できます。</dd>
+                        <dt>fromattrib</dt>
+                            <dd>FROMデータのファイル属性</dd>
+                                <dd><table class="dd">
+                                    <tr><td>1</td><td>:</td><td>システムファイル</td></tr>
+                                    <tr><td>2</td><td>:</td><td>ユーザファイル</td></tr>
+                                </table></dd>
+                    </dl>
+                    </content>
+                </item>
+            </vc>
+         </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>関数実行時エラー<br/>
+            この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+            ODBERR構造体のメンバ err_no に下記詳細ステータスが、err_dtno にエラーが発生したスロット番号がセットされます。
+        <table>
+            <colgroup align="center" valign="top">
+            <colgroup align="center" valign="top">
+            <colgroup valign="top">
+            <tr>
+                <td>9</td>
+                <td>:</td>
+                <td>FROM(モジュール)が認識できない(デバイス不良)</td>
+            </tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+        </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC側で同様の処理(情報読み込み/データ読み込み/データ書き込み)を実行中です。 リトライしてください。 </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_fromgetstart</name>
+            <file>Misc/cnc_fromgetstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromget</name>
+            <file>Misc/cnc_fromget.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromgetend</name>
+            <file>Misc/cnc_fromgetend.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputstart</name>
+            <file>Misc/cnc_fromputstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromput</name>
+            <file>Misc/cnc_fromput.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputend</name>
+            <file>Misc/cnc_fromputend.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromremove</name>
+            <file>Misc/cnc_fromremove.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

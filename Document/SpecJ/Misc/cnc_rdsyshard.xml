@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdsyshard</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsyshard(unsigned short FlibHndl, short hard_num, short *read_num, ODBSYSH *syshard);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCのハードウェア構成情報を読み出します。</p>
+            <p>各情報はODBSYSH内の各メンバに格納されます。構成情報は1度に25個読取る事が出来ます。</p>
+            <p>1度に全ての情報を読み込めない場合は、hard_numを指定し、繰り返し情報を読み出します。</p>
+            <p>なお、系統に依存したデータはありません。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>hard_num</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            初回は、hard_num= 1と指定します。<br/>
+                            情報の追番順にデータを取得し、2回目以降は、hard_num=(最後に取得したhard_num+1)として繰り返し実行して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>read_num</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            読み取るハードウェア情報の個数へのポインタを指定します。<br/>
+                            関数コール前に読み取るハードウェアの個数を指定します。<br/>
+                            関数コール後に実際に読み取った個数が設定されます。<br/>
+                            指定できるデータの有効範囲は1～25です。<br/>
+                            データが1つも読み込めない場合はread_num= 0が返されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>syshard</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNCのハードウェア構成情報を返すODBSYSH構造体へのポインタです。この配列は(*read_num)で指定した数分必要です。<br/>
+                            ODBSYSH構造体は次の通りです。
+                        </p>
+<pre><![CDATA[
+typedef struct odbsysh {
+    unsigned long id1 ;         /*ＩＤ-１(ＩＤ)         */
+    unsigned long id2 ;         /*ＩＤ-２(付加情報)     */
+    short         group_id ;    /* グループ名称ＩＤ     */
+    short         hard_id ;     /* ハードウェア名称ＩＤ */
+    short         hard_num ;    /* 情報の追番           */
+    short         slot_no ;     /* スロット番号         */
+    short         id1_format ;  /* ＩＤ-１の表示形式    */
+    short         id2_format ;  /* ＩＤ-２の表示形式    */
+} ODBSYSH ;
+]]></pre>
+<dl>
+    <dt>id1</dt>
+        <dd>ハードウェアのIDが格納されます。</dd>
+    <dt>id2</dt>
+        <dd>ハードウェアの付加情報が格納されます。</dd>
+    <dt>group_id</dt>
+        <dd>ハードウェアのグループ名称ID</dd>
+        <dd>各ハードウェアのグループの種別を表わす数値が格納されます。</dd>
+        <dd>主なハードウェアのグループ名称IDは以下のようになります。</dd>
+        <dd>(新しくデータが増えた場合にはIDが追加されます。)</dd>
+        <dd><table class="dd">
+                   <tr> <td>0100H</td> <td>:</td> <td>MAIN BOARD  </td> </tr>
+                   <tr> <td>0200H</td> <td>:</td> <td>OPTION BOARD</td> </tr>
+                   <tr> <td>0400H</td> <td>:</td> <td>BUS EXTN    </td> </tr>
+                   <tr> <td>0500H</td> <td>:</td> <td>(UNKNOWN)   </td> </tr>
+                   <tr> <td>0600H</td> <td>:</td> <td>DISPLAY     </td> </tr>
+                   <tr> <td>0700H</td> <td>:</td> <td>OTHERS      </td> </tr>
+                   <tr> <td>0f00H</td> <td>:</td> <td>CERTIFY ID  </td> </tr>
+            </table></dd>
+
+    <dt>hard_id</dt>
+        <dd>ハードウェア名称ID</dd>
+        <dd>各ハードウェアの種別を表わす数値が格納されます。</dd>
+        <dd>主なハードウェア名称IDは以下のようになります。</dd>
+        <dd>(新しくデータが増えた場合にはIDが追加されます。)</dd>
+        <dd><table class="dd">
+                   <tr> <td>0100H</td> <td>:</td> <td>MAIN BOARD  </td> </tr>
+                   <tr> <td>0101H</td> <td>:</td> <td>CPU CARD    </td> </tr>
+                   <tr> <td>0102H</td> <td>:</td> <td>SERVO CARD  </td> </tr>
+                   <tr> <td>0103H</td> <td>:</td> <td>PMC MODULE  </td> </tr>
+                   <tr> <td>0110H</td> <td>:</td> <td>FROM/SRAM   </td> </tr>
+                   <tr> <td>0200H</td> <td>:</td> <td>FAST ETHER  </td> </tr>
+                   <tr> <td>0210H</td> <td>:</td> <td>FL-NET      </td> </tr>
+                   <tr> <td>0211H</td> <td>:</td> <td>ETHER BOARD </td> </tr>
+                   <tr> <td>0212H</td> <td>:</td> <td>ETHER CARD  </td> </tr>
+                   <tr> <td>0220H</td> <td>:</td> <td>PROFI MASTER</td> </tr>
+                   <tr> <td>0230H</td> <td>:</td> <td>PROFI SLAVE </td> </tr>
+                   <tr> <td>0240H</td> <td>:</td> <td>C LANGUAGE  </td> </tr>
+                   <tr> <td>0250H</td> <td>:</td> <td>HSSB 2CH    </td> </tr>
+                   <tr> <td>0260H</td> <td>:</td> <td>HSSB 1CH    </td> </tr>
+                   <tr> <td>0270H</td> <td>:</td> <td>TPU         </td> </tr>
+                   <tr> <td>0280H</td> <td>:</td> <td>ADD SPDL    </td> </tr>
+                   <tr> <td>0290H</td> <td>:</td> <td>ADD AXIS    </td> </tr>
+                   <tr> <td>02A0H</td> <td>:</td> <td>DEVNT MASTER</td> </tr>
+                   <tr> <td>02B0H</td> <td>:</td> <td>ADD CPU     </td> </tr>
+                   <tr> <td>02C0H</td> <td>:</td> <td>DEVNT SLAVE </td> </tr>
+                   <tr> <td>0400H</td> <td>:</td> <td>BUS EXTN    </td> </tr>
+                   <tr> <td>0500H</td> <td>:</td> <td>(QFS)       </td> </tr>
+                   <tr> <td>0510H</td> <td>:</td> <td>(WRC)       </td> </tr>
+                   <tr> <td>0520H</td> <td>:</td> <td>(ETC)       </td> </tr>
+                   <tr> <td>0530H</td> <td>:</td> <td>(LIME)      </td> </tr>
+                   <tr> <td>0540H</td> <td>:</td> <td>(NBG)       </td> </tr>
+                   <tr> <td>0550H</td> <td>:</td> <td>(LSC)       </td> </tr>
+                   <tr> <td>0560H</td> <td>:</td> <td>(PHI)       </td> </tr>
+                   <tr> <td>0570H</td> <td>:</td> <td>(NEW)       </td> </tr>
+                   <tr> <td>0601H</td> <td>:</td> <td>LCD BOARD   </td> </tr>
+                   <tr> <td>0602H</td> <td>:</td> <td>DISP ID     </td> </tr>
+                   <tr> <td>0603H</td> <td>:</td> <td>GUI CARD    </td> </tr>
+                   <tr> <td>0604H</td> <td>:</td> <td>GUI BOARD   </td> </tr>
+                   <tr> <td>0605H</td> <td>:</td> <td>GUI ID      </td> </tr>
+                   <tr> <td>0701H</td> <td>:</td> <td>MDI ID      </td> </tr>
+                   <tr> <td>0702H</td> <td>:</td> <td>B.UNIT ID   </td> </tr>
+                   <tr> <td>0f00H</td> <td>:</td> <td>CERTIFY ID-1</td> </tr>
+                   <tr> <td>0f01H</td> <td>:</td> <td>CERTIFY ID-2</td> </tr>
+                   <tr> <td>0f02H</td> <td>:</td> <td>CERTIFY ID-3</td> </tr>
+            </table></dd>
+
+    <dt>hard_num</dt>
+        <dd>ハードウェアの情報の追番が格納されます。</dd>
+
+    <dt>slot_no</dt>
+        <dd>スロット番号が格納されます。</dd>
+
+    <dt>id1_format</dt>
+        <dd>ＩＤ-１の表示形式</dd>
+    <dt>id2_format</dt>
+        <dd>ＩＤ-２の表示形式</dd>
+        <dd>システム構成画面で使用する場合のＩＤ-１、ＩＤ-２の表示形式が格納されます。</dd>
+
+        <dd><table class="dd">
+                   <tr> <td>0</td> <td>:</td> <td>表示なし。</td> </tr>
+                   <tr> <td>1</td> <td>:</td> <td>16進数を2桁の2進数で表示する。</td> </tr>
+                   <tr> <td>2</td> <td>:</td> <td>16進数を4桁の2進数で表示する。</td> </tr>
+                   <tr> <td>3</td> <td>:</td> <td>16進数を6桁の2進数で表示する。</td> </tr>
+                   <tr> <td>4</td> <td>:</td> <td>2桁の16進数を表示する。</td> </tr>
+                   <tr> <td>5</td> <td>:</td> <td>4桁の16進数を以下の例1のように表示する。</td> </tr>
+                   <tr> <td> </td> <td> </td> <td>例1 1234 → 12/34</td> </tr>
+                   <tr> <td> </td> <td> </td> <td>2文字,2文字の間にスラッシュ(/)を入れる。</td> </tr>
+                   <tr> <td>6</td> <td>:</td> <td>8桁の16進数を表示する。</td> </tr>
+                   <tr> <td>7</td> <td>:</td> <td>8桁の16進数を以下の例2のように並べ替えて表示する。</td> </tr>
+                   <tr> <td> </td> <td> </td> <td>例2  01234567  → 56723 40 1</td> </tr>
+                   <tr> <td> </td> <td> </td> <td>5文字,2文字,1文字の間にｽﾍﾟｰｽを入れる。</td> </tr>
+            </table></dd>
+
+        <table class="dd"><dd>
+                   <tr> <td>注</td> <td>:</td> <td>数値の先頭が0の場合は0も表示する。</td> </tr>
+                   <tr> <td>  </td> <td> </td> <td>例 id1_format = 3の場合 : 0002H → 000010</td> </tr>
+        </dd></table>
+
+        <br/>
+        <p>以下のﾃﾞｰﾀ例が得られた場合、表示例のような表示が出来ます。</p>
+<pre style="background-color:white"><![CDATA[
+ /**** ﾃﾞｰﾀ例 ****************************************************************
+ * group_id/hard_id/   id1  /id1_format/  id2   /id2_format/slot_no/hard_num *
+ *                                                                           *
+ *  0100H   0100H   00010003      7                 0           0      1     *
+ *  0100H   0101H   00060004      7     800C1104    6           0      2     *
+ *  0100H   0110H   0000C103      5                 0           0      3     *
+ *                                                                           *
+ *  0200H   0200H   00011007      7                 0           1      4     *
+ *                                                                           *
+ *  0200H   0220H   00041007      7                 0           2      5     *
+ *                                                                           *
+ *  0600H   0602H   00000005      2                 0           0      6     *
+ ****************************************************************************/
+
+ /* 表示例 ************************************
+ *   1.HARDWARE CONFIGURATION                 *
+ *      NAME          ID-1      ID-2   SLOT   *
+ *  +-------------+----------+--------+----+  *
+ *   MAIN BOARD                               *
+ *   MAIN BOARD    00301 00 0                 *
+ *   CPU CARD      00406 00 0 800C1104        *
+ *   FROM/SRAM     C1/03                      *
+ *                                            *
+ *   OPTION BOARD                             *
+ *   FAST ETHER    00701 10 0             1   *
+ *   PROFI(M)      00704 10 0             2   *
+ *                                            *
+ *   DISPLAY                                  *
+ *   DISP ID       0101                       *
+ *********************************************/
+]]></pre>
+
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>hard_numまたはread_numの値の誤り</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+            但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。<br/><br/>
+            組込みイーサネットを使用のとき、<br/>
+            <p class="dd">上記２つの機能は必要ありません。</p>
+            イーサネットボードを使用のとき、<br/>
+            <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdsyssoft3</name>
+            <file>misc/cnc_rdsyssoft3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

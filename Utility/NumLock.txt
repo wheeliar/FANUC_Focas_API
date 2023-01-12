@@ -1,0 +1,49 @@
+
+                               NumLock.TXT File
+                     README file for Option Setup Utility
+           Copyright(C), FANUC CORPORATION, 2002-2011. All Rights Reserved.
+
+This document provides the information about NumLock.exe.
+Please read this document before using the SOFTWARE.
+
+------------------------------------------------------------------------------
+[1] Purpose
+[2] Operation
+------------------------------------------------------------------------------
+
+This tool enables to change the state of NumLock without a full-keyboard.
+
+
+==============================================================================
+[1] Purpose
+==============================================================================
+
+In the default key assignment of MDI keyboard driver, POS, PROG, and so on 
+are bound to the numeric keypad keys of full-keyboard. These keys generate 
+different key codes according to the state of NumLock, for example, numeric key
+code when Numlock is ON and cursor moving key codes such as "HOME" when Numlock
+is OFF.
+
+Windows NT, 2000, XP and Vista hold the state of NumLock for each login
+session.
+Therefore, if you temporarily connected a full-keyboard for a maintenance, the
+state of NumLock of the full-keyboard is kept by Windows even after
+disconnecting it.
+And since NumLock key itself is not bound to MDI keyboard by default key
+assignment, you cannot switch the state using MDI keyboard.
+
+An application program might not work well if it assumes that NumLock is 
+always ON (or OFF).
+
+This tool enables to change the state of NumLock without a full-keyboard.
+
+
+==============================================================================
+[2] Operation
+==============================================================================
+To make NumLock ON, execute "NumLock.exe".
+To make NumLock OFF, execute "NumLock.exe /OFF".
+
+Copy NumLock.exe on the proper folder, and register it to Startup folder of 
+Windows if you want to make NumLock always ON (or OFF).
+

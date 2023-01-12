@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdrcvmsg</title>
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdrcvmsg(unsigned short FlibHndl,char *rcvmsg);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            受信したメッセージが格納されている受信バッファの内容をリードします。<br/>
+            本関数をコールすると、CNCの受信ステータスがクリアされます。(CNCの受信ステータスは、メッセージが受信されるとオンとなります。)<br/>
+            受信ステータスは <a href="Data/cnc_rdrcvmsg.htm" target="_parent">cnc_rdrcvmsg</a> 関数で受信メッセージをリードするか、CNCのネットワーク通信画面を選択するとオフになります。<br/>
+            また、応答が要求されるメッセージを受信した場合は、所定時間内に応答を返さないと受信メッセージに 以下の文字列がセットされます。<br/>
+            <br/>
+                Series 15
+                <table class="dd">
+                    <tr>
+                        <td>
+                        ・CNC が英語系列の場合<br/>
+                         &#160;&#160;"***** TIME OUT *****"
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                        ・CNC が日本語系列の場合<br/>
+                         &#160;&#160;"***** タイム アウト *****"<br/>
+                         &#160;&#160;&#160;(半角カタカナ)
+                        </td>
+                    </tr>
+                </table>
+                <br/>
+                Series 16/18, 16i/18i/21i
+                <table class="dd">
+                    <tr>
+                        <td>
+                        "***** TIME OUT *****"
+                        </td>
+                    </tr>
+                </table>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rcvmsg</name>
+                    <type>out</type>
+                    <content>
+                        Series 15
+                        <table class="dd">
+                            <tr>
+                                <td>
+                                    メッセージは NULLで終端され、NULLを含めて最大667文字となります。<br/>
+                                    メッセージを格納する領域が667文字以上確保されていない場合、本関数の動作は保証されません。
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        Series 16/18, 16i/18i/21i
+                        <table class="dd">
+                            <tr>
+                                <td>
+                                    メッセージは NULLで終端され、NULLを含めて最大641文字となります。<br/>
+                                    メッセージを格納する領域が641文字以上確保されていない場合、本関数の動作は保証されません。
+                                </td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                OSI-Ethernet、及び拡張ドライバ／ライブラリ機能のオプションが必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側処理の実行拒否(Series 16/18, 16i/18i/21iのみ)<br/>
+                OSI-Ethernetが準備中、またはリスタート中です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能、OSI-Ethernetが必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_rdsndmsg</name>
+            <file>Data/cnc_rdsndmsg.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

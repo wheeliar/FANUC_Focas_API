@@ -1,0 +1,87 @@
+[Version]
+Signature="$WINDOWS NT$"
+;Class=CNC
+Provider=%Provider%
+
+[SourceDisksNames]
+1 = %DiskName1%
+
+[SourceDisksFiles]
+mmcncd.sys = 1
+cnccrypto.sys = 1
+ncboot32.exe = 1, ..\common
+hssb2.cpl = 1
+
+[DestinationDirs]
+Driver.CopyList = 12	; DIRID_DRIVERS
+System.CopyList = 11	; DIRID_SYSTEM
+
+[Driver.CopyList]
+mmcncd.sys
+cnccrypto.sys
+
+[System.CopyList]
+ncboot32.exe
+hssb2.cpl
+
+[DefaultInstall.NT]
+CopyFiles=Driver.CopyList,System.CopyList
+AddReg=mmcncd.AddReg,ncboot32.AddReg,cnccrypto.AddReg
+Reboot
+
+[DefaultInstall.NT.Services]
+AddService = mmcncd,2,mmcncd_Service_Inst
+AddService = cnccrypto,2,cnccrypto_Service_Inst
+
+[mmcncd_Service_Inst]
+DisplayName    = MMCNCD
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 2                  ; SERVICE_AUTO_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mmcncd.sys
+LoadOrderGroup = Extended Base
+
+[cnccrypto_Service_Inst]
+DisplayName    = CNCCRYPTO
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 2                  ; SERVICE_AUTO_START
+ErrorControl   = 1                  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\CNCCrypto.sys
+LoadOrderGroup = Extended Base
+
+[mmcncd.AddReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress0,%REG_DWORD%,0x0280
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress1,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress2,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress3,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress4,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress5,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress6,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress7,%REG_DWORD%,0x0000
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType0,%REG_DWORD%,1
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName0,%REG_SZ%,"CNC-1"
+
+[ncboot32.AddReg]
+HKLM,Software\Microsoft\Windows\CurrentVersion\Run,Ncboot32,%REG_SZ%,"Ncboot32.exe"
+
+[cnccrypto.AddReg]
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,Pcmcia,%REG_DWORD%,0x00000001
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,InterruptNumber,%REG_DWORD%,0x0000000a
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,IoBaseAddress,%REG_DWORD%,0x00000300
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,IoLength,%REG_DWORD%,0x00000008
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,MemoryMappedBaseAddress,%REG_DWORD%,0x000d0000
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,MemoryMappedSize,%REG_DWORD%,0x00001000
+HKLM,System\CurrentControlSet\Services\CNCCrypto1\Parameters,PCCARDMemoryWindowOffset,%REG_DWORD%,0x000d0000
+HKLM,System\CurrentControlSet\Services\EventLog\System\CNCCrypto,EventMessageFile,%REG_EXPAND_SZ%,"%SystemRoot%\System32\IoLogMsg.dll;%SystemRoot%\System32\Drivers\CNCCrypto.sys"
+HKLM,System\CurrentControlSet\Services\EventLog\System\CNCCrypto,TypesSupported,%REG_DWORD%,0x00000007
+HKLM,System\CurrentControlSet\Services\Pcmcia\Database\FANUC\EDIT,Driver,%REG_SZ%,"CNCCrypto"
+HKLM,System\CurrentControlSet\Services\Pcmcia\Database\FANUC\EDIT,AttributeMemorySize,%REG_DWORD%,0x00001000
+HKLM,System\CurrentControlSet\Services\Pcmcia\Database\FANUC\EDIT,CardMemorySize,%REG_DWORD%,0x00001000
+
+[Strings]
+Provider="FANUC"
+DiskName1="FANUC Open CNC Drivers/Libraries Diskette #1"
+
+REG_SZ    = 0x00000000
+REG_DWORD = 0x00010001
+

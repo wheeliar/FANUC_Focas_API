@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdposition</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdposition(unsigned short FlibHndl, short type, short *data_num, ODBPOS *position);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>1軸目から(*data_num)で指定した軸数の座標値をリードします。</p>
+            <p>(*data_num)が現在の制御軸数より大きい場合、(*data_num)に実際にリードした軸数（制御軸数）がセットされます。<br/>
+               (*data_num)が現在の制御軸数より小さい場合、(*data_num)で指定した軸数分のデータをリードします。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リードするデータの種類を指定します。
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>0</td>
+                                <td>:</td>
+                                <td>絶対座標</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>:</td>
+                                <td>機械座標</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>:</td>
+                                <td>相対座標</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>:</td>
+                                <td>残移動量</td>
+                            </tr>
+                            <tr>
+                                <td>-1</td>
+                                <td>:</td>
+                                <td>全種類</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in / out</type>
+                    <content>
+                        <p>
+                            リードする軸数を格納した変数へのポインタを指定します。<br/>
+                            関数終了後、実際にリードした軸数が設定されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>position</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           座標値を返すODBPOS構造体の配列へのポインタです。<br/>
+                           この配列は(*data_num)で指定した数分必要です。<br/>
+                           ODBPOS構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbpos {
+    POSELM  abs;    /* 絶対座標 */
+    POSELM  mach;   /* 機械座標 */
+    POSELM  rel;    /* 相対座標 */
+    POSELM  dist;   /* 残移動量 */
+} ODBPOS ;
+</pre>
+                        <ul>
+                            <dl>
+                                <dt>abs</dt>
+                                <dd>絶対座標を返すPOSELM構造体</dd>
+                                <dt>mach</dt>
+                                <dd>機械座標を返すPOSELM構造体</dd>
+                                <dt>rel</dt>
+                                <dd>相対座標を返すPOSELM構造体</dd>
+                                <dt>dist</dt>
+                                <dd>残移動量を返すPOSELM構造体</dd>
+                            </dl>
+                        </ul>
+                        <p>また、POSELM構造体の内容は次の通りです。</p>
+<pre>
+typedef struct poselm {
+    long    data;   /* 座標値 */
+    short   dec;    /* 座標値の小数点位置 */
+    short   unit;   /* 座標値の単位 */
+    short   disp;   /* 表示状態 */
+    char    name;   /* 軸名称 */
+    char    suff;   /* 軸名称添え字 */
+} POSELM;
+</pre>
+                        <ul>
+                            <dl>
+                                <dt>data</dt>
+                                <dd>座標値</dd>
+                                <dt>dec</dt>
+                                <dd>座標値の小数点位置</dd>
+                                <dt>unit</dt>
+                                <dd>座標値の単位
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>mm</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>inch</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>degree</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <dt>disp</dt>
+                                <dd>表示状態
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>CNCの画面で非表示</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>CNCの画面で表示</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <dt>name</dt>
+                                <dd>軸名称(ASCII)</dd>
+                                <dt>suff</dt>
+                                <dd>軸名称の添え字(ASCII) </dd>
+                            </dl>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                軸数(*data_num)が0以下です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                座標値の種類(type)の指定が不適切です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <is>
+            <hssb>
+                <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+全軸の絶対座標値を取得し表示します。
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    ODBPOS pos[MAX_AXIS];
+    short num = MAX_AXIS;
+    short ret = cnc_rdposition(h, 0, &#38;num, pos);
+    if(!ret) {
+        int i;
+        for(i = 0 ; i &#60; num ; i++) {
+            printf("%c = %d\n", pos[i].abs.name, pos[i].abs.data);
+        }
+    }
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

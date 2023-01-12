@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_prfwrbusprm</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfwrbusprm(unsigned short FlibHndl, IODBBUSPRM *idb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>マスタ機能のバスパラメータをライトします。</p>
+            <p>この関数は、PROFIBUS-DP管理ソフト(6557系列)の01～07版と09版以降で使用できます。
+               08版の管理ソフトでは、戻り値が EW_VERSION となります。<br/>
+               ライトしたデータを有効にするためには、CNCの再立上げが必要です。<br/>
+               この関数は、6558系列でも使用できます。
+            </p>
+            <p>※PROFIBUS-DP機能の詳細については「PROFIBUS-DP機能取扱説明書」を参照して下さい。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idb</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            バスパラメータを設定するIODBBUSPRM構造体へのポインタです。
+                            IODBBUSPRM構造体は次の通りです。
+<pre>
+typedef struct {
+    char           fdl_add ;
+    char           baudrate ;
+    unsigned short tsl ;
+    unsigned short min_tsdr ;
+    unsigned short max_tsdr ;
+    unsigned char  tqui ;
+    unsigned char  tset ;
+    long           ttr ;
+    char           gap ;
+    char           hsa ;
+    char           max_retry ;
+    unsigned char  bp_flag ;
+    unsigned short min_slv_int ;
+    unsigned short poll_tout ;
+    unsigned short data_cntl ;
+    char           reserve1[6] ;
+    char           cls2_name[32] ;
+    short          user_dlen ;
+    char           user_data[62] ;
+    char           reserve2[96] ;
+} IODBBUSPRM ;
+</pre>
+                            <dl>
+                                <dt>fdl_add</dt>
+                                    <dd>マスタ局の局番を設定します。(0～125)</dd>
+                                <dt>baudrate</dt>
+                                    <dd>転送速度のコード番号を設定します。</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr>    <td>0</td><td>：</td><td>9.6Kbps</td>
+                                                <td>1</td><td>：</td><td>19.2Kbps</td>
+                                                <td>2</td><td>：</td><td>93.75Kbps</td>
+                                        </tr>
+                                        <tr>    <td>3</td><td>：</td><td>187.5Kbps</td>
+                                                <td>4</td><td>：</td><td>500Kbps</td>
+                                                <td>6</td><td>：</td><td>1.5Mbps</td>
+                                        </tr>
+                                        <tr>    <td>7</td><td>：</td><td>3Mbps</td>
+                                                <td>8</td><td>：</td><td>6Mbps</td>
+                                                <td>9</td><td>：</td><td>12Mbps</td>
+                                        </tr>
+                                    </table></dd>
+                                <dt>tsl</dt>
+                                    <dd>トークンフレーム送信後、その応答フレームの最初の１文字を読み出すまでの最大時間を設定します。(1～65535)</dd>
+                                <dt>min_tsdr</dt>
+                                    <dd>送信、または受信データの最終ビットから次の送信または受信データの先頭ビットまでの最小経過時間を設定します。(1～65535)</dd>
+                                <dt>max_tsdr</dt>
+                                    <dd>送信、または受信データの最終ビットから次の送信または受信データの先頭ビットまでの最大経過時間を設定します。(1～65535)</dd>
+                                <dt>tqui</dt>
+                                    <dd>データを送信した後、レシーバを動作させるまでの待ち時間を設定します。(0～255)</dd>
+                                <dt>tset</dt>
+                                    <dd>イベントが発生してからそれに対するアクションを実行開始するまでの時間を設定します。(1～255)</dd>
+                                <dt>ttr</dt>
+                                    <dd>PROFIBUSのトークンが一巡するのにかかる予測時間  を設定します。(1～1677215)</dd>
+                                <dt>gap</dt>
+                                    <dd>メンテナンス間隔の間に巡回するトークンの数を設定します。(1～100)</dd>
+                                <dt>hsa</dt>
+                                    <dd>PROFIBUS上に設定される最大ノード番号を設定します。(2～126)</dd>
+                                <dt>max_retry</dt>
+                                    <dd>最大リトライ回数を設定します。(1～8)</dd>
+                                <dt>bp_flag</dt>
+                                    <dd>ユーザインタフェース用のフラグを設定します。各ビットの意味は次の通りです。</dd>
+                                    <dd>BIT7</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>0</td><td>：</td><td>エラー発生時にオペレーションモードを変更しない</td> </tr>
+                                        <tr> <td>1</td><td>：</td><td>エラー発生時にオペレーションモードをOperateモードからClearモードへ変更する。</td> </tr>
+                                    </table></dd>
+                                    <dd>※BIT0 ～BIT6 は、未使用です。</dd>
+                                <dt>min_slv_int</dt>
+                                    <dd>各スレーブ間のポーリング間隔の最小時間を設定します。(1～65535)</dd>
+                                <dt>poll_tout</dt>
+                                    <dd>マスタ局とマスタ局との通信時のリクエストを発信してからその応答を得るまでの最大待ち時間を設定します。(1～65535)</dd>
+                                <dt>data_cntl</dt>
+                                    <dd>Data Transfer Listが最低一度更新されるまでの時間を設定します。(1～65535)</dd>
+                                <dt>reserve1</dt>
+                                    <dd>未使用</dd>
+                                <dt>cls2_name</dt>
+                                    <dd>未使用</dd>
+                                <dt>user_dlen</dt>
+                                    <dd>バスパラメータに必要なメーカー側からの指定データのバイト数を設定します。(0～62)</dd>
+                                <dt>user_data</dt>
+                                    <dd>バスパラメータに必要なメーカー側からの指定データを設定します。</dd>
+                                    <dd>上記 user_dlen に返されるバイト数分のデータが有効です。</dd>
+                                <dt>reserve2</dt>
+                                    <dd>未使用</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                バスパラメータの指定が不適切です。<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a>関数を実行して下さい。
+                ODBPMCERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>fdl_addの誤り</td></tr>
+                    <tr><td>2</td><td>：</td><td>baudrateの誤り</td></tr>
+                    <tr><td>3</td><td>：</td><td>tslの誤り</td></tr>
+                    <tr><td>4</td><td>：</td><td>min_tsdrの誤り</td></tr>
+                    <tr><td>5</td><td>：</td><td>max_tsdrの誤り</td></tr>
+                    <tr><td>6</td><td>：</td><td>tsetの誤り</td></tr>
+                    <tr><td>7</td><td>：</td><td>ttrの誤り</td></tr>
+                    <tr><td>8</td><td>：</td><td>gapの誤り</td></tr>
+                    <tr><td>9</td><td>：</td><td>hsaの誤り</td></tr>
+                    <tr><td>10</td><td>：</td><td>max_retryの誤り</td></tr>
+                    <tr><td>11</td><td>：</td><td>min_slv_intの誤り</td></tr>
+                    <tr><td>12</td><td>：</td><td>poll_toutの誤り</td></tr>
+                    <tr><td>13</td><td>：</td><td>data_cntlの誤り</td></tr>
+                    <tr><td>14</td><td>：</td><td>user_dlenの誤り</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                    <li>PROFIBUS-DPボード(ハード)が必要です。</li>
+                    <li>PROFIBUS-DPの管理ソフトが必要です。</li>
+                    <li>PROFIBUS-DPマスタ機能が必要です。</li>
+                    <li>拡張ドライバ/ライブラリ機能が必要です。</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>PROFIBUS-DPの管理ソフトの版数の誤り<br/>
+                    08版の管理ソフトで本関数が使用されました。
+                    管理ソフトを08版以外に交換して下さい。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>PROFIBUS-DPマスタ機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

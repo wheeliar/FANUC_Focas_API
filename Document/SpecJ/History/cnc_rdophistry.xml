@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdophistry</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophistry(unsigned short FlibHndl, unsigned short s_no, unsigned short e_no, unsigned short length, ODBHIS *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>操作履歴データのリードを行います。<br/>
+               Series 15i の場合は、本関数ではなく <a href="History/cnc_rdophistry2.htm" target="_parent">cnc_rdophistry2</a> 関数を使用して下さい。<br/>
+               また Series 30i の場合は、<a href="History/cnc_rdophistry4.htm" target="_parent">cnc_rdophistry4</a> 関数を使用して下さい。</p>
+            <p>本関数を使用する前に、<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数を実行する必要があります。<br/>
+               また、リードが済み次第 <a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> 関数を実行して下さい。</p>
+            <p>1個の操作履歴データの単位をレコードと呼びます。<br/>
+               レコードの種類(rec_type)によって操作履歴データの構造が違いますので、データにアクセスする場合は種類に応じた構造体を使用して下さい。</p>
+            <p>開始/終了のレコード番号とは、リードする操作履歴データのレコード毎につけた番号のことです。<br/>
+               この番号は、『履歴データのサンプリングの停止』(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数)を実行してから『履歴データのサンプリングの再開』(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> 関数)が実行されるまで有効です。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            開始レコード番号を指定します。(1以上を指定して下さい)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            終了レコード番号を指定します。(1以上を指定して下さい)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            データブロック長(ODBHIS構造体のサイズ)を指定します。<br/>
+                        </p>
+                        <img src="History/ophis_vc.gif"></img><br/>
+                        <img src="History/recalm_vc.gif"></img><br/>
+                        <img src="History/recmdi_vc.gif"></img><br/>
+                        <img src="History/recsig_vc.gif"></img><br/>
+                        <img src="History/recdate_vc.gif"></img><br/>
+                        <img src="History/rectime_vc.gif"></img>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            操作履歴データを返す ODBHIS 構造体へのポインタです。ODBHIS 構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbhis {
+    unsigned    s_no;           /* 開始レコード番号 */
+    short       type;           /* 未使用 */
+    unsigned    e_no;           /* 入力した最後のレコード番号 */
+    union {
+        struct {
+            short   rec_type; /* レコードの種類 */
+            short   alm_grp;  /* アラームの種類 */
+            short   alm_no;   /* アラーム番号 */
+            char    axis_no;  /* 軸番号 */
+            char    dummy;    /* 未使用 */
+        } rec_alm;                /* アラーム */
+        struct {
+            short   rec_type; /* レコードの種類 */
+            char    key_code; /* キーコード */
+            char    pw_flag;  /* 電源投入フラグ */
+            char    dummy[4]; /* 未使用 */
+        } rec_mdi;                /* MDI */
+        struct {
+            short   rec_type; /* レコードの種類 */
+            char    sig_name; /* 信号の名称 */
+            char    sig_old;  /* 変化前のビットパターン */
+            char    sig_new;  /* 変化後のビットパターン */
+            char    dummy;    /* 未使用 */
+            short   sig_no;   /* 信号の番号 */
+        } rec_sgn;                /* 信号 */
+        struct {
+            short   rec_type; /* レコードの種類 */
+            char    year;     /* 年 */
+            char    month;    /* 月 */
+            char    day;      /* 日 */
+            char    pw_flag;  /* 電源投入フラグ */
+            char    dummy[2]; /* 未使用 */
+        } rec_date;               /* 日付 */
+        struct {
+            short   rec_type; /* レコードの種類 */
+            char    hour;     /* 時 */
+            char    minute;   /* 分 */
+            char    second;   /* 秒 */
+            char    pw_flag;  /* 電源投入フラグ */
+            char    dummy[2]; /* 未使用 */
+        } rec_time;               /* 時間 */
+    } data[N];          /* N : 読み出す操作履歴データの個数 */
+} ODBHIS ;
+</pre>
+                        <dl>
+                        <dt>rec_type</dt>
+                    <dd>レコードの種類がセットされます。</dd>
+                <table class="dd">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>MDIキー</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>:</td>
+                                    <td>信号</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>:</td>
+                                    <td>アラーム</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>:</td>
+                                    <td>日付</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>:</td>
+                                    <td>時間</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>:</td>
+                                    <td>第2系統用 MDI キー(Series 16/18/21, 16i/18i/21i, Power Mate i のみ)</td>
+                                </tr>
+                                <tr>
+                                    <td>6</td>
+                                    <td>:</td>
+                                    <td>第2系統用信号(Series 16/18/21, 16i/18i/21i, Power Mate i のみ)</td>
+                                </tr>
+                                <tr>
+                                    <td>7</td>
+                                    <td>:</td>
+                                    <td>第2系統用アラーム(Series 16/18/21, 16i/18i/21i, Power Mate i のみ)</td>
+                                </tr>
+                                <tr>
+                                    <td>10</td>
+                                    <td>:</td>
+                                    <td>第3系統用 MDI キー(Series 16iのみ)</td>
+                                </tr>
+                                <tr>
+                                    <td>11</td>
+                                    <td>:</td>
+                                    <td>第3系統用信号(Series 16iのみ)</td>
+                                </tr>
+                                <tr>
+                                    <td>12</td>
+                                    <td>:</td>
+                                    <td>第3系統用アラーム(Series 16iのみ)</td>
+                                </tr>
+                            </table>
+                            <dt>alm_grp</dt>
+                    <dd>アラームの種類がセットされます。</dd>
+                <ul type="disc"><li>Series 15 (HSSBのみ)</li></ul>
+                <table class="dd">
+                                <tr>
+                        <td>bit 0</td>
+                        <td>:</td>
+                                    <td>バッググラウンド用P/S</td>
+                                    <td>(BG)</td>
+                                </tr>
+                <tr>
+                        <td>bit 1</td>
+                        <td>:</td>
+                                    <td>フォアグラウンド用 P/S</td>
+                                    <td>(PS)</td>
+                                </tr>
+                <tr>
+                        <td>bit 2</td>
+                        <td>:</td>
+                                    <td>オーバヒート</td>
+                                    <td>(OH)</td>
+                                </tr>
+                <tr>
+                        <td>bit 3</td>
+                        <td>:</td>
+                                    <td>サブ CPU エラー</td>
+                                    <td>(SB)</td>
+                                </tr>
+                <tr>
+                        <td>bit 4</td>
+                        <td>:</td>
+                                    <td>同期誤差過大エラー</td>
+                                    <td>(SN)</td>
+                                </tr>
+                <tr>
+                        <td>bit 5</td>
+                        <td>:</td>
+                                    <td>パラメータ書込みスイッチ・オン</td>
+                                    <td>(SW)</td>
+                                </tr>
+                <tr>
+                        <td>bit 6</td>
+                        <td>:</td>
+                                    <td>オーバトラベル / 外部データ入力</td>
+                                    <td>(OT)</td>
+                                </tr>
+                <tr>
+                        <td>bit 7</td>
+                        <td>:</td>
+                                    <td>PMC エラー</td>
+                                    <td>(PC)</td>
+                                </tr>
+                <tr>
+                        <td>bit 8</td>
+                        <td>:</td>
+                                    <td>外部アラームメッセージ</td>
+                                    <td>(EX)</td>
+                                </tr>
+                <tr>
+                        <td>bit 9</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 10</td>
+                        <td>:</td>
+                                    <td>重症の P/S</td>
+                                    <td>(SR)</td>
+                                </tr>
+                <tr>
+                        <td>bit 11</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 12</td>
+                        <td>:</td>
+                                    <td>サーボアラーム</td>
+                                    <td>(SV)</td>
+                                </tr>
+                <tr>
+                        <td>bit 13</td>
+                        <td>:</td>
+                                    <td>I/O エラー</td>
+                                    <td>(IO)</td>
+                                </tr>
+                <tr>
+                        <td>bit 14</td>
+                        <td>:</td>
+                                    <td>電源断が必要なパラメータ入力</td>
+                                    <td>(PW)</td>
+                                </tr>
+                <tr>
+                        <td>bit 15</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <p></p>
+                            <ul type="disc">
+                                <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+                            </ul>
+                <table class="dd">
+                                <tr>
+                        <td>bit 0</td>
+                        <td>:</td>
+                                    <td>P/S 100</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 1</td>
+                        <td>:</td>
+                                    <td>P/S 000</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 2</td>
+                        <td>:</td>
+                                    <td>P/S 101</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 3</td>
+                        <td>:</td>
+                                    <td>P/S その他</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 4</td>
+                        <td>:</td>
+                                    <td>オーバトラベル</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 5</td>
+                        <td>:</td>
+                                    <td>オーバヒート</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 6</td>
+                        <td>:</td>
+                                    <td>サーボアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 7</td>
+                        <td>:</td>
+                                    <td>システムアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 8</td>
+                        <td>:</td>
+                                    <td>ＡＰＣアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 9</td>
+                        <td>:</td>
+                                    <td>スピンドルアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 10</td>
+                        <td>:</td>
+                                    <td>P/S 5000番台、パンチプレスアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 11</td>
+                        <td>:</td>
+                                    <td>レーザアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 12</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 13</td>
+                        <td>:</td>
+                                    <td>リジッドタップアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 14</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 15</td>
+                        <td>:</td>
+                                    <td>外部アラームメッセージ</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <p></p>
+                            <ul type="disc">
+                                <li>Series 16i/18i-W</li>
+                            </ul>
+                <table class="dd">
+                                <tr>
+                        <td>bit 0</td>
+                        <td>:</td>
+                                    <td>Ｐ/Ｓアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 1</td>
+                        <td>:</td>
+                                    <td>オーバトラベルアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 2</td>
+                        <td>:</td>
+                                    <td>サーボアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 3</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 4</td>
+                        <td>:</td>
+                                    <td>オーバヒートアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 5</td>
+                        <td>:</td>
+                                    <td>ストロークリミット１</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 6</td>
+                        <td>:</td>
+                                    <td>ストロークリミット２</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 7</td>
+                        <td>:</td>
+                                    <td>編集アラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 8</td>
+                        <td>:</td>
+                                    <td>ＡＰＣアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 9</td>
+                        <td>:</td>
+                                    <td>システムアラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 10</td>
+                        <td>:</td>
+                                    <td>P/S 5000番台アラーム</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 11</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 12</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 13</td>
+                        <td>:</td>
+                                    <td>(未使用)</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 14</td>
+                        <td>:</td>
+                                    <td>外部アラームメッセージ</td>
+                                    <td></td>
+                                </tr>
+                <tr>
+                        <td>bit 15</td>
+                        <td>:</td>
+                                    <td>後退アラーム</td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        <dt>alm_no</dt>
+                    <dd>アラーム番号がセットされます。</dd>
+                    <dd>P/Sアラーム、システムアラーム、外部アラームのときのみ有効です(15は除く)。</dd>
+                            <dt>axis_no</dt>
+                    <dd>軸番号がセットされます。(Series 15 のみ)<br/>
+                                (軸に関係ないアラームの場合は 0 がセットされます)
+                            </dd>
+                            <dt>key_code</dt>
+                    <dd>キーコードがセットされます。</dd>
+                            <dt>pw_flag</dt>
+                    <dd>電源投入フラグ<br/>
+                                <ul> 1 : 電源投入時<br/>
+                                     0 : その他<br/>
+                                </ul>
+                            </dd>
+                            <dt>sig_name</dt>
+                    <dd>信号の名称<br/>
+                                <ul> 1 : X<br/>
+                                     2 : G<br/>
+                                     3 : Y<br/>
+                                     4 : F<br/>
+                                </ul>
+                            </dd>
+                            <dt>sig_old</dt>
+                    <dd>変化前のビットパターン</dd>
+                            <dt>sig_new</dt>
+                    <dd>変化後のビットパターン</dd>
+                            <dt>sig_no</dt>
+                    <dd>信号の番号<br/>
+                                <ul> X : 0 ～ 127, 1000 ～ 1063<br/>
+                                     G : 0 ～ 255, 1000 ～ 1255, 2000～2255 <br/>
+                                     Y : 0 ～ 127, 1000 ～ 1063<br/>
+                                     F : 0 ～ 255, 1000 ～ 1255, 2000～2255 <br/>
+                                </ul>
+                        Series 16i/18i/21i MODEL B で操作履歴拡張機能がある場合は以下のようになります。
+                                <ul> X : 0 ～ 127, 200 ～ 327, 1000 ～ 1063<br/>
+                                     G : 0 ～ 511, 1000 ～ 1511, 2000～2511 <br/>
+                                     Y : 0 ～ 127, 200 ～ 327, 1000 ～ 1063<br/>
+                                     F : 0 ～ 511, 1000 ～ 1511, 2000～2511 <br/>
+                                </ul>
+                            </dd>
+                            <dt>year</dt>
+                    <dd>年 (0 ～ 99)<br/></dd>
+                            <dt>month</dt>
+                    <dd>月 (1 ～ 12)<br/></dd>
+                            <dt>day</dt>
+                    <dd>日 (1 ～ 31)<br/></dd>
+                            <dt>hour</dt>
+                    <dd>時 (0 ～ 23)<br/></dd>
+                            <dt>minute</dt>
+                    <dd>分 (0 ～ 59)<br/></dd>
+                            <dt>second</dt>
+                    <dd>秒 (0 ～ 59)<br/></dd>
+                         </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数)が行われていません。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                    ODBHIS構造体のサイズ(length)が不正です。<br/>
+                    以下の場合が該当します。<br/>
+                    (e_no-s_no+1) * sizeof(data[0]) + 6 &lt; length<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                     開始レコード番号(s_no)、終了レコード番号(e_no)が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                 <p>但し、FS16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+                 <p>組込みイーサネットを使用のとき、</p>
+                    <p class="dd">上記２つの機能は必要ありません。</p>
+                 <p>イーサネットボードを使用のとき、</p>
+                     <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <add><p>また FS16i/18i/21i MODEL B の場合、操作履歴拡張機能が関係します。</p></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>
+                    Series 15 <br/>
+                    0015#3=1
+                </li>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i<br/>
+            3112#5=0 (必ず設定して下さい)<br/>
+            (16i/18i-Wの場合は 3112#5=1)
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophisno</name>
+            <file>History/cnc_rdophisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophistry2</name>
+            <file>History/cnc_rdophistry2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophistry4</name>
+            <file>History/cnc_rdophistry4.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

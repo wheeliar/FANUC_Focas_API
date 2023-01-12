@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_sramgetstart</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_sramgetstart(unsigned short FlibHndl, char *name);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC制御部のSRAMデータの読み込み処理の開始を指示します。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           読み込みたいSRAMデータの名称<br/>
+                           <a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a> 関数で取得したSRAMデータの名称(sramname)を指定します。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+            <a href="Misc/cnc_sramgetstart.htm" target="_parent">cnc_sramgetstart</a>関数を実行済みです。<br/>
+            <a href="Misc/cnc_sramgetend.htm" target="_parent">cnc_sramgetend</a>関数にて前回の読み込みを終了させてください。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>指定された名称(name)のSRAMデータが存在しない </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>NCが『非常停止』状態ではありません。 </content>
+        </item>
+        <item>
+            <name>EW_PASSWD</name>
+            <content>指定されたSRAMデータは保護されているため読み込めません。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+        すべてのモードで使用できます。
+        <ul>
+        <li> 読み込み時は『非常停止』にして下さい。<br/>
+                『非常停止』状態の無いシステム(FAPT等)の SRAMデータを読み込むとき、読み込み途中でシステム操作があった場合には内容は保証されません。</li></ul>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_getsraminfo</name>
+            <file>Misc/cnc_getsraminfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_sramget</name>
+            <file>Misc/cnc_sramget.htm</file>
+        </item>
+        <item>
+            <name>cnc_sramgetend</name>
+            <file>Misc/cnc_sramgetend.htm</file>
+        </item>        
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

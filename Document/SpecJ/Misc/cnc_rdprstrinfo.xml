@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdprstrinfo</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprstrinfo(unsigned short FlibHndl, ODBPRS *prstr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                プログラム再開情報を読み出します。プログラム再開情報はODBPRS内の各メンバに格納されます。 
+            </p>
+            <p>
+                Series 16/18, 16i/18i/21i, 0i, 30iの場合、Bコードの取得個数/値はM系以外は未使用となります。 
+            </p>
+            <p>
+                Series 15 の場合、プログラム再開の開始位置、残移動量は NC パラメータ2204#1=1,7613#0=1の時のみ有効です。
+            </p>
+        </cmn>
+        <is>
+            <p>
+                プログラム再開情報を読み出します。プログラム再開情報はODBPRS内の各メンバに格納されます。 
+            </p>
+            <p>
+                Bコードの取得個数/値はM系以外は未使用となります。 
+            </p>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prstr</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            プログラム再開情報を返すODBPRS構造体へのポインタです。ODBPRS構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbprs {
+     short   datano;            /* 未使用 */
+     short   type;              /* 未使用 */
+     short   data_info[5];      /* データ設定情報 */
+     long    rstr_bc;           /* ブロック番号 */
+     long    rstr_m[35];        /* M コードの値 */
+     long    rstr_t[2];         /* T コードの値 */
+     long    rstr_s;            /* S コードの値 */
+     long    rstr_b;            /* B コードの値 */
+     long    dest[MAX_AXIS];    /* プログラム再開の開始位置 */
+     long    dist[MAX_AXIS];    /* プログラム再開の残移動量 */
+} ODBPRS ;                      (MAX_AXIS : 最大制御軸数)
+</pre>
+<dl>
+    <dt>datano</dt>
+        <dd>未使用</dd>
+    <dt>type</dt>
+        <dd>未使用</dd>
+    <dt>data_info</dt>
+        <dd>データ設定情報</dd>
+        <dd>rstr_m, rstr_t, rstr_s, rstr_bの取得個数がそれぞれセットされます。</dd>
+    <dt>data_info[0]</dt>
+        <dd>常に 1 </dd>
+    <dt>data_info[1] </dt>
+        <dd>Mコードの取得個数 (0～35)</dd>
+    <dt>data_info[2] </dt>
+        <dd>Tコードの取得個数 (0～2)</dd>
+    <dt>data_info[3] </dt>
+        <dd>Sコードの取得個数 (0～1)</dd>
+    <dt>data_info[4] </dt>
+        <dd>Bコードの取得個数 (0～1)</dd>
+    <dt>rstr_bc</dt>
+        <dd>ブロック番号がセットされます</dd>
+    <dt>rstr_m</dt>
+        <dd>Mコードの値が配列にセットされます。</dd>
+    <dt>rstr_t</dt>
+        <dd>Tコードの値が配列にセットされます。</dd>
+    <dt>rstr_s</dt>
+        <dd>Sコードの値がセットされます。</dd>
+    <dt>rstr_b</dt>
+        <dd>Bコードの値がセットされます。</dd>
+    <dt>dest</dt>
+        <dd>プログラム再開の開始位置がセットされます。制御軸数分が有効です。</dd>
+    <dt>dist</dt>
+        <dd>プログラム再開の残移動量がセットされます。制御軸数分が有効です。</dd>
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>プログラム再開機能、及び拡張ドライバ/ライブラリ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                 <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>プログラム再開機能が必要です。</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type><li>Series 15</li>
+              <dd>2204#1=1, 7613#0=1 （必ず設定して下さい）</dd>
+        </type>
+    </parameter>
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rstrseqsrch</name>
+            <file>misc/cnc_rstrseqsrch.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rstrseqsrch2</name>
+            <file>misc/cnc_rstrseqsrch2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

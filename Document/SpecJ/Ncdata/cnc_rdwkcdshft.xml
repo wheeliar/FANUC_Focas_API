@@ -1,0 +1,570 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_rdwkcdshft</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_rdwkcdshft(unsigned short FlibHndl, short axis, short length, IODBWCSF *wkcdshft);</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    axisで指定された軸のワーク座標系シフト量を読み出します。
+                    ワーク座標系シフト量は符号付きのバイナリ形式でIODBWCSF内のdata配列に格納されます。
+                </p>
+                <p>axisにALL_AXESを指定することにより全軸の読み取りを一度に行うことができます。</p>
+                <p>ワーク座標系シフト量の小数点位置は、<a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。</p>
+                <ul>
+                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/Cの場合</li>
+                    <p>
+                        <table border="1">
+                            <tr>
+                                <th/>
+                                <th>1004#1<br/>(ISC)</th>
+                                <th>1004#0<br/>(ISA)</th>
+                                <th>直線軸<br/>ミリ入力<br/>[mm]</th>
+                                <th>直線軸<br/>インチ入力<br/>[inch]</th>
+                                <th>回転軸<br/> <br/>[deg]</th>
+                            </tr>
+
+                            <tr>
+                                <td>IS-B</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.001</td>
+                                <td>0.0001</td>
+                                <td>0.001</td>
+                            </tr>
+
+                            <tr>
+                                <td>IS-C</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0.0001</td>
+                                <td>0.00001</td>
+                                <td>0.0001</td>
+                            </tr>
+                        </table>
+                    </p>
+                </ul>
+                <ul>
+                    <li>Series 30iの場合</li>
+                    <p>
+                        <table border="1">
+                            <tr>
+                                <th/>
+                                <th>1013#3<br/>(ISE)</th>
+                                <th>1013#2<br/>(ISD)</th>
+                                <th>1013#1<br/>(ISC)</th>
+                                <th>1013#0<br/>(ISA)</th>
+                                <th>直線軸<br/>ミリ入力<br/>[mm]</th>
+                                <th>直線軸<br/>インチ入力<br/>[inch]</th>
+                                <th>回転軸<br/> <br/>[deg]</th>
+                            </tr>
+
+                            <tr>
+                                <td>IS-A</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0.01</td>
+                                <td>0.001</td>
+                                <td>0.01</td>
+                            </tr>
+                            <tr>
+                                <td>IS-B</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.001</td>
+                                <td>0.0001</td>
+                                <td>0.001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-C</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0.0001</td>
+                                <td>0.00001</td>
+                                <td>0.0001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-D</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.00001</td>
+                                <td>0.000001</td>
+                                <td>0.00001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-E</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.000001</td>
+                                <td>0.0000001</td>
+                                <td>0.000001</td>
+                            </tr>
+                        </table>
+                    </p>
+                </ul>
+                <ul>
+                    <li>Series 0i-D/Fの場合</li>
+                    <p>
+                        <table border="1">
+                            <tr>
+                                <th/>
+                                <th>1013#1<br/>(ISC)</th>
+                                <th>1013#0<br/>(ISA)</th>
+                                <th>直線軸<br/>ミリ入力<br/>[mm]</th>
+                                <th>直線軸<br/>インチ入力<br/>[inch]</th>
+                                <th>回転軸<br/> <br/>[deg]</th>
+                            </tr>
+
+                            <tr>
+                                <td>IS-A</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0.01</td>
+                                <td>0.001</td>
+                                <td>0.01</td>
+                            </tr>
+                            <tr>
+                                <td>IS-B</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.001</td>
+                                <td>0.0001</td>
+                                <td>0.001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-C</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0.0001</td>
+                                <td>0.00001</td>
+                                <td>0.0001</td>
+                            </tr>
+                        </table>
+                    </p>
+                </ul>
+            </cmn>
+            
+            <!-- 30i(WinCE) -->
+            <is>
+                <p>
+                    axisで指定された軸のワーク座標系シフト量を読み出します。
+                    ワーク座標系シフト量は符号付きのバイナリ形式でIODBWCSF内のdata配列に格納されます。
+                </p>
+                <p>
+                    axisにALL_AXESを指定することにより全軸の読み取りを一度に行うことができます。
+                </p>
+                <p>
+                    ワーク座標系シフト量の小数点位置は、
+                    <a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。
+                </p>
+                <ul>
+                    <p>
+                        <table border="1">
+                            <tr>
+                                <th/>
+                                <th>1013#3<br/>(ISE)</th>
+                                <th>1013#2<br/>(ISD)</th>
+                                <th>1013#1<br/>(ISC)</th>
+                                <th>1013#0<br/>(ISA)</th>
+                                <th>直線軸<br/>ミリ入力<br/>[mm]</th>
+                                <th>直線軸<br/>インチ入力<br/>[inch]</th>
+                                <th>回転軸<br/> <br/>[deg]</th>
+                            </tr>
+                            <tr>
+                                <td>IS-A</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0.01</td>
+                                <td>0.001</td>
+                                <td>0.01</td>
+                            </tr>
+                            <tr>
+                                <td>IS-B</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.001</td>
+                                <td>0.0001</td>
+                                <td>0.001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-C</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0.0001</td>
+                                <td>0.00001</td>
+                                <td>0.0001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-D</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.00001</td>
+                                <td>0.000001</td>
+                                <td>0.00001</td>
+                            </tr>
+                            <tr>
+                                <td>IS-E</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0.000001</td>
+                                <td>0.0000001</td>
+                                <td>0.000001</td>
+                            </tr>
+                        </table>
+                    </p>
+                </ul>
+            </is>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードする軸番号を指定します。</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>全軸指定(ALL_AXES : -1)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1～m</td>
+                                        <td>:</td>
+                                        <td>1軸指定(m :現在の制御軸数)</td>
+                                    </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>データブロック長(IODBWCSF構造体のサイズ)を指定します。</p>
+                            <p><b>IODBWCSF</b></p>
+                            <table>
+                                <colgroup align="left" valign="top"/>
+                                <colgroup align="left" valign="top"/>
+                                <tr>
+                                    <th>1軸指定</th>
+                                    <th>全軸指定</th>
+                                </tr>
+                                <tr>
+                                    <td><img src="ncdata/rpos.gif"/></td>
+                                    <td><img src="ncdata/rposa.gif"/></td>
+                                </tr>
+                                <tr class="ois">
+                                    <td></td>
+                                    <td>n = 最大制御軸数(有効データは制御軸数分)</td>
+                                </tr>
+                            </table>
+                        <ul class="xis">
+                            <li>Series 30i, 0i-D/F</li><p/>
+                            <p>n = 最大制御軸数(有効データは制御軸数分)</p>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li><p/>
+                            <p>n = 制御軸数</p>
+                        </ul>
+                        </content>
+                    </item>
+                    <item>
+                        <name>wkcdshft</name>
+                        <type>out</type>
+                        <content>
+                            <p>ワーク座標系シフト量を返すIODBWCSF構造体へのポインタです。 IODBWCSF構造体は次の通りです。</p>
+<pre>
+typedef struct iodbwcsf {
+        short   dummy ;             /* 未使用 */
+        short   type ;              /* 軸番号 */
+        long    data[MAX_AXIS] ;    /* ワーク座標系シフト量 */
+} IODBWCSF ;                     /* MAX_AXIS : 最大制御軸数 */
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_FUNC</name>
+                <content>使用不可<br/>M系では使用できません。</content>
+            </item>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>データブロック長の誤り<br/>IODBWCSF構造体のサイズ(length)が不正です。</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り<br/>軸番号(axis)の指定が不適切です。 </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>オプションなし<br/>拡張ドライバ/ライブラリ機能が必要です。</content>
+            </item>
+            <item>
+                <name>EW_PARAM</name>
+                <content>CNCパラメータの誤り<br/>1201#6=0に設定して下さい。</content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                  <ul>上記２つの機能は必要ありません。</ul>
+                  <p>イーサネットボードを使用のとき、</p>
+                  <ul>イーサネット機能のみ必要です。</ul>
+            </ethr>
+            <type>
+                <li>Series 30i</li>
+                   IS-C,IS-D,IS-E<br/>
+            </type>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    本機能には以下のオプションが関係します。<br/>
+                </hssb>
+                <type>
+                    IS-C,IS-D,IS-E<br/>
+                </type>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter>
+            <type>
+                <ul>
+                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+                    1201#6=0（必ず設定して下さい）
+                </ul>
+                <ul>
+                    <li>Series 30i</li>
+                    1013#3,#2,#1,#0<br/>1201#6=0（必ず設定して下さい）
+                </ul>
+                <ul>
+                    <li>Series 0i-D/F</li>
+                    1013#1,#0<br/>1201#6=0（必ず設定して下さい）
+                </ul>
+            </type>
+        </parameter>
+
+
+
+        <is_parameter>
+            <type>
+                <ul>
+                    1013#3,#2,#1,#0<br/>
+                    1201#6=0 (必ず設定して下さい)
+                </ul>
+            </type>
+        </is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+        <!-- 30i(WinCE) -->
+        <is_mode></is_mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>X</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>X</fs30isa>
+                    <fs30isb>X</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>X</fs30isa>
+                    <fs30isb>X</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_wrwkcdshft</name>
+                <file>ncdata/cnc_wrwkcdshft.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdwkcdsfms</name>
+                <file>ncdata/cnc_rdwkcdsfms.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrwkcdsfms</name>
+                <file>ncdata/cnc_wrwkcdsfms.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

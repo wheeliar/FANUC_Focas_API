@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_fromput</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_fromput(unsigned short FlibHndl, void *data, long *length);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC制御部のFROMデータの書き込みを行います。<br/>
+                書き込みデータの送り込み終了後、<a href="Misc/cnc_fromputend.htm" target="_parent">cnc_fromputend</a>関数を実行し、書き込み終了を指示してください。</p>
+
+                <p>FROMファイルからデータを読み込み、そのデータをFROMに格納する手順を以下に示します。</p>
+                
+                <p><img src="Misc/fromput.gif"></img></p>
+                
+                <p>データ書き込み用に 128Ｋバイトのバッファが内部的に用意されています。<br/>
+                <a href="Misc/cnc_fromput.htm" target="_parent">cnc_fromput</a>関数で送り込まれたデータが 128Ｋバイト(初回は128Ｋバイト+128バイト)になった時点でCNC制御部へのFROMの書き込み処理が実行されます。</p>
+                
+                <p><img src="Misc/fromput2.gif"></img></p>
+                
+                <p>CNC制御部へのFROMデータの書き込み処理には時間がかかります。<br/>
+                本関数は、処理が終了するまで、ライブラリの中で待ちます。</p>
+                
+                <p>FROMデータを当関数がCNC制御部へ書き込む時にエラー(EW_DATA)が発生する場合がありますので、アプリケーションでは関数の戻り値をチェックしてください。</p>
+                
+                <p>システムデータ(コントロールソフトウェア、ラダープログラム等)のサイズは、128Ｋバイト × n(n=1,2,3,...) + 128バイトです。本関数ではFROMファイルからの全てのデータを書き込んでください。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           書き込みデータ格納変数のポインタ<br/>
+                           書き込むデータを格納した変数のポインタを指定して下さい。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>書き込むデータ長をセットした変数のポインタ<br/>
+                        ポインタが指し示す変数には、書き込むサイズをバイト長でセットして下さい。本関数実行後に、実際に書き込んだサイズがバイト長でセットされます。<br/>
+                        一度に書き込める最大データ長は<a href="Misc/cnc_getfrominfo.htm" target="_parent">cnc_getfrominfo</a>関数で取得したFROMサイズ(fromsize)です。
+                        </p>
+                            <table>
+                                <tr><td rowspan="3" valign="top">注) </td>
+                                <td>FROMデータが保護されている場合、この関数では、EW_PASSWDを返します。<br/>
+                                FROMデータの名称は、与えられた書き込みデータ内に保存されておりますので、名称が判明次第、エラーを発生します。FROMデータの名称は、FROMデータの先頭から 672 バイト以内に記述されていますので、lengthにはなるべく 672 バイト以上を指定して下さい。</td></tr>
+                                
+                            </table>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません。または<a href="Misc/cnc_fromputstart.htm" target="_parent">cnc_fromputstart</a>関数が実行されていません。
+    </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>バッファフル<br/>バッファがフル状態ですのでリトライしてください。 </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>lengthの指定に誤りがあります(0以下の値が指定されました)。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>FROMデータ書き込みエラー<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>FROMへの書き込み失敗 (デバイス不良)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>:</td>
+                        <td>FROMの消去失敗 (デバイス不良)</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>:</td>
+                        <td>FROM上に空き領域がない</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>:</td>
+                        <td>システムで許されないFROMデータが指定された</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>:</td>
+                        <td>指定されたシステムデータと、FROM上に実際に書き込まれているシステムデータのサイズが異なる</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>:</td>
+                        <td>FROM(モジュール)が認識できない(デバイス不良)</td>
+                    </tr>
+                    <tr>
+                        <td>145</td>
+                        <td>:</td>
+                        <td>書き込みデータの総数が多すぎる<br/>
+                        超過分のデータは破棄されます。</td>
+                    </tr>
+                </colgroup>
+                </colgroup>
+                </colgroup>
+             </table>
+         </content>
+        </item>    
+        <item>
+            <name>EW_PASSWD</name>
+            <content>  指定されたFROMデータは保護されているため書き込めません。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_getfrominfo</name>
+            <file>Misc/cnc_getfrominfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputstart</name>
+            <file>Misc/cnc_fromputstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromputend</name>
+            <file>Misc/cnc_fromputend.htm</file>
+        </item>        
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

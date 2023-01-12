@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpitchr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpitchr(unsigned short FlibHndl, short s_number, short e_number, short length, IODBPI *pitch);</prottype>      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>s_number,e_numberで指定された範囲のピッチ誤差補正データを読み出します。補正データは符号付のバイナリ形式でIODBPI内のdata配列に格納されます。</p>
+
+            <ul>
+                <li>Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C/D, Power Mate i</li>
+                <table>
+                    <tr>
+                        <td>データ範囲</td>
+                        <td>:</td>
+                        <td>-7～7</td>
+                    </tr>
+                </table>
+                <br/>
+                <li>Series 15i, 0i-F, 30i, PMi-A</li>
+                <table>
+                    <tr>
+                        <td>データ範囲</td>
+                        <td>:</td>
+                        <td>-128～127</td>
+                    </tr>
+                </table>
+                <br/>
+            </ul>
+        </cmn>
+
+        <is>
+            <p>
+                s_number,e_numberで指定された範囲のピッチ誤差補正データを読み出します。
+                補正データは符号付のバイナリ形式でIODBPI内のdata配列に格納されます。
+            </p>
+            <p>
+                データ範囲は『-128～127』です。
+            </p>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを開始するピッチ誤差補正データ番号を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを終了するピッチ誤差補正データ番号を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長(IODBPI構造体のサイズ)を指定します。</p>
+
+                        <blockquote>
+                            6+(読み出すピッチ誤差補正データの個数)
+                        </blockquote>
+
+                        <p><b>IODBPI</b></p>
+
+                        <p><img src="ncdata/pitch.gif"/></p>
+
+                        <p>Nは読み出すピッチ誤差補正データの個数です。</p>
+
+                    </content>
+                </item>
+                <item>
+                    <name>pitch</name>
+                    <type>out</type>
+                    <content>
+                        <p>ピッチ誤差補正データを返すIODBPI構造体へのポインタです。 IODBPI構造体は次の通りです。</p>
+
+<pre>
+typedef struct  iodbpi {
+       short datano_s; /* リード開始ピッチ誤差補正データ番号 */
+       short dummy;    /* 未使用 */
+       short datano_e; /* リード終了ピッチ誤差補正データ番号 */
+       char  data[N];  /* ピッチ誤差補正データ */
+} IODBPI ;             /* N は読み出す補正データの個数 */
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>IODBPI構造体のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>ピッチ誤差補正データ番号(s_number, e_number)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>ピッチ誤差補正機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>ピッチ誤差補正機能</need>
+        <type>
+            <p>両方向ピッチ誤差補正<br/>
+               両方向ピッチ誤差補正拡張</p>
+        </type>
+
+        <is>
+            <hssb>
+                本機能にはピッチ誤差補正機能、及び拡張ドライバ/ライブラリ機能が必要です。
+            </hssb>
+            <type>
+                <p>両方向ピッチ誤差補正<br/>
+                   両方向ピッチ誤差補正拡張</p>
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <add>
+                両方向ピッチ誤差を使用する場合：No.3605#0
+            </add>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+              <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+              <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+              <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrpitchr</name>
+            <file>ncdata/cnc_wrpitchr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpitchinfo</name>
+            <file>ncdata/cnc_rdpitchinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+以下のプログラムは指定された番号のピッチ誤差補正データを読みだして表示します。
+
+#include "fwlib32.h"
+/* start/end are start/end number to be read. */
+short example( short start, short end )
+{
+    IODBPI *pitch ;
+    short ret, idx ;
+    pitch = (IODBPI *)malloc( 1024 ) ;
+    ret = cnc_rdpitchr( h, start, end, 6+(end-start+1), pitch ) ;
+    if ( !ret )
+        for ( idx = 0 ; idx &#60; end-start+1 ; idx++ )
+            printf( "#%04d %+d\n", idx+start, pitch-&#62;data[idx] ) ;
+    free( pitch ) ;
+    return ( ret ) ;
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

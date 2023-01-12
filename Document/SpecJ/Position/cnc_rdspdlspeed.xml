@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdspdlspeed</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdspdlspeed(unsigned short FlibHndl, short spdl_no, short gear_no, long *spdl_speed);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>本関数はシリアルスピンドルに対し主軸モータの回転数からギア比を考慮した
+            計算を行ない、指定主軸またはパラメータで設定されている主軸数分の主軸回
+            転数（rpm）の近似値を返します。<br/>
+            ただし、マルチスピンドルのオプションがない場合は、第１主軸のみとなりま
+            す。本関数では、下記の計算式により主軸回転数を計算します。</p>
+
+            <table class="dd">
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <colgroup align="center"/>
+                <tr>
+                    <td>主軸回転数</td>
+                    <td>=</td>
+                    <td></td>
+                    <td>
+                        主軸モータの実回転数<br/>
+                        <hr/>
+                        主軸モータの最高回転数
+                    </td>
+                    <td></td>
+                    <td>*</td>
+                    <td>ギアに対する最大回転数(rpm)</td>
+                </tr>
+            </table>
+
+            <p>※ 近似値計算のため、誤差が含まれる場合があります。</p>
+            <p>上記の計算により主軸回転数の計算を正しく行なうためには、以下に示す主軸
+            モータの最高回転数、ギアに対する最大回転数に正しい値を設定し、使用中の
+            ギアの番号をDI信号で正しく通知する必要があります。</p>
+
+            <ul>
+                <p>
+                    <li>マルチスピンドルのオプションなし</li><p/>
+                    <ul>主軸モータの最高回転数
+                        <table border="1">
+                            <tr>
+                                <td>主軸切換機能なし、主軸切換機能ありのMAIN主軸</td>
+                                <td>パラメータNo.4020(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>主軸切換機能ありのSUB主軸</td>
+                                <td>パラメータNo.4196(S1)</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>使用中のギアの番号
+                        <table border="1">
+                            <tr>
+                                <td>M系のギア選択方式Mタイプ<br/>（CNCで主軸を制御中）</td>
+                                <td>CNCが出力するDO信号F034#2,#1,#0で判別</td>
+                            </tr>
+                            <tr>
+                                <td>M系のギア選択方式Mタイプ<br/>（PMCで主軸を制御中）</td>
+                                <td>本関数の引数gear_noで指定</td>
+                            </tr>
+                            <tr>
+                                <td>M系のギア選択方式Tタイプ<br/>およびT系<br/></td>
+                                <td>DI信号G028#2,#1でギア番号を通知<br/></td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>ギアに対する最大回転数
+                        <table border="1">
+                            <tr>
+                                <td rowspan="3">M系のギア選択方式Mタイプ<br/>（CNCで主軸を制御中）</td>
+                                <td>F034#0=1</td>
+                                <td>パラメータNo.3741</td>
+                            </tr>
+                            <tr>
+                                <td>F034#1=1</td>
+                                <td>パラメータNo.3742</td>
+                            </tr>
+                            <tr>
+                                <td>F034#2=1</td>
+                                <td>パラメータNo.3743</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3">M系のギア選択方式Mタイプ<br/>（PMCで主軸を制御中）</td>
+                                <td>gera_no=1</td>
+                                <td>パラメータNo.3741</td>
+                            </tr>
+                            <tr>
+                                <td>gera_no=2</td>
+                                <td>パラメータNo.3742</td>
+                            </tr>
+                            <tr>
+                                <td>gera_no=3</td>
+                                <td>パラメータNo.3743</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">M系のギア選択方式Tタイプ<br/>およびT系</td>
+                                <td>G028#2=0, G028#1=0</td>
+                                <td>パラメータNo.3741</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=0, G028#1=1</td>
+                                <td>パラメータNo.3742</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1, G028#1=0</td>
+                                <td>パラメータNo.3743</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1, G028#1=1</td>
+                                <td>パラメータNo.3744</td>
+                            </tr>
+                        </table>
+                        <p>※ M系のギア選択方式を以下に示します。
+                            <table border="1">
+                                <tr>
+                                    <td>Mタイプ</td>
+                                    <td>周速一定制御のオプションなし<br/>かつ<br/>パラメータNo.3706#4=0</td>
+                                </tr>
+                                <tr>
+                                    <td>Tタイプ</td>
+                                    <td>周速一定制御のオプションあり<br/>又は<br/>パラメータNo.3706#4=1</td>
+                                </tr>
+                            </table>
+                        </p>
+                    </ul>
+                </p>
+            </ul>
+
+            <br/>
+            <ul>
+                <p>
+                    <li>マルチスピンドルのオプションあり</li><p/>
+                    <ul>主軸モータの最高回転数
+                        <table border="1">
+                            <tr>
+                                <td rowspan="4">主軸切換機能なし、主軸切換機能ありのMAIN主軸</td>
+                                <td>第１主軸</td>
+                                <td>パラメータNo.4020(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>第２主軸</td>
+                                <td>パラメータNo.4020(S2)</td>
+                            </tr>
+                            <tr>
+                                <td>第３主軸</td>
+                                <td>パラメータNo.4020(S3)</td>
+                            </tr>
+                            <tr>
+                                <td>第４主軸</td>
+                                <td>パラメータNo.4020(S4)</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="4">主軸切換機能ありのSUB主軸</td>
+                                <td>第１主軸</td>
+                                <td>パラメータNo.4196(S1)</td>
+                            </tr>
+                            <tr>
+                                <td>第２主軸</td>
+                                <td>パラメータNo.4196(S2)</td>
+                            </tr>
+                            <tr>
+                                <td>第３主軸</td>
+                                <td>パラメータNo.4196(S3)</td>
+                            </tr>
+                            <tr>
+                                <td>第４主軸</td>
+                                <td>パラメータNo.4196(S4)</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>使用中のギアの番号
+                        <table border="1">
+                            <tr>
+                                <td>第１主軸</td>
+                                <td>DI信号G028#2,#1でギア番号を通知</td>
+                            </tr>
+                            <tr>
+                                <td>第２主軸</td>
+                                <td>DI信号G029#0でギア番号を通知</td>
+                            </tr>
+                            <tr>
+                                <td>第３主軸</td>
+                                <td>DI信号G029#2でギア番号を通知</td>
+                            </tr>
+                            <tr>
+                                <td>第４主軸</td>
+                                <td>DI信号G031#4でギア番号を通知</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+                <p>
+                    <ul>ギアに対する最大回転数
+                        <table border="1">
+                            <tr>
+                                <td rowspan="4">第１主軸</td>
+                                <td>G028#2=0,G028#1=0</td>
+                                <td>パラメータNo.3741</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=0,G028#1=1</td>
+                                <td>パラメータNo.3742</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1,G028#1=0</td>
+                                <td>パラメータNo.3743</td>
+                            </tr>
+                            <tr>
+                                <td>G028#2=1,G028#1=1</td>
+                                <td>パラメータNo.3744</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">第２主軸</td>
+                                <td>G029#0=0</td>
+                                <td>パラメータNo.3811</td>
+                            </tr>
+                            <tr>
+                                <td>G029#0=1</td>
+                                <td>パラメータNo.3812</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">第３主軸</td>
+                                <td>G029#2=0</td>
+                                <td>パラメータNo.3831</td>
+                            </tr>
+                            <tr>
+                                <td>G029#2=1</td>
+                                <td>パラメータNo.3832</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">第４主軸</td>
+                                <td>G031#4=0</td>
+                                <td>パラメータNo.3851</td>
+                            </tr>
+                            <tr>
+                                <td>G031#4=1</td>
+                                <td>パラメータNo.3852</td>
+                            </tr>
+                        </table>
+                    </ul>
+                </p>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>spdl_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           取得する主軸の番号を指定します。<br/>
+                           －１および主軸番号（1～4）を指定して下さい。<br/>
+                           －１を指定すると、第１主軸からパラメータで設定されている主軸数分の主軸回転数が取得されます。<br/>
+                           パラメータで設定されていない主軸番号を指定するとエラーとなります。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>gear_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            PMC主軸出力制御で使用しているギアの番号を指定します。<br/>
+                            1～3の値を指定して下さい。1～3以外を指定するとエラーとなります。<br/>
+                            ただし、本引数は下記の条件①～③の全てが満足されている場合にのみ、使用中のギアの番号として使用されます。
+                        </p>
+                        <ul>
+                            ① M系でマルチスピンドルのオプションなし<br/>
+                            ② ギア選択方式Mタイプを選択（周速一定制御のオプションなし、パラメータNo.3706#4=0）<br/>
+                            ③ 信号G033#7=1 （PMCによる主軸出力制御中）<br/>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>spdl_speed</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            主軸回転数（rpm）を格納するためのlong型変数へのポインタを指定します。<br/>
+                            主軸番号（spdl_no）に－１を指定した場合は、必ずパラメータで設定されている主軸数分の配列を用意し、その先頭のポインタを指定して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                主軸番号（spdl_no）の指定の誤り
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                ギア番号（gear_no）の指定の誤り
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <ul>
+                3701#5, #4 （設定の影響を受けます）<br/>
+                3704#1 （設定の影響を受けます）<br/>
+                3706#4 （設定の影響を受けます）<br/>
+                4020 （設定の影響を受けます）<br/>
+                4196 （設定の影響を受けます）<br/>
+                3741 （設定の影響を受けます）<br/>
+                3742 （設定の影響を受けます）<br/>
+                3743 （設定の影響を受けます）<br/>
+                3744 （設定の影響を受けます）<br/>
+                3811 （設定の影響を受けます）<br/>
+                3812 （設定の影響を受けます）<br/>
+                3831 （設定の影響を受けます）<br/>
+                3832 （設定の影響を受けます）<br/>
+                3851 （設定の影響を受けます）<br/>
+                3852 （設定の影響を受けます）
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

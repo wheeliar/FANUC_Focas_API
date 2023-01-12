@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdtooldata</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdtooldata(unsigned short FlibHndl, short s_no, short *number, IODBTLDT *tldt);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>工具データを読み出します。データはIODBTLDT内の各メンバに格納されます。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           リードを開始する工具登録番号を指定します。 
+                        </p>
+                        <p class="dd">
+                            1～最大工具登録番号
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            リードするデータ個数のポインタを指定します。関数コール前にリードしたい個数を指定すると、関数コール後に実際にリードした個数が設定されます。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tldt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            工具データを返すIODBTLDT構造体配列へのポインタです。 IODBTLDT構造体は次の通りです。
+                        </p>
+<pre>
+・Series 16i/18i-Pの場合
+typedef struct iodbtldt {
+    short   slct;       /* データ有効フラグ */
+    long    tool_no;    /* 工具番号 */
+    long    x_axis_ofs; /* X軸工具位置補正量 */
+    long    y_axis_ofs; /* Y軸工具位置補正量 */
+    long    turret_pos; /* タレット割出し位置 */
+    long    chg_tl_no;  /* 交換工具番号 */
+    long    punch_count;/* パンチ回数 */
+    long    tool_life;  /* 工具寿命 */
+    long    m_tl_radius;/* マルチツール半径 */
+    long    m_tl_angle; /* マルチツール角度 */
+    char    tl_shape;   /* 工具形状(C) */
+    long    tl_size_i;  /* 工具寸法(I) */
+    long    tl_size_j;  /* 工具寸法(J) */
+    long    tl_angle;   /* 工具角度(K) */
+    long    reserve[3]; /* リザーブ */
+} IODBTLDT ;
+
+・Series 0i-PD/PF、30i/31i-LB、30i/31i-PB の場合
+typedef struct iodbtldt {
+    short   slct;         /* データ有効フラグ */
+    long    tool_no;      /* 工具番号 */
+    long    x_axis_ofs;   /* X軸工具位置補正量データ部 */
+    long    y_axis_ofs;   /* Y軸工具位置補正量データ部 */
+    long    turret_pos;   /* タレット割出し位置データ部 */
+    long    chg_tl_no;    /* 交換工具番号 */
+    long    punch_count;  /* パンチ回数 */
+    long    tool_life;    /* 工具寿命 */
+    long    m_tl_radius;  /* マルチツール半径データ部 */
+    long    m_tl_angle;   /* マルチツール角度データ部 */
+    char    tl_shape;     /* 工具形状(C) */
+    long    tl_size_i;    /* 工具寸法(I)データ部 */
+    long    tl_size_j;    /* 工具寸法(J)データ部 */
+    long    tl_angle;     /* 工具角度(K)データ部 */
+    char    x_axis_dec;   /* 小数点以下桁数部 */
+    char    y_axis_dec;   /* 小数点以下桁数部 */
+    char    turret_dec;   /* 小数点以下桁数部 */
+    char    m_radius_dec; /* 小数点以下桁数部 */
+    char    m_angle_dec;  /* 小数点以下桁数部 */
+    char    tl_size_i_dec;/* 小数点以下桁数部 */
+    char    tl_size_j_dec;/* 小数点以下桁数部 */
+    char    tl_angle_dec; /* 小数点以下桁数部 */
+    short   reserve[2];   /* リザーブ */
+} IODBTLDT ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>データ有効フラグがセットされます。
+                                <table class="dd">
+                                    <tr><td>bit 0 </td><td>:</td><td>工具番号           </td></tr>
+                                    <tr><td>bit 1 </td><td>:</td><td>X軸工具位置補正量  </td></tr>
+                                    <tr><td>bit 2 </td><td>:</td><td>Y軸工具位置補正量  </td></tr>
+                                    <tr><td>bit 3 </td><td>:</td><td>タレット割出し位置 </td></tr>
+                                    <tr><td>bit 4 </td><td>:</td><td>交換工具番号       </td></tr>
+                                    <tr><td>bit 5 </td><td>:</td><td>パンチ回数         </td></tr>
+                                    <tr><td>bit 6 </td><td>:</td><td>工具寿命           </td></tr>
+                                    <tr><td>bit 7 </td><td>:</td><td>マルチツール半径   </td></tr>
+                                    <tr><td>bit 8 </td><td>:</td><td>マルチツール角度   </td></tr>
+                                    <tr><td>bit 9 </td><td>:</td><td>工具形状(C)        </td></tr>
+                                    <tr><td>bit 10</td><td>:</td><td>工具寸法(I)        </td></tr>
+                                    <tr><td>bit 11</td><td>:</td><td>工具寸法(J)        </td></tr>
+                                    <tr><td>bit 12</td><td>:</td><td>工具角度(K)        </td></tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>bit 13～15</td><td>:</td><td>リザーブ</td></tr>
+                                </table>
+                                ※ 各データに対応するビットが0の時は、そのデータは無効になります。</dd>
+                            <dt>tool_no</dt>
+                                <dd>
+                                    使用する工具番号がセットされます。(0～)
+                                </dd>
+                            <dt>x_axis_ofs</dt>
+                                <dd>
+                                    X軸工具位置補正量がセットされます。
+                                </dd>
+                            <dt>y_axis_ofs</dt>
+                                <dd>
+                                    Y軸工具位置補正量がセットされます。
+                                </dd>
+                            <dt>turret_pos</dt>
+                                <dd>
+                                    タレット割出し位置がセットされます。
+                                </dd>
+                            <dt>chg_tl_no</dt>
+                                <dd>
+                                    交換用の工具番号がセットされます。(0～)
+                                </dd>
+                            <dt>punch_count</dt>
+                                <dd>
+                                    工具毎のパンチ回数がセットされます。(0～99999999)
+                                </dd>
+                            <dt>tool_life</dt>
+                                <dd>
+                                    工具寿命がセットされます。(工具寿命管理機能付の時有効)
+                                </dd>
+                            <dt>m_tl_radius</dt>
+                                <dd>
+                                    マルチツール半径がセットされます。(マルチツール機能 &#38; 工具データ設定機能付 &#38; 16282#5=0時有効)
+                                </dd>
+                            <dt>m_tl_angle</dt>
+                                <dd>
+                                    マルチツール角度がセットされます。(マルチツール機能 &#38; 工具データ設定機能付 &#38; 16282#5=0時有効)
+                                </dd>
+                            <dt>tl_shape</dt>
+                                <dd>
+                                    工具形状(C)がセットされます。(グラフィック機能付の時有効)
+                                </dd>
+                            <dt>tl_size_i</dt>
+                                <dd>
+                                    工具寸法(I)がセットされます。(グラフィック機能付の時有効)
+                                </dd>
+                            <dt>tl_size_j</dt>
+                                <dd>
+                                    工具寸法(J)がセットされます。(グラフィック機能付の時有効)
+                                </dd>
+                            <dt>tl_angle</dt>
+                                <dd>
+                                    工具角度(K)がセットされます。(グラフィック機能付の時有効)
+                                </dd>
+                            <dt>x_axis_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    X軸方向工具位置補正量の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>y_axis_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    Y軸方向工具位置補正量の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>turret_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    タレット割出し位置の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>m_radius_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    マルチツール半径の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>m_angle_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    マルチツール角度の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>tl_size_i_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    工具寸法(I)の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>tl_size_j_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    工具寸法(J)の小数点以下桁数部がセットされます。
+                                </dd>
+                            <dt>tl_angle_dec</dt>
+                                <dd>
+                                    ・Series 0i-PD/PF、30i/31i-LB、30i/31i-PBの場合のみ使用可能
+                                </dd>
+                                <dd>
+                                    工具角度(K)の小数点以下桁数部がセットされます。
+                                <dd>対応するデータ部は以下の通りです。</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>小数点以下桁数部</th> <th>対応するデータ部</th>
+                                    </tr>
+                                    <tr> <td >x_axis_dec</td><td>x_axis_ofs</td>  </tr>
+                                    <tr> <td >y_axis_dec</td><td>y_axis_ofs</td>  </tr>
+                                    <tr> <td >turret_dec</td><td>turret_pos</td>  </tr>
+                                    <tr> <td >m_radius_dec</td><td>m_tl_radius</td>  </tr>
+                                    <tr> <td >m_angle_dec</td><td>m_tl_angle</td>  </tr>
+                                    <tr> <td >tl_size_i_dec</td><td>tl_size_i</td>  </tr>
+                                    <tr> <td >tl_size_j_dec</td><td>tl_size_j</td>  </tr>
+                                    <tr> <td >tl_angle_dec</td><td>tl_angle</td>  </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+
+                                </dd>
+
+                            <dt>reserve</dt>
+                                <dd>
+                                    リザーブです。
+                                </dd>
+                        </dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>0i-PD/PF、16i/18i-P、30i/31i-LB、30i/31i-PB以外では使用できません。</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データ長の誤り<br/>データ個数(number)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>開始番号(s_no)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし
+            <br/>拡張ドライバ/ライブラリ機能が必要です。
+            <br/>パンチプレス機能オプション、パラメータALA(No.16242#0)の設定が必要です。(Series 30i/31i-LBの場合)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <type>
+                <li>マルチツール機能    </li>
+                <li>工具データ設定機能  </li>
+                <li>工具寿命管理機能    </li>
+                <li>グラフィック機能    </li>
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 16i/18i</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#1,#2,#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <li>Series 0i-PD、30i/31i-LB、30i/31i-PB</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <li>Series 0i-PF</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#5</div>
+            <div class="dd">16284</div>
+            <div class="dd">8132#0=1 (必ず設定して下さい)</div>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdtlctldata</name>
+            <file>Punch/cnc_rdtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtlctldata</name>
+            <file>Punch/cnc_wrtlctldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtooldata</name>
+            <file>Punch/cnc_wrtooldata.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmultitldt</name>
+            <file>Punch/cnc_rdmultitldt.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmultitldt</name>
+            <file>Punch/cnc_wrmultitldt.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtoolinfo</name>
+            <file>Punch/cnc_rdtoolinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

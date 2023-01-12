@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdtool</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdtool(unsigned short FlibHndl,short s_number, short *data_num,IODBTLMNG *tool); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>工具管理データテーブルから、開始データ番号と個数で指定された範囲の工具
+                管理データを読出します。
+             </p>
+             <p>読出しは１つ１つの工具管理データを順に行い、もしエラーが発生すると以後
+                の読出しは行われません。
+             </p>
+             <p class="xis">注)　工具管理機能は、組み込みイーサネットとファストイーサネットボード用の機能です。イーサネットボードでは使用できません。 
+             </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           工具管理データテーブルからの読出しを行う際の、開始データ番号を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           工具管理データテーブルからの読出しを行う際の、読出しデータ数へ
+                           のポインタを指定します。ポインタで指されるデータへは予め、読出
+                           しデータ数(１以上)を設定して下さい。
+                        </p>
+                        <p>
+                           s_numberで始まる工具管理データを先頭に，*data_num個の読出しを行
+                           います。関数実行終了時には、*data_numに実際に読出されたデータ
+                           数が返されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tool</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            読出される工具管理データを格納するIODBTLMNG構造体へのポインタです。
+                            IODBTLMNG構造体については、<a href="ToolMng/cnc_regtool.htm" target="_parent">cnc_regtool</a>
+                            関数の引数説明を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_BUSY</name>
+            <content>
+                他のユーザ(PMC等)が同じデータウィンドウをアクセスしています。
+                再度実行してください。
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                工具管理データテーブルの開始インデックス番号(s_number)の指定が不適切です。
+                または、工具管理データテーブルのデータ有効数を超えようとしました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                工具管理機能(64組、240組、1000組)、及び拡張ドライバ/ライブラリ機能が必要です。 
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            <p>
+            工具管理機能、工具管理機能組数240組、工具管理機能組数1000組のいずれかが必要です。
+            </p>
+        </need>
+        <type>
+            <p>
+            工具管理機能カスタマイズデータ拡張(5～20)の影響を受けます。<br/>
+            </p>
+        </type>
+
+        <is>
+            <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+            </hssb>
+            <need>
+                <p>
+                工具管理機能、工具管理機能組数240組、工具管理機能組数1000組のいずれかが必要です。
+                </p>
+            </need>
+            <type>
+                <p>
+                工具管理機能カスタマイズデータ拡張(5～20)の影響を受けます。<br/>
+                </p>
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul type="disc">
+            <li>Series 16i/18i/21i, 0i-F, 30i/31i/32i</li>
+                <dl>
+                    13220(工具管理データ有効本数)<br/>
+                    13222(第１マガジンのデータ個数)<br/>
+                    13223(第１マガジンの先頭ポット番号)<br/>
+                    13227(第２マガジンのデータ個数)<br/>
+                    13228(第２マガジンの先頭ポット番号)<br/>
+                    13232(第３マガジンのデータ個数)<br/>
+                    13233(第３マガジンの先頭ポット番号)<br/>
+                    13237(第４マガジンのデータ個数)<br/>
+                    13238(第４マガジンの先頭ポット番号)<br/>
+                </dl>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+            <ul type="disc">
+                13220 (工具管理データ有効本数)
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- is -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_regtool</name>
+            <file>ToolMng/cnc_regtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_regtool_f2</name>
+            <file>ToolMng/cnc_regtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_deltool</name>
+            <file>ToolMng/cnc_deltool.htm</file>
+        </item>
+<!--
+        <item>
+            <name>cnc_rdtool</name>
+            <file>ToolMng/cnc_rdtool.htm</file>
+        </item>
+-->
+        <item>
+            <name>cnc_rdtool_f2</name>
+            <file>ToolMng/cnc_rdtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool</name>
+            <file>ToolMng/cnc_wrtool.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool_f2</name>
+            <file>ToolMng/cnc_wrtool_f2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtool2</name>
+            <file>ToolMng/cnc_wrtool2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

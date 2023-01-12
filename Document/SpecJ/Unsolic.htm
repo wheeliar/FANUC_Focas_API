@@ -1,0 +1,396 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet CNC主導メッセージ通知機能</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>CNC主導メッセージ通知機能</h2>
+
+<ol>
+
+<ol>
+    <li><a href="#General">CNC主導メッセージ通知機能の概要</a>
+    <li><a href="#Setting">CNC主導メッセージを使用するための設定</a>
+    <li><a href="#Trans">CNC主導メッセージ制御用データとメッセージ送受信について</a>
+    <li><a href="#Func">CNC主導メッセージ通知機能用Ethernet関数について</a>
+    <li><a href="#Make">CNC主導メッセージ通知機能を使用したアプリケーションの作成方法</a>
+    <li><a href="#Vista">Windows Vista Businessで使用する場合の注意事項</a>
+</ol>
+<p>
+<br/>
+<br/>
+
+<!---------------------------------------------------------------------------->
+<li><a name="General">CNC主導メッセージ通知機能の概要
+
+<blockquote>
+<dl>
+<p>CNC主導メッセージ通知機能とは、ラダーやNCプログラム 注1)からの指令でCNCから自発的にパソコンへメッセージを通知し、その結果をアプリケーションで処理できるようにする機能です。メッセージにはPMCの任意のデータやマクロ変数 注1)を送信する事ができます。アプリケーションでは、本機能を使用する事によってCNCの状態を定期的に問い合わせるようなポーリング処理が不要になります。
+
+<p>CNC主導メッセージは、パソコンのアプリケーションに対してウインドウメッセージを発行してメッセージを通知しますので、アプリケーションの作成には、Visual C++ が必要です。
+<p>注1) NCプログラムとマクロ変数は30i/31i/32i/35i, 0i-D/F, PMi-Aのみで利用可能です。</p>
+<br/>
+<p>CNC主導メッセージ通知機能は、以下のイーサネット機能で使用できます。
+<li type="square">16i/18i/21i, 0i-B/C/D/F, Power Mate i (イーサネットボード/組込みイーサネットは不可)
+	<dd>ファスト・イーサネット ボード</dd>
+<li type="square">30i/31i/32i/35i, PMi-A
+	<dd>ファスト・イーサネット ボード</dd>
+	<dd>組込みイーサネット</dd>
+</blockquote>
+
+<center>
+            <p><img src="Unsolic1.gif"></p>
+
+            <p><img src="Unsolic2.gif"></p>
+</center>
+
+
+<li><a name="Setting">CNC主導メッセージを使用するための設定
+
+<blockquote>
+<dl>
+<p>CNC主導メッセージ通知機能を使用するためには、次が必要です。
+     <p>- CNCコントロールソフトウェア          : CNCの FROM上に登録します。
+<ul>
+	<dl compact>
+	<dt>16i	<dd>B0F4/12(M)  以降
+		<dd>B0F4/07(T)  以降
+		<dd>B0H1/17(M)  以降
+		<dd>B1H1/17(T)  以降
+	<dt>18i	<dd>BDF4/12(M)  以降
+		<dd>BEF4/07(T)  以降
+		<dd>BDH1/17(M)  以降
+		<dd>BEH1/17(T)  以降
+	<dt>21i	<dd>DDF4/12(M)  以降
+		<dd>DEF4/07(T)  以降
+		<dd>DDH1/17(M)  以降
+		<dd>DEH1/17(T)  以降
+	<dt>0i	<dd>D4A1/01(M)  以降
+		<dd>D6A1/01(T)  以降
+		<dd>D4F1/01(M)  以降
+		<dd>D6F1/01(T)  以降
+	<dt>PMi	<dd>88E0/21     以降
+		<dd>88F2/04     以降
+		<dd>88F1/12     以降
+	<dt>30i	<dd>G002/19.9   以降
+		<dd>G012/19.9   以降
+		<dd>G022/19.9   以降
+		<dd>G032/19.9   以降
+		<dd>* 組込みイーサネットで使用する場合
+		<dd>G002/23.0 以降
+		<dd>G002/23.0 以降
+		<dd>G012/23.0 以降
+		<dd>G022/23.0 以降
+		<dd>G032/23.0 以降
+		<dd>G003/6.0 以降
+		<dd>G013/6.0 以降
+		<dd>G023/6.0 以降
+		<dd>G033/6.0 以降
+	<dt>31i	<dd>G101/19.9   以降
+		<dd>G111/19.9   以降
+		<dd>G121/19.9   以降
+		<dd>G131/19.9   以降
+		<dd>* 組込みイーサネットで使用する場合
+		<dd>G101/23.0 以降
+		<dd>G111/23.0 以降
+		<dd>G121/23.0 以降
+		<dd>G131/23.0 以降
+		<dd>G103/6.0 以降
+		<dd>G113/6.0 以降
+		<dd>G123/6.0 以降
+		<dd>G133/6.0 以降
+	<dt>32i	<dd>G201/19.9   以降
+		<dd>* 組込みイーサネットで使用する場合
+		<dd>G201/23.0 以降
+		<dd>G203/6.0 以降
+	<dt>PMi-A<dd>88H0/1.0   以降
+	</dl>
+</ul>
+     <p>- CNC側 Fast Ethernet用ファームウェア  : CNCの FROM上に登録します。
+<ul>
+	<dd>6567/06版以降(16i/18i/21i,Power Mate i)
+	<dd>6567/07版以降(0i-B)
+	<dd>656W/01版以降(0i-C)
+	<dd>658W/01版以降(0i-D)
+	<dd>658B/01版以降(0i-F)
+	<dd>6569/19版以降(30i/31i/32i)
+	<dd>658K/05版以降(PMi-A)
+</ul>
+     <p>- CNC側 通信管理アプリケーションソフトウェア  : CNCの FROM上に登録します。
+<ul>
+	<dd>656F/11版以降(30i/31i/32i)
+	<dd>656F/12版以降(30i/31i/32iの組込みイーサネットで使用する場合)
+</ul>
+	<p>- CNC側 組込みEthernetコントロールソフトウェア : CNCの FROM上に登録します。 
+<ul>
+	<dd>656E/11版以降(30i/31i/32iの組込みイーサネットで使用する場合)
+	<dd>658M/04版以降(PMi-Aの組込みイーサネットで使用する場合)
+</ul>
+	<p>- グラフィック機能1(15"用)用ソフトウェア : CNCの FROM上に登録します。 
+<ul>
+	<dd>60VB/01.8 以降(30i/31i/32iの組込みイーサネットで使用する場合)
+</ul>
+     <p>- パソコン側 Ethernetライブラリ : パソコン上の適当なフォルダにコピーします(System32など)。
+<ul>
+	<dl>
+	<dt>Fwlib32.dll : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7 版以降(16i/18i/21i,Power Mate i)
+			  <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.8 版以降(0i)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5 版以降(30i/31i/32i/35i, 0i-D)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 3.9 版以降(PMi-A)
+			  <dd>CNCアプリケーション開発キット(A08B-9010-J5555#ZZ12) 1.1 版以降(0i-F)
+	<dt>Fwlibe1.dll : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7 版以降(16i/18i/21i,Power Mate i)
+			  <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.8 版以降(0i)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5 版以降(30i/31i/32i/35i, 0i-D)
+			  <dd>FOCAS1/2 Libraries(A02B-0207-K737) 3.9 版以降(PMi-A)
+			  <dd>CNCアプリケーション開発キット(A08B-9010-J5555#ZZ12) 1.1 版以降(0i-F)
+	</dl>
+</ul>
+     <p>- パソコン側 CNC主導メッセージサーバ   : パソコンにインストールします。
+<ul>
+	<dt>UMsgServ.exe : <dd>FOCAS1/Ethernet Libraries(A02B-0207-K732) 1.7 版以降
+			   <dd>FOCAS1/2 Libraries(A02B-0207-K737) 2.5 版以降(30i/31i/32i/35i, 0i-D, PMi-A)
+			   <dd>CNCアプリケーション開発キット(A08B-9010-J5555#ZZ12) 1.1 版以降(0i-F)
+</ul>
+</blockquote>
+
+<blockquote>
+     <p>CNC主導メッセージサーバのインストール方法
+	    <ul>
+            <ol type=i>
+            <li>UMsgServ.exe を適当なフォルダにコピーします。<br>
+            <li>コマンドプロンプトより次のように入力します。<br>
+                    <dd> > UMsgServ.exe -Install [Enter]<br>
+            <br>
+            <dt>以上で、次回PC起動時には、自動的にCNC主導メッセージサーバが起動されます。<br>
+            </ol>
+            </ul>
+
+     <p>CNC主導メッセージサーバのアンインストール方法
+            <ul>
+            <ol type=i>
+            <li>トレイアイコン上にあるCNC主導メッセージサーバ "UnsolicitedMessage Server" を右クリックしてメニューから "Exit" を選択し、CNC主導メッセージサーバを停止します。
+            <li>コマンドプロンプトより次のように入力します。
+                    <dd> > UMsgServ.exe -Remove [Enter]
+            <li>UMsgServ.exe をインストールしてあったフォルダから削除します。
+            </ol>
+            </ul>
+</blockquote>
+
+<blockquote>
+     <p>CNC主導メッセージサーバの設定方法
+            <ul>
+            <ol type=i>
+            <li>トレイアイコン上にあるCNC主導メッセージサーバ "Unsolicited Message Server" を右クリックしてメニューから "Setting" を選択すると次のような設定のためのダイアログ画面が表示されます。
+
+
+            <p><img src="unmsgset.gif"></p>
+
+
+            <li>各項目に必要な情報を設定して下さい。
+                  <dl>
+                  <dt>Port Number : <dd>CNC主導メッセージサーバのポート番号を指定します。(標準値:8196)
+                  <dt>Timeout(sec): <dd>CNCとの通信異常を検出するためのタイムアウト時間です。(標準値:30)
+                  <dt>Maximum CNC Number : <dd>CNC主導メッセージサーバで同時に監視可能なCNCの最大数です。(標準値:32)
+                  </dl>
+            <br>
+
+            <li>各ボタンの意味は次の通りです。
+                  <dl>
+                  <dt>[Standard] : <dd>設定値を標準の状態に戻します。
+                  <dt>[   OK   ] : <dd>設定値を保存して、この画面を終了します。
+                                   <dd>変更した設定値は、次回CNC主導メッセージサーバが起動された時に有効です。
+                  <dt>[ Cancel ] : <dd>設定値を保存せずに、この画面を終了します。
+                  </dl>
+            <br>
+            </ol>
+            </ul>
+</blockquote>
+
+<blockquote>
+   <p>CNC主導メッセージ通知機能を使用するためには、CNCに次の設定が必要です。</p>
+     <ul>
+     <dt>- ＩＰアドレス          ：<dd>通知先パソコンアドレス
+     <dt>- ポート番号            ：<dd>通知先パソコン内のTCP/UDPポート番号(CNC主導メッセージは、同じポート番号のTCPとUDPを使用します。)
+     <dt>- 制御用パラメータ      ：<dd>ラダー、またはNCプログラムがデータ送信を要求するためのPMCアドレス、またはマクロ変数番号
+                                   <dd>Series 16i/18i/21i, 0i-B/C, Power Mate i の場合、PMCアドレス（”R”、”E”）のみ設定可能です。
+     <dt>- 送信用パラメータ      ：<dd>メッセージの内容となるPMCアドレスとサイズ、またはマクロ変数番号とマクロ変数個数
+                                   <dd>Series 16i/18i/21i, 0i-B/C, Power Mate i の場合、PMCアドレスのみ設定可能です。
+     <dt>- リトライ回数          ：<dd>CNCがデータ送信時に監視する送信リトライ回数
+     <dt>- タイムアウト時間      ：<dd>CNCがデータ送信時に監視するタイムアウト時間
+     <dt>- 生存信号間隔          ：<dd>CNCが起動中かの判断を行うための信号送信間隔
+     <dt>- その他                : <dd>詳細は関数仕様書を参照下さい。
+     </ul>
+
+   <p>これらのデータは、cnc_wrunsolicprm()、cnc_wrunsolicprm2()関数によってPCアプリケーションから設定されます。</p>
+<!--<p>詳細については、5項を参照して下さい。</p>-->
+   <p>これらのデータは、１度CNCに設定を行うとCNCのS-RAM領域に保持されます。</p>
+
+</blockquote>
+
+
+<li><a name="Trans">CNC主導メッセージ制御用データとメッセージ送受信について
+<ul>
+<li type="square"><a href="./Unsol_res.htm">制御用PMCアドレスを使用する場合(応答通知方式)</a>
+<li type="square"><a href="./Unsol_sim1.htm">制御用PMCアドレスを使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D/F, PMi-Aのみ)</a>
+<li type="square"><a href="./Unsol_sim2.htm">制御用マクロ変数を使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D/F, PMi-Aのみ)</a>
+</ul>
+<blockquote>
+
+<!--- コメント
+   <p>CNCからメッセージを送信するには、PMCの "R" または、"E" アドレスデータを使用します。CNC主導メッセージ通知機能を使用する場合、下記のような信号制御を行うラダーを作成する必要があります。
+
+<p><img src="unmsgbit.gif"></p>
+
+<ul>
+	<dl compact>
+        <dt>REQ : <dd>メッセージを送信する場合、ラダーは本信号をＯＮします。
+                      本信号をＯＮする前に必要なメッセージを設定しておく必要があります。
+        <dt>COM : <dd>CNCからメッセージ送信が開始されると本信号がＯＮされます。本信号は、CNCがＯＮします。
+                      また、CNCは、RES_CODE を設定後、RESをＯＮする直前に本信号をＯＦＦします。
+        <dt>RES : <dd>メッセージ送信が完了し、パソコンがメッセージ受信を完了した直後に、本信号がＯＮされます。
+                      本信号は、CNCがＯＮしますので、ラダーでは、RES_CODE に従った処理を行った後に REQ をＯＦＦして下さい。
+                      CNCは、REQ = OFF になったら、RES_CODE をクリアした後、本信号をＯＦＦします。
+
+        <dt>RES_CODE : <dd>RESに合わせてメッセージ受信結果が、設定されます。
+                           受信結果は、CNCが設定します。ラダーでは受信結果を処理後、REQ をＯＦＦします。
+                           CNCは　REQ = OFF になったら本領域をクリアします。
+</ul>
+
+        <p>RES_CODE は、0x00～0x3F で、0x01～0x0F、0x21～0x2F はシステム固定で以下の意味です。
+        <ul>
+	<dl compact>
+                <dt>= 0x00 <dd>成功
+                <dt>= 0x01 <dd>CNCのパラメータが設定されていないか、CNCがCNC主導メッセージ開始を受け付けていません。
+                <dt>= 0x02 <dd>CNC主導メッセージサーバが存在しないか、起動されていません。
+                <dt>= 0x03 <dd>CNCが送信に失敗しました。
+                <dt>= 0x04 <dd>CNCが受信に失敗しました。
+                <dt>= 0x05 <dd>CNCの再送が送信リトライ回数を超えました。
+                <dt>= 0x06 <dd>CNCがパケットの生成に失敗しました。
+                <dt>= 0x07 <dd>CNCが不正なパケットを受信しました。
+                <dt>= 0x08 <dd>CNCがCNC主導メッセージ終了を受け付けました。
+                <dt>= 0x09～0x0F <dd>リザーブ
+
+                <dt>= 0x21 <dd>パソコンでメッセージを受信しましたが、メッセージを受け取るアプリケーションが存在しませんでした。
+                <dt>= 0x22 <dd>パソコンでメッセージを受信しましたが、メッセージを受け取るアプリケーションが登録されていませんでした。
+                <dt>= 0x23 <dd>パソコンで、受信したメッセージの書込みに失敗しました。
+                <dt>= 0x24 <dd>タイムアウト時間(タイムアウト×リトライ回数)(秒)が経過しました。
+                <dt>= 0x25 <dd>受信したメッセージ中に不正なデータが含まれていました。
+                <dt>= 0x26～0x2F <dd>リザーブ
+        </dl>
+        </ul>
+        <p>0x00、0x10～0x1F、0x30～0x3F は、アプリケーションが必要に応じて設定する事ができます。
+-->
+</blockquote>
+
+<li><a name="Func">CNC主導メッセージ通知機能用Ethernet関数について
+<blockquote>
+
+   <p>PC側アプリケーションでは、CNCからメッセージを送受信するために、以下の関数を使用します。
+
+     <ul>
+     <dt>- <a href="./Unsolic/cnc_wrunsolicprm.htm">cnc_wrunsolicprm</a>  CNC主導メッセージ用パラメータの設定
+     <dt>- <a href="./Unsolic/cnc_wrunsolicprm2.htm">cnc_wrunsolicprm2</a>  CNC主導メッセージ用パラメータの設定(2)
+     <dt>- <a href="./Unsolic/cnc_rdunsolicprm.htm">cnc_rdunsolicprm</a>  CNC主導メッセージ用パラメータの読み込み
+     <dt>- <a href="./Unsolic/cnc_rdunsolicprm2.htm">cnc_rdunsolicprm2</a>  CNC主導メッセージ用パラメータの読み込み(2)
+     <dt>- <a href="./Unsolic/cnc_unsolicstart.htm">cnc_unsolicstart</a> CNC主導メッセージ開始
+     <dt>- <a href="./Unsolic/cnc_unsolicstop.htm">cnc_unsolicstop</a>  CNC主導メッセージ終了
+     <dt>- <a href="./Unsolic/cnc_rdunsolicmsg.htm">cnc_rdunsolicmsg</a>   CNC主導メッセージデータの読み込み
+     <dt>- <a href="./Unsolic/cnc_rdunsolicmsg2.htm">cnc_rdunsolicmsg2</a>   CNC主導メッセージデータの読み込み(2)
+     </ul>
+
+</blockquote>
+
+
+<li><a name="Make">CNC主導メッセージ通知機能を使用したアプリケーションの作成方法
+<blockquote>
+
+  <ol type=i>
+  <li>CNC主導メッセージ用パラメータの設定を行う。
+
+      <p>cnc_wrunsolicprm()関数によりCNC主導メッセージ通知機能用のパラメータ設定を行います。必要に応じ、設定したパラメータを cnc_rdunsolicprm()関数で読み込む事ができます。
+
+  <li>CNC主導メッセージ受信準備完了をCNCへ通知する。
+
+      <p>cnc_unsolicstart()関数によりCNC主導メッセージ通知機能によるメッセージ受信準備完了をCNCへ通知します。
+
+  <li>アプリケーションにCNC主導メッセージを処理するための関数を追加します。
+
+<code><pre>
+     // ON_MESSAGE の例
+     #define WM_MYMESSAGE (WM_APP + 1)
+     BEGIN_MESSAGE_MAP( CMyWnd, CMyParentWndClass )
+         //{{AFX_MSG_MAP( CMyWnd
+         ON_MESSAGE( WM_MYMESSAGE, OnMyMessage )
+         //}}AFX_MSG_MAP
+     END_MESSAGE_MAP( )
+
+     LRESULT CMyWnd::OnMyMessage(WPARAM wParam, LPARAM lParam)
+     {
+         LRESULT result;
+         // メッセージデータ読み込み処理 など
+         return result;
+     }
+</pre></code>
+
+   <p>OnMyMessage()関数の引数は次の通りです。
+   <dl>
+   <dt>wParam
+          <dd> = -3 : ソケット通信エラーが発生しました。
+          <dd> = -2 : CNC主導メッセージサーバが終了(停止)しました。
+          <dd> = -1 : CNCの電源がOFFされました。
+          <dd> =  0 : CNCよりメッセージ送信通知がありました(正常処理)。
+          <dd> =  1 : CNCの電源がONされました。
+   <dt>lParam
+          <dd> =  "手形" 番号 : wParamが0の時
+          <dd> =  0           : wParamが0以外の時
+   </dl>
+
+   <p>wParam = -3の場合、CNC側の "手形" 番号が無効になりますので、再度
+     cnc_unsolicstart()関数を呼出して下さい。問題が解決しない場合は、CNCの電
+     源、イーサネットケーブル、またはI/Fボードを確認してください。
+
+   <p>wParam = -2の場合、アプリケーションではウィンドウメッセージを受け取れなく
+     なります。アプリケーションとCNC主導メッセージサーバの再起動が必要になります。
+
+   <p>wParam = -1の場合、アプリケーションでは wParam = 1になるのを待ってライブラ
+     リハンドルの取得からやり直す必要があります。
+
+   <p>また、OnMyMessage()関数は、wParam=0の場合、"result"に戻り値を設定する事に
+     よってCNC主導メッセージ制御用PMCデータのRES_CODEを設定することができます。
+     アプリケーションで設定可能な "result" の値は以下の通りです。
+         <dd>result = 0x00, 0x10～0x1F, 0x30～0x3F
+         <p>
+  <li>CNC主導メッセージデータを読み込みます。
+
+      <p>cnc_rdunsolicmsg()関数を使用して送信されたメッセージデータを読み込みます。
+
+  <li>CNC主導メッセージ受信終了をCNCへ通知する。
+
+      <p>cnc_unsolicstop()関数によりCNC主導メッセージ通知機能によるメッセージ受信終了をCNCへ通知します。
+  </ol>
+
+</blockquote>
+
+<li><a name="Vista">Windows Vista Businessで使用する場合の注意事項
+<blockquote>
+
+   <p>Windows Vistaでは、メッセージを受信するアプリケーションが、[管理者として実行] されている場合、CNC主導メッセージが通知されません。
+
+</blockquote>
+</ol>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

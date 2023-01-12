@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_rdparam3</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                FWLIBAPI short WINAPI cnc_rdparam3(unsigned short FlibHndl, short number, short axis, short length, short absolute, IODBPSD *param);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    numberで指定された番号、axisで指定された軸(軸型のパラメータのみ)のパラメータを読み出します。<br/>
+                    この関数では情報の取得に、NCの現在の系統内に限るか、NC全体におよぶかの指定が出来ます｡<br/>
+                    引数 absolute において、現在の系統内(相対)、またはNC全体(絶対)の指定が出来ます｡<br/>
+                    データ形式は各パラメータによりますが、バイト/ワード/2ワード型のパラメータは一般に符号付のバイナリ形式です。
+                </p>
+                <p>
+                    axisにALL_AXESを指定することにより全軸の読み取りを一度に行うことができます。
+                    その際、各軸のパラメータはIODBPSD内の各配列に格納されます。
+                </p>
+                <p>
+                    パラメータには型と軸の属性により以下のような種類があり、パラメータ番号ごとに異なります。
+                    <a href="ncdata/cnc_rdparainfo.htm" target="_parent">cnc_rdparainfo</a>関数により、これらの属性情報をリードできます。
+                </p>
+
+                <table class="dd" border="1">
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <th>パラメータの種類</th>
+                        <th>目的</th>
+                        <th>バイトサイズ</th>
+                    </tr>
+                    <tr>
+                        <td>ビット型パラメータ</td>
+                        <td>1ビットごとに意味を持つ</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>ビット型パラメータ</td>
+                        <td>1ビットごとに意味を持つ(軸毎)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>バイト型パラメータ</td>
+                        <td>1バイト長のデータを記憶</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>バイト軸型パラメータ</td>
+                        <td>1バイト長のデータを記憶(軸毎)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>ワード型パラメータ</td>
+                        <td>2バイト長のデータを記憶</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>ワード軸型パラメータ</td>
+                        <td>2バイト長のデータを記憶(軸毎)</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>2ワード型パラメータ</td>
+                        <td>4バイト長のデータを記憶</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>2ワード軸型パラメータ</td>
+                        <td>4バイト長のデータを記憶(軸毎)</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>実数型パラメータ</td>
+                        <td>4バイト長のデータ部+4バイト長の小数点以下桁数部を記憶</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>実数軸型パラメータ</td>
+                        <td>4バイト長のデータ部+4バイト長の小数点以下桁数部を記憶(軸毎)</td>
+                        <td>8</td>
+                    </tr>
+                </table>
+
+                <p>
+                    ただし、ビット型パラメータを1ビット単位で読み出すことはできません。
+                    同一のパラメータ番号に属する8ビット(つまり1バイト)単位で一度に読み出すことになります。
+                </p>
+                <p>各パラメータの詳細については CNCのパラメータ説明書を参照して下さい。</p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>number</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                リードするパラメータ番号を指定します。<br/>
+                                指定可能なパラメータ番号は CNCのパラメータ説明書を参照してください。
+                                また、<a href="ncdata/cnc_rdparanum.htm" target="_parent">cnc_rdparanum</a>関数、
+                                及び<a href="ncdata/cnc_rdparainfo.htm" target="_parent">cnc_rdparainfo</a>関数でも取得できます。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードする軸番号を指定します。</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>軸型でないパラメータ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1～m</td>
+                                        <td>:</td>
+                                        <td>軸型パラメータの1軸指定(m : 最大制御軸数)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>全軸指定(ALL_AXES : -1)</td>
+                                    </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>データブロック長(IODBPSD構造体のサイズ)を指定します。</p>
+                            <p class="dd">4+(パラメータのバイトサイズ)×(読み出す軸数)</p>
+                            <p>
+                                下図はパラメータのサイズが4バイトの場合です。
+                                パラメータのサイズが 1,2,8バイトの場合は、1個(1軸)あたりのデータ部のサイズがそれぞれ 1,2,8バイトになります。
+                            </p>
+                            <p><b>IODBPSD</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>軸なし/1軸指定</th>
+                                    <th>全軸指定</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/prm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/prma.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            <ul>
+                                <p>
+                                    n = 最大制御軸数
+                                </p>
+                            </ul>
+                            <p class="info">
+                                なお、スピンドル関係パラメータは軸型として扱われます。有効データはスピンドルの個数分となります。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>absolute</name>
+                        <type>in</type>
+                        <content>
+                       <p>対象となる軸型パラメータを相対軸、絶対軸のどちらで指定するか設定します。</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr> <td>0</td><td>:</td><td>相対軸指定</td> </tr>
+                                    <tr> <td>1</td><td>:</td><td>絶対軸指定</td> </tr>
+                                </colgroup>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>param</name>
+                        <type>out</type>
+                        <content>
+                            <p>パラメータを返すIODBPSD構造体へのポインタです。 IODBPSD構造体は次の通りです。</p>
+<pre>
+typedef struct realprm {       /* 実数型パラメータ */
+   long prm_val;               /* データ部 */
+   long dec_val;               /* 小数点以下桁数部 */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* パラメータ番号 */
+   short type;                 /* 上位バイト:型属性 */
+                               /* 下位バイト:軸番号 */
+   union {
+      char    cdata;           /* ビット/バイト型パラメータ */
+      short   idata;           /* ワード型パラメータ */
+      long    ldata;           /* 2ワード型パラメータ */
+      REALPRM rdata;           /* 実数型パラメータ */
+      char    cdatas[MAX_AXIS];/* ビット/バイト軸型パラメータ*/
+      short   idatas[MAX_AXIS];/* ワード軸型パラメータ */
+      long    ldatas[MAX_AXIS];/* 2ワード軸型パラメータ */
+      REALPRM rdatas[MAX_AXIS];/* 実数軸型パラメータ */
+   } u;
+} IODBPSD ;                    /* MAX_AXIS : 最大制御軸数 */
+</pre>
+                            <dl>
+                                <dt>datano</dt>
+                                <dd>リードしたパラメータ番号が格納されます。</dd>
+                                <dt>type</dt>
+                                <dd>リードしたパラメータの属性が格納されます。</dd>
+                                <dd>上位バイト : 型属性
+                                    <table class="dd">
+                                        <tr> <td>0</td><td>:</td><td>ビット型 </td> </tr>
+                                        <tr> <td>1</td><td>:</td><td>バイト型 </td> </tr>
+                                        <tr> <td>2</td><td>:</td><td>ワード型 </td> </tr>
+                                        <tr> <td>3</td><td>:</td><td>2ワード型</td> </tr>
+                                        <tr> <td>4</td><td>:</td><td>実数型   </td> </tr>
+                                    </table>
+                                </dd>
+                                <dd>下位バイト : 軸番号
+                                    <table class="dd">
+                                        <tr> <td>0</td>       <td>:</td><td>軸型でないパラメータ                     </td> </tr>
+                                        <tr> <td>1～m</td>    <td>:</td><td>軸型パラメータの1軸指定(m : 最大制御軸数)</td> </tr>
+                                        <tr> <td>ALL_AXES</td><td>:</td><td>軸型パラメータの全軸指定(ALL_AXES : -1)  </td> </tr>
+                                    </table>
+                                </dd>
+                                <dt>rdata, rdatas</dt>
+                                <dd>実数型パラメータが格納されます。<br/>prm_valにデータが、dec_valに小数点以下桁数が格納されます。</dd>
+                                <dd>
+                                    <div class="dd">
+                                        <p>実数型パラメータ = prm_val * 10 ** (-dec_val)<br/>
+                                        (例) prm_val = 12345, dec_val = 3の場合、実数型パラメータが12.345であることを表します。</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>データブロック長の誤り<br/>IODBPSD構造体のサイズ(length)が不正です。 </content>
+            </item>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>データ番号の誤り      <br/>パラメータ番号(number)の指定が不適切です。</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り      <br/>軸番号(axis)の指定が不適切です。          </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                  <p><ul>上記２つの機能は必要ありません。</ul></p>
+                  <p>イーサネットボードを使用のとき、</p>
+                  <p><ul>イーサネット機能のみ必要です。</ul></p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                  <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                  <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                  <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_wrparam</name>
+                <file>ncdata/cnc_wrparam.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparar</name>
+                <file>ncdata/cnc_rdparar.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrparas</name>
+                <file>ncdata/cnc_wrparas.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparam_ext</name>
+                <file>ncdata/cnc_rdparam_ext.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparainfo</name>
+                <file>ncdata/cnc_rdparainfo.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdparanum</name>
+                <file>ncdata/cnc_rdparanum.htm</file>
+            </item>
+        </reference>
+
+
+
+        <!-- プログラム例 -->
+        <example>
+        </example>
+
+
+
+    </func>
+</root>

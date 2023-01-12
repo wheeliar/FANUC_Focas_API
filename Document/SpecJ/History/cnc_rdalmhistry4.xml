@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdalmhistry4</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdalmhistry4(unsigned short FlibHndl,
+                                unsigned short s_no, unsigned short e_no, unsigned short length,ODBAHIS4 *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                アラーム履歴データのリードを行います。
+            </p>
+            <p>
+                Series 30iでアラーム履歴データのリードを行う場合、
+                <a href="History/cnc_rdalmhistry.htm" target="_parent">cnc_rdalmhistry</a>関数ではなく本関数を使用して下さい。
+            </p>
+            <p>
+                １個のアラーム履歴データの単位をレコードと呼びます。
+            </p>
+            <p>
+                操作履歴データ、並びにアラーム履歴データ、並びに外部オペレータメッセージ履歴データはCNC側で自動的に記録されています。
+                これらのデータにアクセスするためには、CNC側のサンプリングを一時的に停止させる必要があります。このため、本関数を使用する前に、
+                『履歴データのサンプリングの停止』(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)を実行する必要があります。
+                また、リードが済み次第、履歴データのサンプリング停止時間を最小限にするために
+                『履歴データのサンプリングの再開』(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>)を実行して下さい。
+            </p>
+            <p>
+                開始／終了のレコード番号とは、リードするアラーム履歴データのレコード毎
+                につけた番号のことです。このレコード番号は『履歴データのサンプリングの停止』を実行してから
+                『履歴データのサンプリングの再開』が実行されるまで有効です。
+            </p>
+            <p>本関数では、発生日時の古い順にアラームが取得されます。</p>
+       </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            開始レコード番号を指定します。<br/>
+                            (1 以上を指定して下さい)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            終了レコード番号を指定します。<br/>
+                            (1 以上を指定して下さい)<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            データブロック長(ODBAHIS4構造体のサイズ)を指定します。<br/>
+                        </p>
+                        <img src="History/rdalmhistry4.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            アラーム履歴データを返すODBAHIS4構造体へのポインタです。ODBAHIS4構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbahis4 {
+    unsigned short  s_no;    /* 開始レコード番号 */
+    unsigned short  e_no;    /* 終了レコード番号 */
+    struct {
+        short   alm_grp;     /* アラームの種類 */
+        short   alm_no;      /* アラーム番号 */
+        short   axis_no;     /* 軸情報 (１～最大制御軸番号) */
+        short   year;        /* 年 */
+        short   month;       /* 月 */
+        short   day;         /* 日 */
+        short   hour;        /* 時 */
+        short   minute;      /* 分 */
+        short   second;      /* 秒 */
+        short   len_msg;     /* アラームメッセージの文字数(0-64)     */
+        short   pth_no;      /* 系統番号 */
+        short   dummy;
+        char    alm_msg[64]; /* アラームメッセージ */
+    } alm_his[N]; /* N : 読み出すアラーム履歴データの個数 */
+} ODBAHIS4 ;
+</pre>
+                        <dl>
+                            <dt>alm_grp</dt>
+                            <dd>アラームの種類がセットされます。</dd>
+                            <dd><table border="0" class="dd">
+                                    <tr><td>0 </td> <td>:</td> <td>パラメータ書込みスイッチオン</td>        <td>(SW)</td></tr>
+                                    <tr><td>1 </td> <td>:</td> <td>電源断が必要なパラメータの入力</td>      <td>(PW)</td></tr>
+                                    <tr><td>2 </td> <td>:</td> <td>I/Oエラー</td>                           <td>(IO)</td></tr>
+                                    <tr><td>3 </td> <td>:</td> <td>フォアグラウンド用P/S</td>               <td>(PS)</td></tr>
+                                    <tr><td>4 </td> <td>:</td> <td>オーバトラベル/外部データ入力エラー</td> <td>(OT)</td></tr>
+                                    <tr><td>5 </td> <td>:</td> <td>オーバーヒート</td>                      <td>(OH)</td></tr>
+                                    <tr><td>6 </td> <td>:</td> <td>サーボアラーム</td>                      <td>(SV)</td></tr>
+                                    <tr><td>7 </td> <td>:</td> <td>データ入出力のエラー</td>                <td>(SR)</td></tr>
+                                    <tr><td>8 </td> <td>:</td> <td>マクロアラーム</td>                      <td>(MC)</td></tr>
+                                    <tr><td>9 </td> <td>:</td> <td>スピンドルアラーム</td>                  <td>(SP)</td></tr>
+                                    <tr><td>10</td> <td>:</td> <td>その他のアラーム</td>                    <td>(DS)</td></tr>
+                                    <tr><td>11</td> <td>:</td> <td>誤動作防止機能に関するアラーム</td>      <td>(IE)</td></tr>
+                                    <tr><td>12</td> <td>:</td> <td>バックグラウンド用P/S</td>               <td>(BG)</td></tr>
+                                    <tr><td>13</td> <td>:</td> <td>同期誤差過大エラー</td>                  <td>(SN)</td></tr>
+                                    <tr><td>14</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                    <tr><td>15</td> <td>:</td> <td>外部アラームメッセージ</td>              <td>(EX)</td></tr>
+                                    <tr><td>16</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                    <tr><td>17</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                    <tr><td>18</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                    <tr><td>19</td> <td>:</td> <td>PMCエラー</td>                           <td>(PC)</td></tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>20～31</td> <td>:</td> <td>(未使用)</td> </tr>
+                                </table>
+                            </dd>
+                            <dt>alm_no</dt>
+                            <dd>アラーム番号</dd>
+                            <dt>axis_no</dt>
+                            <dd>
+                                軸番号(1～最大制御軸数) または 主軸番号(1～主軸数)がセットされます。<br/>
+                                (軸や主軸に関係ないアラームの場合は 0 がセットされます)
+                            </dd>
+                            <dt>year</dt>
+                            <dd>年 (1995 ～ 2094)</dd>
+                            <dt>month</dt>
+                            <dd>月 (1 ～ 12)</dd>
+                            <dt>day</dt>
+                            <dd>日 (1 ～ 31)</dd>
+                            <dt>hour</dt>   
+                            <dd>時 (0 ～ 23)</dd>
+                            <dt>minute</dt> 
+                            <dd>分 (0 ～ 59)</dd>
+                            <dt>second</dt> 
+                            <dd>秒 (0 ～ 59)</dd>
+                            <dt>len_msg</dt>
+                            <dd>アラームメッセージの文字数 (0 ～ 64)</dd>
+                            <dt>pth_no</dt>
+                            <dd>系統番号(0～9)</dd>
+                            <dt>alm_msg</dt>
+                            <dd>アラームメッセージ</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>関数未実行<br/>
+                    履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)が行われていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>
+                    ODBAHIS4構造体のサイズ(length)が不正です。以下の場合が該当します。<br/>
+                    (e_no-s_no+1) * sizeof(data[0]) + 4 > length    
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                    開始レコード番号(s_no)、終了レコード番号(e_no)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                    拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

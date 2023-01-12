@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrtofsr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrtofsr(unsigned short FlibHndl, short length, IODBTO *tofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>datano_s, datano_e, typeで指定された範囲の工具オフセット量を書き換えます。オフセット量は符号付のバイナリ形式でIODBTO内に格納されます。</p>
+
+            <p>オフセット量の単位/設定可能データ範囲は<a href="ncdata/cnc_wrtofs.htm" target="_parent">cnc_wrtofs</a>と同じです。同関数の解説を参照して下さい。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>tofsr</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き換える工具オフセット量を指定するIODBTO構造体へのポインタです。 IODBTO構造体は次の通りです。</p>
+<pre>
+typedef struct  iodbto {
+    short datano_s;             /* 開始オフセット番号 */
+    short type;                 /* オフセットのタイプ */
+    short datano_e;             /* 終了オフセット番号 */
+    union {
+        long    m_ofs[N];       /* M系個別 */
+        long    m_ofs_a[N];     /* M系メモリA全体 */
+        long    m_ofs_b[2*N];   /* M系メモリB全体 */
+        long    m_ofs_c[4*N];   /* M系メモリC全体 */
+        struct  {
+            short   tip ;
+            long    data[1] ;
+        } m_ofs_at[N] ;         /* M系メモリA全体 + 仮想刃先方向 */
+        struct  {
+            short   tip ;
+            long    data[2] ;
+        } m_ofs_bt[N] ;         /* M系メモリB全体 + 仮想刃先方向 */
+        struct  {
+            short   tip ;
+            long    data[4] ;
+        } m_ofs_ct[N] ;         /* M系メモリC全体 + 仮想刃先方向 */
+        short   t_tip[N];       /* T系個別仮想刃先方向 */
+        long    t_ofs[N];       /* T系個別 */
+        struct  {
+            short   tip;
+            long    data[4];
+        } t_ofs_a[N];           /* T系メモリA全体 */
+        struct {
+            short   tip;
+            long    data[8];
+        } t_ofs_b[N];           /* T系メモリB全体 */
+        long    t_ofs_2g[3*N];  /* T系第2形状全体 */
+    } u ;
+} IODBTO ;      /* N は読み出すオフセット量の個数 */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>ライトを開始するオフセット番号を指定します。<br/>
+                                ライト可能なオフセットの組数は、<a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a>関数で取得できます。</dd>
+                        </dl>
+                        <dl>
+                            <dt>datano_e</dt>
+                            <dd>ライトを終了するオフセット番号を指定します。</dd>
+                        </dl>
+                        <dl>
+                            <dt>type</dt>
+                            <dd>ライトするオフセットのタイプを指定します。</dd>
+                        </dl>
+
+                        <p>typeに指定する値、及びデータブロック長(length)の指定、書き込む補正量の種類と格納場所は<a href="ncdata/cnc_rdtofsr.htm" target="_parent">cnc_rdtofsr</a>と同じです。同関数の解説を参照して下さい。</p>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>ODBTOFS構造体のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>オフセット番号(datano_s, datano_e)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>オフセットのタイプ(type)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>データの誤り<br/>工具オフセット量(data)が誤操作防止機能で設定されている有効範囲外です。</content>
+        </item>
+        <item class="xis">
+            <name>EW_DATA</name>
+            <content>データの誤り (Series 15)<br/>データ(data)等が設定可能範囲を越えています。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <type>
+            <li>Series 15</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200/499/999組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">工具補正量拡張(補正個数は上記の半分になります)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/160組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">工具補正量拡張(補正個数は上記の半分になります)</td>
+                </tr>
+                <tr>
+                    <td>TT</td>
+                    <td>工具補正個数(系統毎)</td>
+                    <td>(16)/32/80組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 15i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200/499/999組</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(16)/32/64/99組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-A/B/C</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>32/(400)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>32/(64)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-D/F</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>32/(400)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>32/(99)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+
+            <li>Series 30i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999/2000組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具径・刃先Ｒ補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>複合加工用工具オフセット機能</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999/2000組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状・摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具径・刃先Ｒ補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>第2形状工具オフセット</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>第4軸/第5軸オフセット機能</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>アクティブオフセット変更機能</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>複合加工用工具オフセット機能</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Power Motion i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="150"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td> </td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200組</td>
+                </tr>
+            </table>
+            <br/>
+            <p>※()内はベイシック</p>
+        </type>
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <type>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="150"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>工具補正個数</td>
+                        <td>(32)/64/99/200/400/499/999/2000組</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具補正メモリ</td>
+                        <td>(A)/B/C</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具径・刃先R補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>複合加工用工具オフセット機能</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>工具補正個数</td>
+                        <td>(32)/64/99/200/400/499/999/2000組</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具形状・摩耗補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具径・刃先R補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y軸オフセット</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>第2形状工具オフセット</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>アクティブオフセット変更機能</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>複合加工用工具オフセット機能</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>※()内はベイシック</td>
+                    </tr>
+                </table>
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <div class="dd">6002#0,#1, 6004#0, 6007#0</div><br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+            <div class="dd">1004#0,#1</div><br/>
+            <li>Series 0i-D, PMi-A</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div><br/>
+            <li>Series 0i-F</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024<br/>
+                            8132#1=1 (必ず設定して下さい)</div><br/>
+            <li>Series 30i</li>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div><br/>
+            <li>Power Mate i</li>
+            <div class="dd">1004#0(Power Mate i-H の場合)<br/>
+                            1004#1(Power Mate i-D の場合)</div><br/>
+        </type>
+
+        <add></add>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div><br/>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdtofs</name>
+            <file>ncdata/cnc_rdtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofs</name>
+            <file>ncdata/cnc_wrtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsr</name>
+            <file>ncdata/cnc_rdtofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsinfo</name>
+            <file>ncdata/cnc_rdtofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+以下のプログラムはマシニング系(メモリA/64組)の全工具補正量を設定します。
+
+#include "fwlib32.h"
+#define MAXTOOL 64
+
+/* offset is array of new offset value. */
+short example( long *offset )
+{
+    IODBTO *tofsr ;
+    short ret ;
+    tofsr = (IODBTO *)malloc( 8+4*MAXTOOL ) ;
+    tofsr-&#62;datano_s = 1 ;
+    tofsr-&#62;datano_e = MAXTOOL ;
+    tofsr-&#62;type = -1 ;
+    memcpy( &#38;(tofsr-&#62;u.m_ofs_a[0]), offset, 4*MAXTOOL ) ;
+    ret = cnc_wrtofsr( h, 8+4*MAXTOOL, tofsr ) ;
+    free( tofsr ) ;
+    return ( ret ) ;
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

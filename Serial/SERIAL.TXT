@@ -1,0 +1,1082 @@
+
+                               SERIAL.TXT  File
+               README file for Serial/FCA Communication Library
+       (C) Copyright FANUC CORPORATION, 1996-2011, All Rights Reserved.
+
+
+This document provides the information about Serial/FCA Communication Library.
+Please read this before using the software.
+
+------------------------------------------------------------------------------
+[1] Summary
+[3] Notes
+[4] Function List
+[5] Function Specification
+------------------------------------------------------------------------------
+
+  Microsoft, Windows, Visual Basic are registered trademarks of Microsoft 
+  corporation, U.S.A.
+
+
+==============================================================================
+[1] Summary
+==============================================================================
+
+The Serial/FCA Communication Library is a library for the use of external 
+serial devices via serial ports of PC, and consists of the Serial Library 
+and the FCA Library.
+
+The Serial Library is a general-purpose library for the use of off-the-shelf 
+serial devices. The FCA Library is an exclusive library for the use of FCA 
+(FANUC CASSETTE ADAPTER) devices.
+
+This Library can be used from the 32-bit development language.
+(Visual C++ 2.x/4.x, Visual Basic 4.x)
+
+
+==============================================================================
+[2] Notes
+==============================================================================
+
+* Using the library in a multithreaded environment
+
+  There are some limitations of using this library in a multithreaded 
+  environment. For the Serial Library, a process can access to multiple ports 
+  at the same time, but multiple threads cannot access to a port at the same 
+  time. For the FCA Library, a process cannot access to multiple ports at the 
+  same time.
+
+* Header file
+
+  Functions of this library have been made by using specifications of 
+  "dllexport". To call the functions from C/C++ language, specifications of 
+  "dllimport" are necessary. Because these specifications are described in 
+  the header file FCA32.H, please include this header file.
+
+* Using the library from Visual Basic
+
+  Declarations of functions and definitions of constant values that are 
+  necessary to use this library from Visual Basic, are described in 
+  FCA32.BAS. Please add this file to a project of Visual Basic.
+  
+  Please note the followings.
+      + Names of members of user-defined types defined in FCA32.BAS are 
+        different from names of members of structures defined in FCA32.H.
+      + Type int (32-bit) of Visual C++ corresponds to type Long of Visual 
+        Basic.
+      + Type char of Visual C++ corresponds to type Byte of Visual Basic, but 
+        type String is used for the following functions.
+          rs_open, fca_open, fca_fopen, fca_rename, fca_delete
+
+* Treatment for an alarm state of the FCA device
+
+  Even if functions of the FCA Library succeed, the FCA device may become in 
+  an alarm state afterwards. When the FCA device is in an alarm state, 
+  functions of the FCA Library except the fca_status function return nonzero 
+  value.
+  
+  If functions of the FCA Library return nonzero value, it is expected that 
+  the FCA device is in an alarm state. You can know whether the FCA device is 
+  in an alarm state by examining whether the DR signal is off. Please examine 
+  the status of the DR signal by calling the rs_status function of the Serial 
+  Library.
+  
+  When the FCA device is in an alarm state, it is necessary to reset the FCA 
+  device. Please reset the FCA device by calling the fca_status function.
+  
+  If the fca_status function is called after a file on the FCA device is 
+  opened, the input/output operation to the file cannot be continued. To 
+  resume the input/output operation, close the file once, and open the file 
+  again.
+
+* Limitation of serial ports
+
+  Serial ports that are available for this library, are limited to COM1 and 
+  COM2.
+
+
+==============================================================================
+[3] Function List
+==============================================================================
+
+[Serial Library]
+  ----------------------------------------------------------------------------
+  Function Name   Brief Description
+  ----------------------------------------------------------------------------
+  rs_open         Initializes the communication line.
+  rs_close        Terminates the communication line.
+  rs_putc         Outputs 1 byte to the transmission buffer.
+  rs_getc         Inputs 1 byte from the reception buffer.
+  rs_write        Outputs multiple bytes to the transmission buffer.
+  rs_read         Inputs multiple bytes from the reception buffer.
+  rs_buffer       Examines and operates the communication buffer.
+  rs_status       Gets the status of the communication line and buffer.
+  ----------------------------------------------------------------------------
+
+[FCA Library]
+  ----------------------------------------------------------------------------
+  Function Name   Brief Description
+  ----------------------------------------------------------------------------
+  fca_setparam    Initializes the communication line and begins the 
+                  communication with the FCA device.
+  fca_bye         Terminates the communication with the FCA device and frees 
+                  the communication line.
+  fca_open        Opens a binary file on the FCA device.
+  fca_close       Closes the file opened by the fca_open function.
+  fca_read        Reads data from the file opened by the fca_open function.
+  fca_write       Writes data to the file opened by the fca_open function.
+  fca_fopen       Opens an ASCII file on the FCA device.
+  fca_fclose      Closes the file opened by the fca_fopen function.
+  fca_getc        Reads a character from the file opened by the fca_fopen 
+                  function.
+  fca_putc        Writes a character to the file opened by the fca_fopen 
+                  function.
+  fca_delete      Deletes a file on the FCA device.
+  fca_rename      Changes a file name on the FCA device.
+  fca_readdir     Reads the directory information on the FCA device.
+  fca_status      Reads the status information on the FCA device.
+  fca_remains     Reads the rest of the floppy disk on the FCA device.
+  ----------------------------------------------------------------------------
+
+
+==============================================================================
+[4] Function Specification
+==============================================================================
+
+
+Function Name:
+    rs_open
+
+Description:
+    Initializes the communication line.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_open(int port, ser_t *param, char *mode);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+    
+    param
+        Points to a ser_t structure that is necessary for initialization of 
+        the communication line.
+        If NULL is specified, the default setting is used.
+    
+    mode
+        Points to a null-terminated string that specifies the communication 
+        mode.
+            "r" : Reception mode
+            "w" : Transmission mode
+            "rw": Reception and Transmission mode
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is nonzero value.
+
+Remarks:
+    The ser_t structure contains parameters used for initialization of the 
+    communication line.
+    
+        typedef struct PortDefUser {
+            int baud;
+            int stop_bit;
+            int parity;
+            int data_bit;
+            int hardflow;
+            int dc_enable;
+            int dc_put;
+            int dc1_code;
+            int dc2_code;
+            int dc3_code;
+            int dc4_code;
+        } ser_t;
+        
+        Member      Description
+        ----------------------------------------------------------------------
+        baud        Specifies the baud rate.
+                        FCA_BAUD_1200 :  1200 baud
+                        FCA_BAUD_2400 :  2400 baud
+                        FCA_BAUD_4800 :  4800 baud
+                        FCA_BAUD_9600 :  9600 baud
+                        FCA_BAUD_19200: 19200 baud
+        
+        stop_bit    Specifies the stop bits.
+                        STOP_1: 1 stop bit
+                        STOP_2: 2 stop bits
+        
+        parity      Specifies the parity bit.
+                        PARITY_N: No parity
+                        PARITY_E: Even parity
+                        PARITY_O: Odd parity
+        
+        data_bit    Specifies the character size.
+                        DATA_7: 7 bits
+                        DATA_8: 8 bits
+        
+        hardflow    Specifies the flow control by the hardware signal (CS/RS).
+                        0: No control
+                        1: Both Transmission and Reception
+                        2: Transmission only
+                        3: Reception only
+        
+        dc_enable   Specifies the flow control by the DC code.
+                        0: No control
+                        1: Both Transmission and Reception
+                        2: Transmission only
+                        3: Reception only
+        
+        dc_put      Specifies whether the DC code is output on opening/
+                    closing the port.
+                        0: Not output
+                        1: output
+                    
+                    The relations between the output DC code and the 
+                    communication mode are as follows.
+                    
+                            Mode        Opening   Closing
+                        ----------------------------------
+                        Reception        DC1       DC3
+                        Transmission     DC2       DC4
+                        Transmission
+                         and Reception   None      None
+        
+        dc1_code    Specifies the DC1 code.
+                    In general, specify 0x11.
+        
+        dc2_code    Specifies the DC2 code.
+                    In general, specify 0x12.
+        
+        dc3_code    Specifies the DC3 code.
+                    In general, specify 0x13. To keep compatibility with CNC, 
+                    specify 0x93.
+        
+        dc4_code    Specifies the DC4 code.
+                    In general, specify 0x14.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_close
+
+Description:
+    Terminates the communication line.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_close(int port);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is nonzero value.
+
+Remarks:
+    If the DC code is specified to output on closing the port by the rs_open 
+    function, the DC code is output.
+    
+    The rs_close function clears the transmission and reception buffer.
+    If the rs_close function is called just after the transmission operation 
+    by the rs_putc function or the rs_write function, there is a danger of 
+    failure in the transmission of the expected data.
+    To avoid this, confirm that the transmission buffer is empty by the 
+    rs_buffer function, and call the rs_close function.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_putc
+
+Description:
+    Outputs 1 byte to the transmission buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_putc(int c, int port);
+
+Arguments:
+    c
+        Specifies the data to be output.
+    
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is 1.
+    If the function cannot output the data because the transmission buffer is 
+    full, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The rs_putc function outputs the data to the transmission buffer.
+    To know that the data is actually sent, confirm that the transmission 
+    buffer is empty by the rs_buffer function.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_getc
+
+Description:
+    Inputs 1 byte from the reception buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_getc(int port);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is the received data.
+    If the reception buffer has no data or an error occurs, the return value 
+    is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_write
+
+Description:
+    Outputs multiple bytes to the transmission buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_write(char *buffer, int size, int port);
+
+Arguments:
+    buffer
+        Points to a buffer containing the data to be output.
+    
+    size
+        Specifies the size of the data to be output.
+    
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is the size of the output data.
+    If the transmission buffer does not have sufficient room of the specified 
+    size, the return value is smaller than the specified size.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The rs_write function outputs the data to the transmission buffer.
+    To know that the data is actually sent, confirm that the transmission 
+    buffer is empty by the rs_buffer function.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_read
+
+Description:
+    Inputs multiple bytes from the reception buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_read(char *buffer, int size, int port);
+
+Arguments:
+    buffer
+        Points to a buffer that receives the input data.
+    
+    size
+        Specifies the size of the data to be input.
+    
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is the size of the input data.
+    If the reception buffer does not have sufficient data of the specified 
+    size, the return value is smaller than the specified size.
+    If an error occurs, the return value is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_buffer
+
+Description:
+    Examines and operates the communication buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_buffer(int port, int cmnd);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+    
+    cmnd
+        Specifies the command to the buffer.
+            RS_GET_BUF_R: Returns the size of the reception buffer.
+            RS_GET_BUF_W: Returns the size of the transmission buffer.
+            RS_CHK_BUF_R: Returns the number of bytes of the data in the 
+                          reception buffer.
+            RS_CHK_BUF_W: Returns the number of bytes of the data in the 
+                          transmission buffer.
+            RS_CLR_BUF_R: Clears the reception buffer.
+            RS_CLR_BUF_W: Clears the transmission buffer.
+
+Return Values:
+    If the function succeeds, the return value for each command is as follows.
+    
+        Command         Return Value
+        ----------------------------------------------------------------------
+        RS_GET_BUF_R    The size of the reception buffer
+        RS_GET_BUF_W    The size of the transmission buffer
+        RS_CHK_BUF_R    The number of bytes of the data in the reception 
+                        buffer
+        RS_CHK_BUF_W    The number of bytes of the data in the transmission 
+                        buffer
+        RS_CLR_BUF_R    0
+        RS_CLR_BUF_W    0
+    
+    If an error occurs, the return value is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    rs_status
+
+Description:
+    Gets the status of the communication line and buffer.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI rs_status(int port);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is the status of the 
+    communication line (LSI) and the status of the communication buffer as a 
+    combination of the following values.
+
+        Value           Meaning
+        ----------------------------------------------------------------------
+        STS_S_STOP      Stop state         (Transmission)
+        STS_BUF_FULL    Buffer full        (Transmission)
+        STS_R_STOP      Stop state         (Reception)
+        STS_EMPTY       Buffer empty       (Reception)
+        STS_OVERFLOW    Buffer overrun     (Reception)
+        STS_DR_ON       DR on              (LSI)
+        STS_FRAME       Framing error      (LSI)
+        STS_OVERRUN     Overrun            (LSI)
+        STS_PARITY      Parity error       (LSI)
+        STS_CD_ON       CD on              (LSI)
+    
+    If an error occurs, the return value is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_setparam
+
+Description:
+    Initializes the communication line and begins the communication with the 
+    FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_setparam(int port, ser_t *param);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+    
+    param
+        Points to a ser_t structure that is necessary for initialization of 
+        the communication line.
+        If NULL is specified, the default setting is used.
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is nonzero value.
+
+Remarks:
+    The fca_setparam function initializes the communication line and turns on 
+    the RS/ER signal.
+    
+    For an information about parameters to be set in the ser_t structure, 
+    please refer to the explanation of the rs_open function.
+    
+    For the communication with the protocol B, the following setting is 
+    recommended.
+    
+        param->baud      = FCA_BAUD_4800;
+        param->stop_bit  = STOP_2;
+        param->parity    = PARITY_N;
+        param->data_bit  = DATA_8;
+        param->hardflow  = 2;
+        param->dc_enable = 3;
+        param->dc_put    = 0;
+        param->dc1_code  = 0x11;
+        param->dc2_code  = 0x12;
+        param->dc3_code  = 0x93;
+        param->dc4_code  = 0x14;
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_bye
+
+Description:
+    Terminates the communication with the FCA device and frees the 
+    communication line.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_bye(int port);
+
+Arguments:
+    port
+        Specifies the serial port number.
+            1: COM1
+            2: COM2
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is nonzero value.
+
+Remarks:
+    The fca_bye function turns off the RS/ER signal and frees the 
+    communication line.
+    
+    In the following cases, call the fca_bye function.
+    
+        1) When the FCA device is detached from the line.
+        2) When the FCA device cannot be recovered from the error state.
+        3) When the Serial Library functions (rs_xxxxxx) are used.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_open
+
+Description:
+    Opens a binary file on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_open(char *name, int mode);
+
+Arguments:
+    name
+        Points to a null-terminated string that specifies the file name.
+        (17 characters or less)
+        If the first character is "#", it is supposed that the file number is 
+        specified.
+            "#xxxx": The xxxx-th file (xxxx are 4 digits or less)
+            "#0"   : The first file
+            "#N"   : The next file
+            "#E"   : The next file of the last (a new file is created)
+    
+    mode
+        Specifies the access mode.
+            0: read
+            1: write
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The fca_open function should be used with the fca_close function in pairs.
+    Between the fca_open function and the fca_close function, only the 
+    fca_read function and the fca_write function can be called.
+    If the other FCA Library functions (fca_xxxxxx) are called, an error 
+    occurs. (except the fca_status function and the fca_bye function)
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_close
+
+Description:
+    Closes the file opened by the fca_open function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_close(void);
+
+Arguments:
+    None
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The fca_close function should be used with the fca_open function in pairs.
+    Between the fca_open function and the fca_close function, only the 
+    fca_read function and the fca_write function can be called.
+    If the other FCA Library functions (fca_xxxxxx) are called, an error 
+    occurred. (except the fca_status function and the fca_bye function)
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_read
+
+Description:
+    Reads data from the file opened by the fca_open function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_read(char *buffer, int bytes);
+
+Arguments:
+    buffer
+        Points to a buffer that receives the data to be input.
+    
+    bytes
+        Specifies the number of bytes of the data to be input.
+        (65534 bytes or less)
+
+Return Values:
+    If the function succeeds, the return value is the number of bytes of the 
+    input data.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    Because the FCA device cannot write the data of less number of bytes than 
+    its input/output unit, some extra nulls might be added to the end of the 
+    input data.
+    If the return value is smaller than the specified number of bytes, 
+    interpret that the function reaches the end of file.
+    
+    For a floppy disk of the FANUC format, more extra 0xFF might be added to 
+    the end of the input data because the file size cannot be known correctly.
+    So it is necessary to judge the end of file by an application.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_write
+
+Description:
+    Writes data to the file opened by the fca_open function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_write(char *buffer, int bytes);
+
+Arguments:
+    buffer
+        Points to a buffer containing the data to be output.
+    
+    bytes
+        Specifies the number of bytes of the data to be output.
+        (65534 bytes or less)
+
+Return Values:
+    If the function succeeds, the return value is the number of bytes of the 
+    output data.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    Because the FCA device cannot write the data of less number of bytes than 
+    its input/output unit, some nulls are actually output for supplements of 
+    its input/output unit.
+    As a result, some extra nulls might be added to the end of the file on 
+    the FCA device.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_fopen
+
+Description:
+    Opens an ASCII file on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_fopen(char *name, char *mode);
+
+Arguments:
+    name
+        Points to a null-terminated string that specifies the file name.
+        (17 characters or less)
+        If the first character is "#", it is supposed that the file number is 
+        specified.
+            "#xxxx": The xxxx-th file (xxxx are 4 digits or less)
+            "#0"   : The first file
+            "#N"   : The next file
+            "#E"   : The next file of the last (a new file is created)
+    
+    mode
+        Points to a null-terminated string that specifies the access mode.
+            "r": read
+            "w": write
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The fca_fopen function should be used with the fca_fclose function in 
+    pairs.
+    Between the fca_fopen function and the fca_fclose function, only the 
+    fca_getc function and the fca_putc function can be called.
+    If the other FCA Library functions (fca_xxxxxx) are called, an error 
+    occurs. (except the fca_status function and the fca_bye function)
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_fclose
+
+Description:
+    Closes the file opened by the fca_fopen function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_fclose(void);
+
+Arguments:
+    None
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The fca_fclose function should be used with the fca_fopen function in 
+    pairs.
+    Between the fca_fopen function and the fca_fclose function, only the 
+    fca_getc function and the fca_putc function can be called.
+    If the other FCA Library functions (fca_xxxxxx) are called, an error 
+    occurs. (except the fca_status function and the fca_bye function)
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_getc
+
+Description:
+    Reads a character from the file opened by the fca_fopen function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_getc(void);
+
+Arguments:
+    None
+
+Return Values:
+    If the function succeeds, the return value is the input character.
+    If the function reaches the end of file or an error occurs, the return 
+    value is -1.
+
+Remarks:
+    The input character code is converted from the ISO to the ASCII.
+    
+    For a floppy disk of the FANUC format, an extra 0x7F might be input after 
+    the function reaches the end of file because the file size cannot be 
+    known correctly.
+    So it is necessary to judge the end of file by an application.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_putc
+
+Description:
+    Writes a character to the file opened by the fca_fopen function.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_putc(int c);
+
+Arguments:
+    c
+        Specifies the character to be output.
+
+Return Values:
+    If the function succeeds, the return value is the output character.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The output character code is converted from the ASCII to the ISO.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_delete
+
+Description:
+    Deletes a file on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_delete(char *name);
+
+Arguments:
+    name
+        Points to a null-terminated string that specifies the file name.
+        (17 characters or less)
+        If the first character is "#", it is supposed that the file number is 
+        specified.
+            "#xxxx": The xxxx-th file (xxxx are 4 digits or less)
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_rename
+
+Description:
+    Changes a file name on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_rename(char *oldname, char *newname);
+
+Arguments:
+    oldname
+        Points to a null-terminated string that specifies the old file name.
+        (17 characters or less)
+        If the first character is "#", it is supposed that the file number is 
+        specified.
+            "#xxxx": The xxxx-th file (xxxx are 4 digits or less)
+            "#0"   : The first file
+            "#N"   : The next file
+    
+    newname
+        Points to a null-terminated string that specifies the new file name.
+        (17 characters or less)
+        The first character cannot be "#".
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_readdir
+
+Description:
+    Reads the directory information on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_readdir(fca_dir *buffer, int ndir, int nfile);
+
+Arguments:
+    buffer
+        Points to a buffer of the fca_dir structure (array) that receives 
+        the directory information.
+        If NULL is specified, the buffer does not receive the directory 
+        information.
+    
+    ndir
+        Specified the file number to start reading the directory information.
+    
+    nfile
+        Specified the number of files to read the directory information.
+        If 0 is specified, the directory information up to the last file is 
+        read, but the buffer does not receive the directory information.
+
+Return Values:
+    If the function succeeds, the return value is the number of files whose 
+    directory information is read.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    To use the fca_readdir function, use the following steps.
+    
+        1) Specify NULL for the argument buffer and 0 for the argument nfile, 
+           and call the fca_readdir function.
+        2) Because the return value is the number of files after the file 
+           specified by the argument ndir, allocate the buffer that can 
+           receive the directory information of the files, and specify the 
+           pointer for the argument buffer.
+        3) Specify the number of files obtained in the step 2) for the 
+           argument nfile, and call the fca_readdir function again.
+    
+    The fca_dir structure receives the directory information.
+    
+        typedef struct FCA_DIRINFO {
+            char file_name[18];
+            char file_size[9]; 
+            char wrt_protect;  
+            char record_code;  
+            char vol_no[3];    
+            char multi_vol;    
+        } fca_dir;
+        
+            Member          Description
+            ------------------------------------------------------------------
+            file_name       Specifies a string of the file name.
+                            (17 alphanumeric characters or less + null)
+                            If the first character is null, a deleted file 
+                            is specified.
+            
+            file_size       Specifies a string of the file size.
+                            (8 digits + null)
+            
+            wrt_protect     Specifies whether the file is write-protected.
+                                'P': On
+                                ' ': Off
+            
+            record_code     Specifies the record code.
+                                'B': Binary
+                                'E': EIA
+                                ' ': ISO
+            
+            vol_no          Specifies a string of the volume number.
+                            (2 digits + null)
+                            If "  " is specified, a single volume is 
+                            specified.
+            
+            multi_vol       Specified whether the file is multi-volume.
+                                ' ': The file is a single volume.
+                                'C': The file has a next volume.
+                                'L': The file is the last volume.
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_status
+
+Description:
+    Reads the status information on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_status(char *buffer);
+
+Arguments:
+    buffer
+        Points to a buffer that receives the status information.
+        2 bytes are necessary for the buffer.
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    If the FCA device is in an alarm state, the function resets the FCA 
+    device and clears the alarm state.
+    
+    If the FCA device is not in an alarm state, the function terminates the 
+    input/output operation and clears the status.
+    
+    The content of the status information is as follows.
+    
+        The first byte: Error code etc.
+        
+              7   6   5   4   3   2   1   0
+            +---+---+---+---+---+---+---+---+
+            | SD| 0 | PT|    ERROR CODE     |
+            +---+---+---+---+---+---+---+---+
+              |       |
+              |       +---+--->0: Write-protect off
+              |           +--->1: Write-protect on
+              |           
+              +-----------+--->0: Sending the data of a file is completed.
+                          +--->1: Sending the data of a file is not completed.
+            
+            ERROR CODE specifies the error code of the last alarm.
+            
+                ERROR CODE      Cause of alarm
+                --------------------------------------------------------------
+                00000 (= 0)     No error
+                00001 (= 1)     File search error
+                00010 (= 2)     (reserved)
+                00011 (= 3)     (reserved)
+                00100 (= 4)     (reserved)
+                00101 (= 5)     (reserved)
+                00110 (= 6)     (reserved)
+                00111 (= 7)     Record size over
+                01000 (= 8)     (reserved)
+                01001 (= 9)     Protocol error
+                01010 (=10)     (reserved)
+                01011 (=11)     (reserved)
+                01100 (=12)     Write protect error
+                01101 (=13)     (reserved)
+                01110 (=14)     (reserved)
+                01111 (=15)     Overrun, framing error
+                10000 (=16)     (reserved)
+                10001 (=17)     FD hardware error
+                10010 (=18)     RAM error
+                10011 (=19)     ROM sum check error
+                10100 (=20)     Volume sequence error
+                10101 (=21)     Format error
+                10110 (=22)     Label error
+                10111 (=23)     Door opened
+                11000 (=24)     (reserved)
+                11001 (=25)     (reserved)
+                11010 (=26)     Code error
+                11011 (=27)     (reserved)
+                11100 (=28)     File read error
+                11101 (=29)     Preparation invalid
+                11110 (=30)     System error
+                11111 (=31)     Power off error
+        
+        The second byte: The kind of floppy disk
+        
+              7   6   5   4   3   2   1   0
+            +---+---+---+---+---+---+---+---+
+            | - | - | - | C5| - | C3| C2| - |
+            +---+---+---+---+---+---+---+---+
+                          |       |   |
+                          0       0   1 : Single side double density (1D)
+                          0       1   0 : Double side double density (2D)
+                          1       0   0 : Double side high density  (2HD)
+------------------------------------------------------------------------------
+
+
+Function Name:
+    fca_remains
+
+Description:
+    Reads the rest of the floppy disk on the FCA device.
+
+Declaration:
+    #include "fca32.h"
+    int WINAPI fca_remains(long *remains);
+
+Arguments:
+    remains
+        Points to a 32-bit variable that receives the rest of the floppy disk.
+
+Return Values:
+    If the function succeeds, the return value is 0.
+    If an error occurs, the return value is -1.
+
+Remarks:
+    The rest of the floppy disk is specified in byte.
+------------------------------------------------------------------------------
+

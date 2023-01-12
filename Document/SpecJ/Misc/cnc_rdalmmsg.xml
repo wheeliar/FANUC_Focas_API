@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdalmmsg</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdalmmsg(unsigned short FlibHndl, short type, short *num, ODBALMMSG *almmsg);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+        <p>
+        CNC側で発生しているアラームメッセージを読み出します。全てのアラームメッセージを一括して読み出すことが可能です。
+        </p>
+        <p>
+        <a href="misc/cnc_rdalminfo.htm" target="_parent">cnc_rdalminfo</a>関数とは異なり、軸関係のアラームメッセージ内には軸名称が挿入されています。 
+        </p>
+        <p>また、30i/31i/32i, 0i-D/F, PMi-Aの場合、アラームメッセージは最大64文字ですので、<a href="misc/cnc_rdalmmsg2.htm" target="_parent">cnc_rdalmmsg2</a> を使用してください。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                       アラームの種類を指定します。
+                       <dd><br/>
+                            <ul>
+                                <li>Series 15i (Ethernetのみ)</li>
+                                    <table class="dd">
+                                            <tr><td>0</td>  <td>:</td> <td>バックグラウンド用P/S</td>               <td>(BG)</td> </tr>
+                                            <tr><td>1</td>  <td>:</td> <td>フォアグラウンド用P/S</td>               <td>(PS)</td> </tr>
+                                            <tr><td>2</td>  <td>:</td> <td>オーバーヒート</td>                      <td>(OH)</td> </tr>
+                                            <tr><td>3</td>  <td>:</td> <td>サブCPUエラー</td>                       <td>(SB)</td> </tr>
+                                            <tr><td>4</td>  <td>:</td> <td>同期誤差過大エラー</td>                  <td>(SN)</td> </tr>
+                                            <tr><td>5</td>  <td>:</td> <td>パラメータ書込みスイッチオン</td>        <td>(SW)</td> </tr>
+                                            <tr><td>6</td>  <td>:</td> <td>オーバトラベル/外部データ入力エラー</td> <td>(OT)</td> </tr>
+                                            <tr><td>7</td>  <td>:</td> <td>PMCエラー</td>                           <td>(PC)</td> </tr>
+                                            <tr><td>8</td>  <td>:</td> <td>外部アラームメッセージ</td>              <td>(EX)</td> </tr>
+                                            <tr><td>9</td>  <td>:</td> <td>(未使用) </td>                           <td></td>     </tr>
+                                            <tr><td>10</td> <td>:</td> <td>重症のP/S</td>                           <td>(SR)</td> </tr>
+                                            <tr><td>11</td> <td>:</td> <td>(未使用)</td>                            <td></td>     </tr>
+                                            <tr><td>12</td> <td>:</td> <td>サーボアラーム</td>                      <td>(SV)</td> </tr>
+                                            <tr><td>13</td> <td>:</td> <td>I/Oエラー</td>                           <td>(IO)</td> </tr>
+                                            <tr><td>14</td> <td>:</td> <td>電源断が必要なパラメータの入力</td>      <td>(PW)</td> </tr>
+                                            <tr><td>15</td> <td>:</td> <td>システムアラーム</td>                    <td>(SY)</td> </tr>
+                                            <tr><td>16</td> <td>:</td> <td>外部アラームメッセージ (2)</td>          <td>(EX)</td> </tr>
+                                            <tr><td>17</td> <td>:</td> <td>外部アラームメッセージ (3)</td>          <td>(EX)</td> </tr>
+                                            <tr><td>18</td> <td>:</td> <td>外部アラームメッセージ (4)</td>          <td>(EX)</td> </tr>
+                                            <tr><td>19</td> <td>:</td> <td>マクロアラーム</td>                      <td>(MC)</td> </tr>
+                                            <tr><td>20</td> <td>:</td> <td>スピンドルアラーム</td>                  <td>(SP)</td> </tr>
+                                            <tr><td>-1</td> <td>:</td> <td>全種類</td>                              <td></td>     </tr>
+                                    </table>
+                                <li>Series 16i/18i/21i, 0i-A/B/C, Power Mate i (Ethernetのみ)</li>
+                                    <table class="dd">
+                                            <tr><td>0</td>  <td>:</td> <td>P/S100</td>                            </tr>
+                                            <tr><td>1</td>  <td>:</td> <td>P/S000</td>                            </tr>
+                                            <tr><td>2</td>  <td>:</td> <td>P/S101</td>                            </tr>
+                                            <tr><td>3</td>  <td>:</td> <td>P/Sその他</td>                         </tr>
+                                            <tr><td>4</td>  <td>:</td> <td>オーバトラベルアラーム</td>            </tr>
+                                            <tr><td>5</td>  <td>:</td> <td>オーバヒートアラーム</td>              </tr>
+                                            <tr><td>6</td>  <td>:</td> <td>サーボアラーム</td>                    </tr>
+                                            <tr><td>7</td>  <td>:</td> <td>システムアラーム</td>                  </tr>
+                                            <tr><td>8</td>  <td>:</td> <td>APCアラーム</td>                       </tr>
+                                            <tr><td>9</td>  <td>:</td> <td>スピンドルアラーム</td>                </tr>
+                                            <tr><td>10</td> <td>:</td> <td>P/S5000番台、パンチプレスアラーム</td> </tr>
+                                            <tr><td>11</td> <td>:</td> <td>レーザアラーム</td>                    </tr>
+                                            <tr><td>12</td> <td>:</td> <td>(未使用) </td>                         </tr>
+                                            <tr><td>13</td> <td>:</td> <td>リジッドタップアラーム</td>            </tr>
+                                            <tr><td>14</td> <td>:</td> <td>(未使用)</td>                          </tr>
+                                            <tr><td>15</td> <td>:</td> <td>外部アラームメッセージ</td>            </tr>
+                                            <tr><td>-1</td> <td>:</td> <td>全種類</td>                            </tr>
+                                    </table>
+                                <li>Series 30i, 0i-D/F, PMi-A</li>
+                                    <table class="dd">
+                                            <tr><td>0</td>  <td>:</td> <td>パラメータ書込みスイッチオン</td>        <td>(SW)</td> </tr>
+                                            <tr><td>1</td>  <td>:</td> <td>電源断が必要なパラメータの入力</td>      <td>(PW)</td> </tr>
+                                            <tr><td>2</td>  <td>:</td> <td>I/Oエラー</td>                           <td>(IO)</td> </tr>
+                                            <tr><td>3</td>  <td>:</td> <td>フォアグラウンド用P/S</td>               <td>(PS)</td> </tr>
+                                            <tr><td>4</td>  <td>:</td> <td>オーバトラベル/外部データ入力エラー</td> <td>(OT)</td> </tr>
+                                            <tr><td>5</td>  <td>:</td> <td>オーバーヒート</td>                      <td>(OH)</td> </tr>
+                                            <tr><td>6</td>  <td>:</td> <td>サーボアラーム</td>                      <td>(SV)</td> </tr>
+                                            <tr><td>7</td>  <td>:</td> <td>データ入出力のエラー</td>                <td>(SR)</td> </tr>
+                                            <tr><td>8</td>  <td>:</td> <td>マクロアラーム</td>                      <td>(MC)</td> </tr>
+                                            <tr><td>9</td>  <td>:</td> <td>スピンドルアラーム</td>                  <td>(SP)</td> </tr>
+                                            <tr><td>10</td> <td>:</td> <td>その他のアラーム(DS)</td>                <td>(DS)</td> </tr>
+                                            <tr><td>11</td> <td>:</td> <td>誤動作防止機能に関するアラーム</td>      <td>(IE)</td> </tr>
+                                            <tr><td>12</td> <td>:</td> <td>バックグラウンド用P/S</td>               <td>(BG)</td> </tr>
+                                            <tr><td>13</td> <td>:</td> <td>同期誤差過大エラー</td>                  <td>(SN)</td> </tr>
+                                            <tr><td>14</td> <td>:</td> <td>(予約)</td>                              <td></td>     </tr>
+                                            <tr><td>15</td> <td>:</td> <td>外部アラームメッセージ</td>              <td>(EX)</td> </tr>
+                                            <tr><td>16</td> <td>:</td> <td>(予約)</td>                              <td></td>     </tr>
+                                            <tr><td>17</td> <td>:</td> <td>(予約)</td>                              <td></td>     </tr>
+                                            <tr><td>18</td> <td>:</td> <td>(予約)</td>                              <td></td>     </tr>
+                                            <tr><td>19</td> <td>:</td> <td>PMCエラー</td>                           <td>(PC)</td> </tr>
+                                            <tr><td>-1</td> <td>:</td> <td>全種類</td>                              <td></td>     </tr>
+                                    </table>
+                            </ul>
+                        </dd>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                            読み取るアラームの個数へのポインタを指定します。関数コール前に読み取るアラームの個数を指定し、関数コール後に実際に読み取った個数が設定されます。
+                    </content>
+                </item>
+                <item>
+                    <name>almmsg</name>
+                    <type>out</type>
+                    <content>
+                            アラームメッセージを返すODBALMMSG構造体の配列へのポインタです。この配列は(*num)で指定した数分必要です。ODBALMMSG構造体は次の通りです。
+                       <dd><br/>
+<pre>
+typedef struct odbalmmsg {
+        long alm_no ;           /* アラーム番号 */
+        short type ;            /* アラーム種類 */
+        short axis ;            /* 軸番号 */
+        short dummy ;           /* 予約 */
+        short msg_len ;         /* メッセージ文字数 */
+        char alm_msg[32];       /* アラームメッセージ */
+} ODBALMMSG;
+</pre>
+                        </dd>
+                    <dt>alm_no</dt>
+                        <dd>アラーム番号がセットされます。</dd>
+                    <dt>type</dt>
+                        <dd>アラームの種類がセットされます。この値は、引数typeで指定するものと同じです。</dd>
+                    <dt>axis</dt>
+                        <dd>軸番号がセットされます。(1～最大制御軸数) </dd>
+                        <dd>軸と無関係なアラームは0となります。</dd>
+                    <dt>msg_len</dt>
+                        <dd>メッセージ文字数(バイナリ)がセットされます。(1～32)</dd>
+                    <dt>alm_msg</dt>
+                        <dd>アラームメッセージ文字列がセットされます </dd>
+                        <dd>メッセージは以下の文字コードで取得されます。</dd>
+                        <ul>
+                            <table class="dd">
+                                <tr><td>英語                  </td> <td>:</td> <td>ASCII           </td> </tr>
+                                <tr><td>日本語                </td> <td>:</td> <td>シフトJIS       </td> </tr>
+                                <tr><td>中国語(繁体字)        </td> <td>:</td> <td>シフトJIS       </td> </tr>
+                                <tr><td>中国語(簡体字)        </td> <td>:</td> <td>GB2312          </td> </tr>
+                                <tr><td>韓国語                </td> <td>:</td> <td>コードページ949 </td> </tr>
+                                <tr><td>ロシア語              </td> <td>:</td> <td>コードページ1251</td> </tr>
+                                <tr><td>トルコ語              </td> <td>:</td> <td>コードページ1254</td> </tr>
+                                <tr><td>その他のヨーロッパ言語</td> <td>:</td> <td>欧州文字コード  </td> </tr>
+                            </table>
+                        </ul>
+                        <dd>注1) 30iシリーズ, 0i-D/F, PMi-A以外では、日本語と英語以外のメッセージは正しく取得できません。</dd>
+                        <dd>注2) FOCAS2/Ethernetの場合、韓国語は正しく取得できません。(30i-B、0i-F、PMi-Aを除く)</dd>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                アラームの個数(*num)が0以下です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                アラーム種類(type)の指定が不適切です。
+           </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <dd>上記２つの機能は必要ありません。</dd>
+              <p>イーサネットボードを使用のとき、</p>
+              <dd>イーサネット機能のみ必要です。</dd>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>E</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>O</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_alarm</name>
+            <file>misc/cnc_alarm.htm</file>
+        </item>
+        <item>
+            <name>cnc_alarm2</name>
+            <file>misc/cnc_alarm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalminfo</name>
+            <file>misc/cnc_rdalminfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdalmmsg2</name>
+            <file>misc/cnc_rdalmmsg2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

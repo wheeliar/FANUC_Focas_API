@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_unsolicstop</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_unsolicstop( unsigned short FlibHndl, short number );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                CNC主導メッセージの受信停止を指示します。<br/>
+                NCパラメータNo.905#4=1 にした場合、CNC主導メッセージサーバが起動している他のPCからも実行できます。<br/>
+                本関数は、Series 16i/18i/21i, 0i, Power Mate i, Series 30i/31i/32i, PMi-A でのみ有効です。 Visual Basic では、使用できません。本関数を使用する場合は、Visual C++ をご使用下さい。<br/>
+本機能の詳細については、<a href="./Unsolic.htm" target="_parent">CNC主導メッセージ通知機能</a>を参照下さい。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージ用パラメータ番号です。現在未使用(必ず"1"を設定して下さい)。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>CNC主導メッセージ用パラメータ番号(number)の値が不正です。</content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>本関数は使用できません。または、CNC主導メッセージの受信が開始されていません。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <dd>上記２つの機能は必要ありません。</dd>
+              <p>イーサネットボードを使用のとき、</p>
+              <dd>イーサネット機能のみ必要です。</dd>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <fast>
+          <ul>
+            <li>Series 16i/18i/21i, 0i, Power Mate i, Series 30i/31i/32i, PMi-A<br/>
+                No.904#4=1 :(必ず設定して下さい)<br/>
+                No.905#4   :(設定の影響を受けます)<br/>
+            </li>
+            <li>Series 0i-F, 30i/31i/32i(組込みEthernet(内蔵ポート))<br/>
+              No.14880#4=1 :ＣＮＣ主導メッセージ通知機能(必ず設定して下さい)<br/>
+              No.14880#5   :(設定の影響を受けます)<br/>
+            </li>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicprm</name>
+            <file>Unsolic/cnc_rdunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg</name>
+            <file>Unsolic/cnc_rdunsolicmsg.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

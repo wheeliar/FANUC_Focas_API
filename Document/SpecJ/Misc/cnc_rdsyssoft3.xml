@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdsyssoft3</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsyssoft3(unsigned short FlibHndl, short s_id, short *read_num, short *all_num, ODBSYSS3 *syssoft3);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+CNCのシステムソフトの系列／版数を読み出します。
+</p>
+<p>
+各情報はODBSYSS3内の各メンバに格納されます。
+</p>
+<p>
+使用可能なシステムソフトの系列／版数を読み出す事ができます。
+</p>
+<p>
+系統に依存したデータはありません。
+</p>
+<!-- <p>
+系統に依存したデータは、<a href="misc/cnc_setpath.htm" target="_parent">cnc_setpath</a>関数で系統を切り換えて読み出して下さい。
+</p> -->
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>s_id</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リードする系列／版数情報の取得開始IDを指定します。指定したIDからIDが大きい方へ順に取得して行きます。すべての系列／版数情報をリードする場合は、s_id= 0としてデータを取得し、2回目以降はs_id= (最後に取得したID+1)として繰り返し実行して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>read_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            読み取るソフトウェアの個数へのポインタを指定します。関数コール前に読み取るソフトウェアの個数を指定し、関数コール後に実際に読み取った個数が設定されます。指定できるデータの有効範囲は1～40です。データが1つも読み込めない場合はread_num= 0が返されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>all_num</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            ソフトウェアの個数全体が設定されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>syssoft3</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNCのシステムソフトの系列／版数を返すODBSYSS3構造体へのポインタです。この配列は(*read_num)で指定した数分必要です。<br/>
+                            ODBSYSS3構造体は次の通りです。
+                        </p>
+<pre><![CDATA[
+typedef struct odbsyss3 {
+    short   soft_id ;           /* ソフトＩＤ   */
+    char    soft_series[5] ;    /* ソフト系列   */
+    char    soft_edition[5] ;   /* ソフト版数   */
+} ODBSYSS3 ;
+]]></pre>
+<dl>
+    <dt>soft_id</dt>
+        <dd>ソフトID</dd>
+        <dd>各ソフトウェアの種別を表わす数値が格納されます。</dd>
+        <dd>主なソフトIDは以下のようになります。</dd>
+        <dd>- FS30i/31i/32i-A, 0i-D</dd>
+        <dd><table class="dd">
+                   <tr> <td>0101H</td>  <td>:</td> <td>CNCベイシックソフト</td> </tr>
+                   <tr> <td>0102H</td>  <td>:</td> <td>CNCオプションソフトA1</td> </tr>
+                   <tr> <td>0103H</td>  <td>:</td> <td>CNCオプションソフトA2</td> </tr>
+                   <tr> <td>0104H</td>  <td>:</td> <td>CNCオプションソフトA3</td> </tr>
+<!--               <tr> <td>0105H</td>  <td>:</td> <td>CNCオプションソフトA4</td> </tr> -->
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0111H</td>  <td>:</td> <td>CNC各国語表示ROM 英語(Basic)</td> </tr>
+                   <tr> <td>0112H</td>  <td>:</td> <td>CNC各国語表示ROM 日本語</td> </tr>
+                   <tr> <td>0113H</td>  <td>:</td> <td>CNC各国語表示ROM ドイツ語</td> </tr>
+                   <tr> <td>0114H</td>  <td>:</td> <td>CNC各国語表示ROM フランス語</td> </tr>
+                   <tr> <td>0115H</td>  <td>:</td> <td>CNC各国語表示ROM 中国語(繁体文字)</td> </tr>
+                   <tr> <td>0116H</td>  <td>:</td> <td>CNC各国語表示ROM イタリア語</td> </tr>
+                   <tr> <td>0117H</td>  <td>:</td> <td>CNC各国語表示ROM 韓国語</td> </tr>
+                   <tr> <td>0118H</td>  <td>:</td> <td>CNC各国語表示ROM スペイン語</td> </tr>
+                   <tr> <td>0119H</td>  <td>:</td> <td>CNC各国語表示ROM オランダ語</td> </tr>
+                   <tr> <td>011AH</td>  <td>:</td> <td>CNC各国語表示ROM デンマーク語</td> </tr>
+                   <tr> <td>011BH</td>  <td>:</td> <td>CNC各国語表示ROM ポルトガル語</td> </tr>
+                   <tr> <td>011CH</td>  <td>:</td> <td>CNC各国語表示ROM ポーランド語</td> </tr>
+                   <tr> <td>011DH</td>  <td>:</td> <td>CNC各国語表示ROM ハンガリー語</td> </tr>
+                   <tr> <td>011EH</td>  <td>:</td> <td>CNC各国語表示ROM スウェーデン語</td> </tr>
+                   <tr> <td>011FH</td>  <td>:</td> <td>CNC各国語表示ROM チェコ語</td> </tr>
+                   <tr> <td>0120H</td>  <td>:</td> <td>CNC各国語表示ROM 中国語(簡体文字)</td> </tr>
+                   <tr> <td>0121H</td>  <td>:</td> <td>CNC各国語表示ROM ロシア語</td> </tr>
+                   <tr> <td>0122H</td>  <td>:</td> <td>CNC各国語表示ROM トルコ語</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0123H</td>  <td>:</td> <td>CNCオプションソフトA21</td> </tr>
+                   <tr> <td>0124H</td>  <td>:</td> <td>CNCオプションソフトA22</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0141H</td>  <td>:</td> <td>reserve</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0151H</td>  <td>:</td> <td>BOOTソフト</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0201H</td>  <td>:</td> <td>PMCシステムソフト1</td> </tr>
+<!--               <tr> <td>0202H</td>  <td>:</td> <td>PMCシステムソフト2</td> </tr> -->
+<!--               <tr> <td>0203H</td>  <td>:</td> <td>PMCシステムソフト3</td> </tr> -->
+<!--               <tr> <td>0204H</td>  <td>:</td> <td>PMCシステムソフト4</td> </tr> -->
+                   <tr> <td>0211H</td>  <td>:</td> <td>PMCラダー1(第1ラダー)</td> </tr>
+                   <tr> <td>0212H</td>  <td>:</td> <td>PMCラダー2(第2ラダー)</td> </tr>
+                   <tr> <td>0213H</td>  <td>:</td> <td>PMCラダー3(第3ラダー)</td> </tr>
+                   <tr> <td>0214H</td>  <td>:</td> <td>PMCラダー4(DUAL CHECK用ラダー)</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0221H</td>  <td>:</td> <td>C言語ボード システムソフト</td> </tr>
+                   <tr> <td>0222H</td>  <td>:</td> <td>C言語ボード ユーザソフト</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0301H</td>  <td>:</td> <td>サーボソフト1</td> </tr>
+                   <tr> <td>0302H</td>  <td>:</td> <td>サーボソフト2</td> </tr>
+                   <tr> <td>0303H</td>  <td>:</td> <td>サーボソフト3</td> </tr>
+                   <tr> <td>0304H</td>  <td>:</td> <td>サーボソフト4</td> </tr>
+                   <tr> <td>0305H</td>  <td>:</td> <td>サーボソフト5</td> </tr>
+                   <tr> <td>0306H</td>  <td>:</td> <td>サーボソフト6</td> </tr>
+                   <tr> <td>0307H</td>  <td>:</td> <td>サーボソフト7</td> </tr>
+                   <tr> <td>0308H</td>  <td>:</td> <td>サーボソフト8</td> </tr>
+                   <tr> <td>0309H</td>  <td>:</td> <td>サーボソフト9</td> </tr>
+                   <tr> <td>030AH</td>  <td>:</td> <td>サーボソフト10</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0501H</td>  <td>:</td> <td>第1スピンドルソフト</td> </tr>
+                   <tr> <td>0502H</td>  <td>:</td> <td>第2スピンドルソフト</td> </tr>
+                   <tr> <td>0503H</td>  <td>:</td> <td>第3スピンドルソフト</td> </tr>
+                   <tr> <td>0504H</td>  <td>:</td> <td>第4スピンドルソフト</td> </tr>
+                   <tr> <td>0505H</td>  <td>:</td> <td>第5スピンドルソフト</td> </tr>
+                   <tr> <td>0506H</td>  <td>:</td> <td>第6スピンドルソフト</td> </tr>
+                   <tr> <td>0507H</td>  <td>:</td> <td>第7スピンドルソフト</td> </tr>
+                   <tr> <td>0508H</td>  <td>:</td> <td>第8スピンドルソフト</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0601H</td>  <td>:</td> <td>グラフィックソフト1</td> </tr>
+                   <tr> <td>0602H</td>  <td>:</td> <td>グラフィックソフト2</td> </tr>
+                   <tr> <td>0603H</td>  <td>:</td> <td>グラフィックソフト3</td> </tr>
+                   <tr> <td>0604H</td>  <td>:</td> <td>グラフィックソフト4 (フォントデータ)</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0701H</td>  <td>:</td> <td>マクロエグゼキュータ1</td> </tr>
+                   <tr> <td>0702H</td>  <td>:</td> <td>マクロエグゼキュータ2</td> </tr>
+                   <tr> <td>0703H</td>  <td>:</td> <td>マクロエグゼキュータ3</td> </tr>
+                   <tr> <td>0704H</td>  <td>:</td> <td>マクロエグゼキュータ4</td> </tr>
+                   <tr> <td>0705H</td>  <td>:</td> <td>マクロエグゼキュータ5</td> </tr>
+                   <tr> <td>0706H</td>  <td>:</td> <td>マクロエグゼキュータ6</td> </tr>
+                   <tr> <td>0707H</td>  <td>:</td> <td>マクロエグゼキュータ7</td> </tr>
+                   <tr> <td>0708H</td>  <td>:</td> <td>マクロエグゼキュータ8</td> </tr>
+                   <tr> <td>0709H</td>  <td>:</td> <td>マクロエグゼキュータ9</td> </tr>
+                   <tr> <td>070AH</td>  <td>:</td> <td>マクロエグゼキュータ10</td> </tr>
+                   <tr> <td>070BH</td>  <td>:</td> <td>マクロエグゼキュータ11</td> </tr>
+                   <tr> <td>070CH</td>  <td>:</td> <td>マクロエグゼキュータ12</td> </tr>
+                   <tr> <td>070DH</td>  <td>:</td> <td>マクロエグゼキュータ13</td> </tr>
+                   <tr> <td>070EH</td>  <td>:</td> <td>マクロエグゼキュータ14</td> </tr>
+                   <tr> <td>070FH</td>  <td>:</td> <td>マクロエグゼキュータ15</td> </tr>
+                   <tr> <td>0710H</td>  <td>:</td> <td>マクロエグゼキュータ16</td> </tr>
+                   <tr> <td>0711H</td>  <td>:</td> <td>マクロエグゼキュータ17</td> </tr>
+                   <tr> <td>0712H</td>  <td>:</td> <td>マクロエグゼキュータ18</td> </tr>
+                   <tr> <td>0713H</td>  <td>:</td> <td>マクロエグゼキュータ19</td> </tr>
+                   <tr> <td>0714H</td>  <td>:</td> <td>マクロエグゼキュータ20</td> </tr>
+                   <tr> <td>075AH</td>  <td>:</td> <td>マニュアルガイド i (Ｍ系用マクロエグゼキュータ)</td> </tr>
+                   <tr> <td>075BH</td>  <td>:</td> <td>マニュアルガイド i (Ｔ系用マクロエグゼキュータ)</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0801H</td>  <td>:</td> <td>C言語エグゼキュータ用ライブラリ</td> </tr>
+                   <tr> <td>0802H</td>  <td>:</td> <td>C言語エグゼキュータ用アプリケーション</td> </tr>
+                   <tr> <td>0808H</td>  <td>:</td> <td>FANUC Auto HMI/T</td> </tr>
+                   <tr> <td>0809H</td>  <td>:</td> <td>FANUC Auto HMI/T</td> </tr>
+                   <tr> <td>0811H</td>  <td>:</td> <td>マニュアルガイド i 用ライブラリ</td> </tr>
+                   <tr> <td>0812H</td>  <td>:</td> <td>マニュアルガイド i 用アプリケーション</td> </tr>
+                   <tr> <td>0820H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0821H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0822H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0823H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0824H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0825H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0826H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0827H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0828H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0829H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                   <tr> <td>0830H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0831H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0832H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0833H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0834H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0835H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0836H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0837H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0838H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>0839H</td>  <td>:</td> <td>マニュアルガイド i用データ</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0901H</td>  <td>:</td> <td>ネットワーク管理 NET</td> </tr>
+                   <tr> <td>0911H</td>  <td>:</td> <td>組込みイーサネット</td> </tr>
+                   <tr> <td>0912H</td>  <td>:</td> <td>イーサネット表示機能</td> </tr>
+                   <tr> <td>0921H</td>  <td>:</td> <td>プロフィバス1</td> </tr>
+                   <tr> <td>0922H</td>  <td>:</td> <td>プロフィバス2</td> </tr>
+                   <tr> <td>0923H</td>  <td>:</td> <td>デバイスネット1</td> </tr>
+                   <tr> <td>0924H</td>  <td>:</td> <td>デバイスネット2</td> </tr>
+                   <tr> <td>0925H</td>  <td>:</td> <td>FL-net 1</td> </tr>
+                   <tr> <td>0926H</td>  <td>:</td> <td>FL-net 2</td> </tr>
+                   <tr> <td>0927H</td>  <td>:</td> <td>プロフィバス3</td> </tr>
+                   <tr> <td>0929H</td>  <td>:</td> <td>FL-net/イーサネット</td> </tr>
+                   <tr> <td>092AH</td>  <td>:</td> <td>CC-Link</td> </tr>
+                   <tr> <td>0931H</td>  <td>:</td> <td>データサーバ</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                   <tr> <td>0A01H</td>  <td>:</td> <td>カスタマーズボード システム</td> </tr>
+                   <tr> <td>0A02H</td>  <td>:</td> <td>カスタマーズボード ユーザ</td> </tr>
+                   <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+
+            </table></dd>
+
+        <dd>- 0i-F, 30i/31i/32i/35i-B, PMi-A</dd>
+        <dd><table class="dd">
+                    <tr> <td>0101H</td>  <td>:</td> <td>CNCシステムソフト1</td> </tr>
+                    <tr> <td>0102H</td>  <td>:</td> <td>CNCシステムソフト2</td> </tr>
+                    <tr> <td>0103H</td>  <td>:</td> <td>CNCシステムソフト3</td> </tr>
+                    <tr> <td>0104H</td>  <td>:</td> <td>CNCシステムソフト4</td> </tr>
+                    <tr> <td>0111H</td>  <td>:</td> <td>CNC各国語表示1</td> </tr>
+                    <tr> <td>0112H</td>  <td>:</td> <td>CNC各国語表示2</td> </tr>
+                    <tr> <td>0113H</td>  <td>:</td> <td>CNC各国語表示3</td> </tr>
+                    <tr> <td>0114H</td>  <td>:</td> <td>CNC各国語表示4</td> </tr>
+                    <tr> <td>0115H</td>  <td>:</td> <td>CNC各国語表示5</td> </tr>
+                    <tr> <td>0141H</td>  <td>:</td> <td>reserve</td> </tr>
+                    <tr> <td>0151H</td>  <td>:</td> <td>BOOTソフト</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0201H</td>  <td>:</td> <td>PMCシステムソフト1</td> </tr>
+                    <tr> <td>0211H</td>  <td>:</td> <td>PMCラダー1(第1ラダー)</td> </tr>
+                    <tr> <td>0212H</td>  <td>:</td> <td>PMCラダー2(第2ラダー)</td> </tr>
+                    <tr> <td>0213H</td>  <td>:</td> <td>PMCラダー3(第3ラダー)</td> </tr>
+                    <tr> <td>0214H</td>  <td>:</td> <td>PMCラダー4(第4ラダー)</td> </tr>
+                    <tr> <td>0215H</td>  <td>:</td> <td>PMCラダー5(第5ラダー)</td> </tr>
+                    <tr> <td>0216H</td>  <td>:</td> <td>PMCラダーDCS(DUAL CHECK用ラダー)</td> </tr>
+                    <tr> <td>0221H</td>  <td>:</td> <td>PMC1の各国語メッセージデータ</td> </tr>
+                    <tr> <td>0222H</td>  <td>:</td> <td>PMC2の各国語メッセージデータ</td> </tr>
+                    <tr> <td>0223H</td>  <td>:</td> <td>PMC3の各国語メッセージデータ</td> </tr>
+                    <tr> <td>0224H</td>  <td>:</td> <td>PMC4の各国語メッセージデータ</td> </tr>
+                    <tr> <td>0225H</td>  <td>:</td> <td>PMC5の各国語メッセージデータ</td> </tr>
+                    <tr> <td>0231H</td>  <td>:</td> <td>I/O Linki 割り付けデータ</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0301H</td>  <td>:</td> <td>サーボソフト1</td> </tr>
+                    <tr> <td>0302H</td>  <td>:</td> <td>サーボソフト2</td> </tr>
+                    <tr> <td>0303H</td>  <td>:</td> <td>サーボソフト3</td> </tr>
+                    <tr> <td>0304H</td>  <td>:</td> <td>サーボソフト4</td> </tr>
+                    <tr> <td>0305H</td>  <td>:</td> <td>サーボソフト5</td> </tr>
+                    <tr> <td>0306H</td>  <td>:</td> <td>サーボソフト6</td> </tr>
+                    <tr> <td>0307H</td>  <td>:</td> <td>サーボソフト7</td> </tr>
+                    <tr> <td>0308H</td>  <td>:</td> <td>サーボソフト8</td> </tr>
+                    <tr> <td>0309H</td>  <td>:</td> <td>サーボソフト9</td> </tr>
+                    <tr> <td>030aH</td>  <td>:</td> <td>サーボソフト10</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0501H</td>  <td>:</td> <td>第1スピンドルソフト</td> </tr>
+                    <tr> <td>0502H</td>  <td>:</td> <td>第2スピンドルソフト</td> </tr>
+                    <tr> <td>0503H</td>  <td>:</td> <td>第3スピンドルソフト</td> </tr>
+                    <tr> <td>0504H</td>  <td>:</td> <td>第4スピンドルソフト</td> </tr>
+                    <tr> <td>0505H</td>  <td>:</td> <td>第5スピンドルソフト</td> </tr>
+                    <tr> <td>0506H</td>  <td>:</td> <td>第6スピンドルソフト</td> </tr>
+                    <tr> <td>0507H</td>  <td>:</td> <td>第7スピンドルソフト</td> </tr>
+                    <tr> <td>0508H</td>  <td>:</td> <td>第8スピンドルソフト</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0601H</td>  <td>:</td> <td>グラフィックソフト1</td> </tr>
+                    <tr> <td>0602H</td>  <td>:</td> <td>グラフィックソフト2</td> </tr>
+                    <tr> <td>0603H</td>  <td>:</td> <td>グラフィックソフト3</td> </tr>
+                    <tr> <td>0604H</td>  <td>:</td> <td>グラフィックソフト4 (フォント)</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0701H</td>  <td>:</td> <td>マニュアルガイド i ライブラリ</td> </tr>
+                    <tr> <td>0702H</td>  <td>:</td> <td>マニュアルガイド i システム</td> </tr>
+                    <tr> <td>0703H</td>  <td>:</td> <td>マニュアルガイド i マクロ(M系)</td> </tr>
+                    <tr> <td>0704H</td>  <td>:</td> <td>マニュアルガイド i マクロ(T系)</td> </tr>
+                    <tr> <td>0710H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX0DATU)</td> </tr>
+                    <tr> <td>0711H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX1DATU)</td> </tr>
+                    <tr> <td>0712H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX2DATU)</td> </tr>
+                    <tr> <td>0713H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX3DATU)</td> </tr>
+                    <tr> <td>0714H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX4DATU)</td> </tr>
+                    <tr> <td>0715H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX5DATU)</td> </tr>
+                    <tr> <td>0716H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX6DATU)</td> </tr>
+                    <tr> <td>0717H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX7DATU)</td> </tr>
+                    <tr> <td>0718H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX8DATU)</td> </tr>
+                    <tr> <td>0719H</td>  <td>:</td> <td>マニュアルガイド i ユーザデータ(CEX9DATU)</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0801H</td>  <td>:</td> <td>マクロエグゼキュータ1</td> </tr>
+                    <tr> <td>0802H</td>  <td>:</td> <td>マクロエグゼキュータ2</td> </tr>
+                    <tr> <td>0803H</td>  <td>:</td> <td>マクロエグゼキュータ3</td> </tr>
+                    <tr> <td>0804H</td>  <td>:</td> <td>マクロエグゼキュータ4</td> </tr>
+                    <tr> <td>0805H</td>  <td>:</td> <td>マクロエグゼキュータ5</td> </tr>
+                    <tr> <td>0806H</td>  <td>:</td> <td>マクロエグゼキュータ6</td> </tr>
+                    <tr> <td>0807H</td>  <td>:</td> <td>マクロエグゼキュータ7</td> </tr>
+                    <tr> <td>0808H</td>  <td>:</td> <td>マクロエグゼキュータ8</td> </tr>
+                    <tr> <td>0809H</td>  <td>:</td> <td>マクロエグゼキュータ9</td> </tr>
+                    <tr> <td>080AH</td>  <td>:</td> <td>マクロエグゼキュータ10</td> </tr>
+                    <tr> <td>080BH</td>  <td>:</td> <td>マクロエグゼキュータ11</td> </tr>
+                    <tr> <td>080CH</td>  <td>:</td> <td>マクロエグゼキュータ12</td> </tr>
+                    <tr> <td>080DH</td>  <td>:</td> <td>マクロエグゼキュータ13</td> </tr>
+                    <tr> <td>080EH</td>  <td>:</td> <td>マクロエグゼキュータ14</td> </tr>
+                    <tr> <td>080FH</td>  <td>:</td> <td>マクロエグゼキュータ15</td> </tr>
+                    <tr> <td>0810H</td>  <td>:</td> <td>マクロエグゼキュータ16</td> </tr>
+                    <tr> <td>0811H</td>  <td>:</td> <td>マクロエグゼキュータ17</td> </tr>
+                    <tr> <td>0812H</td>  <td>:</td> <td>マクロエグゼキュータ18</td> </tr>
+                    <tr> <td>0813H</td>  <td>:</td> <td>マクロエグゼキュータ19</td> </tr>
+                    <tr> <td>0814H</td>  <td>:</td> <td>マクロエグゼキュータ20</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0901H</td>  <td>:</td> <td>C言語エグゼキュータ用ライブラリ</td> </tr>
+                    <tr> <td>0902H</td>  <td>:</td> <td>C言語エグゼキュータ用アプリ</td> </tr>
+                    <tr> <td>0908H</td>  <td>:</td> <td>FANUC Auto HMI/T</td> </tr>
+                    <tr> <td>0909H</td>  <td>:</td> <td>FANUC Auto HMI/T</td> </tr>
+                    <tr> <td>0920H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0921H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0922H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0923H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0924H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0925H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0926H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0927H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0928H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>0929H</td>  <td>:</td> <td>C言語エグゼキュータ用データ</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0A01H</td>  <td>:</td> <td>ネットワーク管理 NET</td> </tr>
+                    <tr> <td>0A11H</td>  <td>:</td> <td>組込みイーサネット</td> </tr>
+                    <tr> <td>0A12H</td>  <td>:</td> <td>イーサネット表示機能</td> </tr>
+                    <tr> <td>0A18H</td>  <td>:</td> <td>USB機能</td> </tr>
+                    <tr> <td>0A21H</td>  <td>:</td> <td>プロフィバス1</td> </tr>
+                    <tr> <td>0A22H</td>  <td>:</td> <td>プロフィバス2</td> </tr>
+                    <tr> <td>0A23H</td>  <td>:</td> <td>デバイスネット1</td> </tr>
+                    <tr> <td>0A24H</td>  <td>:</td> <td>デバイスネット2</td> </tr>
+                    <tr> <td>0A25H</td>  <td>:</td> <td>FL-net 1</td> </tr>
+                    <tr> <td>0A26H</td>  <td>:</td> <td>FL-net 2</td> </tr>
+                    <tr> <td>0A27H</td>  <td>:</td> <td>プロフィバス3</td> </tr>
+                    <tr> <td>0A29H</td>  <td>:</td> <td>FL-net/イーサネット</td> </tr>
+                    <tr> <td>0A2AH</td>  <td>:</td> <td>CC-Link</td> </tr>
+                    <tr> <td>0A31H</td>  <td>:</td> <td>データサーバ</td> </tr>
+                    <tr> <td>&#160;</td> <td> </td> <td></td> </tr>
+                    <tr> <td>0B01H</td>  <td>:</td> <td>カスタマーズボード システム</td> </tr>
+                    <tr> <td>0B02H</td>  <td>:</td> <td>カスタマーズボード ユーザ</td> </tr>
+            </table></dd>
+
+    <dt>soft_series</dt>
+        <dd>ソフトの系列</dd>
+        <dd>使用されているソフトの系列がASCIIコード</dd>
+        <dd>(４バイト＋NULL)で格納されます。</dd>
+
+    <dt>soft_edition</dt>
+        <dd>ソフトの版数</dd>
+        <dd>使用されているソフトの版数がASCIIコード</dd>
+        <dd>(４バイト＋NULL)で格納されます。</dd>
+
+</dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+            但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。<br/><br/>
+            組込みイーサネットを使用のとき、<br/>
+            <p class="dd">上記２つの機能は必要ありません。</p>
+            イーサネットボードを使用のとき、<br/>
+            <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item class="xis">
+            <name>cnc_rdsyssoft</name>
+            <file>misc/cnc_rdsyssoft.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdsyssoft2</name>
+            <file>misc/cnc_rdsyssoft2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsyshard</name>
+            <file>misc/cnc_rdsyshard.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

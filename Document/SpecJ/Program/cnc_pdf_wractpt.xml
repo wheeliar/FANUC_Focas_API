@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+    <title>cnc_pdf_wractpt</title>
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_pdf_wractpt(unsigned short FlibHndl, char *prog_name, short type, long *blk_no );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>MDI運転またはメモリ運転するプログラムに対して、次に実行されるポインタ（ブロック）を設定します。</p>
+
+            <p>ただし、既に先読みされているブロックがある場合は、本関数で設定したポインタ（ブロック）を実行する前に先読み済みのブロックが実行されます。</p><br/>
+
+            <p>本関数は、パラメータLES(No.11353#3)により、CNCでリセット処理が実行された時、処理が中断するか否かを選択することができます。</p>
+            <p>パラメータLES(No.11353#3)=0 の場合、処理は中断されません。</p>
+            <p>パラメータLES(No.11353#3)=1 の場合、処理は中断されます。</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            実行中ポインタを設定するプログラムをドライブ名＋パス名＋ファイル名で指定します。<br/>
+                            ファイル名の指定方法の詳細については、「<a href="./general.htm#DriveName" target="_parent">ライブラリ全般 &quot;FS30i, 0i-D/F, PMi-Aのフォルダ名/ファイル名の指定方法について&quot;</a>」を参照してください。<br/>
+                            MDIプログラムを指定する場合は、&quot;MDI&quot;を指定して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            実行ポインタのタイプ<br/>
+                            ブロック番号に指定した値が、絶対ポインタなのか相対ポインタなのかを示します。 
+                        </p>
+                        <table class="dd">
+                            <tr>
+                            <td>0</td><td>:</td><td>絶対ポインタ(プログラムの先頭をブロック0としたブロック番号)</td>
+                            </tr>
+                            <tr>
+                            <td>1</td><td>:</td><td>相対ポインタ(現在の実行ポインタからの相対値)</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>blk_no</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            設定するブロック番号が格納されているlong型変数へのポインタを指定します。 
+                        </p>
+                        <dt>type = 0の場合</dt>
+                            <ul>
+                            <li type="disk">ブロック番号には、プログラムの先頭をブロック0としたブロック番号を指定してください。</li>
+                            </ul>
+                        <dt>type = 1の場合</dt>
+                            <ul>
+                            <li type="disk">ブロック番号には現在の実行ポインタからの相対値を指定してください。</li>
+                            <li type="disk">
+                                ブロック番号に0を指定すると、実行ポインタはそのまま変更されず、次に実行されるポインタがblk_noに絶対ポインタでセットされます。
+                            </li>
+                            </ul>
+
+                        <p>
+                        以下に絶対ポインタと相対ポインタでの指定方法を示します。
+                        <table rules="groups">
+                            <colgroup/>
+                            <colgroup/>
+                            <colgroup/>
+                            <thead>
+                            <tr>    <th>選択されているNC指令プログラム  </th><th>絶対ポインタ</th><th>相対ポインタ</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>    <td>O1234;                          </td><td>0          </td><td>-3</td></tr>
+                            <tr>    <td>G00 X0. Z0.;                    </td><td>1          </td><td>-2</td></tr>
+                            <tr>    <td>G01 X10. Z5. F100.;             </td><td>2          </td><td>-1</td></tr>
+                            <tr>    <td>X20. Z15.;                      </td><td>3          </td><td> 0</td></tr>
+                            <tr>    <td>X35.;                           </td><td>4          </td><td> 1</td></tr>
+                            <tr>    <td>Z20;                            </td><td>5          </td><td> 2</td></tr>
+                            <tr>    <td>M30;                            </td><td>6          </td><td> 3</td></tr>
+                            <tr>    <td>%                               </td><td>7          </td><td> 4</td></tr>
+                            </tbody>
+                        </table>
+                        ※上表の相対ポインタは、ブロック"X20. Z15.;"に現在の実行ポインタがある場合の値です。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                type に不正な値が指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り
+                <ul style="margin-top:0;margin-bottom:0">
+                <li>prog_name で指定されたプログラム名が不正か存在しません。</li>
+                <li>*blk_no で指定されたブロック番号が不正か存在しません。</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCモードの誤り
+                <ul style="margin-top:0;margin-bottom:0">
+                <li>MDI、EDITモード以外で実行されました。</li>
+                <li>EDITモードで prog_name にNULL が指定されました。</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の実行拒否
+                <ul style="margin-top:0;margin-bottom:0">
+                <li>現在運転中です。</li>
+                <li>MDIプログラムが存在しません。</li>
+                <li>プログラムが選択されていません。</li>
+                <li>アラーム発生中です。</li>
+                <li>非常停止中です。</li>
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                11353#3 (設定の影響を受けます)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>本機能はMDIモードまたはEDITモードで使用できます。</cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_pdf_rdactpt</name>
+            <file>Program/cnc_pdf_rdactpt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

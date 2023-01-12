@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Script-Type" content="text/javascript">
+    <link rel="stylesheet" type="text/css" href="Fwlib32.css"></link>
+    <title>frmmain</title>
+
+    <script language="JavaScript">
+<!--
+      var lang = -1;
+      var Connect = 0;
+
+      // VB VC のチェックボックスが変更されたイベント
+      function remoteFunc( type ){
+        // window.alert("call cnc_xxx_main = " + type);
+
+        // 言語の更新
+        lang = type;
+
+        // 関数仕様説明を再表示
+        SetHtml();
+      }
+
+
+      // クッキー情報をfrmtopより取得
+      function GetCookie() {
+        // window.alert( parent.top );
+
+        if( parent.frmtop.getLangType != null )
+        {
+            lang = parent.frmtop.getLangType();
+            // window.alert( "lang = " + lang );
+            Connect = parent.frmtop.getConnectType();
+            //window.alert( "Connect = " + Connect );
+            return true;
+        }
+        else
+        {
+           parent.frmmain.location.href="cnc_com_main.htm";
+           return false;
+        }
+
+      }
+
+
+      // 関数仕様説明を表示
+      function SetHtml() {
+
+
+        var XSLFile = "Fmethod_xsl/fmethod_";
+
+
+        switch( Connect )
+        {
+
+          case 0: // 接続   未選択
+          case 3: // 両接続 選択
+
+            XSLFile = XSLFile + "he_";
+
+          break;
+
+
+          case 1: // HSSBのみ
+
+            XSLFile = XSLFile + "h_";
+
+          break;
+
+
+          case 2: // EtherNetのみ
+
+            XSLFile = XSLFile + "e_";
+
+          break;
+
+
+          default: // エラー
+            here.innerHTML = "エラー（言語選択情報エラー）";
+          return;
+        }
+
+        XSLFile = XSLFile + "c.xsl";
+
+//      switch( lang )
+//      {
+//
+//        case 0: // VB ＆VC 未選択
+//        case 3: // VB ＆VC 両選択
+//
+//          XSLFile = XSLFile + "cb.xsl";
+//        break;
+//
+//        case 1: // VC 選択
+//          XSLFile = XSLFile + "c.xsl";
+//        break;
+//
+//        case 2: // VB 選択
+//          XSLFile = XSLFile + "b.xsl";
+//        break;
+//
+//        default:
+//          here.innerHTML = "エラー（言語選択情報エラー）";
+//        break;
+//      }
+
+
+<!--        window.alert( XSLFile );   -->
+
+        xslStyle = new ActiveXObject("MSXML2.DOMdocument");
+        xslStyle.async = false;
+        xslStyle.load(XSLFile);
+
+
+        var XMLFile = parent.getXMLFileName();
+        xmlSource = new ActiveXObject("MSXML2.DOMdocument");
+        xmlSource.async = false;
+        xmlSource.load(XMLFile);
+
+        here.innerHTML = xmlSource.transformNode( xslStyle.documentElement );
+
+      }
+
+// -->
+    </script>
+
+  </head>
+
+
+
+  <body bgcolor="#FFFFFF">
+
+  <div id="here" align="left"></div>
+
+  <script language="JavaScript">
+<!--
+
+    // クッキー情報をfrmtopより取得
+    if( GetCookie() )
+    {
+
+        // 関数仕様説明を表示
+        SetHtml();
+    }
+
+// -->
+  </script>
+
+  </body>
+
+
+
+</html>
+

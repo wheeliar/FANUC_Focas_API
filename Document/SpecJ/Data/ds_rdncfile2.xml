@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_rdncfile2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI ds_rdncfile2(unsigned short FlibHndl, char *file_name);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            ハードディスクからNC側へNCプログラムを入力します。<br/>
+            <br/>
+            <li>ストレージモードの場合</li>
+                <dd>データサーバのハードディスク(またはATA)からNCのメモリ</dd>
+            <li>FTPモードの場合</li>
+                <dd>ホストパソコンのハードディスクからNCのメモリ</dd><br/>
+            データサーバのファイル名のO番号と、ファイル内のNCプログラムのO番号が異なっていた場合、どちらのO番号でNC側に登録するかは、CNC側のパラメータONS(0900#1)によります。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>file_name</name>
+                    <type>in</type>
+                    <content>
+                        <p>NC側へ入力するファイル名（データサーバ側のファイル名）が格納されているアスキー文字列へのポインタを指定します。<br/>
+                        ファイル名の形式は次の通りです。
+                        <dl class="dd">
+                            <dt><li>O4桁の場合</li></dt>
+                            <dd>ファイル名を"O" + 数字4桁 + NULLの形式で指定します。</dd>
+                            <dt><li>O8桁の場合</li></dt>
+                            <dd>ファイル名を"O" + 数字7桁 + NULLの形式で指定します。</dd>
+                        </dl>
+                        </p>
+                        <p>そのため上記形式以外のファイル名で登録されているNCプログラムは入力することができません。<br/>
+                           またファイル名の指定にワイルドカード（"*"、"?"）は使用できません。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>リセットリクエスト<br/>CNC側のRESETにより強制終了されました。</content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>ビジィ<br/>
+            CNC側が下記の何れかの状態になっています。<br/>
+                <li>CNC側がアラーム状態（PS/000、PS/101）</li>
+                <li>CNC側のI/Oチャンネル番号がデータサーバ以外</li>
+                <li>CNC側がバックグラウンド編集中</li>
+                <li>CNC側がMDI編集中/運転中</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>番号エラー<br/>
+            ファイル名（file_name）の指定が不正です。<br/>
+<!--        "O" + 数字1～8桁 + NULLの形式で指定してください。<br/>-->
+            <table>
+                <li>O4桁の場合</li>
+                <dd>ファイル名を"O" + 数字4桁 + NULLの形式で指定します。</dd>
+                <li>O8桁の場合</li>
+                <dd>ファイル名を"O" + 数字7桁 + NULLの形式で指定します。</dd>
+            </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データエラー<br/>
+                <li>既にプログラムが登録されています。</li>
+                <li>指定されたファイルがデータサーバに存在しません。</li>
+                <li>NC側で選択されているプログラムを上書きしようとしました。</li>
+                <li><a href="program/cnc_setpglock.htm" target="_parent">cnc_setpglock</a> により運転／編集禁止となっているプログラムを上書きしようとしました。</li>
+            </content>
+        </item>
+      <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>書き込み禁止<br/>
+                <li>CNC側でプロテクトKEYがOFFになっています。</li>
+                <li>CNC側のパラメータ（8000番台/9000番台プロテクト、暗号化）が書き込み禁止の設定になっています。</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>メモリオーバフロー<br/>
+            CNC側のテープ記憶領域または登録プログラム数をオーバしました。
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>データサーバエラー<br/>
+                データサーバでエラーが発生しました。
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+        </hssb>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 16i/18i/21i</li>
+               パラメータNo.0020 = 5<br/>
+               パラメータNo.0900#1(ONS)
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+         <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>ds_rdncfile</name>
+            <file>Data/ds_rdncfile.htm</file>
+        </item>
+        <item>
+            <name>ds_wrncfile</name>
+            <file>Data/ds_wrncfile.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

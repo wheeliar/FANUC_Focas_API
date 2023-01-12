@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrrotvolc</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrrotvolc ( unsigned short FlibHndl, long start_no, long *num, IODBROTVOLC *rot_data );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定した範囲の3次元回転誤差補正データのライトを行います。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>start_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライト開始補正点番号。指定する範囲は、1～7812です。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            ライト開始補正点を含む補正点数を指定します。指定する範囲は、1～13です。<br/>
+                            ライト終了時、実際に書き込んだ点数がセットされます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rot_data</name>
+                    <type>in</type>
+                    <content>
+                        <p>ライトする3次元回転誤差補正データを格納する領域へのポインタです。IODBROTVOLC構造体は次の通りです。<br/>
+                           (最大サイズはrot_data[13]です)</p>
+
+<pre>
+typedef struct iodbrotvolc {
+    long   lin[3] ;   /* 並進誤差[Cx,Cy,Cz]    */
+    long   rot[3] ;   /* 回転誤差[Cα,Cβ,Cγ] */
+} IODBROTVOLC ;
+</pre>
+                        <p>例えば、補正点番号10から、2点分の補正データを書き込む場合、以下の設定になります。</p>
+                        <br/>
+                        <p>ODBROTVOLC *rot_data ;</p>
+                        <br/>
+                        <p>start_no  = 10;</p>
+                        <p>num       = 2;</p>
+                        <br/>
+                        <p>ライトするデータは以下のようにセットします。</p>
+                        <br/>
+                        <p>rot_data[0]->lin[0] 補正点番号10における第1補正軸の並進誤差補正データ</p>
+                        <p>rot_data[0]->lin[1] 補正点番号10における第2補正軸の並進誤差補正データ</p>
+                        <p>rot_data[0]->lin[2] 補正点番号10における第3補正軸の並進誤差補正データ</p>
+                        <p>rot_data[0]->rot[0] 補正点番号10における第1補正軸の回転誤差補正データ</p>
+                        <p>rot_data[0]->rot[1] 補正点番号10における第2補正軸の回転誤差補正データ</p>
+                        <p>rot_data[0]->rot[2] 補正点番号10における第3補正軸の回転誤差補正データ</p>
+                        <p>rot_data[1]->lin[0] 補正点番号11における第1補正軸の並進誤差補正データ</p>
+                        <p>rot_data[1]->lin[1] 補正点番号11における第2補正軸の並進誤差補正データ</p>
+                        <p>rot_data[1]->lin[2] 補正点番号11における第3補正軸の並進誤差補正データ</p>
+                        <p>rot_data[1]->rot[0] 補正点番号11における第1補正軸の回転誤差補正データ</p>
+                        <p>rot_data[1]->rot[1] 補正点番号11における第2補正軸の回転誤差補正データ</p>
+                        <p>rot_data[1]->rot[2] 補正点番号11における第3補正軸の回転誤差補正データ</p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>ODBERR構造体のメンバ err_no に詳細ステータスがセットされます。
+                    <table class="dd">
+                        <tr> <td>1</td><td>:</td><td>ライト開始補正点番号の誤り                 </td> </tr>
+                        <tr> <td>5</td><td>:</td><td>ライト補正点数の指定誤り                   </td> </tr>
+                        <tr> <td>7</td><td>:</td><td>書込みデータ(rot_data)が不正(-128～127以外)</td> </tr>
+                     </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                    3次元回転誤差補正機能、及び拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+            <need>
+                3次元回転誤差補正機能<br/>
+            </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+          <cmn>本機能は MDIモード で使用する必要があります。</cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>X</fs0id>
+              <fs0if>X</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>X</fs0id>
+              <fs0if>X</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>X</fs0id>
+              <fs0if>X</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdrotvolc</name>
+            <file>ncdata/cnc_rdrotvolc.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

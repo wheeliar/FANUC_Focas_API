@@ -1,0 +1,1143 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_rdcommand</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_rdcommand(unsigned short FlibHndl, short type, short block, short *num_cmd, ODBCMD *command);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>指令値を読み出します。各種情報はODBCMD内の各メンバに格納されます。</p>
+                <p>読み出すことのできるデータは、Gコード以外のモーダルデータ、及び指令値です。 </p>
+                <p>
+                    Series 15 16i/18i/21i, 0i-A/B/C、及びPower Mate iの場合、本関数は使用できませんので、
+                    必ず<a href="Misc/cnc_modal.htm" target="_parent">cnc_modal</a>関数を使用して下さい。
+                </p>
+            </cmn>
+            <!-- 30i(WinCE) -->
+            <is>
+                <cmn>
+                    <p>指令値を読み出します。各種情報はODBCMD内の各メンバに格納されます。</p>
+                    <p>読み出すことのできるデータは、Gコード以外のモーダルデータ、及び指令値です。 </p>
+                </cmn>
+            </is>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                        <content>
+                            <p>指令値の種類を指定します。</p>
+                            <table class="dd">
+                                <tr>
+                                    <td valign="top" width="60">0～29 </td> <td valign="top">:</td>
+                                    <td valign="top">Gコード以外のモーダルの個別読み出し</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">-1  </td> <td valign="top">:</td>
+                                    <td valign="top">Gコード以外のモーダルの一括読み出し</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">100～129</td> <td valign="top">:</td>
+                                    <td valign="top">指令値の個別読み出し</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">-2  </td> <td valign="top">:</td>
+                                    <td valign="top">指令値の一括読み出し</td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">200～223</td> <td valign="top">:</td>
+                                    <td valign="top">軸指令値の個別読み出し </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">-3  </td> <td valign="top">:</td>
+                                    <td valign="top">軸指令値の一括読み出し </td>
+                                </tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>block</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                読み出す対象となるブロックを指定します。
+                            </p>
+                            <table class="dd">
+                                <tr><td valign="top">0</td><td valign="top">:</td><td valign="top">前のブロック            </td></tr>
+                                <tr><td valign="top">1</td><td valign="top">:</td><td valign="top">現在実行中のブロック    </td></tr>
+                                <tr><td valign="top">2</td><td valign="top">:</td><td valign="top">次のブロック            </td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>num_cmd</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>
+                                読み出すデータの個数へのポインタを指定します。関数コール後に、実際に読み出されたデータの個数が設定されます。
+                            </p>
+                            
+                        </content>
+                    </item>
+                    <item>
+                        <name>command</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                指令値データを返すODBCMD構造体の配列の先頭アドレスを指定します。
+                                個別読み出しの場合はODBCMD構造体を1個、一括読み出しの場合にはODBCMD構造体を読み出す個数(*num_cmd)分用意します。
+                                ODBCMD構造体は次の通りです。 
+                            </p>
+<pre>
+typedef struct odbcmd {
+    char  adrs ;            /* 指令アドレス */
+    char  num ;             /* Mコード番号、または軸番号 */
+    short flag ;            /* 付加情報 */
+    long  cmd_val ;         /* 指令値データ */
+    long  dec_val ;         /* 指令値の小数点以下桁数 */
+} ODBCMD ;
+</pre>
+                            <p>ODBGCD構造体の各メンバについては、以下の各読み出しの説明を参照して下さい。</p>
+                            <p class="label">(1) Gコード以外のモーダルの読み出し</p>
+                            <ul>
+                                <p>
+                                    D, E, F, H, L, M, N, O, S, T, 第2補助機能(パラメータ1030で設定した A, B, C, U, V, Wのいずれか)の指令値が読み出されます。
+                                </p>
+                                <li type="square">個別読み出し<br/></li>
+                                <div>
+                                    <p>
+                                        num_cmdが指すデータに1を指定して、typeに指令アドレス(0～29)を指定することにより、
+                                        引数 blockで指定したブロックにおけるGコード以外のモーダルデータが読み出されます。
+                                    </p>
+                                    type には、下表の値が指定できます。<br/>
+                                    <table border="1" rules="groups">
+                                        <colgroup>
+                                        <colgroup>
+                                        <colgroup>
+                                        <colgroup>
+                                        <thead>
+                                            <tr> <th>type</th>    <th>指令アドレス</th>        <th>type</th>    <th>指令アドレス</th>    </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr> <td>0 </td> <td>A (第2補助機能)</td> <td>15</td> <td>P (使用不可)   </td> </tr>
+                                            <tr> <td>1 </td> <td>B (第2補助機能)</td> <td>16</td> <td>Q (使用不可)   </td> </tr>
+                                            <tr> <td>2 </td> <td>C (第2補助機能)</td> <td>17</td> <td>R (使用不可)   </td> </tr>
+                                            <tr> <td>3 </td> <td>D              </td> <td>18</td> <td>S              </td> </tr>
+                                            <tr> <td>4 </td> <td>E              </td> <td>19</td> <td>T              </td> </tr>
+                                            <tr> <td>5 </td> <td>F              </td> <td>20</td> <td>U (第2補助機能)</td> </tr>
+                                            <tr> <td>6 </td> <td>G (使用不可)   </td> <td>21</td> <td>V (第2補助機能)</td> </tr>
+                                            <tr> <td>7 </td> <td>H              </td> <td>22</td> <td>W (第2補助機能)</td> </tr>
+                                            <tr> <td>8 </td> <td>I (使用不可)   </td> <td>23</td> <td>X (使用不可)   </td> </tr>
+                                            <tr> <td>9 </td> <td>J (使用不可)   </td> <td>24</td> <td>Y (使用不可)   </td> </tr>
+                                            <tr> <td>10</td> <td>K (使用不可)   </td> <td>25</td> <td>Z (使用不可)   </td> </tr>
+                                            <tr> <td>11</td> <td>L              </td> <td>26</td> <td>M (第2Mコード) </td> </tr>
+                                            <tr> <td>12</td> <td>M              </td> <td>27</td> <td>M (第3Mコード) </td> </tr>
+                                            <tr> <td>13</td> <td>N              </td> <td>28</td> <td>M (第4Mコード) </td> </tr>
+                                            <tr> <td>14</td> <td>O              </td> <td>29</td> <td>M (第5Mコード) </td> </tr>
+                                        </tbody>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <p>ODBGCD構造体には以下の値がセットされます。</p>
+                                    <dl>
+                                    <dt>adrs</dt>
+                                        <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                    <dt>num</dt>
+                                        <dd>adrsが M (=77)のとき、以下の値がセットされます。</dd>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr> <td valign="top">1</td>    <td valign="top">:</td>    <td valign="top">第1Mコード</td>    </tr>
+                                                <tr> <td valign="top">2</td>    <td valign="top">:</td>    <td valign="top">第2Mコード</td>    </tr>
+                                                <tr> <td valign="top">3</td>    <td valign="top">:</td>    <td valign="top">第3Mコード</td>    </tr>
+                                                <tr> <td valign="top">4</td>    <td valign="top">:</td>    <td valign="top">第4Mコード</td>    </tr>
+                                                <tr> <td valign="top">5</td>    <td valign="top">:</td>    <td valign="top">第5Mコード</td>    </tr>
+                                            </table>
+                                        </ul>
+                                    <dt>flag</dt>
+                                        <dd>以下のフラグがセットされます。</dd>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr>
+                                                    <td valign="top">#3 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">前ブロックと異なる指令 （Series 30i, 0i-D/F, PMi-Aのみ）</td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">小数点あり  </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">負データ  </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">1桁データ  </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">NCリセット後指令された  </td>
+                                                </tr>
+                                                <tr>
+                                                    <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">1</td>
+                                                    <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                 </tr>
+                                            </table>
+                                        </ul>
+                                    <dt>cmd_val</dt>
+                                        <dd>指令値データがセットされます。</dd>
+                                    <dt>dec_val</dt>
+                                        <dd>指令値の小数点以下桁数がセットされます。</dd><br/>
+                                        <dd>指令値は以下の計算式で得られます。</dd>
+                                        <dd>&#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)</dd><br/>
+                                        <dd>(例) F1000.0を読み出すと</dd>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr> <td>adrs   </td>    <td>=</td>    <td>F (=70)</td>    </tr>
+                                                <tr> <td>cmd_val</td>    <td>=</td>    <td>10000  </td>    </tr>
+                                                <tr> <td>dec_val</td>    <td>=</td>    <td>1      </td>    </tr>
+                                            </table>
+                                        </ul>
+                                    </dl>
+                                    <br/>
+                                </div>
+                                <li type="square">一括読み出し<br/></li>
+                                    <div>
+                                    <p>
+                                        typeに-1を指定すると、num_cmdで指定した数だけ、引数blockで指定したブロックにおけるGコード以外の
+                                        モーダルデータが読み出されます。
+                                        Gコード以外の全てのモーダルデータを読み出すには、num_cmdが指すデータに下表の値を指定して下さい。
+                                        関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                    </p>
+                                    また、1ブロック複数M指令ありのとき、NCの運転状況によっては同じMコードが複数個読めることがあります。
+                                    <p/><ul>
+                                    <table class="dd" border="1" frame="hsides" rules="groups">
+                                        <colgroup>
+                                        <colgroup>
+                                        <colgroup>
+                                            <thead>
+                                                <tr> <th></th> <th>第2補助機能あり</th>    <th>第2補助機能なし</th>    </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr> <td>1ブロック複数M指令あり</td>    <td>15</td>    <td>14</td>    </tr>
+                                                <tr> <td>1ブロック複数M指令なし</td>    <td>11</td>    <td>10</td>    </tr>
+                                            </tbody>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </ul>
+                                    </div>
+                            </ul>
+                            <p class="label">(2) 指令値の読み出し</p>
+                            <ul>
+                                <li type="square">個別読み出し<br/></li>
+                                    <div>
+                                        <p>
+                                            num_cmdが指すデータに1を指定して、typeに指令アドレス(100～129)を指定することにより、
+                                            引数 blockで指定したブロックで指令されている指令値が読み出されます。
+                                            指定したブロックに指定したアドレスが指令されていなかった場合、num_cmdが指すデータに0がセットされます。
+                                        </p>
+                                        type には、下表の値が指定できます。<br/>
+                                        <table border="1" rules="groups">
+                                            <colgroup>
+                                            <colgroup>
+                                            <colgroup>
+                                            <colgroup>
+                                                <thead>
+                                                    <tr> <th>type</th>  <th>指令アドレス</th>    <th>type</th>  <th>指令アドレス</th>    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr> <td>100</td> <td>A</td>                   <td>115</td>    <td>P</td>                </tr>
+                                                    <tr> <td>101</td> <td>B</td>                   <td>116</td>    <td>Q</td>                </tr>
+                                                    <tr> <td>102</td> <td>C</td>                   <td>117</td>    <td>R</td>                </tr>
+                                                    <tr> <td>103</td> <td>D</td>                   <td>118</td>    <td>S</td>                </tr>
+                                                    <tr> <td>104</td> <td>E</td>                   <td>119</td>    <td>T</td>                </tr>
+                                                    <tr> <td>105</td> <td>F</td>                   <td>120</td>    <td>U</td>                </tr>
+                                                    <tr> <td>106</td> <td>G (使用不可)</td>       <td>121</td>    <td>V</td>                </tr>
+                                                    <tr> <td>107</td> <td>H</td>                   <td>122</td>    <td>W</td>                </tr>
+                                                    <tr> <td>108</td> <td>I</td>                   <td>123</td>    <td>X</td>                </tr>
+                                                    <tr> <td>109</td> <td>J</td>                   <td>124</td>    <td>Y</td>                </tr>
+                                                    <tr> <td>110</td> <td>K</td>                   <td>125</td>    <td>Z</td>                </tr>
+                                                    <tr> <td>111</td> <td>L</td>                   <td>126</td>    <td>M (第2Mコード)</td>    </tr>
+                                                    <tr> <td>112</td> <td>M</td>                   <td>127</td>    <td>M (第3Mコード)</td>    </tr>
+                                                    <tr> <td>113</td> <td>N</td>                   <td>128</td>    <td>M (第4Mコード)</td>    </tr>
+                                                    <tr> <td>114</td> <td>O</td>                   <td>129</td>    <td>M (第5Mコード)</td>    </tr>
+                                                </tbody>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        <p>ODBGCD構造体には以下の値がセットされます。</p>
+                                        <dl>
+                                            <dt>adrs</dt>
+                                                <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                            <dt>num</dt>
+                                                <dd>adrsが M (=77)のとき、以下の値がセットされます。</dd>
+                                                <ul>
+                                                    <table class="dd">
+                                                        <tr> <td valign="top">1</td><td valign="top">:</td><td valign="top">第1Mコード</td> </tr>
+                                                        <tr> <td valign="top">2</td><td valign="top">:</td><td valign="top">第2Mコード</td> </tr>
+                                                        <tr> <td valign="top">3</td><td valign="top">:</td><td valign="top">第3Mコード</td> </tr>
+                                                        <tr> <td valign="top">4</td><td valign="top">:</td><td valign="top">第4Mコード</td> </tr>
+                                                        <tr> <td valign="top">5</td><td valign="top">:</td><td valign="top">第5Mコード</td> </tr>
+                                                    </table>
+                                                </ul>
+                                            <dt>flag</dt>
+                                                <dd>以下のフラグがセットされます。</dd>
+                                                <ul>
+                                                    <table class="dd">
+                                                        <tr>
+                                                            <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                            <td valign="top">:</td> <td valign="top">小数点あり  </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                            <td valign="top">:</td> <td valign="top">負データ  </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                            <td valign="top">:</td> <td valign="top">1桁データ  </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top">#11</td><td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                            <td valign="top">:</td> <td valign="top">NCリセット後指令された    </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td valign="top">#15</td> <td valign="top">=</td><td valign="top" width="45">(常に)1</td>
+                                                            <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                        </tr>
+                                                    </table>
+                                                </ul>
+                                            <dt>cmd_val</dt>
+                                                <dd>指令値データがセットされます。</dd>
+                                            <dt>dec_val</dt>
+                                                <dd>指令値の小数点以下桁数がセットされます。</dd><p/>
+                                                <ul>
+                                                    <div>
+                                                        指令値は以下の計算式で得られます。<br/>
+                                                        &#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)
+                                                        <p/>
+                                                        (例) X200.00を読み出すと<br/>
+                                                        <table class="dd">
+                                                            <tr> <td>adrs</td>     <td>=</td> <td>X (=88)  </td>    </tr>
+                                                            <tr> <td>cmd_val</td>  <td>=</td> <td>20000    </td>    </tr>
+                                                            <tr> <td>dec_val</td>  <td>=</td> <td>2        </td>    </tr>
+                                                        </table>
+                                                    </div>
+                                                </ul>
+                                        </dl>
+                                    </div>
+                                    <p/>
+                                <li type="square">一括読み出し</li><br/>
+                                    <div>
+                                        typeに-2を指定すると、num_cmdで指定した数だけ、引数blockで指定したブロックで指令されている指令値が読み出されます。
+                                        全指令値を読み出すには、num_cmdが指すデータに以下の値を指定して下さい。
+                                        関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                        <p/>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr> <td>1ブロック複数M指令あり</td>    <td>:</td> <td>29</td>    </tr>
+                                                <tr> <td>1ブロック複数M指令なし</td>    <td>:</td> <td>25</td>    </tr>
+                                            </table>
+                                        </ul>
+                                    </div>
+                            </ul>
+                            <p class="label">(3) 軸指令値の読み出し</p>
+                            <ul>
+                                <li type="square">個別読み出し</li><br/>
+                                <ul>
+                                    <div>
+                                        <p/>
+                                        num_cmdが指すデータに1を指定して、typeに軸(200～223)を指定することにより、
+                                        引数blockで指定したブロックで指令されている軸指令値が読み出されます。
+                                        指定したブロックにおいて指定した軸が指令されていなかった場合、num_cmdが指すデータに0がセットされます。
+                                        <p/>
+                                        type には、下表の値が指定できます。
+                                        <p/>
+                                        <li type="disc">Series 15i</li>
+                                            <table border="1" rules="groups">
+                                                <colgroup>
+                                                <colgroup>
+                                                <thead>
+                                                    <tr> <th>type</th>    <th>軸</th>        </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr> <td>200</td>                  <td>第1軸</td>            </tr>
+                                                    <tr> <td>201</td>                  <td>第2軸</td>            </tr>
+                                                    <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                    <tr> <td>209</td>                  <td>第10軸</td>           </tr>
+                                                    <tr> <td>210</td>                  <td>第11軸</td>           </tr>
+                                                    <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                    <tr> <td>222</td>                  <td>第23軸</td>           </tr>
+                                                    <tr> <td>223</td>                  <td>第24軸</td>           </tr>
+                                                </tbody>
+                                                </colgroup>
+                                                </colgroup>
+                                            </table>
+                                            ※ MAX_AXIS=15 の時 type=215～223 は未使用です。<br/>
+                                            ※ MAX_AXIS=10 の時 type=210～223 は未使用です。<p/>
+                                        <li type="disc">Series 30i, 0i-D/F, PMi-A</li>
+                                            <table border="1" rules="groups">
+                                                <colgroup>
+                                                <colgroup>
+                                                <thead>
+                                                    <tr> <th>type</th>    <th>軸</th>        </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr> <td>200</td>                  <td>第1軸</td>            </tr>
+                                                    <tr> <td>201</td>                  <td>第2軸</td>            </tr>
+                                                    <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                    <tr> <td>209</td>                  <td>第10軸</td>           </tr>
+                                                    <tr> <td>210</td>                  <td>第11軸</td>           </tr>
+                                                    <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                    <tr> <td>230</td>                  <td>第31軸</td>           </tr>
+                                                    <tr> <td>231</td>                  <td>第32軸</td>           </tr>
+                                                </tbody>
+                                                </colgroup>
+                                                </colgroup>
+                                            </table>
+                                            <p>ODBCMD構造体には以下の値がセットされます。</p>
+                                            <dl>
+                                                <dt>adrs</dt>
+                                                    <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                                <dt>num</dt>
+                                                    <dd>軸番号(1～最大制御軸数)がバイナリでセットされます。</dd>
+                                                <dt>flag</dt>
+                                                    <dd>以下のフラグがセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr>
+                                                                <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">小数点あり</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">負データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">1桁データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#11</td>
+                                                                <td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">NCリセット後指令された</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#15</td>
+                                                                <td valign="top">=</td><td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                            </tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>cmd_val</dt>
+                                                    <dd>指令値データがセットされます。</dd>
+                                                <dt>dec_val</dt>
+                                                    <dd>指令値の小数点以下桁数がセットされます。</dd><p/>
+                                                    <div>
+                                                        <dd>指令値は以下の計算式で得られます。</dd>
+                                                        <dd>&#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)</dd>
+                                                        <dd><p/>(例) 2軸目がYの時、Y50.0を読み出すと</dd>
+                                                        <ul>
+                                                            <table class="dd">
+                                                                <tr> <td>adrs</td>    <td>=</td>    <td>Y (=89)</td>    </tr>
+                                                                <tr> <td>num</td>        <td>=</td>    <td>2</td>        </tr>
+                                                                <tr> <td>cmd_val</td>    <td>=</td>    <td>500</td>        </tr>
+                                                                <tr> <td>dec_val</td>    <td>=</td>    <td>1</td>        </tr>
+                                                            </table>
+                                                        </ul>
+                                                    </div>
+                                            </dl>
+                                    <p/>
+                                    </div>
+                                </ul>
+                                <li type="square">一括読み出し</li><br/>
+                                <ul>
+                                    <div>
+                                        <p/>
+                                        typeに-3を指定すると、num_cmdで指定した数だけ、
+                                        引数blockで指定したブロックで指令されている軸指令値が読み出されます。
+                                        全軸の指令値を読み出すには、num_cmdが指すデータに以下の値を指定して下さい。
+                                        関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                        <table class="dd">
+                                            <tr> <td>MAX_AXIS = 25～32のとき</td>    <td>:</td> <td>25～32(Series 30i, 0i-D/F, PMi-A のみ)</td>    </tr>
+                                        </table>
+                                        <table class="dd">
+                                            <tr> <td>MAX_AXIS = 24のとき</td>    <td>:</td> <td>24</td>    </tr>
+                                            <tr> <td>MAX_AXIS = 15のとき</td>    <td>:</td> <td>15</td>    </tr>
+                                            <tr> <td>MAX_AXIS = 10のとき</td>    <td>:</td> <td>10</td>    </tr>
+                                        </table>
+                                    </div>
+                                </ul>
+                            </ul>
+                        </content>
+                    </item>
+                </vc>
+
+            </common>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    <vc>
+                        <item>
+                            <name>FlibHndl</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>type</name>
+                            <type>in</type>
+                            <content>
+                                <p>指令値の種類を指定します。</p>
+                                <table class="dd">
+                                    <tr>
+                                        <td valign="top" width="60">0～29 </td>
+                                        <td valign="top">:</td> <td valign="top">Gコード以外のモーダルの個別読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">-1  </td> <td valign="top">:</td> <td valign="top">Gコード以外のモーダルの一括読み出し</td>
+                                    </tr>
+                                    <tr> <td valign="top">100～129</td> <td valign="top">:</td> <td valign="top">指令値の個別読み出し</td> </tr>
+                                    <tr> <td valign="top">-2      </td> <td valign="top">:</td> <td valign="top">指令値の一括読み出し</td> </tr>
+                                    <tr> <td valign="top">200～223</td> <td valign="top">:</td> <td valign="top">軸指令値の個別読み出し</td> </tr>
+                                    <tr> <td valign="top">-3      </td> <td valign="top">:</td> <td valign="top">軸指令値の一括読み出し</td> </tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>block</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    読み出す対象となるブロックを指定します。
+                                </p>
+                                <table class="dd">
+                                    <tr><td valign="top">0</td><td valign="top">:</td><td valign="top">前のブロック            </td></tr>
+                                    <tr><td valign="top">1</td><td valign="top">:</td><td valign="top">現在実行中のブロック    </td></tr>
+                                    <tr><td valign="top">2</td><td valign="top">:</td><td valign="top">次のブロック            </td></tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>num_cmd</name>
+                            <type>in/out</type>
+                            <content>
+                                <p>
+                                    読み出すデータの個数へのポインタを指定します。関数コール後に、実際に読み出されたデータの個数が設定されます。
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>command</name>
+                            <type>out</type>
+                            <content>
+                                <p>
+                                    指令値データを返すODBCMD構造体の配列の先頭アドレスを指定します。
+                                    個別読み出しの場合はODBCMD構造体を1個、一括読み出しの場合にはODBCMD構造体を読み出す個数(*num_cmd)分用意します。
+                                    ODBCMD構造体は次の通りです。 
+                                </p>
+<pre>
+typedef struct odbcmd {
+    char  adrs ;            /* 指令アドレス */
+    char  num ;             /* Mコード番号、または軸番号 */
+    short flag ;            /* 付加情報 */
+    long  cmd_val ;         /* 指令値データ */
+    long  dec_val ;         /* 指令値の小数点以下桁数 */
+} ODBCMD ;
+</pre>
+                                <p>ODBGCD構造体の各メンバについては、以下の各読み出しの説明を参照して下さい。</p>
+                                <p class="label">(1) Gコード以外のモーダルの読み出し</p>
+                                <ul>
+                                    <p>
+                                       D, E, F, H, L, M, N, O, S, T, 第2補助機能(パラメータ1030で設定した A, B, C, U, V, Wのいずれか)の
+                                       指令値が読み出されます。
+                                    </p>
+                                    <li type="square">個別読み出し<br/></li>
+                                        <div>
+                                            <p>
+                                                num_cmdが指すデータに1を指定して、typeに指令アドレス(0～29)を指定することにより、
+                                                引数 blockで指定したブロックにおけるGコード以外のモーダルデータが読み出されます。
+                                            </p>
+                                            type には、下表の値が指定できます。<br/>
+                                            <table border="1" rules="groups">
+                                                <colgroup>
+                                                <colgroup>
+                                                <colgroup>
+                                                <colgroup>
+                                                <thead>
+                                                    <tr> <th>type</th>  <th>指令アドレス</th>    <th>type</th><th>指令アドレス</th> </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr> <td>0 </td> <td>A (第2補助機能)</td> <td>15</td> <td>P (使用不可)   </td> </tr>
+                                                    <tr> <td>1 </td> <td>B (第2補助機能)</td> <td>16</td> <td>Q (使用不可)   </td> </tr>
+                                                    <tr> <td>2 </td> <td>C (第2補助機能)</td> <td>17</td> <td>R (使用不可)   </td> </tr>
+                                                    <tr> <td>3 </td> <td>D              </td> <td>18</td> <td>S              </td> </tr>
+                                                    <tr> <td>4 </td> <td>E              </td> <td>19</td> <td>T              </td> </tr>
+                                                    <tr> <td>5 </td> <td>F              </td> <td>20</td> <td>U (第2補助機能)</td> </tr>
+                                                    <tr> <td>6 </td> <td>G (使用不可)   </td> <td>21</td> <td>V (第2補助機能)</td> </tr>
+                                                    <tr> <td>7 </td> <td>H              </td> <td>22</td> <td>W (第2補助機能)</td> </tr>
+                                                    <tr> <td>8 </td> <td>I (使用不可)   </td> <td>23</td> <td>X (使用不可)   </td> </tr>
+                                                    <tr> <td>9 </td> <td>J (使用不可)   </td> <td>24</td> <td>Y (使用不可)   </td> </tr>
+                                                    <tr> <td>10</td> <td>K (使用不可)   </td> <td>25</td> <td>Z (使用不可)   </td> </tr>
+                                                    <tr> <td>11</td> <td>L              </td> <td>26</td> <td>M (第2Mコード) </td> </tr>
+                                                    <tr> <td>12</td> <td>M              </td> <td>27</td> <td>M (第3Mコード) </td> </tr>
+                                                    <tr> <td>13</td> <td>N              </td> <td>28</td> <td>M (第4Mコード) </td> </tr>
+                                                    <tr> <td>14</td> <td>O              </td> <td>29</td> <td>M (第5Mコード) </td> </tr>
+                                                </tbody>
+                                                </colgroup>
+                                                </colgroup>
+                                                </colgroup>
+                                                </colgroup>
+                                            </table>
+                                            <p>ODBGCD構造体には以下の値がセットされます。</p>
+                                            <dl>
+                                                <dt>adrs</dt>
+                                                    <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                                <dt>num</dt>
+                                                    <dd>adrsが M (=77)のとき、以下の値がセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr> <td valign="top">1</td><td valign="top">:</td><td valign="top">第1Mコード</td></tr>
+                                                            <tr> <td valign="top">2</td><td valign="top">:</td><td valign="top">第2Mコード</td></tr>
+                                                            <tr> <td valign="top">3</td><td valign="top">:</td><td valign="top">第3Mコード</td></tr>
+                                                            <tr> <td valign="top">4</td><td valign="top">:</td><td valign="top">第4Mコード</td></tr>
+                                                            <tr> <td valign="top">5</td><td valign="top">:</td><td valign="top">第5Mコード</td></tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>flag</dt>
+                                                    <dd>以下のフラグがセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr>
+                                                                <td valign="top">#3 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">前ブロックと異なる指令</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">小数点あり</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">負データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">1桁データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#11</td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">NCリセット後指令された</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#15</td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                            </tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>cmd_val</dt>
+                                                    <dd>指令値データがセットされます。</dd>
+                                                <dt>dec_val</dt>
+                                                    <dd>指令値の小数点以下桁数がセットされます。</dd><br/>
+                                                    <dd>指令値は以下の計算式で得られます。</dd>
+                                                    <dd>&#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)</dd><br/>
+                                                    <dd>(例) F1000.0を読み出すと</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr> <td>adrs   </td>    <td>=</td>    <td>F (=70)</td>    </tr>
+                                                            <tr> <td>cmd_val</td>    <td>=</td>    <td>10000  </td>    </tr>
+                                                            <tr> <td>dec_val</td>    <td>=</td>    <td>1      </td>    </tr>
+                                                        </table>
+                                                    </ul>
+                                            </dl>
+                                            <br/>
+                                        </div>
+                                    <li type="square">一括読み出し<br/></li>
+                                        <div>
+                                        <p>
+                                            typeに-1を指定すると、num_cmdで指定した数だけ、引数blockで指定したブロックにおけるGコード以外の
+                                            モーダルデータが読み出されます。
+                                            Gコード以外の全てのモーダルデータを読み出すには、num_cmdが指すデータに下表の値を指定して下さい。
+                                            関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                        </p>
+                                        また、1ブロック複数M指令ありのとき、NCの運転状況によっては同じMコードが複数個読めることがあります。
+                                        <p/>
+                                        <ul>
+                                            <table class="dd" border="1" frame="hsides" rules="groups">
+                                                <colgroup>
+                                                <colgroup>
+                                                <colgroup>
+                                                <thead>
+                                                    <tr> <th></th> <th>第2補助機能あり</th>    <th>第2補助機能なし</th>    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr> <td>1ブロック複数M指令あり</td>    <td>15</td>    <td>14</td>    </tr>
+                                                    <tr> <td>1ブロック複数M指令なし</td>    <td>11</td>    <td>10</td>    </tr>
+                                                </tbody>
+                                                </colgroup>
+                                                </colgroup>
+                                                </colgroup>
+                                            </table>
+                                        </ul>
+                                        </div>
+                                </ul>
+                                <p class="label">(2) 指令値の読み出し</p>
+                                <ul>
+                                    <li type="square">個別読み出し<br/></li>
+                                        <div>
+                                            <p>
+                                                num_cmdが指すデータに1を指定して、typeに指令アドレス(100～129)を指定することにより、
+                                                引数 blockで指定したブロックで指令されている指令値が読み出されます。
+                                                指定したブロックに指定したアドレスが指令されていなかった場合、num_cmdが指すデータに0がセットされます。
+                                            </p>
+                                            type には、下表の値が指定できます。<br/>
+                                            <table border="1" rules="groups">
+                                                <colgroup>
+                                                <colgroup>
+                                                <colgroup>
+                                                <colgroup>
+                                                    <thead>
+                                                        <tr> <th>type</th>  <th>指令アドレス</th>    <th>type</th><th>指令アドレス</th>  </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr> <td>100</td> <td>A</td>  <td>115</td>    <td>P</td>                 </tr>
+                                                        <tr> <td>101</td> <td>B</td>  <td>116</td>    <td>Q</td>                 </tr>
+                                                        <tr> <td>102</td> <td>C</td>  <td>117</td>    <td>R</td>                 </tr>
+                                                        <tr> <td>103</td> <td>D</td>  <td>118</td>    <td>S</td>                 </tr>
+                                                        <tr> <td>104</td> <td>E</td>  <td>119</td>    <td>T</td>                 </tr>
+                                                        <tr> <td>105</td> <td>F</td>  <td>120</td>    <td>U</td>                 </tr>
+                                                        <tr> <td>106</td> <td>G (使用不可)</td>  <td>121</td>  <td>V</td>       </tr>
+                                                        <tr> <td>107</td> <td>H</td>  <td>122</td>    <td>W</td>                 </tr>
+                                                        <tr> <td>108</td> <td>I</td>  <td>123</td>    <td>X</td>                 </tr>
+                                                        <tr> <td>109</td> <td>J</td>  <td>124</td>    <td>Y</td>                 </tr>
+                                                        <tr> <td>110</td> <td>K</td>  <td>125</td>    <td>Z</td>                 </tr>
+                                                        <tr> <td>111</td> <td>L</td>  <td>126</td>    <td>M (第2Mコード)</td>     </tr>
+                                                        <tr> <td>112</td> <td>M</td>  <td>127</td>    <td>M (第3Mコード)</td>     </tr>
+                                                        <tr> <td>113</td> <td>N</td>  <td>128</td>    <td>M (第4Mコード)</td>     </tr>
+                                                        <tr> <td>114</td> <td>O</td>  <td>129</td>    <td>M (第5Mコード)</td>     </tr>
+                                                </tbody>
+                                                </colgroup>
+                                                </colgroup>
+                                                </colgroup>
+                                                </colgroup>
+                                            </table>
+                                            <p>ODBGCD構造体には以下の値がセットされます。</p>
+                                            <dl>
+                                                <dt>adrs</dt>
+                                                    <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                                <dt>num</dt>
+                                                    <dd>adrsが M (=77)のとき、以下の値がセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr> <td valign="top">1</td><td valign="top">:</td><td valign="top">第1Mコード</td> </tr>
+                                                            <tr> <td valign="top">2</td><td valign="top">:</td><td valign="top">第2Mコード</td> </tr>
+                                                            <tr> <td valign="top">3</td><td valign="top">:</td><td valign="top">第3Mコード</td> </tr>
+                                                            <tr> <td valign="top">4</td><td valign="top">:</td><td valign="top">第4Mコード</td> </tr>
+                                                            <tr> <td valign="top">5</td><td valign="top">:</td><td valign="top">第5Mコード</td> </tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>flag</dt>
+                                                    <dd>以下のフラグがセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr>
+                                                                <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">小数点あり</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">負データ  </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top">1</td>
+                                                                <td valign="top">:</td> <td valign="top">1桁データ  </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#11</td>
+                                                                <td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">NCリセット後指令された    </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#15</td>
+                                                                <td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                            </tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>cmd_val</dt>
+                                                    <dd>指令値データがセットされます。</dd>
+                                                <dt>dec_val</dt>
+                                                    <dd>指令値の小数点以下桁数がセットされます。</dd><p/>
+                                                    <ul>
+                                                        <div>
+                                                            指令値は以下の計算式で得られます。<br/>
+                                                            &#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)
+                                                            <p/>
+                                                            (例) X200.00を読み出すと<br/>
+                                                            <table class="dd">
+                                                                <tr> <td>adrs</td>     <td>=</td> <td>X (=88)  </td>    </tr>
+                                                                <tr> <td>cmd_val</td>  <td>=</td> <td>20000    </td>    </tr>
+                                                                <tr> <td>dec_val</td>  <td>=</td> <td>2        </td>    </tr>
+                                                            </table>
+                                                        </div>
+                                                    </ul>
+                                            </dl>
+                                        </div>
+                                    <p/>
+                                    <li type="square">一括読み出し</li><br/>
+                                        <div>
+                                            typeに-2を指定すると、num_cmdで指定した数だけ、
+                                            引数blockで指定したブロックで指令されている指令値が読み出されます。
+                                            全指令値を読み出すには、num_cmdが指すデータに以下の値を指定して下さい。
+                                            関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                            <p/>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr> <td>1ブロック複数M指令あり</td>    <td>:</td> <td>29</td>    </tr>
+                                                <tr> <td>1ブロック複数M指令なし</td>    <td>:</td> <td>25</td>    </tr>
+                                            </table>
+                                        </ul>
+                                        </div>
+                                </ul>
+                                <p class="label">(3) 軸指令値の読み出し</p>
+                                <ul>
+                                    <li type="square">個別読み出し</li><br/>
+                                        <ul>
+                                            <div>
+                                                <p/>
+                                                num_cmdが指すデータに1を指定して、typeに軸(200～223)を指定することにより、
+                                                引数blockで指定したブロックで指令されている軸指令値が読み出されます。
+                                                指定したブロックにおいて指定した軸が指令されていなかった場合、
+                                                num_cmdが指すデータに0がセットされます。
+                                                <p/>type には、下表の値が指定できます。<p/>
+                                                <table border="1" rules="groups">
+                                                    <colgroup>
+                                                    <colgroup>
+                                                    <thead>
+                                                        <tr> <th>type</th>    <th>軸</th>        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr> <td>200</td>                  <td>第1軸</td>            </tr>
+                                                        <tr> <td>201</td>                  <td>第2軸</td>            </tr>
+                                                        <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                        <tr> <td>&#160;&#160;:</td>        <td>&#160;&#160;:</td>    </tr>
+                                                        <tr> <td>230</td>                  <td>第31軸</td>           </tr>
+                                                        <tr> <td>231</td>                  <td>第32軸</td>           </tr>
+                                                    </tbody>
+                                                    </colgroup>
+                                                    </colgroup>
+                                                </table>
+                                                <p>ODBCMD構造体には以下の値がセットされます。</p>
+                                                <dl>
+                                                <dt>adrs</dt>
+                                                    <dd>読み出したモーダルの指令アドレスがASCIIコードでセットされます。</dd>
+                                                <dt>num</dt>
+                                                    <dd>軸番号(1～最大制御軸数)がバイナリでセットされます。</dd>
+                                                <dt>flag</dt>
+                                                    <dd>以下のフラグがセットされます。</dd>
+                                                    <ul>
+                                                        <table class="dd">
+                                                            <tr>
+                                                                <td valign="top">#4 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">小数点あり</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#5 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">負データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#6 </td> <td valign="top">=</td> <td valign="top" width="45">1</td>
+                                                                <td valign="top">:</td> <td valign="top">1桁データ</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#11</td>
+                                                                <td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">NCリセット後指令された</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td valign="top">#15</td>
+                                                                <td valign="top">=</td> <td valign="top" width="45">(常に)1</td>
+                                                                <td valign="top">:</td> <td valign="top">指定ブロックにて指令されている</td>
+                                                            </tr>
+                                                        </table>
+                                                    </ul>
+                                                <dt>cmd_val</dt>
+                                                    <dd>指令値データがセットされます。</dd>
+                                                <dt>dec_val</dt>
+                                                    <dd>指令値の小数点以下桁数がセットされます。</dd><p/>
+                                                    <div>
+                                                        <dd>指令値は以下の計算式で得られます。</dd>
+                                                        <dd>&#160;&#160;&#160;指令値 = cmd_val * 10 ** (-dec_val)</dd>
+                                                        <dd><p/>(例) 2軸目がYの時、Y50.0を読み出すと</dd>
+                                                        <ul>
+                                                            <table class="dd">
+                                                                <tr> <td>adrs</td>    <td>=</td>    <td>Y (=89)</td>    </tr>
+                                                                <tr> <td>num</td>        <td>=</td>    <td>2</td>        </tr>
+                                                                <tr> <td>cmd_val</td>    <td>=</td>    <td>500</td>        </tr>
+                                                                <tr> <td>dec_val</td>    <td>=</td>    <td>1</td>        </tr>
+                                                            </table>
+                                                        </ul>
+                                                    </div>
+                                                </dl>
+                                            <p/>
+                                            </div>
+                                        </ul>
+                                    <li type="square">一括読み出し</li><br/>
+                                        <ul>
+                                            <div>
+                                                <p/>
+                                                typeに-3を指定すると、num_cmdで指定した数だけ、引数blockで指定したブロックで指令されている
+                                                軸指令値が読み出されます。
+                                                全軸の指令値を読み出すには、num_cmdが指すデータに以下の値を指定して下さい。
+                                                関数コール後に、num_cmdが指すデータに実際に読み出したデータ数がセットされます。
+                                            </div>
+                                        </ul>
+                                </ul>
+                            </content>
+                        </item>
+                    </vc>
+                </hssb>
+            </is>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>データブロック長の誤り<br/>読み取り個数(*num_cmd)が不正です。</content>
+            </item>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>データ番号の誤り<br/>指令値の種類(type)の指定が不適切です。</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り<br/>ブロックの指定(block)が不適切です</content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr>
+                イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+                但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。<br/><br/>
+                組込みイーサネットを使用のとき、<br/>
+                <p class="dd">上記２つの機能は必要ありません。</p>
+                イーサネットボードを使用のとき、<br/>
+                <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+<!--
+            <type>
+                <li type="dd">Series 15i</li>
+                1ブロック複数M指令、第2補助機能
+            </type>
+-->
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+<!--
+                <type>
+                    1ブロック複数M指令、第2補助機能
+                </type>
+-->
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter>
+            <type>
+                <ul>
+                <li>Series 15i</li>
+                    1030 (設定の影響を受けます) 
+                </ul>
+            </type>
+        </parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>O</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_modal</name>
+                <file>Misc/cnc_modal.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdgcode</name>
+                <file>Misc/cnc_rdgcode.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

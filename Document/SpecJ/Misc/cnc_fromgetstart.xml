@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_fromgetstart</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_fromgetstart(unsigned short FlibHndl, short slotno, char *name);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC制御部のFROMデータの読み込み開始を指示します。<br/>
+               ただし<!--Ethernet版では、-->システムコントロールソフトウェアの読み込みはできません。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slotno</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            物理スロット番号(0,1,2,...,15)<br/>
+読み込みたいFROMが実装されている制御部プリント板の物理スロット番号を指定します。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>name</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            読み込みたいシステムデータの名称<br/>
+                            <a href="Misc/cnc_getfrominfo.htm" target="_parent">cnc_getfrominfo</a> 関数で取得したシステムデータ名称(sysname)を指定します。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>ビジィ<br/>
+            <a href="Misc/cnc_fromgetstart.htm" target="_parent">cnc_fromgetstart</a>関数を実行済みです。<br/>
+            <a href="Misc/cnc_fromgetend.htm" target="_parent">cnc_fromgetend</a>関数にて前回の読み込みを終了させてください。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>関数実行時エラー<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>-2</td>
+                        <td>:</td>
+                        <td>指定されたスロットにはFROM(モジュール)が実装されていない。</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>:</td>
+                        <td>指定された名称のFROMデータが存在しない</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>:</td>
+                        <td>FROM(モジュール)が認識できない(デバイス不良)</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>:</td>
+                        <td>指定されたスロットが存在しない</td>
+                    </tr>
+                </colgroup>
+                </colgroup>
+                </colgroup>
+                </table>
+         </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC側で同様の処理(情報読み込み/データ読み込み/データ書き込み)を実行中です。 リトライしてください。 </content>
+        </item>
+        <item>
+            <name>EW_PASSWD</name>
+            <content>指定されたFROMデータは保護されているため読み込めません。 </content>
+        </item>                
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_getfrominfo</name>
+            <file>Misc/cnc_getfrominfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromget</name>
+            <file>Misc/cnc_fromget.htm</file>
+        </item>
+        <item>
+            <name>cnc_fromgetend</name>
+            <file>Misc/cnc_fromgetend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

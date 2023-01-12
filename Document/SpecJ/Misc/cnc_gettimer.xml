@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_gettimer</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_gettimer(unsigned short FlibHndl, IODBTIMER *buf);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>CNC装置に実装されているカレンダタイマの日付、及び時刻を取得します。</p>
+            </cmn>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <cmn>
+                    <p>CNC装置に実装されているカレンダタイマの日付、及び時刻を取得します。</p>
+                    <p>
+                        buf.typeには以下のいずれかを指定します(日付と時刻を同時に取得することはできません)。 
+                        <table class="dd" border="1" frame="hsides" rules="groups">
+                            <thead>
+                                <tr>
+                                    <th>buf.type</th>
+                                    <th>取得するデータ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td align ="center">0</td>
+                                    <td>日付</td>
+                                </tr>
+                                <tr>
+                                    <td align ="center">1</td>
+                                    <td>時刻</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p>
+                    <p>
+                        buf.data.date、またはbuf.data.timeの各メンバには、次のように日付、または時刻データがバイナリ形式で格納されます。
+                        <table class="dd" border="1" frame="hsides" rules="groups">
+                            <thead>
+                            <tr>
+                                <th>メンバ</th>
+                                <th>データ</th>
+                                <th>値の範囲</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td valign="top">buf.data.date.year</td>
+                                <td valign="top">年</td>
+                                <td>1997～2096</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.date.month</td>
+                                <td>月</td>
+                                <td>1～12</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.date.date</td>
+                                <td>日</td>
+                                <td>1～31</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.hour</td>
+                                <td>時</td>
+                                <td>0～23</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.minute</td>
+                                <td>分</td>
+                                <td>0～59</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.second</td>
+                                <td>秒</td>
+                                <td>0～59</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </p>
+                </cmn>
+            </is>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>buf</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                CNCの日付、時刻を取得するIODBTIMER構造体へのポインタです。 IODBTIMER構造体は次の通りです。
+                            </p>
+<pre>
+typedef struct iodbtimer {
+        short   type ;          /* 日付,時刻の指定 */
+        short   dummy ;         /* 未使用 */
+        union {
+                struct {
+                        short   year ;  /* 年 */
+                        short   month ; /* 月 */
+                        short   date ;  /* 日 */
+                } date ;
+                struct {
+                        short   hour ;  /* 時 */
+                        short   minute ;/* 分 */
+                        short   second ;/* 秒 */
+                } time ;
+        } data ;
+} IODBTIMER ;
+</pre>
+
+                <p>
+                    buf.typeには以下のいずれかを指定します(日付と時刻を同時に取得することはできません)。 
+                    <table class="dd" border="1" frame="hsides" rules="groups">
+                        <thead>
+                        <tr>
+                            <th>buf.type<br/>(buf.nType)</th>
+                            <th>設定するデータ</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>日付の設定</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>時刻の設定</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </p>
+                <p>
+                    buf.data.date、またはbuf.data.timeの各メンバには、次のように日付、
+                    または時刻データがバイナリ形式で格納されます。
+                    <table class="dd" border="1" frame="hsides" rules="groups">
+                        <thead>
+                        <tr>
+                            <th>メンバ</th>
+                            <th>データ</th>
+                            <th>値の範囲</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td valign="top">buf.data.date.year</td>
+                            <td valign="top">年</td>
+                            <td>
+                                1987～2085(Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i)<br/>
+                                1986～2086(Series 15)<br/>
+                                1995～2094(Series 15i)<br/>
+                                1997～2096(Series 30i/31i/32i, 0i-D/F, PMi-A)</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.date.month</td>
+                                <td>月</td>
+                                <td>1～12</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.date.date</td>
+                                <td>日</td>
+                                <td>1～31</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.hour</td>
+                                <td>時</td>
+                                <td>0～23</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.minute</td>
+                                <td>分</td>
+                                <td>0～59</td>
+                            </tr>
+                            <tr>
+                                <td>buf.data.time.second</td>
+                                <td>秒</td>
+                                <td>0～59</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </p>
+                <p>つまり、取得できるカレンダタイマの範囲は以下のようになります。
+                    <dl class="dd">
+                        <dt>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</dt>
+                        <dd>1987年1月1日0時0分0秒 ～ 2085年12月31日23時59分59秒</dd>
+                        <dt>Series 15</dt>
+                        <dd>1986年1月1日0時0分0秒 ～ 2086年12月31日23時59分59秒</dd>
+                        <dt>Series 15i</dt>
+                        <dd>1995年1月1日0時0分0秒 ～ 2094年12月31日23時59分59秒</dd>
+                        <dt>Series 30i/31i/32i, 0i-D/F, PMi-A</dt>
+                        <dd>1997年1月1日0時0分0秒 ～ 2096年12月31日23時59分59秒</dd>
+                    </dl>
+                </p>
+
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>日付,時刻の指定(buf.type)が正しくありません。 </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                <p><ul>上記２つの機能は必要ありません。</ul></p>
+                <p>イーサネットボードを使用のとき、</p>
+                <p><ul>イーサネット機能のみ必要です。</ul></p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_settimer</name>
+                <file>Misc/cnc_settimer.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <title>cnc_pdf_rdactpt</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_pdf_rdactpt(unsigned short FlibHndl, char* prog_name, long* blk_no );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+        <cmn>
+            <p>MDI、MEMモードおよびEDIT、TJOG、THNDモードにおける現在のプログラム名とブロック番号を取得します。</p>
+            <p>本関数を実行する上での制限事項を以下に示します。
+                <ul>
+                <li>DNC/M198運転中は、EW_REJECTとなります。</li>
+                <li>FS30i-Aでは、STL信号がONの場合は、EW_REJECTとなります。</li>
+                <li>FS0i-D/F, FS30i-B, PMi-Aでは、STL信号がONの場合でも、EW_OKとなります(パラメータNo.13104#1=1の場合は、EW_REJECT)。</li>
+                <li>FS0i-D/F, FS30i-B, PMi-Aでは、M198実行中も、EW_OKとなります。</li>
+                <li>プログラムが先読みされている場合は、先読みされているブロックの次のブロック番号が取得されます。</li>
+                </ul>
+            </p><br/>
+
+            <p>本関数は、パラメータLES(No.11353#3)により、CNCでリセット処理が実行された時、処理が中断するか否かを選択することができます。</p>
+            <p>パラメータLES(No.11353#3)=0 の場合、処理は中断されません。</p>
+            <p>パラメータLES(No.11353#3)=1 の場合、処理は中断されます。</p>
+            <br/>
+            0i-Dでは、本関数をプログラムのブロック番号を変更する関数(例：cnc_pdf_searchresult)の直後に実行すると、その変更前の値を取得する場合があります。
+        </cmn>
+    </doc>
+
+
+
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_name</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            実行中のプログラムを格納するポインタを指定します。<br/>
+                            MDIプログラムが実行されている時は、"MDI"がセットされます。
+                            バッファは244文字分必要です。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>blk_no</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            プログラムの先頭を0としたブロック番号を格納するポインタを指定します。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <errcode>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCモードの誤り<br/>
+                MDI、MEM、EDIT、TJOG、THNDモード以外で実行されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                ポインタ取得の実行拒否
+                <ul style="margin-top:0;margin-bottom:0">
+                <li>現在対象となるプログラムが存在しません。</li>
+                <li>CNCがDNC運転、M198運転中です。</li>
+                <li>STL信号がONです。</li>
+                <li>非常停止中です。</li>
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <parameter>
+        <type>
+            <ul>
+                11353#3 (設定の影響を受けます)
+            </ul>
+            <ul>
+                <li>Series 0i-D/F, 30i-B, PMi-A<br/>
+                    13104#1<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <mode>
+        <cmn>上記解説の項を参照してください。</cmn>
+    </mode>
+
+
+
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_pdf_wractpt</name>
+            <file>Program/cnc_pdf_wractpt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdophisno</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophisno(unsigned short FlibHndl, unsigned short *hisno); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>操作履歴データ数のリードを行います。</p>
+             <p>この関数を使用する前に、履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)を行う必要があります。</p>
+             <p><b>(例)</b></p>
+             <ul style="margin-top:0">
+                 <li>Series 15, 16i/18i/21i, 0i-A/B/C, Power Mate iの場合<br/>
+                 NCの操作履歴画面に下記のような履歴データが表示されているとき、本関数を使用すると、操作履歴データ数 = 6と読めます。<br/>
+                 <table class="dd" border="1">
+                 <colgroup valign="top"></colgroup>
+                 <colgroup></colgroup>
+                 <colgroup></colgroup>
+                 <thead>
+                     <tr><th>履歴番号</th><th>操作履歴</th>     <th>レコードの種類</th>          </tr>
+                 </thead>
+                 <tbody>
+                     <tr><td>1</td>        <td>99/11/22</td>    <td rowspan="2">電源ON時刻</td>  </tr>
+                     <tr><td>2</td>        <td>12:34:56</td>                                     </tr>
+                     <tr><td>3</td>        <td>PS0181  </td>    <td rowspan="3">アラーム</td>    </tr>
+                     <tr><td>4</td>        <td>99/11/22</td>                                     </tr>
+                     <tr><td>5</td>        <td>13:00:00</td>                                     </tr>
+                     <tr><td>6</td>        <td>[SOFT 1]</td>    <td>MDIキー操作</td>             </tr>
+                 </tbody>
+                 </table>
+                 </li><br/>
+                 <li>Series 15i, 30i, 0i-D/F, PMi-Aの場合<br/>
+                 NCの操作履歴画面に下記のような履歴データが表示されているとき、本関数を使用すると、操作履歴データ数 =3と読めます。<br/>
+                 <table class="dd" border="1">
+                 <colgroup valign="top"></colgroup>
+                 <colgroup></colgroup>
+                 <colgroup></colgroup>
+                 <thead>
+                     <tr><th>履歴番号</th>      <th>操作履歴</th>    <th>レコードの種類</th>          </tr>
+                 </thead>
+                 <tbody>
+                     <tr><td rowspan="2">1</td>  <td>99/11/22</td>    <td rowspan="2">電源ON時刻</td> </tr>
+                     <tr>                        <td>12:34:56</td>                                    </tr>
+                     <tr><td rowspan="3">2</td>  <td>PS0181</td>      <td rowspan="3">アラーム</td>   </tr>
+                     <tr>                        <td>99/11/22</td>                                    </tr>
+                     <tr>                        <td>13:00:00</td>                                    </tr>
+                     <tr><td>3</td>              <td>[SOFT 1]</td>    <td>MDIキー操作</td>            </tr>
+                 </tbody>
+                 </table>
+                 </li>
+             </ul>
+        </cmn>
+        <is>
+        <cmn><p>操作履歴データ数のリードを行います。</p>
+             <p>この関数を使用する前に、履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)を行う必要があります。</p>
+             <p><b>(例)</b></p>
+             <ul style="margin-top:0">
+                 NCの操作履歴画面に下記のような履歴データが表示されているとき、本関数を使用すると、操作履歴データ数 =3と読めます。<br/>
+                 <table class="dd" border="1">
+                 <colgroup valign="top"></colgroup>
+                 <colgroup></colgroup>
+                 <colgroup></colgroup>
+                 <thead>
+                     <tr><th>履歴番号</th>      <th>操作履歴</th>    <th>レコードの種類</th>          </tr>
+                 </thead>
+                 <tbody>
+                     <tr><td rowspan="2">1</td>  <td>99/11/22</td>    <td rowspan="2">電源ON時刻</td> </tr>
+                     <tr>                        <td>12:34:56</td>                                    </tr>
+                     <tr><td rowspan="3">2</td>  <td>PS0181</td>      <td rowspan="3">アラーム</td>   </tr>
+                     <tr>                        <td>99/11/22</td>                                    </tr>
+                     <tr>                        <td>13:00:00</td>                                    </tr>
+                     <tr><td>3</td>              <td>[SOFT 1]</td>    <td>MDIキー操作</td>            </tr>
+                 </tbody>
+                 </table>
+             </ul>
+        </cmn>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hisno</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            操作履歴データ数を格納する変数のアドレスを指定します。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>関数未実行<br/>
+             履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)が行われていません。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i、PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i<br/>
+                    0015#3=1(必ず設定して下さい)<br/>
+                </li>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i<br/>
+                    3112#5=0(必ず設定して下さい)<br/>
+                    (16i/18i-Wの場合は 3112#5=1)
+                </li>
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry</name>
+            <file>History/cnc_rdophistry.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry2</name>
+            <file>History/cnc_rdophistry2.htm</file>
+        </item>
+        <item class="xis">
+            <name>cnc_rdophistry4</name>
+            <file>History/cnc_rdophistry4.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

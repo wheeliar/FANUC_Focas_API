@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdophistry2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophistry2(unsigned short FlibHndl, unsigned short s_no, unsigned short *e_no, unsigned short *length, void *his); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>操作履歴データのリードを行います。<br/>
+               Series 15i で操作履歴データのリードを行う場合、<a href="History/cnc_rdophistry.htm" target="_parent">cnc_rdophistry</a> 関数ではなく本関数を使用して下さい。</p>
+            <p>本関数を使用する前に、<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数を実行する必要があります。<br/>
+               また、リードが済み次第 <a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> 関数を実行して下さい。</p>
+            <p>1個の操作履歴データの単位をレコードと呼びます。<br/>
+               レコードの種類(rec_type)によって操作履歴データの構造が違いますので、データにアクセスする場合は種類に応じた構造体を使用して下さい。</p>
+            <p>開始/終了のレコード番号とは、リードする操作履歴データのレコード毎につけた番号のことです。<br/>
+               この番号は、『履歴データのサンプリングの停止』(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数)を実行してから『履歴データのサンプリングの再開』(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a> 関数)が実行されるまで有効です。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リードを開始する操作履歴データ番号を指定します。(1 以上を指定して下さい)<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            リードを終了する操作履歴データ番号へのポインタを指定します。(1 以上を指定して下さい)<br/>
+                            関数からは、実際にリードされた最後の操作履歴データ番号が返ります。<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            指定した範囲の操作履歴データを格納するのに必要なデータブロック長へのポインタを指定します。<br/>
+                            <br/>
+                            操作履歴データ1個あたりは下図ODBOPHIS構造体のようになり、構造体
+                            の大きさは rec_lenで表されます。この構造体が操作履歴データ番号
+                            順に指定された個数分並びますので、指定するlengthはそれら構造体
+                            の rec_lenの合計になります。<br/>
+                            <br/>
+                            関数からは、実際にリードしたサイズが返りますので長めに指定することができます。<br/>
+
+                        </p>
+                            <img src="History/recmdi15_vc.gif"></img><br/>
+                            <img src="History/recsig15_vc.gif"></img><br/>
+                            <img src="History/recalm15_vc.gif"></img><br/>
+                            <img src="History/rectim15_vc.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            操作履歴データを返す領域へのポインタです。
+                            個々の操作履歴データの参照は、ODBOPHIS構造体を使用します。
+                        </p>
+<pre>
+typedef struct odbophis {
+    short  rec_len;          /* レコードの有効長 */
+    short  rec_type;         /* レコードの種類 */
+    union {
+        struct {
+            char    key_code; /* キーコード */
+            char    pw_flag;  /* 電源投入フラグ */
+            short   dummy;    /* 未使用 */
+        } rec_mdi;                /* MDIキー操作 */
+        struct {
+            short   sig_name; /* 信号の名称 */
+            short   sig_no;   /* 信号の番号 */
+            char    sig_old;  /* 変化前のビットパターン */
+            char    sig_new;  /* 変化後のビットパターン */
+            short   dummy;    /* 未使用 */
+        } rec_sgn;                /* 信号 */
+        struct {
+            short   alm_grp;  /* アラームの種類 */
+            short   alm_no;   /* アラーム番号 */
+            short   axis_no;  /* 軸番号 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   dummy;    /* 未使用 */
+        } rec_alm;                /* アラーム */
+        struct {
+            short   evnt_type;/* イベントの種類 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   dummy;    /* 未使用 */
+        } rec_date;               /* 日付・時刻 */
+    } u;
+} ODBOPHIS ;
+</pre>
+                        <dl>
+                            <dt>rec_len</dt>
+                                <dd>ODBOPHIS構造体の長さがセットされます。</dd>
+                            <dt>rec_type</dt>
+                                <dd>レコードの種類がセットされます。</dd>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>MDIキー</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>信号</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>アラーム</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>日付・時刻</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>key_code</dt>
+                                <dd>キーコードがセットされます。</dd>
+                            <dt>pw_flag</dt>
+                                <dd>電源投入フラグ</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>電源投入時</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>その他</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_name</dt>
+                                <dd>信号の名称</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>X</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>G</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>Y</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>F</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_no</dt>
+                                <dd>信号の番号</dd><br/>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>X</td>
+                                        <td>:</td>
+                                        <td>0 ～ 127, 1000 ～ 1063</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G</td>
+                                        <td>:</td>
+                                        <td>0 ～ 255, 1000 ～ 1255</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Y</td>
+                                        <td>:</td>
+                                        <td>0 ～ 127, 1000 ～ 1063</td>
+                                    </tr>
+                                    <tr>
+                                        <td>F</td>
+                                        <td>:</td>
+                                        <td>0 ～ 255, 1000 ～ 1255</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_old</dt>
+                                <dd>変化前のビットパターン</dd>
+                            <dt>sig_new</dt>
+                                <dd>変化後のビットパターン</dd>
+                            <dt>alm_grp</dt>
+                                <dd>アラームの種類がセットされます。</dd>
+                                <ul type="disc">
+                                </ul>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>バッググラウンド用P/S</td>
+                                            <td>(BG)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>フォアグラウンド用 P/S</td>
+                                            <td>(PS)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>(未使用)</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>(未使用)</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>:</td>
+                                            <td>同期誤差過大エラー</td>
+                                            <td>(SN)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>:</td>
+                                            <td>パラメータ書込みスイッチオン</td>
+                                            <td>(SW)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>:</td>
+                                            <td>オーバトラベル / 外部データ入力エラー</td>
+                                            <td>(OT)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>:</td>
+                                            <td>PMC エラー</td>
+                                            <td>(PC)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>:</td>
+                                            <td>外部アラームメッセージ</td>
+                                            <td>(EX)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>:</td>
+                                            <td>(未使用)</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>:</td>
+                                            <td>重症の P/S</td>
+                                            <td>(SR)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11</td>
+                                            <td>:</td>
+                                            <td>(未使用)</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>:</td>
+                                            <td>サーボアラーム</td>
+                                            <td>(SV)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>:</td>
+                                            <td>I/O エラー</td>
+                                            <td>(IO)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>14</td>
+                                            <td>:</td>
+                                            <td>電源断が必要なパラメータ入力</td>
+                                            <td>(PW)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>15</td>
+                                            <td>:</td>
+                                            <td>システムアラーム</td>
+                                            <td>(SY)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>16</td>
+                                            <td>:</td>
+                                            <td>外部アラームメッセージ (2)</td>
+                                            <td>(EX)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>17</td>
+                                            <td>:</td>
+                                            <td>外部アラームメッセージ (3)</td>
+                                            <td>(EX)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>18</td>
+                                            <td>:</td>
+                                            <td>外部アラームメッセージ (4)</td>
+                                            <td>(EX)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>19</td>
+                                            <td>:</td>
+                                            <td>マクロアラーム</td>
+                                            <td>(MC)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>20</td>
+                                            <td>:</td>
+                                            <td>スピンドルアラーム</td>
+                                            <td>(SP)</td>
+                                        </tr>
+                                    </table>
+                            <dt>alm_no</dt>
+                                <dd>アラーム番号がセットされます。</dd>
+                            <dt>axis_no</dt>
+                                <dd>軸番号(1～最大制御軸数) または 主軸番号(1～主軸数)がセットされます。<br/>
+                                    (軸や主軸に関係ないアラームの場合は 0 がセットされます)<br/>
+                                </dd>
+                            <dt>year</dt>
+                                <dd>年 (1995 ～ 2094)<br/></dd>
+                            <dt>month</dt>
+                                <dd>月 (1 ～ 12)<br/></dd>
+                            <dt>day</dt>
+                                <dd>日 (1 ～ 31)<br/></dd>
+                            <dt>hour</dt>
+                                <dd>時 (0 ～ 23)<br/></dd>
+                            <dt>minute</dt>
+                                <dd>分 (0 ～ 59)<br/></dd>
+                            <dt>second</dt>
+                                <dd>秒 (0 ～ 59)<br/></dd>
+                            <dt>evnt_type</dt>
+                                <dd>イベントの種類</dd><br/>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>電源断</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>電源投入用</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>日付変更</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>タイムスタンプ</td>
+                                    </tr>
+                                    <tr>
+                                         <td>4</td>
+                                         <td>:</td>
+                                         <td>データ消去</td>
+                                         <td></td>
+                                     </tr>
+                             </table>
+                         </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数)が行われていません。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                    データブロック長の誤り<br/>
+                    操作履歴データ格納領域のサイズ(length)が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                     開始レコード番号(s_no)、終了レコード番号(e_no)が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>
+                    Series 15i<br/>
+                    0015#3=1(設定の影響を受けます)<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophisno</name>
+            <file>History/cnc_rdophisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophistry</name>
+            <file>History/cnc_rdophistry.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

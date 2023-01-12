@@ -1,0 +1,2225 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <title>cnc_modal</title>
+
+
+
+        <declare>
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_modal(unsigned short FlibHndl, short type, short block, ODBMDL *modal);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <doc>
+            <cmn>
+                <p>CNC側のモーダル情報を読み出します。各種情報はODBMDL内の各メンバに格納されます。</p>
+                <p>読み出すことのできるモーダルデータは、モーダルGコードの値や M,S,T,Fなどの指令値です。</p>
+                <p>
+                    モーダルデータの種別(type)により、データを格納する共用体のタイプが変化しますので、
+                    リード結果にアクセスする場合は種別に応じた共用体を使用して下さい。
+                </p>
+                <p>
+                    Series 15iの場合、本関数は使用できませんので、必ず<a href="Misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a>関数、
+                    及び<a href="Misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a>関数を使用して下さい。
+                </p>
+                <p>
+                    Series 30i, 0i-D/F, PMi-Aの場合、この関数で取得できるモーダルデータはSeries 16iに存在していたデータまでです。
+                    Series 30i, 0i-D/F, PMi-Aで追加されたデータについては、<a href="misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a>関数と
+                    <a href="misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a>関数にて取得することができます。
+                </p>
+            </cmn>
+            <!-- 30i(WinCE) -->
+            <is>
+                <cmn>
+                    <p>CNC側のモーダル情報を読み出します。各種情報はODBMDL内の各メンバに格納されます。</p>
+                    <p>読み出すことのできるモーダルデータは、モーダルGコードの値や M,S,T,Fなどの指令値です。</p>
+                    <p>
+                        モーダルデータの種別(type)により、データを格納する共用体のタイプが変化しますので、
+                        リード結果にアクセスする場合は種別に応じた共用体を使用して下さい。
+                    </p>
+                    <p>
+                        この関数で取得できるモーダルデータはSeries 16isに存在していたデータまでです。
+                        Series 30iで追加されたデータについては、<a href="misc/cnc_rdgcode.htm" target="_parent">cnc_rdgcode</a>関数と
+                        <a href="misc/cnc_rdcommand.htm" target="_parent">cnc_rdcommand</a>関数にて取得することができます。
+                    </p>
+                </cmn>
+            </is>
+        </doc>
+
+
+
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                モーダルデータの種類を指定します。(詳しくは後述) 
+                            </p>
+
+                            <li>Series 15 (HSSBのみ)</li>
+                            <table class="dd">
+                                <tr> <td>-4</td>         <td>:</td> <td>1 shot G コードの一括読み出し</td>      </tr>
+                                <tr> <td>-3</td>         <td>:</td> <td>G コード以外の軸データ一括読み出し</td> </tr>
+                                <tr> <td>-2</td>         <td>:</td> <td>G コード以外の一括読み出し</td>         </tr>
+                                <tr> <td>-1</td>         <td>:</td> <td>G コードの一括読み出し</td>             </tr>
+                                <tr> <td>0 ～ 17</td>    <td>:</td> <td>G コードの個別読み出し</td>             </tr>
+                                <tr> <td>100 ～ 126</td> <td>:</td> <td>G コード以外の個別読み出し</td>         </tr>
+                                <tr> <td>200 ～ 223</td> <td>:</td> <td>G コード以外の軸データ個別読み出し</td> </tr>
+                                <tr> <td>300 ～ 303</td> <td>:</td> <td>1 shot G コードの個別読み出し</td>      </tr>
+                            </table>
+                            <br/>
+                            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i (HSSB接続の場合)</li>
+                            <table class="dd">
+                                <tr> <td>-5</td>   <td>:</td> <td>G コードの一括読み出し(type = 0～23)(16i/18i/21iのみ)</td> </tr>
+                                <tr> <td>-4</td>   <td>:</td> <td>1 shot G コードの一括読み出し</td> </tr>
+                                <tr> <td>-3</td>   <td>:</td> <td>G コード以外の軸データ一括読み出し(16i/18i-W以外)</td> </tr>
+                                <tr> <td>-2</td>   <td>:</td> <td>G コード以外の一括読み出し</td> </tr>
+                                <tr> <td>-1</td>   <td>:</td> <td>G コードの一括読み出し</td> </tr>
+                                <tr> <td>0 ～ 23,<br/>31 ～ 34(Series 16Lのみ)</td> <td>:</td> <td>G コードの個別読み出し</td> </tr>
+                                <tr> <td>100 ～ 126</td> <td>:</td> <td>G コード以外の個別読み出し</td> </tr>
+                                <tr> <td>200 ～ 207</td> <td>:</td> <td>G コード以外の軸データ個別読み出し</td> </tr>
+                                <tr> <td>300</td>  <td>:</td> <td>1 shot G コードの個別読み出し</td> </tr>
+                            </table>
+                            <br/>
+                            <li>Series 16i/18i/21i, 0i-A/B/C, Power Mate i (Ethernet接続の場合)</li>
+                            <table class="dd">
+                                <tr> <td>-5</td>      <td>:</td> <td>Gコードの一括読み出し(type = 0～34)</td></tr>
+                                <tr> <td>-4</td>      <td>:</td> <td>1 shot Gコードの一括読み出し</td></tr>
+                                <tr> <td>-3</td>      <td>:</td> <td>Gコード以外の軸データ一括読み出し(16i/18i-W以外)</td></tr>
+                                <tr> <td>-2</td>      <td>:</td> <td>Gコード以外の一括読み出し</td></tr>
+                                <tr> <td>-1</td>      <td>:</td> <td>Gコードの一括読み出し(type = 1～20, 31～34(Series 16Lのみ))</td></tr>
+                                <tr> <td>0～24,<br/>31～34(Series 16Lのみ)</td><td>:</td><td>Gコードの個別読み出し</td></tr>
+                                <tr> <td>100～126</td><td>:</td> <td>Gコード以外の個別読み出し</td></tr>
+                                <tr> <td>200～207</td><td>:</td> <td>Gコード以外の軸データ個別読み出し</td></tr>
+                                <tr> <td>300</td>     <td>:</td> <td>1 shot Gコードの個別読み出し</td></tr>
+                            </table>
+                            <br/>
+                            <li>Series 30i, 0i-D/F, PMi-A</li>
+                            <table class="dd">
+                                <tr> <td>-4</td>      <td>:</td> <td>1 shot Gコードの一括読み出し</td></tr>
+                                <tr> <td>-3</td>      <td>:</td> <td>Gコード以外の軸データ一括読み出し(系統内の軸数が8軸以下の場合のみ)</td></tr>
+                                <tr> <td>-2</td>      <td>:</td> <td>Gコード以外の一括読み出し</td></tr>
+                                <tr> <td>-1</td>      <td>:</td> <td>Gコードの一括読み出し(type = 0～20)</td></tr>
+                                <tr> <td>0～20</td>   <td>:</td> <td>Gコードの個別読み出し</td></tr>
+                                <tr> <td>100～126</td><td>:</td> <td>Gコード以外の個別読み出し</td></tr>
+                                <tr> <td>200～207</td><td>:</td> <td>Gコード以外の軸データ個別読み出し</td></tr>
+                                <tr> <td>300</td>     <td>:</td> <td>1 shot Gコードの個別読み出し</td></tr>
+                            </table>
+                    </content>
+                </item>
+                <item>
+                    <name>block</name>
+                    <type>in</type>
+                    <content>
+                            <p>
+                                読み出す対象となるブロックを指定します。 
+                            </p>
+                            <li>Series 15 (HSSBのみ)</li>
+                            <table class="dd">
+                                <tr><td>0</td> <td>:</td> <td>前のブロック</td></tr>
+                                <tr><td>1</td> <td>:</td> <td>現在実行中のブロック</td></tr>
+                                <tr><td>2</td> <td>:</td> <td>次のブロック</td></tr>
+                            </table>
+                            <br/>
+                            <li>Series 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+                            <table class="dd">
+                                <tr><td>0</td> <td>:</td> <td>現在実行中のブロック</td></tr>
+                                <tr><td>1</td> <td>:</td> <td>次のブロック</td></tr>
+                                <tr><td>2</td> <td>:</td> <td>次の次のブロック (Series 30i, 0i-D/F, PMi-Aでは使用不可)</td></tr>
+                            </table>
+                            <br/>
+                            <li>Series 16i/18i-W</li>
+                            <table class="dd">
+                                <tr><td>0</td> <td>:</td> <td>現在実行中のブロック</td> </tr>
+                                <tr><td>1</td> <td>:</td> <td>次のブロック</td> </tr>
+                                <tr><td>2</td> <td>:</td> <td>次の次のブロック</td> </tr>
+                                <tr><td>3</td> <td>:</td> <td>前のブロック</td> </tr>
+                            </table>
+                    </content>
+                </item>
+                <item>
+                    <name>modal</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            モーダルデータを返すODBMDL構造体へのポインタです。ODBMDL構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbmdl {
+     short datano;              /* データの種類 */
+     short type;                /* 指令されたブロック */
+     union {
+          char  g_data;         /* G コードのモーダルデータ */
+          char  g_rdata[35];    /* G コードのモーダルデータ */
+          char  g_1shot[4];/* 1 shot G コードのモーダルデータ*/
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }aux;
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }raux1[27];
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }raux2[MAX_AXIS];     /* MAX_AXIS : 最大制御軸数 */
+     }modal;
+} ODBMDL ;
+</pre>
+                        <dl>
+                            <dt>datano</dt>
+                            <dd>モーダルデータの種類がセットされます。</dd>
+                            <dt>type</dt>
+                            <dd>読み出す対象となるブロックがセットされます。</dd>
+                            <dt>g_data</dt>
+                            <dd>
+                                Gコード(ならびに、1 shot Gコード)の個別読み出しの場合に使用します。
+                                対応するGコードグループ内のモーダルGコードが読み出されます。
+                            </dd>
+                            <dt>g_rdata</dt>
+                            <dd>Gコードの一括読み出しの場合に使用します。すべてのGコードグループ内のモーダルGコードが読み出されます。</dd>
+                            <dt>g_1shot</dt>
+                            <dd>1 shot Gコードの一括読み出しの場合に使用します。(個別読み出しの場合は、g_dataを使用して下さい)</dd>
+                            <dt>aux</dt>
+                            <dd>Gコード以外(軸データ含む)の個別読み出しの場合に使用します。</dd>
+                            <dt>raux1</dt>
+                            <dd>Gコード以外の一括読み出しの場合に使用します。</dd>
+                            <dt>raux2</dt>
+                            <dd>Gコード以外の軸データ一括読み出しの場合に使用します。</dd>
+                            <dt>aux_data</dt>
+                            <dd>Gコード以外のモーダルデータがセットされます。</dd>
+                            <dt>flag1</dt>
+                            <dd>補助情報がセットされます。</dd>
+                            <dt>flag2</dt>
+                            <dd>補助情報がセットされます。</dd>
+                        </dl>
+                        <p class="label">(1) モーダルGコードの読み出し</p>
+                    <ul>
+                        <li>Series 15<br/>type には、下表のGコードグループが指定できます。(HSSBのみ)</li>
+                        <table border="1">
+                            <thead>
+                                <tr> <th>    </th> <th>      </th> <th>マシニング系</th> <th colspan="3">旋盤系</th> </tr>
+                                <tr>
+                                    <th>type</th> <th>g_data</th> <th>Gコード   </th> <th>Gコード<br/>体系A </th>
+                                    <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="23">0</td>
+                                    <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td>
+                                </tr>
+                                <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+                                <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+                                <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+                                <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+                                <tr> <td>5 </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+                                <tr> <td>6 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+                                <tr> <td>7 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+                                <tr> <td>8 </td> <td>&#160;</td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+                                <tr> <td>9 </td> <td>&#160;</td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+                                <tr> <td>10</td> <td>&#160;</td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+                                <tr> <td>11</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+                                <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>G02.3 </td> <td>&#160;</td> </tr>
+                                <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>G03.3 </td> <td>&#160;</td> </tr>
+                                <tr> <td>14</td> <td>G02.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>15</td> <td>G03.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>16</td> <td>G60   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>17</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+                                <tr> <td>18</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+                                <tr> <td>19</td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+                                <tr> <td>20</td> <td>G02.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>21</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>22</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+                                <tr>
+                                    <td rowspan="4">1</td>
+                                    <td>0 </td> <td>G17   </td> <td>G97   </td> <td>G97   </td> <td>G97   </td>
+                                </tr>
+                                <tr> <td>1 </td> <td>G18   </td> <td>G96   </td> <td>G96   </td> <td>G96   </td> </tr>
+                                <tr> <td>2 </td> <td>G19   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>3 </td> <td>G17.1 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr>
+                                    <td rowspan="2">2</td>
+                                    <td>0 </td> <td>G91    </td> <td>G91   </td> <td>G91   </td> <td>G91   </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G90    </td> <td>G90   </td> <td>G90   </td> <td>G90   </td> </tr>
+                                <tr>
+                                    <td rowspan="2">3</td>
+                                    <td>0 </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+                                <tr>
+                                    <td rowspan="3">4</td>
+                                    <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+                                <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+                                <tr>
+                                    <td rowspan="2">5</td>
+                                    <td>0 </td> <td>G21    </td> <td>G21    </td> <td>G21    </td> <td>G71    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G20    </td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+                                <tr>
+                                    <td rowspan="7">6</td>
+                                    <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+                                <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+                                <tr><td>3 </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+                                <tr><td>4 </td> <td>G41.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>5 </td> <td>G42.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>6 </td> <td>G41.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr>
+                                    <td rowspan="7">7</td>
+                                    <td>0 </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+                                <tr><td>2 </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> </tr>
+                                <tr><td>3 </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> </tr>
+                                <tr><td>4 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>5 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>6 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="19">8</td>
+                                    <td>0 </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G81    </td> <td>G81    </td> <td>G81    </td> <td>G81    </td> </tr>
+                                <tr><td>2 </td> <td>G82    </td> <td>G82    </td> <td>G82    </td> <td>G82    </td> </tr>
+                                <tr><td>3 </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+                                <tr><td>4 </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+                                <tr><td>5 </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+                                <tr><td>6 </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+                                <tr><td>7 </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+                                <tr><td>8 </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+                                <tr><td>9 </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+                                <tr><td>10</td> <td>G73    </td> <td>G83.1  </td> <td>G83.1  </td> <td>G83.1  </td> </tr>
+                                <tr><td>11</td> <td>G74    </td> <td>G84.1  </td> <td>G84.1  </td> <td>G84.1  </td> </tr>
+                                <tr><td>12</td> <td>G76    </td> <td>G86.1  </td> <td>G84.1  </td> <td>G84.1  </td> </tr>
+                                <tr><td>13</td> <td>G81    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>14</td> <td>G84.2  </td> <td>G84.2  </td> <td>G84.2  </td> <td>G84.2  </td> </tr>
+                                <tr><td>15</td> <td>G84.3  </td> <td>G84.3  </td> <td>G84.3  </td> <td>G84.3  </td> </tr>
+                                <tr><td>16</td> <td>G85&#160;&#160; 多軸のみ </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>17</td> <td>G81.4 多軸のみ </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>18</td> <td>G85.4 多軸のみ </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="6">9</td>
+                                    <td>0 </td> <td>G98    </td> <td>G98    </td> <td>G98    </td> <td>G98    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G99    </td> <td>G99    </td> <td>G99    </td> <td>G99    </td> </tr>
+                                <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>4 </td> <td>G86 多軸のみ</td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>5 </td> <td>G87 多軸のみ</td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="2">10</td>
+                                    <td>0 </td> <td>G50    </td> <td>G50    </td> <td>G50    </td> <td>G50    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G51    </td> <td>G51    </td> <td>G51    </td> <td>G51    </td> </tr>
+                                <tr><td rowspan="3">11</td>
+                                    <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+                                <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+                                <tr><td rowspan="2">12</td>
+                                    <td>0 </td> <td>G97    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G96    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+                                <tr><td rowspan="7">13</td>
+                                    <td>0 </td> <td>G54    </td> <td>G54    </td> <td>G54    </td> <td>G54    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+                                <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+                                <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+                                <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+                                <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+                                <tr><td>6～53</td> <td>G54.1</td> <td>&#160;</td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="5">14</td>
+                                    <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+                                <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+                                <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+                                <tr><td>4 </td> <td>G62.1  </td> <td>G62.1  </td> <td>G62.1  </td> <td>G62.1  </td> </tr>
+                                <tr><td rowspan="3">15</td>
+                                    <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G68    </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+                                <tr><td>2 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+                                <tr><td rowspan="2">16</td>
+                                    <td>0 </td> <td>G15    </td> <td>G15    </td> <td>G15    </td> <td>G15    </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> </tr>
+                                <tr><td rowspan="2">17</td>
+                                    <td>0 </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td>
+                                </tr>
+                                <tr><td>1 </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+
+                        <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i<br/>
+                            type には、下表のGコードグループが指定できます。なお、パンチプレス, Power Mateはマシニング系と同じです。</li>
+                        <table border="1">
+                            <thead>
+                            <tr><th>    </th><th>       </th><th>マシニング系   </th><th colspan="3">旋盤系 </th><th>レーザ </th></tr>
+                            <tr><th>type</th><th>g_data </th><th>Gコード    </th><th>Gコード<br/>体系A  </th><th>Gコード<br/>体系B  </th><th>Gコード<br/>体系C  </th><th>Gコード    </th></tr>
+                            </thead>
+
+                            <tbody>
+                            <tr>
+                            <td rowspan="26">0</td>
+                                 <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+                            <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+                            <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+                            <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+                            <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> <td>&#160;</td> </tr>
+                            <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> <td>&#160;</td> </tr>
+                            <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> <td>&#160;</td> </tr>
+                            <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> <td>&#160;</td> </tr>
+                            <tr> <td>8 </td> <td>G79   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>9 </td> <td>&#160;</td> <td>G34   </td> <td>G34   </td> <td>G34   </td> <td>&#160;</td> </tr>
+                            <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> <td>&#160;</td> </tr>
+                            <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> <td>&#160;</td> </tr>
+                            <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                            <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> <td>&#160;</td> </tr>
+                            <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> <td>&#160;</td> </tr>
+                            <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> <td>&#160;</td> </tr>
+                            <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> <td>G12   </td> </tr>
+                            <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> <td>&#160;</td> </tr>
+                            <tr> <td>22</td> <td>&#160;</td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> <td>&#160;</td> </tr>
+                            <tr> <td>23</td> <td>&#160;</td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> <td>&#160;</td> </tr>
+                            <tr> <td>24</td> <td>&#160;</td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> <td>&#160;</td> </tr>
+                            <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> <td>&#160;</td> </tr>
+                            <tr>
+                                <td rowspan="5">1</td>
+                                 <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> <td>G17    </td> </tr>
+                            <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> <td>&#160; </td> </tr>
+                            <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G19    </td> </tr>
+                            <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G18    </td> </tr>
+                            <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr>
+                                <td rowspan="2">2</td>
+                                <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90   </td> <td>G90   </td> <td>G90   </td> </tr>
+                            <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91   </td> <td>G91   </td> <td>G91   </td> </tr>
+                            <tr>
+                                <td rowspan="2">3</td>
+                                <td>0 </td> <td>G23    </td> <td>G69   </td> <td>G69   </td> <td>G69   </td> <td>G23   </td> </tr>
+                            <tr><td>1 </td> <td>G22    </td> <td>G68   </td> <td>G68   </td> <td>G68   </td> <td>G22   </td> </tr>
+                            <tr>
+                                <td rowspan="3">4</td>
+                                <td>0 </td> <td>G94    </td> <td>G98   </td> <td>G94   </td> <td>G94   </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G95    </td> <td>G99   </td> <td>G95   </td> <td>G95   </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>G93    </td> <td>G93   </td> <td>G93   </td> <td>G93   </td> <td>&#160; </td> </tr>
+                            <tr>
+                                <td rowspan="2">5</td>
+                                <td>0 </td> <td>G20    </td> <td>G20   </td> <td>G20   </td> <td>G70   </td> <td>G20   </td> </tr>
+                            <tr><td>1 </td> <td>G21    </td> <td>G21   </td> <td>G21   </td> <td>G71   </td> <td>G21   </td> </tr>
+                            <tr>
+                                <td rowspan="11">6</td>
+                                <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+                            <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+                            <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+                            <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>&#160; </td> </tr>
+                            <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>&#160; </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="9">7</td>
+                                <td>0 </td> <td>G49    </td> <td>G25    </td> <td>G25    </td> <td>G25    </td> <td>G49    </td> </tr>
+                            <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> <td>G43    </td> </tr>
+                            <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G44    </td> </tr>
+                            <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G43.6  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="16">8</td>
+                                <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="8">9</td>
+                                <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> <td>&#160; </td> </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> <td>&#160; </td> </tr>
+                            <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> <td>&#160; </td> </tr>
+                            <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">10</td>
+                                <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> <td>G50    </td> </tr>
+                            <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> <td>G51    </td> </tr>
+                            <tr><td rowspan="3">11</td>
+                                <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+                            <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+                            <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">12</td>
+                                <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="6">13</td>
+                                <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> <td>G54    </td> </tr>
+                            <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+                            <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+                            <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+                            <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+                            <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+                            <tr><td rowspan="4">14</td>
+                                <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+                            <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+                            <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+                            <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="6">15</td>
+                                <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> <td>G85    </td> </tr>
+                            <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G84    </td> </tr>
+                            <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> <td>&#160; </td> </tr>
+                            <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> <td>&#160; </td> </tr>
+                            <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="3">16</td>
+                                <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> <td>G15    </td> </tr>
+                            <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> <td>G16    </td> </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="3">17</td>
+                                <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50 </td> <td>G50    </td> <td>G40.1  </td> </tr>
+                            <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51 </td> <td>G51    </td> <td>G41.1  </td> </tr>
+                            <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;  </td> <td>&#160; </td> <td>G42.1  </td> </tr>
+                            <tr><td rowspan="2">18</td>
+                                <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">19</td>
+                                <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">20</td>
+                                <td>0 </td> <td>G13.1(G113)</td> <td>G13.1</td> <td>G13.1    </td> <td>G13.1  </td> <td>G13.1  </td> </tr>
+                            <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1</td> <td>G12.1    </td> <td>G12.1  </td> <td>G12.1  </td> </tr>
+                            <tr><td rowspan="2">21</td>
+                                <td>0 </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>G50.1  </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>G51.1  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="5">22</td>
+                                <td>0 </td> <td>G54.2  </td> <td>G49.1  </td> <td>G49.1  </td> <td>G49.1  </td> <td>&#160;</td>    </tr>
+                            <tr><td>2 </td> <td>&#160; </td> <td>G44    </td> <td>G44    </td> <td>G44    </td> <td>&#160; </td> </tr>
+                            <tr><td>3 </td> <td>&#160; </td> <td>G43.1  </td> <td>G43.1  </td> <td>G43.1  </td> <td>&#160; </td> </tr>
+                            <tr><td>4 </td> <td>&#160; </td> <td>G43.4  </td> <td>G43.4  </td> <td>G43.4  </td> <td>&#160; </td> </tr>
+                            <tr><td>5 </td> <td>&#160; </td> <td>G43.5  </td> <td>G43.5  </td> <td>G43.5  </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">23</td>
+                                <td>0 </td> <td>G80.5  </td> <td>G15    </td> <td>G15    </td> <td>G15    </td> <td>&#160; </td> </tr>
+                            <tr><td>1 </td> <td>G81.5  </td> <td>G16    </td> <td>G16    </td> <td>G16    </td> <td>&#160; </td> </tr>
+                            <tr><td rowspan="2">31</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G14    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G13    </td> </tr>
+                            <tr><td rowspan="2">32</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G69    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G68    </td> </tr>
+                            <tr><td rowspan="2">33</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G99    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G98    </td> </tr>
+                            <tr><td rowspan="2">34</td>
+                                <td>0 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G34    </td> </tr>
+                            <tr><td>1 </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>G33    </td> </tr>
+                            </tbody>
+                        </table>
+                        <br/>
+
+                        <li>Series 30i, 0i-D/F, PMi-A<br/>
+                            type には、下表のGコードグループが指定できます。</li>
+                            <table border="1">
+                                <thead>
+                                <tr> <th>    </th> <th>      </th> <th>マシニング系</th>                 <th colspan="3">旋盤系</th> </tr>
+                                <tr> <th>type</th> <th>g_data</th> <th>Gコード     </th> <th>Gコード<br/>体系A </th> <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th> </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr>
+                                    <td rowspan="26">0</td>
+                                     <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+                                <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+                                <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+                                <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+                                <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+                                <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+                                <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+                                <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+                                <tr> <td>8 </td> <td>G79   </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>9 </td> <td>&#160;</td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+                                <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+                                <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+                                <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+                                <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> </tr>
+                                <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> </tr>
+                                <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+                                <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+                                <tr> <td>22</td> <td>G35   </td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> </tr>
+                                <tr> <td>23</td> <td>G36   </td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> </tr>
+                                <tr> <td>24</td> <td>G34   </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+                                <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+                                <tr>
+                                    <td rowspan="5">1</td>
+                                     <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> </tr>
+                                <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> </tr>
+                                <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr>
+                                    <td rowspan="2">2</td>
+                                    <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90    </td> <td>G90    </td> </tr>
+                                <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91    </td> <td>G91    </td> </tr>
+                                <tr>
+                                    <td rowspan="2">3</td>
+                                    <td>0 </td> <td>G23    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td> </tr>
+                                <tr><td>1 </td> <td>G22    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+                                <tr>
+                                    <td rowspan="4">4</td>
+                                    <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td> </tr>
+                                <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+                                <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+                                <tr><td>3 </td> <td>G93.2  </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+                                <tr>
+                                    <td rowspan="2">5</td>
+                                    <td>0 </td> <td>G20(G70)</td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+                                <tr><td>1 </td> <td>G21(G71)</td> <td>G21    </td> <td>G21    </td> <td>G71    </td> </tr>
+                                <tr>
+                                    <td rowspan="13">6</td>
+                                    <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+                                <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+                                <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+                                <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> </tr>
+                                <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> </tr>
+                                <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> </tr>
+                                <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> </tr>
+                                <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> </tr>
+                                <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> </tr>
+                                <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> </tr>
+                                <tr><td>10</td> <td>G41.6  </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+                                <tr><td>11</td> <td>G42.6  </td> <td>G41.6  </td> <td>G41.6  </td> <td>G41.6  </td> </tr>
+                                <tr><td>12</td> <td>&#160; </td> <td>G42.6  </td> <td>G42.6  </td> <td>G42.6  </td> </tr>
+                                <tr><td rowspan="8">7</td>
+                                    <td>0 </td> <td>G49(G49.1)</td> <td>G25    </td> <td>G25    </td> <td>G25    </td> </tr>
+                                <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> </tr>
+                                <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="16">8</td>
+                                    <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+                                <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> </tr>
+                                <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="8">9</td>
+                                    <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> </tr>
+                                <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+                                <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+                                <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+                                <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+                                <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+                                <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+                                <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+                                <tr><td rowspan="2">10</td>
+                                    <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> </tr>
+                                <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> </tr>
+                                <tr><td rowspan="3">11</td>
+                                    <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+                                <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+                                <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+                                <tr><td rowspan="2">12</td>
+                                    <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> </tr>
+                                <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+                                <tr><td rowspan="6">13</td>
+                                    <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> </tr>
+                                <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+                                <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+                                <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+                                <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+                                <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+                                <tr><td rowspan="4">14</td>
+                                    <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+                                <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+                                <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+                                <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+                                <tr><td rowspan="7">15</td>
+                                    <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> </tr>
+                                <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>3 </td> <td>G68.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+                                <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+                                <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> </tr>
+                                <tr><td rowspan="3">16</td>
+                                    <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> </tr>
+                                <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> </tr>
+                                <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> </tr>
+                                <tr><td rowspan="3">17</td>
+                                    <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50   </td> <td>G50   </td> </tr>
+                                <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51   </td> <td>G51   </td> </tr>
+                                <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                <tr><td rowspan="2">18</td>
+                                    <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                <tr><td rowspan="2">19</td>
+                                    <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> </tr>
+                                <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> </tr>
+                                <tr><td rowspan="2">20</td>
+                                    <td>0 </td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> <td>G13.1(G113)</td> </tr>
+                                <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> <td>G12.1(G112)</td> </tr>
+                                </tbody>
+                            </table>
+                        <br/>
+
+                        <li>Series 16i/18i-W<br/>
+                            type には、下表のGコードグループが指定できます。</li>
+                            <table border="1">
+                                <thead>
+                                    <tr><th>type</th><th>g_data </th><th>Gコード    </th></tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr>
+                                        <td rowspan="4">0</td>
+                                        <td>0   </td> <td>G00        </td> </tr>
+                                    <tr><td>1   </td> <td>G01        </td> </tr>
+                                    <tr><td>2   </td> <td>G02        </td> </tr>
+                                    <tr><td>3   </td> <td>G03        </td> </tr>
+                                    <tr>
+                                        <td rowspan="3">1</td>
+                                        <td>0   </td> <td>G17        </td> </tr>
+                                    <tr><td>1   </td> <td>G18        </td> </tr>
+                                    <tr><td>2   </td> <td>G19        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">2</td>
+                                        <td>0   </td> <td>G90        </td> </tr>
+                                    <tr><td>1   </td> <td>G91        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">3</td>
+                                        <td>0   </td> <td>G23        </td> </tr>
+                                    <tr><td>1   </td> <td>G22        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">4</td>
+                                        <td>0   </td> <td>G94        </td> </tr>
+                                    <tr><td>1   </td> <td>G95        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">5</td>
+                                        <td>0   </td> <td>G20        </td> </tr>
+                                    <tr><td>1   </td> <td>G21        </td> </tr>
+                                    <tr>
+                                        <td rowspan="3">6</td>
+                                        <td>0   </td> <td>G40        </td> </tr>
+                                    <tr><td>1   </td> <td>G41        </td> </tr>
+                                    <tr><td>2   </td> <td>G42        </td> </tr>
+                                    <tr>
+                                        <td rowspan="3">7</td>
+                                        <td>0   </td> <td>G50        </td> </tr>
+                                    <tr><td>1   </td> <td>G51        </td> </tr>
+                                    <tr><td>2   </td> <td>G52        </td> </tr>
+                                    <tr>
+                                        <td rowspan="4">8</td>
+                                        <td>0   </td> <td>G60        </td> </tr>
+                                    <tr><td>1   </td> <td>G61        </td> </tr>
+                                    <tr><td>2   </td> <td>G62        </td> </tr>
+                                    <tr><td>3   </td> <td>G63        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">9</td>
+                                        <td>0   </td> <td>G49        </td> </tr>
+                                    <tr><td>1   </td> <td>G48        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">10</td>
+                                        <td>0   </td> <td>G66        </td> </tr>
+                                    <tr><td>1   </td> <td>G67        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">11</td>
+                                        <td>0   </td> <td>G47        </td> </tr>
+                                    <tr><td>1   </td> <td>G46        </td> </tr>
+                                    <tr>
+                                        <td rowspan="2">12</td>
+                                        <td>0   </td> <td>G68        </td> </tr>
+                                    <tr><td>1   </td> <td>G69        </td> </tr>
+                                </tbody>
+                            </table>
+                            </ul>
+                            <p>
+                                g_dataの第0～6ビットには上の表の g_data欄の数値がバイナリ形式で格納されます。
+                                g_dataの第7ビットにはblockで指定した読み出し対象ブロック内でこのGコードが指令されているかどうかが格納されます。
+                            </p>
+                            <p><img src="misc/gcode.gif"></img></p>
+                            <p>
+                                例えば、次の加工プログラムのN100のブロック実行中に本関数を実行した結果は以下のようになります。
+                                (Series 16i/18i/21i, 0i-A/B/C マシニング系, Power Mate i)
+                            </p>
+                            <blockquote>
+<pre>
+N090 G18 ;
+N100 G1 Z100. ;
+N110 G17 G2 X10. Y-20. R12. ;
+</pre>
+                                <table frame="hsides" rules="groups">
+                                    <colgroup width="20%">
+                                    <colgroup width="20%">
+                                    <colgroup width="20%">
+                                    <colgroup width="40%">
+                                    <thead>
+                                    <tr>
+                                        <th>type</th>
+                                        <th>block</th>
+                                        <th>g_data</th>
+                                        <th>モーダル状態</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>0x81</td>
+                                        <td>G1が指令されている</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0x82</td>
+                                        <td>G2が指令されている</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0x08</td>
+                                        <td>G18モード(指令なし)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>1</td>
+                                        <td>0x80</td>
+                                        <td>G17が指令されている</td>
+                                    </tr>
+                                    </tbody>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                            </blockquote>
+                            <p>
+                                Gコードに関するすべてのtypeを一度に読み出すには、-1を指定します。g_rdataにg_dataの配列がセットされます。
+                            </p>
+                            <p class="label">(2) Gコード以外のモーダルデータの読み出し</p>
+                        <ul>
+                            <li>Series 15</li>
+                            <table border="1">
+                                <colgroup width="20%">
+                                <thead>
+                                    <tr><th>type</th><th>指令アドレス   </th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>100 </td> <td>B (第2補助機能)</td> </tr>
+                                    <tr><td>101 </td> <td>D              </td> </tr>
+                                    <tr><td>102 </td> <td>E              </td> </tr>
+                                    <tr><td>103 </td> <td>F              </td> </tr>
+                                    <tr><td>104 </td> <td>H              </td> </tr>
+                                    <tr><td>105 </td> <td>L              </td> </tr>
+                                    <tr><td>106 </td> <td>M              </td> </tr>
+                                    <tr><td>107 </td> <td>S              </td> </tr>
+                                    <tr><td>108 </td> <td>T              </td> </tr>
+                                    <tr><td>109 </td> <td>R              </td> </tr>
+                                    <tr><td>110 </td> <td>P              </td> </tr>
+                                    <tr><td>111 </td> <td>Q              </td> </tr>
+                                    <tr><td>112 </td> <td>A              </td> </tr>
+                                    <tr><td>113 </td> <td>C              </td> </tr>
+                                    <tr><td>114 </td> <td>I              </td> </tr>
+                                    <tr><td>115 </td> <td>J              </td> </tr>
+                                    <tr><td>116 </td> <td>K              </td> </tr>
+                                    <tr><td>117 </td> <td>N              </td> </tr>
+                                    <tr><td>118 </td> <td>O              </td> </tr>
+                                    <tr><td>119 </td> <td>U              </td> </tr>
+                                    <tr><td>120 </td> <td>V              </td> </tr>
+                                    <tr><td>121 </td> <td>W              </td> </tr>
+                                    <tr><td>122 </td> <td>X              </td> </tr>
+                                    <tr><td>123 </td> <td>Y              </td> </tr>
+                                    <tr><td>124 </td> <td>Z              </td> </tr>
+                                    <tr><td>125 </td> <td>M (第2Mコード) </td> </tr>
+                                    <tr><td>126 </td> <td>M (第3Mコード) </td> </tr>
+                                </tbody>
+                                </colgroup>
+                            </table>
+
+                            <table border="1">
+                                <colgroup width="20%">
+                                <thead>
+                                    <tr><th>type</th><th>指令アドレス   </th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>200     </td> <td>第1軸         </td> </tr>
+                                    <tr><td>201     </td> <td>第2軸         </td> </tr>
+                                    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+                                    <tr><td>209     </td> <td>第10軸         </td> </tr>
+                                    <tr><td>210     </td> <td>第11軸         </td> </tr>
+                                    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+                                    <tr><td>214     </td> <td>第15軸         </td> </tr>
+                                    <tr><td>215     </td> <td>第16軸         </td> </tr>
+                                    <tr><td>&#160; :</td> <td>&#160; &#160; :</td> </tr>
+                                    <tr><td>222     </td> <td>第23軸         </td> </tr>
+                                    <tr><td>223     </td> <td>第24軸         </td> </tr>
+                                </tbody>
+                                </colgroup>
+                            </table>
+                            <li type="square">MAX_AXIS=15 の時 type=215～223 は未使用です。</li>
+                            <li type="square">MAX_AXIS=10 の時 type=210～223 は未使用です。</li>
+                            <p>
+                                100番台の type を一度に読み出すには、-2 を指定します。raux1 の配列にデータがセットされます。<br/>
+                                200番台の type を一度に読み出すには、-3 を指定します。raux2 の配列にデータがセットされます。
+                            </p>
+                            <p><img src="misc/com15.gif"></img></p>
+                        </ul>
+
+                            <ul>
+                                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                <table border="1">
+                                    <colgroup width="20%">
+                                    <thead>
+                                        <tr><th>type</th><th>指令アドレス   </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>100 </td> <td>B (第2補助機能)    </td> </tr>
+                                        <tr><td>101 </td> <td>D              </td> </tr>
+                                        <tr><td>102 </td> <td>- (リザーブ)   </td> </tr>
+                                        <tr><td>103 </td> <td>F              </td> </tr>
+                                        <tr><td>104 </td> <td>H [M]          </td> </tr>
+                                        <tr><td>105 </td> <td>L              </td> </tr>
+                                        <tr><td>106 </td> <td>M              </td> </tr>
+                                        <tr><td>107 </td> <td>S              </td> </tr>
+                                        <tr><td>108 </td> <td>T              </td> </tr>
+                                        <tr><td>109 </td> <td>R [M]          </td> </tr>
+                                        <tr><td>110 </td> <td>P [M]          </td> </tr>
+                                        <tr><td>111 </td> <td>Q [M]          </td> </tr>
+                                        <tr><td>112 </td> <td>A              </td> </tr>
+                                        <tr><td>113 </td> <td>C              </td> </tr>
+                                        <tr><td>114 </td> <td>I              </td> </tr>
+                                        <tr><td>115 </td> <td>J              </td> </tr>
+                                        <tr><td>116 </td> <td>K              </td> </tr>
+                                        <tr><td>117 </td> <td>N              </td> </tr>
+                                        <tr><td>118 </td> <td>O              </td> </tr>
+                                        <tr><td>119 </td> <td>U              </td> </tr>
+                                        <tr><td>120 </td> <td>V              </td> </tr>
+                                        <tr><td>121 </td> <td>W              </td> </tr>
+                                        <tr><td>122 </td> <td>X              </td> </tr>
+                                        <tr><td>123 </td> <td>Y              </td> </tr>
+                                        <tr><td>124 </td> <td>Z              </td> </tr>
+                                        <tr><td>125 </td> <td>M (第2Mコード) </td> </tr>
+                                        <tr><td>126 </td> <td>M (第3Mコード) </td> </tr>
+                                    </tbody>
+                                    </colgroup>
+                                </table>
+                                <table border="1">
+                                    <colgroup width="20%">
+                                    <thead>
+                                        <tr><th>type</th><th>指令アドレス   </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>200 </td> <td>第1軸          </td> </tr>
+                                        <tr><td>201 </td> <td>第2軸          </td> </tr>
+                                        <tr><td>202 </td> <td>第3軸          </td> </tr>
+                                        <tr><td>203 </td> <td>第4軸          </td> </tr>
+                                        <tr><td>204 </td> <td>第5軸          </td> </tr>
+                                        <tr><td>205 </td> <td>第6軸          </td> </tr>
+                                        <tr><td>206 </td> <td>第7軸          </td> </tr>
+                                        <tr><td>207 </td> <td>第8軸          </td> </tr>
+                                    </tbody>
+                                    </colgroup>
+                                </table>
+                            </ul>
+                            <p>[M]はマシニング系ではモーダルデータとして、旋盤系では指令データとして読み出されます。</p>
+                            <p>100番台のtypeを一度に読み出すには、-2を指定します。raux1の配列にデータがセットされます。</p>
+                            <p>200番台のtypeを一度に読み出すには、-3を指定します。raux2の配列にデータがセットされます。</p>
+                            <p><img src="misc/com16.gif"></img></p>
+                            <ul type="square">
+                                <li>
+                                    flag1の小数点指令あり/なし、及びflag2の小数点以下桁数はFコードのときのみ有効です。<br/>
+                                    また、少数点あり/なしのフラグは、「現在のブロックに指令あり」の時のみ有効で、それ以外は不定になります。<br/>
+                                    そのため、小数点指令なしでも小数点以下桁数は有効です。
+                                </li>
+                                <li>指令アドレスの M,S,T,Bの入力桁数は、パラメータで設定した許容桁数が返されます。<br/></li>
+                                <table>
+                                    <colgroup width="10%">
+                                    <colgroup width="50%">
+                                    <colgroup width="40%">
+                                    <tr>
+                                        <td>M</td>
+                                        <td>パラメータNo.3030</td>
+                                        <td>Mコードの許容桁数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>S</td>
+                                        <td>パラメータNo.3031</td>
+                                        <td>Sコードの許容桁数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>T</td>
+                                        <td>パラメータNo.3032</td>
+                                        <td>Tコードの許容桁数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>B</td>
+                                        <td>パラメータNo.3033</td>
+                                        <td>Bコードの許容桁数</td>
+                                    </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </ul>
+                            <p></p>
+                            <ul>
+                                <li>Series 30i, 0i-D/F, PMi-A</li>
+                                <table border="1">
+                                    <colgroup width="20%">
+                                    <thead>
+                                        <tr><th>type</th><th>指令アドレス   </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>100 </td> <td>B (第2補助機能)</td> </tr>
+                                        <tr><td>101 </td> <td>D              </td> </tr>
+                                        <tr><td>102 </td> <td>- (リザーブ)   </td> </tr>
+                                        <tr><td>103 </td> <td>F              </td> </tr>
+                                        <tr><td>104 </td> <td>H [M]          </td> </tr>
+                                        <tr><td>105 </td> <td>L              </td> </tr>
+                                        <tr><td>106 </td> <td>M              </td> </tr>
+                                        <tr><td>107 </td> <td>S              </td> </tr>
+                                        <tr><td>108 </td> <td>T              </td> </tr>
+                                        <tr><td>109 </td> <td>R [M]          </td> </tr>
+                                        <tr><td>110 </td> <td>P [M]          </td> </tr>
+                                        <tr><td>111 </td> <td>Q [M]          </td> </tr>
+                                        <tr><td>112 </td> <td>A              </td> </tr>
+                                        <tr><td>113 </td> <td>C              </td> </tr>
+                                        <tr><td>114 </td> <td>I              </td> </tr>
+                                        <tr><td>115 </td> <td>J              </td> </tr>
+                                        <tr><td>116 </td> <td>K              </td> </tr>
+                                        <tr><td>117 </td> <td>N              </td> </tr>
+                                        <tr><td>118 </td> <td>O              </td> </tr>
+                                        <tr><td>119 </td> <td>U              </td> </tr>
+                                        <tr><td>120 </td> <td>V              </td> </tr>
+                                        <tr><td>121 </td> <td>W              </td> </tr>
+                                        <tr><td>122 </td> <td>X              </td> </tr>
+                                        <tr><td>123 </td> <td>Y              </td> </tr>
+                                        <tr><td>124 </td> <td>Z              </td> </tr>
+                                        <tr><td>125 </td> <td>M (第2Mコード) </td> </tr>
+                                        <tr><td>126 </td> <td>M (第3Mコード) </td> </tr>
+                                    </tbody>
+                                    </colgroup>
+                                </table>
+                                <table border="1">
+                                    <colgroup width="20%">
+                                    <thead>
+                                        <tr><th>type</th><th>指令アドレス   </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>200 </td> <td>第1軸          </td> </tr>
+                                        <tr><td>201 </td> <td>第2軸          </td> </tr>
+                                        <tr><td>202 </td> <td>第3軸          </td> </tr>
+                                        <tr><td>203 </td> <td>第4軸          </td> </tr>
+                                        <tr><td>204 </td> <td>第5軸          </td> </tr>
+                                        <tr><td>205 </td> <td>第6軸          </td> </tr>
+                                        <tr><td>206 </td> <td>第7軸          </td> </tr>
+                                        <tr><td>207 </td> <td>第8軸          </td> </tr>
+                                        </tbody>
+                                    </colgroup>
+                                </table>
+                            </ul>
+                            <p>[M]はマシニング系ではモーダルデータとして、旋盤系では指令データとして読み出されます。</p>
+                            <p>100番台のtypeを一度に読み出すには、-2を指定します。raux1の配列にデータがセットされます。</p>
+                            <p>200番台のtypeを一度に読み出すには、-3を指定します。raux2の配列にデータがセットされます。</p>
+                            <p><img src="misc/com30.gif"></img></p>
+                            <ul type="square">
+                                <li>
+                                    flag1の小数点指令あり/なし、及びflag2の小数点以下桁数はFコードのときのみ有効です。<br/>
+                                    また、少数点あり/なしのフラグは、「現在のブロックに指令あり」の時のみ有効で、それ以外は不定になります。<br/>
+                                    そのため、小数点指令なしでも小数点以下桁数は有効です。
+                                </li>
+                                <li>指令アドレスの M,S,T,Bの入力桁数は、パラメータで設定した許容桁数が返されます。<br/></li>
+                                    <table>
+                                        <colgroup width="10%">
+                                        <colgroup width="50%">
+                                        <colgroup width="40%">
+                                        <tr>
+                                            <td>M</td>
+                                            <td>パラメータNo.3030</td>
+                                            <td>Mコードの許容桁数</td>
+                                        </tr>
+                                        <tr>
+                                            <td>S</td>
+                                            <td>パラメータNo.3031</td>
+                                            <td>Sコードの許容桁数</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T</td>
+                                            <td>パラメータNo.3032</td>
+                                            <td>Tコードの許容桁数</td>
+                                        </tr>
+                                        <tr>
+                                            <td>B</td>
+                                            <td>パラメータNo.3033</td>
+                                            <td>Bコードの許容桁数</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                            </ul>
+                            <p></p>
+                            <ul>
+                                <li>Series 16i/18i-W</li>
+                                <table border="1">
+                                    <colgroup width="20%">
+                                    <thead>
+                                        <tr><th>type</th><th>指令アドレス   </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>100 </td> <td>B              </td> </tr>
+                                        <tr><td>101 </td> <td>D              </td> </tr>
+                                        <tr><td>102 </td> <td>- (リザーブ)   </td> </tr>
+                                        <tr><td>103 </td> <td>F              </td> </tr>
+                                        <tr><td>104 </td> <td>H              </td> </tr>
+                                        <tr><td>105 </td> <td>L              </td> </tr>
+                                        <tr><td>106 </td> <td>M              </td> </tr>
+                                        <tr><td>107 </td> <td>S              </td> </tr>
+                                        <tr><td>108 </td> <td>T              </td> </tr>
+                                        <tr><td>109 </td> <td>R              </td> </tr>
+                                        <tr><td>110 </td> <td>P              </td> </tr>
+                                        <tr><td>111 </td> <td>Q              </td> </tr>
+                                        <tr><td>112 </td> <td>A              </td> </tr>
+                                        <tr><td>113 </td> <td>C              </td> </tr>
+                                        <tr><td>114 </td> <td>I              </td> </tr>
+                                        <tr><td>115 </td> <td>J              </td> </tr>
+                                        <tr><td>116 </td> <td>K              </td> </tr>
+                                        <tr><td>117 </td> <td>N              </td> </tr>
+                                        <tr><td>118 </td> <td>O              </td> </tr>
+                                        <tr><td>119 </td> <td>U              </td> </tr>
+                                        <tr><td>120 </td> <td>V              </td> </tr>
+                                        <tr><td>121 </td> <td>W              </td> </tr>
+                                        <tr><td>122 </td> <td>X              </td> </tr>
+                                        <tr><td>123 </td> <td>Y              </td> </tr>
+                                        <tr><td>124 </td> <td>Z              </td> </tr>
+                                    </tbody>
+                                    </colgroup>
+                                </table>
+                            </ul>
+                            <p>100番台の type を一度に読み出すには、-2 を指定します。</p>
+                            <p>raux1 の配列にデータがセットされます。</p>
+                            <p><img src="misc/com16w.gif"></img></p>
+                            <ul type="square">
+                                <li>
+                                    flag1の小数点指令あり/なし、及びflag2の小数点以下桁数はFコードのときのみ有効です。
+                                    なお、小数点指令なしでも小数点以下桁数は<b>0</b>でない場合があります。</li>
+                                </ul>
+                                <p class="label">(3) ワンショットGコードのモーダルデータの読み出し</p>
+
+                                <ul>
+                                <li>Series 15 (HSSBのみ)</li>
+                                <table border="1">
+                                    <thead>
+                                        <tr> <th>    </th> <th>       </th> <th>マシニング系</th> <th colspan="3">旋盤系 </th> </tr>
+                                        <tr>
+                                            <th>type</th> <th>g_data </th> <th>Gコード  </th> <th>Gコード<br/>体系A</th>
+                                            <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td rowspan="73">300</td>
+                                            <td> 0   </td><td>G04      </td><td>G04      </td><td>G04      </td><td>G04      </td></tr>
+                                        <tr><td> 1   </td><td>G10      </td><td>G10      </td><td>G10      </td><td>G10      </td></tr>
+                                        <tr><td> 2   </td><td>G10.1    </td><td>G10.1    </td><td>G10.1    </td><td>G10.1    </td></tr>
+                                        <tr><td> 3   </td><td>G27      </td><td>G27      </td><td>G27      </td><td>G27      </td></tr>
+                                        <tr><td> 4   </td><td>G28      </td><td>G28      </td><td>G28      </td><td>G28      </td></tr>
+                                        <tr><td> 5   </td><td>G29      </td><td>G29      </td><td>G29      </td><td>G29      </td></tr>
+                                        <tr><td> 6   </td><td>G30      </td><td>G30      </td><td>G30      </td><td>G30      </td></tr>
+                                        <tr><td> 7   </td><td>G30.1    </td><td>G30.1    </td><td>G30.1    </td><td>G30.1    </td></tr>
+                                        <tr><td>8 (注)</td> <td>G31<br/>(G31.1)</td> <td>G31<br/>(G31.1)</td>
+                                            <td>G31<br/>(G31.1)</td> <td>G31<br/>(G31.1)</td></tr>
+                                        <tr><td> 9   </td><td>G31.2    </td><td>G31.2    </td><td>G31.2    </td><td>G31.2    </td></tr>
+                                        <tr><td> 10  </td> <td>G31.3   </td><td>G31.3    </td><td>G31.3    </td><td>G31.3    </td></tr>
+                                        <tr><td> 11  </td> <td>&#160;  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td>12 (注)</td> <td>G37<br/>(G37.1)</td> <td>G37<br/>(G37.1)</td>
+                                            <td>G37<br/>(G37.1)</td> <td>G37<br/>(G37.1)</td></tr>
+                                        <tr><td> 13  </td><td>&#160;   </td><td>G37.2    </td><td>G37.2    </td><td>G37.2    </td></tr>
+                                        <tr><td> 14  </td><td>&#160;   </td><td>G37.3    </td><td>G37.3    </td><td>G37.3    </td></tr>
+                                        <tr><td> 15  </td><td>G39      </td><td>G39      </td><td>G39      </td><td>G39      </td></tr>
+                                        <tr><td> 16  </td><td>G52      </td><td>G52      </td><td>G52      </td><td>G52      </td></tr>
+                                        <tr><td> 17  </td><td>G60      </td><td>G60      </td><td>G60      </td><td>G60      </td></tr>
+                                        <tr><td> 18  </td><td>G65      </td><td>G65      </td><td>G65      </td><td>G65      </td></tr>
+                                        <tr><td> 19  </td><td>G92      </td><td>G92      </td><td>G92      </td><td>G92      </td></tr>
+                                        <tr><td> 20  </td><td>&#160;   </td><td>G70      </td><td>G70      </td><td>G70      </td></tr>
+                                        <tr><td> 21  </td><td>&#160;   </td><td>G71      </td><td>G71      </td><td>G71      </td></tr>
+                                        <tr><td> 22  </td><td>&#160;   </td><td>G72      </td><td>G72      </td><td>G72      </td></tr>
+                                        <tr><td> 23  </td><td>&#160;   </td><td>G73      </td><td>G73      </td><td>G73      </td></tr>
+                                        <tr><td> 24  </td><td>&#160;   </td><td>G74      </td><td>G74      </td><td>G74      </td></tr>
+                                        <tr><td> 25  </td><td>&#160;   </td><td>G75      </td><td>G75      </td><td>G75      </td></tr>
+                                        <tr><td> 26  </td><td>&#160;   </td><td>G76      </td><td>G76      </td><td>G76      </td></tr>
+                                        <tr><td> 27  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 28  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 29  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 30  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 31  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 32  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 33  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 34  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 35  </td><td>G11      </td><td>G11      </td><td>G11      </td><td>G11      </td></tr>
+                                        <tr><td> 36  </td><td>G07      </td><td>G07      </td><td>G07      </td><td>G07      </td></tr>
+                                        <tr><td> 37  </td><td>&#160;   </td><td>G10.2    </td><td>G10.2    </td><td>G10.2    </td></tr>
+                                        <tr><td> 38  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 39  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 40  </td><td>G10.3    </td><td>G10.3    </td><td>G10.3    </td><td>G10.3    </td></tr>
+                                        <tr><td> 41  </td><td>G11.3    </td><td>G11.3    </td><td>G11.3    </td><td>G11.3    </td></tr>
+                                        <tr><td> 42  </td><td>G65.3    </td><td>G65.3    </td><td>G65.3    </td><td>G65.3    </td></tr>
+                                        <tr><td> 43  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 44  </td><td>G05.1    </td><td>G05.1    </td><td>G05.1    </td><td>G05.1    </td></tr>
+                                        <tr><td> 45  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 46  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 47  </td><td>G07.1    </td><td>G07.1    </td><td>G07.1    </td><td>G07.1    </td></tr>
+                                        <tr><td> 48  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 49  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 50  </td><td>G81.1    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 51  </td><td>G72.2    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 52  </td><td>G10.6    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 53  </td><td>G92.1    </td><td>G50.3    </td><td>G92.1    </td><td>G92.1    </td></tr>
+                                        <tr><td> 54  </td><td>G72.2    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 55  </td><td>G05.2    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 56  </td><td>G12.2    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 57  </td><td>G13.2    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 58  </td><td>&#160;   </td><td>G10.7    </td><td>G10.7    </td><td>G10.7    </td></tr>
+                                        <tr><td> 59  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 60  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 61  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 62  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 63  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 64  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 65  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 66  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 67  </td><td>G31.9    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 68  </td><td>G10.9    </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 69  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 70  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 71  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 72  </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr><td rowspan="3">301</td>
+                                            <td> 0   </td><td>G09      </td><td>G09      </td><td>G09      </td><td>G09      </td></tr>
+                                        <tr><td> 1   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 2   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                    </tbody>
+                                    <tbody>
+                                    <tr> <td rowspan="3">302</td>
+                                            <td> 0   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 1   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 2   </td><td>G53      </td><td>G53      </td><td>G53      </td><td>G53      </td></tr>
+                                    </tbody>
+                                    <tbody>
+                                    <tr> <td rowspan="5">303</td>
+                                            <td> 0   </td><td>G38      </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 1   </td><td>G45      </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 2   </td><td>G46      </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 3   </td><td>G47      </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                        <tr><td> 4   </td><td>G48      </td><td>&#160;   </td><td>&#160;   </td><td>&#160;   </td></tr>
+                                    </tbody>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>(注)</td> <td> </td> <td>G31とG31.1は同じ機能です</td></tr>
+                                    <tr><td>    </td> <td> </td> <td>G37とG37.1は同じ機能です。</td></tr>
+                                </table>
+                                </ul>
+
+                                <ul>
+                                <li>Series 16/18/21, 16i/18i/21i, 0-A/B/C, Power Mate i</li>
+                                <table border="1">
+                                    <thead>
+                                        <tr><th></th><th></th><th>マシニング系  </th><th colspan="3">旋盤系 </th><th>レーザ </th></tr>
+                                        <tr>
+                                            <th>type</th><th>g_data </th><th>Gコード</th><th>Gコード<br/>体系A</th><th>Gコード<br/>体系B</th>
+                                            <th>Gコード<br/>体系C</th><th>Gコード</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td rowspan="56">300</td>
+                                            <td>0  </td> <td>G04    </td><td>G04   </td><td>G04   </td><td>G04   </td><td>G04   </td></tr>
+                                        <tr><td>1  </td> <td>G10    </td><td>G27   </td><td>G27   </td><td>G27   </td><td>G10   </td></tr>
+                                        <tr><td>2  </td> <td>&#160; </td><td>G28   </td><td>G28   </td><td>G28   </td><td>&#160;</td></tr>
+                                        <tr><td>3  </td> <td>&#160; </td><td>G29   </td><td>G29   </td><td>G29   </td><td>&#160;</td></tr>
+                                        <tr><td>4  </td> <td>G27    </td><td>G30   </td><td>G30   </td><td>G30   </td><td>G27   </td></tr>
+                                        <tr><td>5  </td> <td>G28    </td><td>G50   </td><td>G92   </td><td>G92   </td><td>G28   </td></tr>
+                                        <tr><td>6  </td> <td>G29    </td><td>G70   </td><td>G70   </td><td>G72   </td><td>G29   </td></tr>
+                                        <tr><td>7  </td> <td>G30    </td><td>G71   </td><td>G71   </td><td>G73   </td><td>G30   </td></tr>
+                                        <tr><td>8  </td> <td>G38    </td><td>G72   </td><td>G72   </td><td>G74   </td><td>&#160;</td></tr>
+                                        <tr><td>9  </td> <td>G39    </td><td>G73   </td><td>G73   </td><td>G75   </td><td>&#160;</td></tr>
+                                        <tr><td>10 </td> <td>G45    </td><td>G74   </td><td>G74   </td><td>G76   </td><td>G45   </td></tr>
+                                        <tr><td>11 </td> <td>G46    </td><td>G75   </td><td>G75   </td><td>G77   </td><td>G46   </td></tr>
+                                        <tr><td>12 </td> <td>G47    </td><td>G76   </td><td>G76   </td><td>G78   </td><td>G47   </td></tr>
+                                        <tr><td>13 </td> <td>G48    </td><td>G10   </td><td>G10   </td><td>G10   </td><td>G48   </td></tr>
+                                        <tr><td>14 </td> <td>G92    </td><td>G37.1 </td><td>G37.1 </td><td>G37.1 </td><td>G92   </td></tr>
+                                        <tr><td>15 </td> <td>G09    </td><td>G37   </td><td>G37   </td><td>G37   </td><td>G09   </td></tr>
+                                        <tr><td>16 </td> <td>G31(G31.1) </td><td>G31 </td><td>G31 </td><td>G31   </td><td>G31   </td></tr>
+                                        <tr><td>17 </td> <td>G60    </td><td>G65   </td><td>G65   </td><td>G65   </td><td>G60   </td></tr>
+                                        <tr><td>18 </td> <td>G65    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G65   </td></tr>
+                                        <tr><td>19 </td> <td>&#160; </td><td>G05   </td><td>G05   </td><td>G05   </td><td>&#160;</td></tr>
+                                        <tr><td>20 </td> <td>G05    </td><td>G11   </td><td>G11   </td><td>G11   </td><td>G05   </td></tr>
+                                        <tr><td>21 </td> <td>G11    </td><td>G07.1 </td><td>G07.1 </td><td>G07.1 </td><td>G11   </td></tr>
+                                        <tr><td>22 </td> <td>G52    </td><td>G52   </td><td>G52   </td><td>G52   </td><td>G52   </td></tr>
+                                        <tr><td>23 </td> <td>G53    </td><td>G53   </td><td>G53   </td><td>G53   </td><td>G53   </td></tr>
+                                        <tr><td>24 </td> <td>G37    </td><td>G30.1 </td><td>G30.1 </td><td>G30.1 </td><td>&#160;</td></tr>
+                                        <tr><td>25 </td> <td>G07.1(G107)</td><td>G10.6</td><td>G10.6</td><td>G10.6</td><td>G07.1</td></tr>
+                                        <tr><td>26 </td> <td>G30.1  </td><td>G50.3 </td><td>G92.1 </td><td>G92.1 </td><td>G30.1 </td></tr>
+                                        <tr><td>27 </td> <td>G10.6  </td><td>G08   </td><td>G08   </td><td>G08   </td><td>&#160;</td></tr>
+                                        <tr><td>28 </td> <td>G72.1  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G72.1 </td></tr>
+                                        <tr><td>29 </td> <td>G72.2  </td><td>G39   </td><td>G39   </td><td>G39   </td><td>G72.2 </td></tr>
+                                        <tr><td>30 </td> <td>G92.1  </td><td>G60   </td><td>G60   </td><td>G60   </td><td>G92.1 </td></tr>
+                                        <tr><td>31 </td> <td>G08    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G08   </td></tr>
+                                        <tr><td>32 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G71   </td></tr>
+                                        <tr><td>80 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G24   </td></tr>
+                                        <tr><td>81 </td> <td>&#160; </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>G32   </td></tr>
+                                        <tr><td>100</td> <td>G81.1  </td><td>G07   </td><td>G07   </td><td>G07   </td><td>&#160;</td></tr>
+                                        <tr><td>101</td> <td>&#160; </td><td>G09   </td><td>G09   </td><td>G09   </td><td>&#160;</td></tr>
+                                        <tr><td>102</td> <td>&#160; </td><td>G73.1 </td><td>G73.1 </td><td>G73.1 </td><td>&#160;</td></tr>
+                                        <tr><td>103</td> <td>&#160; </td><td>G73.2 </td><td>G73.2 </td><td>G73.2 </td><td>&#160;</td></tr>
+                                        <tr><td>104</td> <td>G05.1  </td><td>G74.1 </td><td>G74.1 </td><td>G74.1 </td><td>&#160;</td></tr>
+                                        <tr><td>105</td> <td>G07    </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>106</td> <td>G31.8  </td><td>G80.4 </td><td>G80.4 </td><td>G80.4 </td><td>&#160;</td></tr>
+                                        <tr><td>107</td> <td>G31.9  </td><td>G81.4 </td><td>G81.4 </td><td>G81.4 </td><td>&#160;</td></tr>
+                                        <tr><td>108</td> <td>G12.4  </td><td>G82.4 </td><td>G82.4 </td><td>G82.4 </td><td>&#160;</td></tr>
+                                        <tr><td>109</td> <td>G13.4  </td><td>G83.4 </td><td>G83.4 </td><td>G83.4 </td><td>&#160;</td></tr>
+                                        <tr><td>110</td> <td>G05.4  </td><td>G84.4 </td><td>G84.4 </td><td>G84.4 </td><td>&#160;</td></tr>
+                                        <tr><td>111</td> <td>G10.9  </td><td>G05.1 </td><td>G05.1 </td><td>G05.1 </td><td>&#160;</td></tr>
+                                        <tr><td>112</td> <td>G31.2  </td><td>G72.1 </td><td>G72.1 </td><td>G72.1 </td><td>&#160;</td></tr>
+                                        <tr><td>113</td> <td>G31.3  </td><td>G72.2 </td><td>G72.2 </td><td>G72.2 </td><td>&#160;</td></tr>
+                                        <tr><td>114</td> <td>G31.4  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>115</td> <td>G53.1  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>116</td> <td>&#160; </td><td>G38   </td><td>G38   </td><td>G38   </td><td>&#160;</td></tr>
+                                        <tr><td>117</td> <td>G28.2  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>118</td> <td>G30.2  </td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td></tr>
+                                        <tr><td>126</td> <td>&#160; </td><td>G28.2 </td><td>G28.2 </td><td>G28.2 </td><td>&#160;</td></tr>
+                                        <tr><td>127</td> <td>&#160; </td><td>G30.2 </td><td>G30.2 </td><td>G30.2 </td><td>&#160;</td></tr>
+                                    </tbody>
+                                </table>
+                            </ul>
+                            <ul>
+                                <li>Series 30i, 0i-D/F, PMi-A</li>
+                                <table border="1">
+                                    <thead>
+                                        <tr><th>     </th> <th>       </th> <th>マシニング系</th> <th colspan="3">旋盤系 </th> </tr>
+                                        <tr>
+                                            <th>type</th> <th>g_data </th> <th>Gコード  </th> <th>Gコード<br/>体系A</th>
+                                            <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th> 
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td rowspan="59">300</td>
+                                             <td>0  </td><td>G04        </td><td>G04     </td><td>G04     </td><td>G04        </td></tr>
+                                        <tr> <td>1  </td><td>G10        </td><td>G27     </td><td>G27     </td><td>G27        </td></tr>
+                                        <tr> <td>2  </td><td>&#160;     </td><td>G28     </td><td>G28     </td><td>G28        </td></tr>
+                                        <tr> <td>3  </td><td>&#160;     </td><td>G29     </td><td>G29     </td><td>G29        </td></tr>
+                                        <tr> <td>4  </td><td>G27        </td><td>G30     </td><td>G30     </td><td>G30        </td></tr>
+                                        <tr> <td>5  </td><td>G28        </td><td>G50     </td><td>G92     </td><td>G92        </td></tr>
+                                        <tr> <td>6  </td><td>G29        </td><td>G70     </td><td>G70     </td><td>G72        </td></tr>
+                                        <tr> <td>7  </td><td>G30        </td><td>G71     </td><td>G71     </td><td>G73        </td></tr>
+                                        <tr> <td>8  </td><td>&#160;     </td><td>G72     </td><td>G72     </td><td>G74        </td></tr>
+                                        <tr> <td>9  </td><td>G39        </td><td>G73     </td><td>G73     </td><td>G75        </td></tr>
+                                        <tr> <td>10 </td><td>&#160;     </td><td>G74     </td><td>G74     </td><td>G76        </td></tr>
+                                        <tr> <td>11 </td><td>&#160;     </td><td>G75     </td><td>G75     </td><td>G77        </td></tr>
+                                        <tr> <td>12 </td><td>&#160;     </td><td>G76     </td><td>G76     </td><td>G78        </td></tr>
+                                        <tr> <td>13 </td><td>&#160;     </td><td>G10     </td><td>G10     </td><td>G10        </td></tr>
+                                        <tr> <td>14 </td><td>G92        </td><td>G37.1   </td><td>G37.1   </td><td>G37.1      </td></tr>
+                                        <tr> <td>15 </td><td>&#160;     </td><td>G37(G37.2)</td><td>G37(G37.2)</td><td>G37(G37.2)</td></tr>
+                                        <tr> <td>16 </td><td>G31(G31.1) </td><td>G31     </td><td>G31     </td><td>G31        </td></tr>
+                                        <tr> <td>17 </td><td>G60        </td><td>G65     </td><td>G65     </td><td>G65        </td></tr>
+                                        <tr> <td>18 </td><td>G65        </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                        <tr> <td>19 </td><td>&#160;     </td><td>G05     </td><td>G05     </td><td>G05        </td></tr>
+                                        <tr> <td>20 </td><td>G05        </td><td>G11     </td><td>G11     </td><td>G11        </td></tr>
+                                        <tr> <td>21 </td><td>G11        </td><td>G07.1(G107)</td><td>G07.1(G107)</td><td>G07.1(G107)</td></tr>
+                                        <tr> <td>22 </td><td>G52        </td><td>G52     </td><td>G52     </td><td>G52        </td></tr>
+                                        <tr> <td>23 </td><td>&#160;     </td><td>G53     </td><td>G53     </td><td>G53        </td></tr>
+                                        <tr> <td>24 </td><td>G37        </td><td>G30.1   </td><td>G30.1   </td><td>G30.1      </td></tr>
+                                        <tr> <td>25 </td><td>G07.1(G107)</td><td>G10.6   </td><td>G10.6   </td><td>G10.6      </td></tr>
+                                        <tr> <td>26 </td><td>G30.1      </td><td>G50.3   </td><td>G92.1   </td><td>G92.1      </td></tr>
+                                        <tr> <td>27 </td><td>G10.6      </td><td>G08     </td><td>G08     </td><td>G08        </td></tr>
+                                        <tr> <td>28 </td><td>G72.1      </td><td>G100    </td><td>G110    </td><td>G101       </td></tr>
+                                        <tr> <td>29 </td><td>G72.2      </td><td>G39     </td><td>G39     </td><td>G39        </td></tr>
+                                        <tr> <td>30 </td><td>G92.1      </td><td>G60     </td><td>G60     </td><td>G60        </td></tr>
+                                        <tr> <td>31 </td><td>G08        </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                        <tr> <td>96 </td><td>&#160;     </td><td>G31.8   </td><td>G31.8   </td><td>G31.8      </td></tr>
+                                        <tr> <td>97 </td><td>&#160;     </td><td>G37.3   </td><td>G37.3   </td><td>G37.3      </td></tr>
+                                        <tr> <td>99 </td><td>&#160;     </td><td>G10.9   </td><td>G10.9   </td><td>G10.9      </td></tr>
+                                        <tr> <td>100</td><td>G81.1      </td><td>G07     </td><td>G07     </td><td>G07        </td></tr>
+                                        <tr> <td>102</td><td>&#160;     </td><td>G73.1   </td><td>G73.1   </td><td>G73.1      </td></tr>
+                                        <tr> <td>103</td><td>&#160;     </td><td>G73.2   </td><td>G73.2   </td><td>G73.2      </td></tr>
+                                        <tr> <td>104</td><td>G05.1      </td><td>G74.1   </td><td>G74.1   </td><td>G74.1      </td></tr>
+                                        <tr> <td>105</td><td>G07        </td><td>G05.4   </td><td>G05.4   </td><td>G05.4      </td></tr>
+                                        <tr> <td>106</td><td>G31.8      </td><td>G80.4   </td><td>G80.4   </td><td>G80.4      </td></tr>
+                                        <tr> <td>107</td><td>G31.9      </td><td>G81.4   </td><td>G81.4   </td><td>G81.4      </td></tr>
+                                        <tr> <td>108</td><td>G12.4      </td><td>G82.4   </td><td>G82.4   </td><td>G82.4      </td></tr>
+                                        <tr> <td>109</td><td>G13.4      </td><td>G83.4   </td><td>G83.4   </td><td>G83.4      </td></tr>
+                                        <tr> <td>110</td><td>G05.4      </td><td>G84.4   </td><td>G84.4   </td><td>G84.4      </td></tr>
+                                        <tr> <td>111</td><td>G10.9      </td><td>G05.1   </td><td>G05.1   </td><td>G05.1      </td></tr>
+                                        <tr> <td>112</td><td>G31.2      </td><td>G72.1   </td><td>G72.1   </td><td>G72.1      </td></tr>
+                                        <tr> <td>113</td><td>G31.3      </td><td>G72.2   </td><td>G72.2   </td><td>G72.2      </td></tr>
+                                        <tr> <td>114</td><td>G31.4      </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                        <tr> <td>116</td><td>G91.1      </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                        <tr> <td>119</td><td>&#160;     </td><td>G43.6   </td><td>G43.6   </td><td>G43.6      </td></tr>
+                                        <tr> <td>120</td><td>&#160;     </td><td>G50.4   </td><td>G50.4   </td><td>G50.4      </td></tr>
+                                        <tr> <td>121</td><td>&#160;     </td><td>G50.5   </td><td>G50.5   </td><td>G50.5      </td></tr>
+                                        <tr> <td>122</td><td>&#160;     </td><td>G50.6   </td><td>G50.6   </td><td>G50.6      </td></tr>
+                                        <tr> <td>123</td><td>&#160;     </td><td>G51.4   </td><td>G51.4   </td><td>G51.4      </td></tr>
+                                        <tr> <td>124</td><td>&#160;     </td><td>G51.5   </td><td>G51.5   </td><td>G51.5      </td></tr>
+                                        <tr> <td>125</td><td>G37.1      </td><td>G51.6   </td><td>G91.1   </td><td>G91.1      </td></tr>
+                                        <tr> <td>126</td><td>G37.2      </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                        <tr> <td>127</td><td>G37.3      </td><td>&#160;  </td><td>&#160;  </td><td>&#160;     </td></tr>
+                                    </tbody>
+                                </table>
+                            </ul>
+                            <ul>
+                                <li>Series 16i/18i-W</li>
+                                <table border="1">
+                                    <thead>
+                                        <tr><th>type</th><th>g_data </th><th>Gコード    </th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td rowspan="31">300</td>
+                                            <td>0   </td> <td>G04</td> </tr>
+                                        <tr><td>1   </td> <td>G10</td> </tr>
+                                        <tr><td>2   </td> <td>G11</td> </tr>
+                                        <tr><td>3   </td> <td>G09</td> </tr>
+                                        <tr><td>4   </td> <td>G27</td> </tr>
+                                        <tr><td>5   </td> <td>G28</td> </tr>
+                                        <tr><td>6   </td> <td>G29</td> </tr>
+                                        <tr><td>7   </td> <td>G30</td> </tr>
+                                        <tr><td>13  </td> <td>G93</td> </tr>
+                                        <tr><td>14  </td> <td>G92</td> </tr>
+                                        <tr><td>15  </td> <td>G31</td> </tr>
+                                        <tr><td>16  </td> <td>G70</td> </tr>
+                                        <tr><td>17  </td> <td>G71</td> </tr>
+                                        <tr><td>18  </td> <td>G72</td> </tr>
+                                        <tr><td>19  </td> <td>G73</td> </tr>
+                                        <tr><td>20  </td> <td>G74</td> </tr>
+                                        <tr><td>21  </td> <td>G75</td> </tr>
+                                        <tr><td>22  </td> <td>G76</td> </tr>
+                                        <tr><td>23  </td> <td>G77</td> </tr>
+                                        <tr><td>24  </td> <td>G78</td> </tr>
+                                        <tr><td>25  </td> <td>G79</td> </tr>
+                                        <tr><td>26  </td> <td>G65</td> </tr>
+                                        <tr><td>27  </td> <td>G32</td> </tr>
+                                        <tr><td>28  </td> <td>G33</td> </tr>
+                                        <tr><td>31  </td> <td>G53</td> </tr>
+                                        <tr><td>32  </td> <td>G80</td> </tr>
+                                        <tr><td>33  </td> <td>G81</td> </tr>
+                                        <tr><td>34  </td> <td>G86</td> </tr>
+                                        <tr><td>35  </td> <td>G87</td> </tr>
+                                        <tr><td>36  </td> <td>G88</td> </tr>
+                                        <tr><td>37  </td> <td>G89</td> </tr>
+                                        </tbody>
+                                </table>
+                            </ul>
+                            <p>
+                                g_1shotの第0～6ビットには上の表の g_1shot欄の数値がバイナリ形式で格納されます。
+                                g_1shotの第7ビットにはblock で指定した読み出し対象ブロック内でこのGコードが指令されているかどうかが格納されます。
+                            </p>
+                            <p><img src="misc/gcode.gif"></img></p>
+                            <p>
+                                1 shotG コードに関するすべてのtypeを一度に読み出すには、-4を指定します。<br/>
+                                Series 15 の場合、g_1shot[0]～g_1shot[3] に type=300～303のデータがセットされます。<br/>
+                                Series 16/18/21, 0i, 30i, Power Mate i, PMi-A の場合、g_1shot[0] に type=300 のデータが格納されます。
+                            </p>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    <vc>
+                        <item>
+                            <name>FlibHndl</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    ライブラリハンドルです。
+                                    詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>type</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    モーダルデータの種類を指定します。(詳しくは後述) 
+                                </p>
+                                <table class="dd">
+                                    <tr>
+                                        <td>-4</td>
+                                        <td>:</td>
+                                        <td>1 shot Gコードの一括読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-3</td>
+                                        <td>:</td>
+                                        <td>Gコード以外の軸データ一括読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-2</td>
+                                        <td>:</td>
+                                        <td>Gコード以外の一括読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>-1</td>
+                                        <td>:</td>
+                                        <td>Gコードの一括読み出し(type = 0～20)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0～20</td>
+                                        <td>:</td>
+                                        <td>Gコードの個別読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>100～126</td>
+                                        <td>:</td>
+                                        <td>Gコード以外の個別読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>200～207</td>
+                                        <td>:</td>
+                                        <td>Gコード以外の軸データ個別読み出し</td>
+                                    </tr>
+                                    <tr>
+                                        <td>300</td>
+                                        <td>:</td>
+                                        <td>1 shot Gコードの個別読み出し</td>
+                                    </tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>block</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    読み出す対象となるブロックを指定します。 
+                                </p>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>現在実行中のブロック</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>次のブロック</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>次の次のブロック</td>
+                                    </tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>modal</name>
+                            <type>out</type>
+                            <content>
+                                <p>
+                                    モーダルデータを返すODBMDL構造体へのポインタです。ODBMDL構造体は次の通りです。
+                                </p>
+<pre>
+typedef struct odbmdl {
+     short datano;              /* データの種類 */
+     short type;                /* 指令されたブロック */
+     union {
+          char  g_data;         /* G コードのモーダルデータ */
+          char  g_rdata[35];    /* G コードのモーダルデータ */
+          char  g_1shot[4];/* 1 shot G コードのモーダルデータ*/
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }aux;
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }raux1[27];
+          struct {
+                long    aux_data;
+                        /* G コード以外のモーダルデータ */
+                char    flag1;  /* フラグ 1 */
+                char    flag2;  /* フラグ 2 */
+          }raux2[MAX_AXIS];     /* MAX_AXIS : 最大制御軸数 */
+     }modal;
+} ODBMDL ;
+</pre>
+                                <dl>
+                                    <dt>datano</dt>
+                                    <dd>モーダルデータの種類がセットされます。</dd>
+                                    <dt>type</dt>
+                                    <dd>読み出す対象となるブロックがセットされます。</dd>
+                                    <dt>g_data</dt>
+                                    <dd>
+                                        Gコード(ならびに、1 shot Gコード)の個別読み出しの場合に使用します。
+                                        対応するGコードグループ内のモーダルGコードが読み出されます。
+                                    </dd>
+                                    <dt>g_rdata</dt>
+                                    <dd>
+                                        Gコードの一括読み出しの場合に使用します。
+                                        すべてのGコードグループ内のモーダルGコードが読み出されます。
+                                    </dd>
+                                    <dt>g_1shot</dt>
+                                    <dd>1 shot Gコードの一括読み出しの場合に使用します。(個別読み出しの場合は、g_dataを使用して下さい)</dd>
+                                    <dt>aux</dt>
+                                    <dd>Gコード以外(軸データ含む)の個別読み出しの場合に使用します。</dd>
+                                    <dt>raux1</dt>
+                                    <dd>Gコード以外の一括読み出しの場合に使用します。</dd>
+                                    <dt>raux2</dt>
+                                    <dd>Gコード以外の軸データ一括読み出しの場合に使用します。</dd>
+                                    <dt>aux_data</dt>
+                                    <dd>Gコード以外のモーダルデータがセットされます。</dd>
+                                    <dt>flag1</dt>
+                                    <dd>補助情報がセットされます。</dd>
+                                    <dt>flag2</dt>
+                                    <dd>補助情報がセットされます。</dd>
+                                </dl>
+                                <p class="label">(1) モーダルGコードの読み出し</p>
+                                <ul>
+                                    type には、下表のGコードグループが指定できます。<br/>
+                                    なお、パンチプレス, Power Mate iはマシニング系、研削盤は旋盤系と同じです。
+                                    <table border="1">
+                                        <thead>
+                                            <tr> <th>    </th> <th>  </th> <th>マシニング系</th>         <th colspan="3">旋盤系</th> </tr>
+                                            <tr>
+                                                <th>type</th> <th>g_data</th> <th>Gコード   </th> <th>Gコード<br/>体系A </th>
+                                                <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td rowspan="25">0</td>
+                                                 <td>0 </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> <td>G00   </td> </tr>
+                                            <tr> <td>1 </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> <td>G01   </td> </tr>
+                                            <tr> <td>2 </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> <td>G02   </td> </tr>
+                                            <tr> <td>3 </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> <td>G03   </td> </tr>
+                                            <tr> <td>4 </td> <td>G33   </td> <td>G32   </td> <td>G33   </td> <td>G33   </td> </tr>
+                                            <tr> <td>5 </td> <td>G75   </td> <td>G90   </td> <td>G77   </td> <td>G20   </td> </tr>
+                                            <tr> <td>6 </td> <td>G77   </td> <td>G92   </td> <td>G78   </td> <td>G21   </td> </tr>
+                                            <tr> <td>7 </td> <td>G78   </td> <td>G94   </td> <td>G79   </td> <td>G24   </td> </tr>
+                                            <tr> <td>9 </td> <td>G79   </td> <td>G34   </td> <td>G34   </td> <td>G34   </td> </tr>
+                                            <tr> <td>10</td> <td>G02.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr> <td>11</td> <td>G03.2 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr> <td>12</td> <td>G02.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr> <td>13</td> <td>G03.3 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr> <td>14</td> <td>G06.2 </td> <td>G35   </td> <td>G35   </td> <td>G35   </td> </tr>
+                                            <tr> <td>15</td> <td>G02.4 </td> <td>G36   </td> <td>G36   </td> <td>G36   </td> </tr>
+                                            <tr> <td>16</td> <td>G03.4 </td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr> <td>17</td> <td>&#160;</td> <td>G06.2 </td> <td>G06.2 </td> <td>G06.2 </td> </tr>
+                                            <tr> <td>18</td> <td>&#160;</td> <td>G02.4 </td> <td>G02.4 </td> <td>G02.4 </td> </tr>
+                                            <tr> <td>19</td> <td>&#160;</td> <td>G03.4 </td> <td>G03.4 </td> <td>G03.4 </td> </tr>
+                                            <tr> <td>20</td> <td>&#160;</td> <td>G02.2 </td> <td>G02.2 </td> <td>G02.2 </td> </tr>
+                                            <tr> <td>21</td> <td>&#160;</td> <td>G03.2 </td> <td>G03.2 </td> <td>G03.2 </td> </tr>
+                                            <tr> <td>22</td> <td>G35   </td> <td>G02.3 </td> <td>G02.3 </td> <td>G02.3 </td> </tr>
+                                            <tr> <td>23</td> <td>G36   </td> <td>G03.3 </td> <td>G03.3 </td> <td>G03.3 </td> </tr>
+                                            <tr> <td>24</td> <td>G34   </td> <td>G06.1 </td> <td>G06.1 </td> <td>G06.1 </td> </tr>
+                                            <tr> <td>25</td> <td>&#160;</td> <td>G32.2 </td> <td>G32.2 </td> <td>G32.2 </td> </tr>
+                                            <tr>
+                                                <td rowspan="5">1</td>
+                                                 <td>0 </td> <td>G17    </td> <td>G97    </td> <td>G97    </td> <td>G97    </td> </tr>
+                                            <tr> <td>1 </td> <td>&#160; </td> <td>G96    </td> <td>G96    </td> <td>G96    </td> </tr>
+                                            <tr> <td>4 </td> <td>G19    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td>8 </td> <td>G18    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td>10</td> <td>G17.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr>
+                                                <td rowspan="2">2</td>
+                                                <td>0 </td> <td>G90    </td> <td>&#160; </td> <td>G90    </td> <td>G90    </td> </tr>
+                                            <tr><td>1 </td> <td>G91    </td> <td>&#160; </td> <td>G91    </td> <td>G91    </td> </tr>
+                                            <tr>
+                                                <td rowspan="2">3</td>
+                                                <td>0 </td> <td>G23    </td> <td>G69    </td> <td>G69    </td> <td>G69    </td> </tr>
+                                            <tr><td>1 </td> <td>G22    </td> <td>G68    </td> <td>G68    </td> <td>G68    </td> </tr>
+                                            <tr>
+                                                <td rowspan="4">4</td>
+                                                <td>0 </td> <td>G94    </td> <td>G98    </td> <td>G94    </td> <td>G94    </td> </tr>
+                                            <tr><td>1 </td> <td>G95    </td> <td>G99    </td> <td>G95    </td> <td>G95    </td> </tr>
+                                            <tr><td>2 </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+                                            <tr><td>3 </td> <td>G93.2  </td> <td>G93    </td> <td>G93    </td> <td>G93    </td> </tr>
+                                            <tr>
+                                                <td rowspan="2">5</td>
+                                                <td>0 </td> <td>G20(G70)</td> <td>G20    </td> <td>G20    </td> <td>G70    </td> </tr>
+                                            <tr><td>1 </td> <td>G21(G71)</td> <td>G21    </td> <td>G21    </td> <td>G71    </td> </tr>
+                                            <tr>
+                                                <td rowspan="11">6</td>
+                                                <td>0 </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> <td>G40    </td> </tr>
+                                            <tr><td>1 </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> <td>G41    </td> </tr>
+                                            <tr><td>2 </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> <td>G42    </td> </tr>
+                                            <tr><td>3 </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> <td>G41.2  </td> </tr>
+                                            <tr><td>4 </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> <td>G42.2  </td> </tr>
+                                            <tr><td>5 </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> <td>G41.3  </td> </tr>
+                                            <tr><td>6 </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> <td>G41.4  </td> </tr>
+                                            <tr><td>7 </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> <td>G42.4  </td> </tr>
+                                            <tr><td>8 </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> <td>G41.5  </td> </tr>
+                                            <tr><td>9 </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> <td>G42.5  </td> </tr>
+                                            <tr><td>10</td> <td>&#160; </td> <td>G40.3  </td> <td>G40.3  </td> <td>G40.3  </td> </tr>
+                                            <tr><td rowspan="8">7</td>
+                                                <td>0 </td> <td>G49(G49.1)</td> <td>G25    </td> <td>G25    </td> <td>G25    </td> </tr>
+                                            <tr><td>1 </td> <td>G43    </td> <td>G26    </td> <td>G26    </td> <td>G26    </td> </tr>
+                                            <tr><td>2 </td> <td>G44    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>3 </td> <td>G43.1  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>4 </td> <td>G43.4  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>5 </td> <td>G43.5  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>6 </td> <td>G43.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>7 </td> <td>G43.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td rowspan="16">8</td>
+                                                <td>0 </td> <td>G80    </td> <td>G23    </td> <td>G23    </td> <td>G23    </td> </tr>
+                                            <tr><td>1 </td> <td>G81    </td> <td>G22    </td> <td>G22    </td> <td>G22    </td> </tr>
+                                            <tr><td>2 </td> <td>G82    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>3 </td> <td>G83    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>4 </td> <td>G84    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>5 </td> <td>G85    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>6 </td> <td>G86    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>7 </td> <td>G87    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>8 </td> <td>G88    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>9 </td> <td>G89    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>10</td> <td>G73    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>11</td> <td>G74    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>12</td> <td>G76    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>13</td> <td>G84.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>14</td> <td>G84.3  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>15</td> <td>G81.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td rowspan="8">9</td>
+                                                <td>0 </td> <td>G98    </td> <td>G80    </td> <td>G80    </td> <td>G80    </td> </tr>
+                                            <tr><td>1 </td> <td>G99    </td> <td>G83    </td> <td>G83    </td> <td>G83    </td> </tr>
+                                            <tr><td>2 </td> <td>&#160; </td> <td>G84    </td> <td>G84    </td> <td>G84    </td> </tr>
+                                            <tr><td>3 </td> <td>&#160; </td> <td>G85    </td> <td>G85    </td> <td>G85    </td> </tr>
+                                            <tr><td>4 </td> <td>&#160; </td> <td>G86    </td> <td>G86    </td> <td>G86    </td> </tr>
+                                            <tr><td>5 </td> <td>&#160; </td> <td>G87    </td> <td>G87    </td> <td>G87    </td> </tr>
+                                            <tr><td>6 </td> <td>&#160; </td> <td>G88    </td> <td>G88    </td> <td>G88    </td> </tr>
+                                            <tr><td>7 </td> <td>&#160; </td> <td>G89    </td> <td>G89    </td> <td>G89    </td> </tr>
+                                            <tr><td rowspan="2">10</td>
+                                                <td>0 </td> <td>G50    </td> <td>&#160; </td> <td>G98    </td> <td>G98    </td> </tr>
+                                            <tr><td>1 </td> <td>G51    </td> <td>&#160; </td> <td>G99    </td> <td>G99    </td> </tr>
+                                            <tr><td rowspan="3">11</td>
+                                                <td>0 </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> <td>G67    </td> </tr>
+                                            <tr><td>1 </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> <td>G66    </td> </tr>
+                                            <tr><td>2 </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> <td>G66.1  </td> </tr>
+                                            <tr><td rowspan="2">12</td>
+                                                <td>0 </td> <td>G97    </td> <td>G49    </td> <td>G49    </td> <td>G49    </td> </tr>
+                                            <tr><td>1 </td> <td>G96    </td> <td>G43    </td> <td>G43    </td> <td>G43    </td> </tr>
+                                            <tr><td rowspan="6">13</td>
+                                                <td>0 </td> <td>G54(G54.1)</td> <td>G54 </td> <td>G54    </td> <td>G54    </td> </tr>
+                                            <tr><td>1 </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> <td>G55    </td> </tr>
+                                            <tr><td>2 </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> <td>G56    </td> </tr>
+                                            <tr><td>3 </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> <td>G57    </td> </tr>
+                                            <tr><td>4 </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> <td>G58    </td> </tr>
+                                            <tr><td>5 </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> <td>G59    </td> </tr>
+                                            <tr><td rowspan="4">14</td>
+                                                <td>0 </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> <td>G64    </td> </tr>
+                                            <tr><td>1 </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> <td>G61    </td> </tr>
+                                            <tr><td>2 </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> <td>G62    </td> </tr>
+                                            <tr><td>3 </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> <td>G63    </td> </tr>
+                                            <tr><td rowspan="6">15</td>
+                                                <td>0 </td> <td>G69    </td> <td>G17    </td> <td>G17    </td> <td>G17    </td> </tr>
+                                            <tr><td>1 </td> <td>G68    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>2 </td> <td>G68.2  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>4 </td> <td>&#160; </td> <td>G18    </td> <td>G18    </td> <td>G18    </td> </tr>
+                                            <tr><td>8 </td> <td>&#160; </td> <td>G19    </td> <td>G19    </td> <td>G19    </td> </tr>
+                                            <tr><td>10</td> <td>&#160; </td> <td>G17.1  </td> <td>G17.1  </td> <td>G17.1  </td> </tr>
+                                            <tr><td rowspan="3">16</td>
+                                                <td>0 </td> <td>G15    </td> <td>G69.1  </td> <td>G69.1  </td> <td>G69.1  </td> </tr>
+                                            <tr><td>1 </td> <td>G16    </td> <td>G68.1  </td> <td>G68.1  </td> <td>G68.1  </td> </tr>
+                                            <tr><td>2 </td> <td>&#160; </td> <td>G68.2  </td> <td>G68.2  </td> <td>G68.2  </td> </tr>
+                                            <tr><td rowspan="3">17</td>
+                                                <td>0 </td> <td>G40.1(G150)</td> <td>&#160;</td> <td>G50   </td> <td>G50   </td> </tr>
+                                            <tr><td>1 </td> <td>G41.1(G151)</td> <td>&#160;</td> <td>G51   </td> <td>G51   </td> </tr>
+                                            <tr><td>2 </td> <td>G42.1(G152)</td> <td>&#160;</td> <td>&#160;</td> <td>&#160;</td> </tr>
+                                            <tr><td rowspan="2">18</td>
+                                            <td>0 </td> <td>G25    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td>1 </td> <td>G26    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr><td rowspan="2">19</td>
+                                                <td>0 </td> <td>G160   </td> <td>G50.2  </td> <td>G50.2  </td> <td>G50.2  </td> </tr>
+                                            <tr><td>1 </td> <td>G161   </td> <td>G51.2  </td> <td>G51.2  </td> <td>G51.2  </td> </tr>
+                                            <tr><td rowspan="2">20</td>
+                                                <td>0 </td> <td>G13.1(G113)</td> <td>G13.1 </td> <td>G13.1 </td> <td>G13.1 </td> </tr>
+                                            <tr><td>1 </td> <td>G12.1(G112)</td> <td>G12.1 </td> <td>G12.1 </td> <td>G12.1 </td> </tr>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                    </ul>
+                                    <p>
+                                        g_dataの第0～6ビットには上の表の g_data欄の数値がバイナリ形式で格納されます。
+                                        g_dataの第7ビットにはblockで指定した読み出し対象ブロック内でこのGコードが指令されているか
+                                        どうかが格納されます。
+                                    </p>
+                                    <p><img src="misc/gcode.gif"></img></p>
+                                    <p>
+                                        例えば、次の加工プログラムのN100のブロック実行中に本関数を実行した結果は以下のようになります。
+                                        (Series 30i マシニング系)
+                                    </p>
+                                    <blockquote>
+<pre>
+N090 G18 ;
+N100 G1 Z100. ;
+N110 G17 G2 X10. Y-20. R12. ;
+</pre>
+                                        <table frame="hsides" rules="groups">
+                                            <colgroup width="20%">
+                                            <colgroup width="20%">
+                                            <colgroup width="20%">
+                                            <colgroup width="40%">
+                                            <thead>
+                                                <tr>
+                                                    <th>type</th>
+                                                    <th>block</th>
+                                                    <th>g_data</th>
+                                                    <th>モーダル状態</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>0</td>
+                                                    <td>0</td>
+                                                    <td>0x81</td>
+                                                    <td>G1が指令されている</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>0</td>
+                                                    <td>1</td>
+                                                    <td>0x82</td>
+                                                    <td>G2が指令されている</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>0</td>
+                                                    <td>0x08</td>
+                                                    <td>G18モード(指令なし)</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>1</td>
+                                                    <td>0x80</td>
+                                                    <td>G17が指令されている</td>
+                                                </tr>
+                                            </tbody>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                            </table>
+                                        </blockquote>
+                                        <p>
+                                            Gコードに関するすべてのtypeを一度に読み出すには、-1を指定します。
+                                            g_rdataにg_dataの配列がセットされます。
+                                        </p>
+                                        <p class="label">(2) Gコード以外のモーダルデータの読み出し</p>
+                                        <ul>
+                                            <table border="1">
+                                                <colgroup width="20%">
+                                                <thead>
+                                                <tr><th>type</th><th>指令アドレス   </th></tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr><td>100 </td> <td>B (第2補助機能)</td> </tr>
+                                                <tr><td>101 </td> <td>D              </td> </tr>
+                                                <tr><td>102 </td> <td>- (リザーブ)   </td> </tr>
+                                                <tr><td>103 </td> <td>F              </td> </tr>
+                                                <tr><td>104 </td> <td>H [M]          </td> </tr>
+                                                <tr><td>105 </td> <td>L              </td> </tr>
+                                                <tr><td>106 </td> <td>M              </td> </tr>
+                                                <tr><td>107 </td> <td>S              </td> </tr>
+                                                <tr><td>108 </td> <td>T              </td> </tr>
+                                                <tr><td>109 </td> <td>R [M]          </td> </tr>
+                                                <tr><td>110 </td> <td>P [M]          </td> </tr>
+                                                <tr><td>111 </td> <td>Q [M]          </td> </tr>
+                                                <tr><td>112 </td> <td>A              </td> </tr>
+                                                <tr><td>113 </td> <td>C              </td> </tr>
+                                                <tr><td>114 </td> <td>I              </td> </tr>
+                                                <tr><td>115 </td> <td>J              </td> </tr>
+                                                <tr><td>116 </td> <td>K              </td> </tr>
+                                                <tr><td>117 </td> <td>N              </td> </tr>
+                                                <tr><td>118 </td> <td>O              </td> </tr>
+                                                <tr><td>119 </td> <td>U              </td> </tr>
+                                                <tr><td>120 </td> <td>V              </td> </tr>
+                                                <tr><td>121 </td> <td>W              </td> </tr>
+                                                <tr><td>122 </td> <td>X              </td> </tr>
+                                                <tr><td>123 </td> <td>Y              </td> </tr>
+                                                <tr><td>124 </td> <td>Z              </td> </tr>
+                                                <tr><td>125 </td> <td>M (第2Mコード) </td> </tr>
+                                                <tr><td>126 </td> <td>M (第3Mコード) </td> </tr>
+                                                </tbody>
+                                            </colgroup>
+                                        </table>
+                                        <table border="1">
+                                            <colgroup width="20%">
+                                            <thead>
+                                                <tr><th>type</th><th>指令アドレス   </th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><td>200 </td> <td>第1軸          </td> </tr>
+                                                <tr><td>201 </td> <td>第2軸          </td> </tr>
+                                                <tr><td>202 </td> <td>第3軸          </td> </tr>
+                                                <tr><td>203 </td> <td>第4軸          </td> </tr>
+                                                <tr><td>204 </td> <td>第5軸          </td> </tr>
+                                                <tr><td>205 </td> <td>第6軸          </td> </tr>
+                                                <tr><td>206 </td> <td>第7軸          </td> </tr>
+                                                <tr><td>207 </td> <td>第8軸          </td> </tr>
+                                            </tbody>
+                                            </colgroup>
+                                        </table>
+                                    </ul>
+                                    <p>[M]はマシニング系ではモーダルデータとして、旋盤系では指令データとして読み出されます。</p>
+                                    <p>100番台のtypeを一度に読み出すには、-2を指定します。raux1の配列にデータがセットされます。</p>
+                                    <p>200番台のtypeを一度に読み出すには、-3を指定します。raux2の配列にデータがセットされます。</p>
+                                    <p><img src="misc/com30.gif"></img></p>
+                                    <ul type="square">
+                                        <li>小数点指令なしでも小数点以下桁数は<b>O</b>でない場合があります。</li>
+                                        <li>指令アドレスの M,S,T,Bの入力桁数は、パラメータで設定した許容桁数が返されます。<br/></li>
+                                        <table>
+                                            <colgroup width="10%">
+                                            <colgroup width="50%">
+                                            <colgroup width="40%">
+                                            <tr>
+                                                <td>M</td>
+                                                <td>パラメータNo.3030</td>
+                                                <td>Mコードの許容桁数</td>
+                                            </tr>
+                                            <tr>
+                                                <td>S</td>
+                                                <td>パラメータNo.3031</td>
+                                                <td>Sコードの許容桁数</td>
+                                            </tr>
+                                            <tr>
+                                                <td>T</td>
+                                                <td>パラメータNo.3032</td>
+                                                <td>Tコードの許容桁数</td>
+                                            </tr>
+                                            <tr>
+                                                <td>B</td>
+                                                <td>パラメータNo.3033</td>
+                                                <td>Bコードの許容桁数</td>
+                                            </tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </ul>
+                                    <p></p>
+                                    <p class="label">(3) ワンショットGコードのモーダルデータの読み出し</p>
+                                    <ul>
+                                    <table border="1">
+                                        <thead>
+                                            <tr> <th> </th> <th>   </th> <th>マシニング系</th> <th colspan="3">旋盤系 </th> </tr>
+                                            <tr>
+                                                <th>type</th> <th>g_data </th> <th>Gコード </th> <th>Gコード<br/>体系A</th>
+                                                <th>Gコード<br/>体系B</th> <th>Gコード<br/>体系C</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr><td rowspan="60">300</td>
+                                                 <td> 0   </td> <td>G04    </td> <td>G04    </td> <td>G04    </td> <td>G04    </td> </tr>
+                                            <tr> <td> 1   </td> <td>G10    </td> <td>G27    </td> <td>G27    </td> <td>G27    </td> </tr>
+                                            <tr> <td> 2   </td> <td>&#160;   </td> <td>G28  </td> <td>G28    </td> <td>G28    </td> </tr>
+                                            <tr> <td> 3   </td> <td>&#160;   </td> <td>G29  </td> <td>G29    </td> <td>G29    </td> </tr>
+                                            <tr> <td> 4   </td> <td>G27    </td> <td>G30    </td> <td>G30    </td> <td>G30    </td> </tr>
+                                            <tr> <td> 5   </td> <td>G28    </td> <td>G50    </td> <td>G92    </td> <td>G92    </td> </tr>
+                                            <tr> <td> 6   </td> <td>G29    </td> <td>G70    </td> <td>G70    </td> <td>G72    </td> </tr>
+                                            <tr> <td> 7   </td> <td>G30    </td> <td>G71    </td> <td>G71    </td> <td>G73    </td> </tr>
+                                            <tr> <td> 8   </td> <td>G38    </td> <td>G72    </td> <td>G72    </td> <td>G74    </td> </tr>
+                                            <tr> <td> 9   </td> <td>G39    </td> <td>G73    </td> <td>G73    </td> <td>G75    </td> </tr>
+                                            <tr> <td> 10  </td> <td>&#160;   </td> <td>G74  </td> <td>G74    </td> <td>G76    </td> </tr>
+                                            <tr> <td> 11  </td> <td>&#160;   </td> <td>G75  </td> <td>G75    </td> <td>G77    </td> </tr>
+                                            <tr> <td> 12  </td> <td>&#160;   </td> <td>G76  </td> <td>G76    </td> <td>G78    </td> </tr>
+                                            <tr> <td> 13  </td> <td>&#160;   </td> <td>G10  </td> <td>G10    </td> <td>G10    </td> </tr>
+                                            <tr> <td> 14  </td> <td>G92    </td> <td>G37.1  </td> <td>G37.1  </td> <td>G37.1  </td> </tr>
+                                            <tr> <td> 15  </td> <td>&#160;   </td> <td>G37  </td> <td>G37    </td> <td>G37    </td> </tr>
+                                            <tr> <td> 16  </td> <td>G31(G31.1) </td> <td>G31</td> <td>G31    </td> <td>G31    </td> </tr>
+                                            <tr> <td> 17  </td> <td>G60    </td> <td>G65    </td> <td>G65    </td> <td>G65    </td> </tr>
+                                            <tr> <td> 18  </td> <td>G65    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 19  </td> <td>&#160;   </td> <td>G05  </td> <td>G05    </td> <td>G05    </td> </tr>
+                                            <tr> <td> 20  </td> <td>G05    </td> <td>G11    </td> <td>G11    </td> <td>G11    </td> </tr>
+                                            <tr> <td> 21  </td> <td>G11    </td> <td>G07.1  </td> <td>G07.1  </td> <td>G07.1  </td> </tr>
+                                            <tr> <td> 22  </td> <td>G52    </td> <td>G52    </td> <td>G52    </td> <td>G52    </td> </tr>
+                                            <tr> <td> 23  </td> <td>G53    </td> <td>G53    </td> <td>G53    </td> <td>G53    </td> </tr>
+                                            <tr> <td> 24  </td> <td>G37    </td> <td>G30.1  </td> <td>G30.1  </td> <td>G30.1  </td> </tr>
+                                            <tr> <td> 25  </td> <td>G07.1(G107)</td> <td>G10.6</td> <td>G10.6 </td> <td>G10.6 </td> </tr>
+                                            <tr> <td> 26  </td> <td>G30.1   </td> <td>G50.3 </td> <td>G92.1  </td> <td>G92.1  </td> </tr>
+                                            <tr> <td> 27  </td> <td>G10.6   </td> <td>G08   </td> <td>G08    </td> <td>G08    </td> </tr>
+                                            <tr> <td> 28  </td> <td>G72.1   </td> <td>&#160;</td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 29  </td> <td>G72.2   </td> <td>G39   </td> <td>G39    </td> <td>G39    </td> </tr>
+                                            <tr> <td> 30  </td> <td>G92.1   </td> <td>G60   </td> <td>G60    </td> <td>G60    </td> </tr>
+                                            <tr> <td> 31  </td> <td>G08    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 32  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160;</td> </tr>
+                                            <tr> <td> 80  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 81  </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 100 </td> <td>G81.1   </td> <td>G07   </td> <td>G07    </td> <td>G07    </td> </tr>
+                                            <tr> <td> 101 </td> <td>&#160;   </td> <td>G09  </td> <td>G09    </td> <td>G09    </td> </tr>
+                                            <tr> <td> 102 </td> <td>&#160;   </td> <td>G73.1</td> <td>G73.1  </td> <td>G73.1  </td> </tr>
+                                            <tr> <td> 103 </td> <td>&#160;   </td> <td>G73.2</td> <td>G73.2  </td> <td>G73.2  </td> </tr>
+                                            <tr> <td> 104 </td> <td>G05.1   </td> <td>G74.1 </td> <td>G74.1  </td> <td>G74.1  </td> </tr>
+                                            <tr> <td> 105 </td> <td>G07    </td> <td>&#160; </td> <td>&#160; </td> <td>&#160; </td> </tr>
+                                            <tr> <td> 106 </td> <td>G31.8   </td> <td>G80.4 </td> <td>G80.4  </td> <td>G80.4  </td> </tr>
+                                            <tr> <td> 107 </td> <td>G31.9   </td> <td>G81.4 </td> <td>G81.4  </td> <td>G81.4  </td> </tr>
+                                            <tr> <td> 108 </td> <td>G12.4   </td> <td>G82.4 </td> <td>G82.4  </td> <td>G82.4  </td> </tr>
+                                            <tr> <td> 109 </td> <td>G13.4   </td> <td>G83.4 </td> <td>G83.4  </td> <td>G83.4  </td> </tr>
+                                            <tr> <td> 110 </td> <td>G05.4   </td> <td>G84.4 </td> <td>G84.4  </td> <td>G84.4  </td> </tr>
+                                            <tr> <td> 111 </td> <td>G10.9   </td> <td>G05.1 </td> <td>G05.1  </td> <td>G05.1  </td> </tr>
+                                            <tr> <td> 112 </td> <td>G31.2   </td> <td>G72.1 </td> <td>G72.1  </td> <td>G72.1  </td> </tr>
+                                            <tr> <td> 113 </td> <td>G31.3   </td> <td>G72.2 </td> <td>G72.2  </td> <td>G72.2  </td> </tr>
+                                            <tr> <td> 114 </td> <td>G31.4   </td> <td>G53.1 </td> <td>G53.1  </td> <td>G53.1  </td> </tr>
+                                            <tr> <td> 116 </td> <td>G91.1   </td> <td>G38   </td> <td>G38    </td> <td>G38    </td> </tr>
+                                            <tr> <td> 119 </td> <td>&#160;   </td> <td>G43.6</td> <td>G43.6  </td> <td>G43.6  </td> </tr>
+                                            <tr> <td> 120 </td> <td>&#160;   </td> <td>G50.4</td> <td>G50.4  </td> <td>G50.4  </td> </tr>
+                                            <tr> <td> 121 </td> <td>&#160;   </td> <td>G50.5</td> <td>G50.5  </td> <td>G50.5  </td> </tr>
+                                            <tr> <td> 122 </td> <td>&#160;   </td> <td>G50.6</td> <td>G50.6  </td> <td>G50.6  </td> </tr>
+                                            <tr> <td> 123 </td> <td>&#160;   </td> <td>G51.4</td> <td>G51.4  </td> <td>G51.4  </td> </tr>
+                                            <tr> <td> 124 </td> <td>&#160;   </td> <td>G51.5</td> <td>G51.5  </td> <td>G51.5  </td> </tr>
+                                            <tr> <td> 125 </td> <td>&#160;   </td> <td>G51.6</td> <td>G91.1  </td> <td>G91.1  </td> </tr>
+                                            <tr> <td> 126 </td> <td>&#160;   </td> <td>G28.2</td> <td>G28.2  </td> <td>G28.2  </td> </tr>
+                                            <tr> <td> 127 </td> <td>&#160;   </td> <td>G30.2</td> <td>G30.2  </td> <td>G30.2  </td> </tr>
+                                        </tbody>
+                                    </table>
+                                </ul>
+                                <p>
+                                    g_1shotの第0～6ビットには上の表の g_1shot欄の数値がバイナリ形式で格納されます。
+                                    g_1shotの第7ビットにはblock で指定した読み出し対象ブロック内でこのGコードが指令されているか
+                                    どうかが格納されます。
+                                </p>
+                                <p><img src="misc/gcode.gif"></img></p>
+                                <p>
+                                    1 shotG コードに関するすべてのtypeを一度に読み出すには、-4を指定します。
+                                    g_1shot[0]にtype=300のデータが格納されます。
+                                </p>
+                            </content>
+                        </item>
+                    </vc>
+                </hssb>
+            </is>
+        </argument>
+
+
+
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>データ番号の誤り<br/>モーダルデータの種類(type)の指定が不適切です。</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り<br/>ブロックの指定(block)が不適切です。</content>
+            </item>
+        </errcode>
+
+
+
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                <p><ul>上記２つの機能は必要ありません。</ul></p>
+                <p>イーサネットボードを使用のとき、</p>
+                <p><ul>イーサネット機能のみ必要です。</ul></p>
+            </ethr>
+        </option>
+
+
+
+        <!-- パラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- モード -->
+        <mode></mode>
+
+
+
+        <support>
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+            <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <reference>
+            <item>
+                <name>cnc_rdgcode</name>
+                <file>Misc/cnc_rdgcode.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdcommand</name>
+                <file>Misc/cnc_rdcommand.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

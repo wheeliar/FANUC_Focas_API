@@ -1,0 +1,695 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdaxisdata</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdaxisdata(unsigned short FlibHndl,
+                        short cls, short* type, short num, short* len, 
+                        ODBAXDT* axdata);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>本関数は<a href="position/cnc_rdposition.htm" target="_parent">cnc_rdposition</a>、<a href="position/cnc_rdspeed.htm" target="_parent">cnc_rdspeed</a>、<a href="position/cnc_rdsvmeter.htm" target="_parent">cnc_rdsvmeter</a>、<a href="position/cnc_rdspmeter.htm" target="_parent">cnc_rdspmeter</a>、<a href="position/cnc_rdhndintrpt.htm" target="_parent">cnc_rdhndintrpt</a>関数を軸名称拡張機能に対応したもので、軸/主軸関連の各種データをリードします。</p>
+
+            <p>リードするデータの区分を引数clsに、リードするデータの種類を、shortの配列(type[])にて指定します。その配列の個数は引数numにて指定します。一度に読めるデータの種類は4つまでで、それを超えるとEW_ATTRIBのエラーになります。</p>
+
+            <p>引数(*len)にリードする軸数を指定しますが、データ区分clsの値に応じて、(*len)は以下のようになります。</p>
+
+            <ul>
+                <p>1. clsに座標(=1)、サーボ(=2)、主軸(=3)を指定した場合</p>
+                <div class="dd">
+              1軸目から(*len)で指定した軸数のデータをリードします。関数実行
+              後、(*len)が現在有効な軸数より大きい場合、(*len)に実際の軸数が
+              セットされます。(*len)が現在有効な軸数より小さい場合、(*len)で
+              指定した軸数分のデータをリードします。
+                </div>
+                <p>2．clsに選択中主軸(=4)、速度(=5)を指定した場合</p>
+                <div class="dd">
+              常に1軸分のデータをリードします。ただし、選択中主軸を指定した
+              とき、選択中の主軸がない場合(*len)には0がセットされます。
+                </div>
+            </ul>
+
+            <p>リードしたデータは、引数axdata[]に指定するODBAXDT構造体の配列に格納されます。この配列はnum×(*len)数分の大きさが必要です。リードしたデータは、以下の様に(*len)で指定したサイズ毎にtype[]で指定した順に格納されます。</p>
+
+            <table class="dd">
+                <colgroup align="left" valign="top">
+                <tr>
+                    <td>type[0]のデータ</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">0]</td>
+                    <td align="right">～axdata[</td>
+                    <td align="right">(*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>type[1]のデータ</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">(*len)]</td>
+                    <td align="right">～axdata[</td>
+                    <td align="right">2×(*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>type[2]のデータ</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">2×(*len)]</td>
+                    <td align="right">～axdata[</td>
+                    <td align="right">3×(*len)-1]</td>
+                </tr>
+                <tr>
+                    <td>type[3]のデータ</td>
+                    <td>:</td>
+                    <td>axdata[</td>
+                    <td align="right">3×(*len)]</td>
+                    <td align="right">～axdata[</td>
+                    <td align="right">4×(*len)-1]</td>
+                </tr>
+                </colgroup>
+            </table>
+
+            <p>指定した(*len)が実際の軸数より少ない場合でも、関数呼び出し時に指定した(*len)の値に従ってデータを格納します。</p>
+
+            <p><b>引数の指定例</b></p>
+
+            <ul>
+                <p>絶対座標、機械座標、相対座標をリードする場合</p>
+
+<pre><![CDATA[
+short types[3] = {0, 1, 2}; /* 絶対座標、機械座標、相対座標 */
+len = 3;                    /* 3軸を指定 */
+ODBAXDT axdata[3*3];
+cnc_rdaxisdata(h, 1, types, 3, &len, axdata);
+]]></pre>
+
+                <p>配列axdataの内容は、以下の様になります。</p>
+
+                <div class="dd"><img src="position/axisdata.gif"/></div>
+
+                <p>もし現在有効な軸数が2軸だった場合、関数実行後lenには2が返り、3軸目にはデータは格納されません。</p>
+
+            </ul>
+        </cmn>
+
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>cls</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードするデータの区分を指定します。</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr><td>1</td><td>:</td><td>座標値</td></tr>
+                                <tr><td>2</td><td>:</td><td>サーボ</td></tr>
+                                <tr><td>3</td><td>:</td><td>主軸</td></tr>
+                                <tr><td>4</td><td>:</td><td>選択中主軸</td></tr>
+                                <tr><td>5</td><td>:</td><td>速度</td></tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードするデータの種類を指定した配列へのポインタです。clsの値に応じて、以下の値が指定可能です。</p>
+
+                        <ul>
+                            cls = 1 (座標値)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>絶対座標</td></tr>
+                                    <tr><td>1</td><td>:</td><td>機械座標</td></tr>
+                                    <tr><td>2</td><td>:</td><td>相対座標</td></tr>
+                                    <tr><td>3</td><td>:</td><td>残移動量</td></tr>
+                                    <tr><td>4</td><td>:</td><td>ハンドル割り込み量(入力単位)</td></tr>
+                                    <tr><td>5</td><td>:</td><td>ハンドル割り込み量(出力単位)</td></tr>
+                                    <tr><td>6</td><td>:</td><td>プログラム再開開始位置</td></tr>
+                                    <tr><td>7</td><td>:</td><td>プログラム再開残移動量</td></tr>
+                                    <tr><td>8</td><td>:</td><td>ブロック再開開始位置</td></tr>
+                                    <tr><td>9</td><td>:</td><td>ブロック再開残移動量</td></tr>
+<!--
+                                    <tr><td>10</td><td>:</td><td>絶対座標(オフセット画面，グラフィック画面用)</td></tr>
+                                    <tr><td>11</td><td>:</td><td>相対座標(オフセット画面，グラフィック画面用)</td></tr>
+                                    <tr>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             0,2はパラメータ8163#0に従う<br/>
+                                             10,11はパラメータ8163#0には従わず、常に0相当
+                                        </td>
+                                    </tr>
+-->
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 2 (サーボ)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>サーボロードメータ</td></tr>
+                                    <tr><td>1</td><td>:</td><td>負荷電流値(%単位)</td></tr>
+                                    <tr><td>2</td><td>:</td><td>負荷電流値(アンペア単位)</td></tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 3 (主軸)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>主軸ロードメータ</td></tr>
+                                    <tr><td>1</td><td>:</td><td>主軸モータ速度</td></tr>
+                                    <tr><td>2</td><td>:</td><td>主軸回転数(パラメータ3799#2に従った値)</td></tr>
+                                    <tr><td>3</td><td>:</td><td>主軸回転数(主軸モータ速度より求めた値)</td></tr>
+                                    <tr><td>4</td><td>:</td><td>主軸ロードメータ(250m秒毎の平均値)</td></tr>
+                                    <tr><td>5</td><td>:</td><td>主軸ロードメータ最大値</td></tr>
+                                    <tr><td>6</td><td>:</td><td>主軸ロードメータ最大値(250m秒毎の平均値)</td></tr>
+                                    <tr><td>7</td><td>:</td><td>主軸の加工継続可能時間</td></tr>
+                                    <tr>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             5,6,7はパラメータNo.4542#7の設定に従います。<br/>
+                                             よって、データを取得するタイミングによっては、ロードメータ(type = 0)の値が最大値(type = 5,6)を超えることがあるのでご注意ください。
+                                        </td>
+                                    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 4 (選択中主軸)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             (cls = 3の指定方法と同じ)
+                                        </td>
+                                    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                            <br/>
+                            cls = 5 (速度)
+                            <dd/><table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                    <tr><td>0</td><td>:</td><td>合成速度(F)(毎分送り速度)</td></tr>
+                                    <tr><td>1</td><td>:</td><td>主軸回転数(S)</td></tr>
+                                    <tr><td>2</td><td>:</td><td>ジョグ送り速度/ドライラン速度</td></tr>
+                                    <tr><td>3</td><td>:</td><td>工具先端速度</td></tr>
+                                    <tr><td>4</td><td>:</td><td>サーボモータの回転数</td></tr>
+                                    <tr><td>5</td><td>:</td><td>毎回転送り速度(F/S)※</td></tr>
+                                    <tr>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             パラメ-タNo.3107#3、No.3191#5の設定に従います。<br/>
+                                             取得される値が毎回転送り速度か毎分送り速度かは、"unit"で判断してください。
+                                        </td>
+                                    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in</type>
+                    <content>
+                        <p>type配列の数を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>len</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>リードする軸数を格納した変数へのポインタを指定します。<br/>
+                        関数終了後、実際にリードした軸数が設定されます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>axdata</name>
+                    <type>out</type>
+                    <content>
+                        <p>データを返すODBAXDT構造体の配列へのポインタです。この配列は num×(*len)で指定した数分必要です。ODBAXDT構造体は次の通りです。</p>
+
+<pre>
+typedef struct odbaxdt {
+        char    name[4];        /* 軸名称 */
+        long    data;           /* データ */
+        short   dec;            /* データの小数点位置 */
+        short   unit;           /* データの単位 */
+        short   flag;           /* フラグ */
+        short   reserve;        /* 未使用 */
+} ODBAXDT ;
+</pre>
+
+                        <dl>
+                            <dt>name</dt>
+                            <dd>軸名称がASCIIで格納されます。<br/>
+                            文字列の終端にはNULL文字('\0')が格納されています。</dd>
+                            <br/>
+
+                            <dt>data</dt>
+                            <dd>データ</dd>
+                            <br/>
+
+                            <dt>dec</dt>
+                            <dd>データの小数点位置<br/>
+                                下記の単位unitがrpmまたは%の場合には、小数点以下のデータはなく、必ず0が格納されます。</dd>
+                            <br/>
+
+                            <dt>unit</dt>
+                            <dd>データの単位<br/>
+                                <table class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup align="left" valign="top">
+                                        <tr><td>0</td><td>:</td><td>ミリ</td><td>(座標値)</td></tr>
+                                        <tr><td>1</td><td>:</td><td>インチ</td><td>(座標値)</td></tr>
+                                        <tr><td>2</td><td>:</td><td>度</td><td>(座標値)</td></tr>
+                                        <tr><td>3</td><td>:</td><td>ミリ/分</td><td>(合成速度(毎分送り速度)、ジョグ/ドライラン速度、工具先端速度)</td></tr>
+                                        <tr><td>4</td><td>:</td><td>インチ/分</td><td>(合成速度(毎分送り速度)、ジョグ/ドライラン速度、工具先端速度)</td></tr>
+                                        <tr><td>5</td><td>:</td><td>rpm</td><td>(主軸回転数、主軸モータ速度)</td></tr>
+                                        <tr><td>6</td><td>:</td><td>ミリ/回</td><td>(合成速度(毎回転送り速度)、ジョグ/ドライラン速度、工具先端速度)</td></tr>
+                                        <tr><td>7</td><td>:</td><td>インチ/回</td><td>(合成速度(毎回転送り速度)、ジョグ/ドライラン速度、工具先端速度)</td></tr>
+                                        <tr><td>8</td><td>:</td><td>%</td><td>(ロードメータ、負荷電流値)</td></tr>
+                                        <tr><td>9</td><td>:</td><td>アンペア</td><td>(負荷電流値)</td></tr>
+                                        <tr><td>10</td><td>:</td><td>秒</td><td>(時間)</td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dd>
+                            <br/>
+
+                            <dt>flag</dt>
+                            <dd>フラグ<br/>
+                                clsの値に応じて、以下の様になります。<br/>
+                                <ul>cls = 1 (座標値)
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>表示状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>CNCの画面で表示</td><td>: 0 = CNCの画面で非表示</td></tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>軸取り外し状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>2</td><td>:</td><td>インタロック状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>3</td><td>:</td><td>マシンロック状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>4</td><td>:</td><td>サーボオフ状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>5</td><td>:</td><td>インポスチェック</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>インポス状態でない</td><td>: 0 = インポス状態</td></tr>
+                                            <tr><td>bit</td><td>6</td><td>:</td><td>ミラーイメージ状態</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>7</td><td>:</td><td>直径/半径ダイナミック切替え機能</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>切り替え中</td><td>: 0 = 切り替え中でない</td></tr>
+                                            <tr><td>bit</td><td>8</td><td>:</td><td>高速プログラムチェックモード(機械座標のみ)</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td>9</td><td>:</td><td>プログラム再開任意1軸アプローチ</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>実行中</td><td>: 0 = 実行中でない</td></tr>
+                                            <tr><td>bit</td><td>10</td><td>:</td><td>プログラム再開画面の再開座標表示(機械座標以外)</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>可能</td><td>: 0 = 不可 (数値ではなく***********を表示する)</td></tr>
+                                            <tr><td>bit</td><td>11</td><td>:</td><td>軸の解放状態（任意軸切換え機能）</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>有効</td><td>: 0 = 無効</td></tr>
+                                            <tr><td>bit</td><td colspan="3">12～15 : 未使用</td><td></td></tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+
+                                    cls = 3, 4(主軸、選択中主軸)
+                                    <tr><br/>
+                                        <td>※</td>
+                                        <td colspan="2">
+                                             type = 5,6,7(主軸ロードメータ最大値、主軸ロードメータ最大値(250m秒毎の平均値)、主軸の加工継続可能時間) <br/>
+                                        </td>
+                                    </tr>
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>データ判定結果</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>データ判定済み</td><td>: 0 = データ未判定</td></tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>データの有無</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>データあり</td><td>: 0 = データなし</td></tr>
+                                            <tr><td>bit</td><td colspan="3">2～15 : 未使用</td><td></td></tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+
+                                    cls = 5 (速度)
+                                    <table class="dd">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                            <tr><td>bit</td><td>0</td><td>:</td><td>主軸回転数</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>主軸あり</td><td>: 0 = 主軸なし</td></tr>
+                                            <tr><td>bit</td><td>1</td><td>:</td><td>ジョグ送り速度/ドライラン速度</td><td></td></tr>
+                                            <tr><td>   </td><td>1</td><td>=</td><td>ドライラン速度</td><td>: 0 = ジョグ送り速度</td></tr>
+                                            <tr><td>bit</td><td colspan="3">2～15 : 未使用</td><td></td></tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    <br/>
+                                    その他 
+                                    <table class="dd">
+                                        <tr><td>未使用</td></tr>
+                                    </table>
+                                </ul>
+                            </dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>軸数(*data_num)が0以下です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ属性の誤り<br/>データ区分(cls)の指定が不適切です。</content>           </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>データの種類(type)の指定が不適切です。<br/>
+                     または、種類の数(num)が4を超えています。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>指定されたデータをリードするために必要なオプションがありません。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <type>
+            リードするデータの種類に応じたオプションが必要です。
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <table>
+                    <tr>
+                        <td>1020,1025,1026</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>3131,3132,3133</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>3104#0,#4,#5,#6,#7</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>3115#0,#1,#2</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>3799#2</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>8163#0</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                    <tr>
+                        <td>4542#7</td>
+                        <td>(設定の影響を受けます)</td>
+                    </tr>
+                </table>
+            </ul>
+        </type>
+        <add></add>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+<vc>
+全軸の絶対座標、機械座標、相対座標、残移動量を取得し表示します。
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    ODBAXDT pos[4*MAX_AXIS];
+    short types[4] = {0, 1, 2, 3};
+    short num = sizeof(types) / sizeof(types[0]);
+    short len = MAX_AXIS;
+    short ret = cnc_rdaxisdata(h, 1, types, 4, &#38;len, pos);
+    if(!ret) {
+        int i;
+        printf("ABSOLUTE:\n");
+        for(i = 0 * MAX_AXIS ; i &#60; 0 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("MACHINE:\n");
+        for(i = 1 * MAX_AXIS ; i &#60; 1 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("RELATIVE:\n");
+        for(i = 2 * MAX_AXIS ; i &#60; 2 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+        printf("DISTANCE TO GO:\n");
+        for(i = 3 * MAX_AXIS ; i &#60; 3 * MAX_AXIS + len ; i++) {
+            printf("%s = %d\n", pos[i].name, pos[i].data);
+        }
+    }
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

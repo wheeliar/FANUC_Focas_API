@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdetherinfo</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdetherinfo(unsigned short FlibHndl, short *type, short *device);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>イーサネットボード情報を読み取ります。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            イーサネットボードの通信形態を格納する変数へのポインタを指定します。
+                        </p>
+                        <table class="dd">
+                            <tr><td>1   </td><td>:</td><td>Ethernet Board  or  Data Server Board           </td></tr>
+                            <tr><td>2   </td><td>:</td><td>Fast Ethernet Board  or  Fast Data Server Board </td></tr>
+                            <tr><td>3   </td><td>:</td><td>組込み Ethernet (内蔵)                          </td></tr>
+                            <tr><td>4   </td><td>:</td><td>組込み Ethernet (PCMCIA)                        </td></tr>
+                            <tr><td>5   </td><td>:</td><td>Windows NT/2000 Ethernet Server                 </td></tr>
+                            <tr><td>6   </td><td>:</td><td>Windows CE Ethernet Server                      </td></tr>
+                            <tr><td>7   </td><td>:</td><td>FL-net Board                                    </td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>device</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            Data Server のストレージデバイスの種類を格納する変数へのポインタを指定します。 
+                        </p>
+                        <table class="dd">
+                            <tr><td>0   </td><td>:</td><td>なし     </td></tr>
+                            <tr><td>1   </td><td>:</td><td>HDD      </td></tr>
+                            <tr><td>2   </td><td>:</td><td>ATA Card </td></tr>
+                        </table>
+                        <p>本データは、type = 1,2 の時のみ有効です。</p>
+                    </content>
+                </item>
+            </cmn>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません<br/>
+            NCコントロールソフトウェア、またはイーサネットファームウェアが本関数をサポートしていない旧版のものです。 
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+            <p>FL-netボードを使用のとき、</p>
+            <p><ul>FL-net/Ethernet共存機能、FL-net機能、イーサネット機能が必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>E</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>E</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

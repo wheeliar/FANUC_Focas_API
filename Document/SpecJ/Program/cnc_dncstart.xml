@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_dncstart</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dncstart(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>アプリケーションプログラムが作成した加工プログラム(NC指令データ)をCNC側に直接運転させることができます(DNC運転)。<br/>
+                本関数でCNC側にDNC運転開始を要求します。</p>
+            <p>Series 15 の場合、パラメータ20番を『15』に設定する必要があります。この設定をしなくてもエラーにはなりません。</p>
+            <p>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i の場合、DI:DMMC&#60;G042#7&#62;=1にする必要があります。この設定をしなくてもエラーにはなりません。</p>
+            <p>本関数を実行後、STL 信号(DO)でスタートを確認してから、<a href="Program/cnc_dnc.htm" target="_parent">cnc_dnc</a>(<a href="Program/cnc_cdnc.htm" target="_parent">cnc_cdnc</a>)にて指令データを出力して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                <li>cnc_dncstart関数を実行済みです</li>
+                    <a href="Program/cnc_dncend.htm" target="_parent">cnc_dncend</a>関数にて前回の出力を終了させて下さい。<br/>
+                <br/>
+                <li>CNCアラーム(Series 16/18/21, 16i/18i/21i, 0i, Power Mate i)</li>
+                    CNCのアラームを解除して下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの設定の誤り<br/>
+                以下のようにパラメータを設定します。<br/>
+                Series 16/18, 16i/18i/21i, 0i<br/>
+                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;8706#1 = 0
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15</li>
+                    0020 = 15 (必ず設定します)<br/>
+                    0000#0 (設定の影響を受けます)<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                    0000#0 (設定の影響を受けます)<br/>
+                    8706#0 (設定の影響を受けます)(このパラメータは第１系統でのみ有効です。第１系統以外では、0を設定して下さい。)<br/>
+                    8706#1 = 0 (必ず設定します)<br/>
+            <br/>
+            <li>Power Matre i</li>
+                    0000#0 (設定の影響を受けます)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <ul>
+            <li>Series 15</li>
+                    TAPEモードにする必要があります。<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+                    MEMモードで DI:DMMC&#60;G042#7&#62;=1 にする必要があります。
+            </ul>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dnc</name>
+            <file>Program/cnc_dnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdnc</name>
+            <file>Program/cnc_cdnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend</name>
+            <file>Program/cnc_dncend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrgrpinfo3</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrgrpinfo3(unsigned short FlibHndl,short length,IODBTGI3 *grpinfo3); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>工具グループ情報３のライトを行います。更新できる情報は以下のものです。</p>
+             <ul type="disc">
+                 <li>残量設定値</li>
+             </ul>
+             <p>本機能は旋盤系(T/TT)では使用できません。(30iシリーズ, 0i-D/Fを除く)</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            データブロック長(IODBTGI3構造体のサイズ)を指定します。
+                            <p><b>IODBTGI3</b></p>
+                            <img src="Toollife/grpinfo3.gif"/>
+                            <p>Nは書き込むグループの個数です</p>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>grpinfo3</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            各種工具情報を設定するIODBTGI3構造体へのポインタです。
+                            IODBTGI3構造体は次の通りです。
+<pre>
+typedef struct iodbtgi3 {
+    short      s_grp;           /* 入力開始グループ番号 */
+    short      dummy;           /* 未使用 */
+    short      e_grp;           /* 入力終了グループ番号 */
+    long       life_rest[N];    /* 残量設定値 */
+} IODBTGI3 ;                    /* N : 書き込むグループ数 */
+</pre>
+
+                          <dl>
+                            <dt>s_grp</dt>
+                            <dd>入力開始グループ番号を指定します。</dd>
+                            <dt>e_grp</dt>
+                            <dd>入力終了グループ番号を指定します。</dd>
+                            <dt>life_rest[i]</dt>
+                            <dd>残量設定値を指定します。</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                IODBTGI3構造体のサイズ(length)が不正です。
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                工具グループ番号(s_grp,e_grp)が不正です。
+            </content>
+        </item>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>0</td><td>：</td><td>EW_DATA 以外のエラー</td></tr>
+                    <tr><td>1</td><td>：</td><td>残量設定値(life_rest)の誤り</td></tr>
+                    <tr><td>2</td><td>：</td><td>残量設定値(life_rest)の誤り(寿命値より大きい値が指定された)</td></tr>
+                </table>
+                また、ODBERR 構造体のメンバ err_dtno に不正データが含まれる工具グループ番号がセットされます。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                <span class="xis">工具寿命管理機能Ｂ、及び拡張ドライバ/ライブラリ機能が必要です。(16i/18iのみ)<br/></span>
+                工具寿命管理機能、及び拡張ドライバ/ライブラリ機能が必要です。<span class="xis">(0i-F/30iのみ)</span><br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNCパラメータの誤り<span class="xis">(0i-F/30iのみ)</span><br/>
+                工具寿命管理機能Ｂ、及び残量設定値が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                実行中/選択中/バッファリング中のグループのため書き込み不可。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            <p>
+            <li>Series 16i/18i<br/>
+                工具寿命管理Ｂ機能
+            </li>
+            <li>Series 30i<br/>
+                工具寿命管理機能
+            </li>
+            </p>
+        </need>
+        <type>
+            <li>Series 16i/18i<br/>
+                <p>512組(M系)の影響を受けます。 </p>
+            </li>
+            <li>Series 0i-F, 30i<br/>
+                <p>工具寿命管理組数追加の影響を受けます。</p>
+                <table>
+                    <tr> <td>工具寿命管理</td>        <td>:</td><td>システム全体で256組(M系)</td></tr>
+                    <tr> <td>工具寿命管理組数追加</td><td>:</td><td>システム全体で1024組(M系)</td></tr>
+                </table>
+            </li>
+        </type>
+        <is>
+        <hssb>
+            <p>本機能には、工具寿命管理機能、及び拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>また、工具寿命管理組数追加の影響を受けます。</p>
+            <table>
+                <tr> <td>工具寿命管理</td>        <td>:</td><td>システム全体で256組(M系)</td></tr>
+                <tr> <td>工具寿命管理組数追加</td><td>:</td><td>システム全体で1024組(M系)</td></tr>
+            </table>
+        </hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul type="disc">    
+                <li>Series 16i/18i<br/>
+                    6800#0,#1,#2(設定の影響を受けます)<br/>
+                    6802#3 (残量設定値)<br/>
+                </li>
+                <li>Series 30i<br/>
+                    6800#0,#1,#2(設定の影響を受けます)<br/>
+                    6805#4 (工具寿命管理B機能)<br/>
+                    6802#3 (残量設定値)<br/>
+                </li>
+                <li>Series 0i-F<br/>
+                    6800#0,#1,#2(設定の影響を受けます)<br/>
+                    6805#4 (工具寿命管理B機能)<br/>
+                    6802#3 (残量設定値)<br/>
+                    8132#0=1 (必ず設定して下さい)<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter>
+        <type>
+        <table>
+           <tr><td></td><td>6800#0,#1,#2</td><td>(設定の影響を受けます)</td></tr>
+           <tr><td></td><td>6805#4</td><td>(工具寿命管理B機能)</td></tr>
+           <tr><td></td><td>6802#3</td><td>(残量設定値)</td></tr>
+        </table>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

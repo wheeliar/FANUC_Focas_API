@@ -1,0 +1,73 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>制御用PMCアドレスを使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D, PMi-Aのみ)</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>制御用PMCアドレスを使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D, PMi-Aのみ)</h2>
+
+<ul>
+
+<blockquote>
+
+   <p>ラダープログラムにおいて、簡易方式で制御用PMCアドレスを使用する場合について説明します。</p>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>注) 送信用データとしてマクロ変数を設定することもできます。以下の説明では、送信用データとしてPMCアドレスを使用しています。</td></tr>
+            </table>
+<br/>
+<li>制御用PMCアドレスの信号説明</li>
+
+    <p>CNC主導メッセージ通知機能を実行するための制御用PMCアドレスの信号の詳細を示します。制御用PMCアドレスの領域は1バイトです。</p>
+    <p>以下は、制御用PMCアドレスとして“Rxxxx”(PMC系統番号は省略)を使用する場合を示しています。</p>
+
+
+<p><img src="unsol_sim1bit.gif"></p>
+<ul>
+	<dl compact>
+        <dt>REQ (Rxxxx#7)</dt>
+        <table class= "dt">
+            <tr><td>[名称]</td> <td>メッセージの送信要求信号 </td></tr>
+            <tr><td>[区分]</td> <td>入力信号 </td></tr>
+            <tr><td>[機能]</td> <td>ＣＮＣ主導メッセージの送信を要求します。 </td></tr>
+            <tr><td>[動作]</td> <td>ラダープログラムは、送信用PMCアドレスへ送信メッセージを用意した後、本信号を“１”にすると、メッセージがパソコンへ送信されます。<br/>メッセージの応答の受信後、ＣＮＣ(通信ボード)が本信号を０クリアします。</td></tr>
+        </table>
+	</dl>
+</ul>
+<br/>
+
+<li>制御用PMCアドレスの信号のタイムチャート</li>
+
+<p>制御用PMCアドレスからの信号によるCNC主導メッセージ通知機能の実行について、タイムチャートにより説明します。</p>
+
+<p><img src="unsol_sim1chat.gif"></p>
+
+<ul>
+        <table class="dt">
+            <tr><td>①</td>  <td>:</td> <td>ラダープログラムは、REQが“0”であることを確認した後、メッセージを用意し、REQを“１”とする。  </td></tr>
+            <tr><td>②</td>  <td>:</td> <td>REQが“１”になったので、通信ボードはメッセージを送信する。</td></tr>
+            <tr><td>③</td>  <td>:</td> <td>通信ボードは、メッセージの送信処理を完了する。  </td></tr>
+            <tr><td>④</td>  <td>:</td> <td>通信ボードは、メッセージの応答を受信した後、受信処理を完了する。</td></tr>
+            <tr><td>⑤</td>  <td>:</td> <td>通信ボードは、受信処理が完了したのでREQを“０”とする。</td></tr>
+        </table>
+
+</ul>
+<br/>
+</blockquote>
+
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

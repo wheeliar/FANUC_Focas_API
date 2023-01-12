@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+
+        <!-- 関数名 -->
+        <title>cnc_allclibhndl</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_allclibhndl(unsigned short *FlibHndl);</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    ライブラリで使用するライブラリハンドルを取得します。
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <cmn>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルを格納する変数へのポインタです。<BR/>
+                                詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                </cmn>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_HSSB</name>
+                <content>
+                    HSSB通信エラー<BR/>
+                    CNCの電源、HSSBのI/Fボード、HSSBのケーブルを確認して下さい。
+                </content>
+            </item>
+            <item>
+                <name>EW_HANDLE</name>
+                <content>ハンドルの取得に失敗しました。</content>
+            </item>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    CNC/PMCとのインタフェース初期化中<BR/>
+                    初期化が終了するまでリトライして下さい。
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+        <!-- 30i(WinCE) -->
+        <is_parameter></is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+        <!-- 30i(WinCE) -->
+        <is_mode></is_mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>H</fs0ib>
+                <fs0id>H</fs0id>
+                <fs0if>H</fs0if>
+                <fs15>H</fs15>
+                <fs15i>H</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>H</fs30ia>
+                <fs30ib>H</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>H</fs0ib>
+                <fs0id>H</fs0id>
+                <fs0if>H</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>H</fs30ia>
+                <fs30ib>H</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>X</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>H</fs0id>
+                <fs0if>H</fs0if>
+                <fs16i>H</fs16i>
+                <fs18i>H</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>H</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>H</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>H</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>H</fs16i>
+                <fs18i>H</fs18i>
+                <fs30ia>H</fs30ia>
+                <fs30ib>H</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>H</d>
+                <h>H</h>
+                <a>H</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+    <reference>
+        <item>
+            <name>cnc_allclibhndl2</name>
+            <file>Handle/cnc_allclibhndl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_allclibhndl3</name>
+            <file>Handle/cnc_allclibhndl3.htm</file>
+        </item>
+        <item>
+            <name>cnc_freelibhndl</name>
+            <file>Handle/cnc_freelibhndl.htm</file>
+        </item>
+        <is>
+            <item>
+                <name>cnc_freelibhndl</name>
+                <file>Handle/cnc_freelibhndl.htm</file>
+            </item>
+        </is>
+    </reference>
+
+  </func>
+</root>

@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_dwnend4</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dwnend4(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側にNCデータの登録終了を通知します。(ダウンロード終了後に必ず使用する必要があります。)</p>
+
+            <p><a href="Program/cnc_download4.htm" target="_parent">cnc_download4</a>でのエラー(EW_DATA,EW_OVRFLOW等)が本関数で返されることがあります。</p>
+            <p>また、<a href="Program/cnc_download4.htm" target="_parent">cnc_download4</a>で出力したデータの登録が終了するまで本関数からは戻ってきません。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart4.htm" target="_parent">cnc_dwnstart4</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td><td>:</td><td>NCデータ内の構文の誤り。</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>:</td><td>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>:</td><td>NC指令プログラムの登録本数がオーバーしている。</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>:</td><td>同一のプログラム番号が既に登録されている。</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>:</td><td>同一のプログラム番号がNC側で選択されている。</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                CNCのパラメータ（8000番台/9000番台プロテクト、暗号化）が書き込み禁止の設定になっています。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                メモリオーバーフロー<br/>
+                NC側の空き容量が足りませんので、容量を確保してください。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                CNCが登録できる状態ではありません。(運転中、モード変更中、リセット中)<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                アラーム状態<br/>
+                ダウンロード中にアラームが発生しました。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+        <type>
+            ピッチ誤差補正<br/>
+            カスタムマクロ<br/>
+            ワーク原点オフセット
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3201#2,#5,#6<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+                8900#0
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dwnstart4</name>
+            <file>Program/cnc_dwnstart4.htm</file>
+        </item>
+        <item>
+            <name>cnc_download4</name>
+            <file>Program/cnc_download4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <common>
+            <a href="Program/cnc_download4.htm#sample" target="_parent">cnc_download4</a>の使用例を参照してください。
+        </common>
+    </example>
+
+
+
+  </func>
+</root>

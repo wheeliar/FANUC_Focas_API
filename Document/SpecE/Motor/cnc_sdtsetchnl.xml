@@ -1,0 +1,1214 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <title>cnc_sdtsetchnl</title>
+
+
+
+    <declare>
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_sdtsetchnl(unsigned short FlibHndl, short num, long datanum, IDBSDTCHAN *channel); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <doc>
+      <cmn>
+        <p>
+          The channel data for the sampling of various data of Servo and Spindle are set.<br/>
+          As for the data which can be acquired, refer to channel.type in the arguments.
+        </p>
+        <br/>
+        <p>The position feedback pulse data of the Servo and the Spindle shows the summation value.(When the CNC was powered on, these value are "0".)</p>
+        <p>Sampling cycle of servo data is 0.25msec or 1msec. The one of spindle data is 1msec. </p>
+
+        <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+          <tr>
+            <td>
+              These functions cannot be simultaneously used with the Servo Guide or the Servo Guide Mate.  In this case, these functions return EW_REJECT.
+            </td>
+          </tr>
+        </table>
+        <br/>
+        <p>The processing flow is as follows.</p>
+
+        <p>
+          <img src="Motor/sdtflow.GIF"/>
+        </p>
+      </cmn>
+    </doc>
+
+
+
+    <argument>
+      <common>
+        <vc>
+          <item>
+            <name>FlibHndl</name>
+            <type>in</type>
+            <content>
+              <p>
+                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details.
+              </p>
+            </content>
+          </item>
+          <item>
+            <name>num</name>
+            <type>in</type>
+            <content>
+              <p>
+                Specify the number of channels which wants to be sampled. Maximum channel numbers are "8".<br/>
+                However, the following limitations are in the data which can be acquired at the same time.
+              </p>
+              <table border="0" class="dd">
+                <tr>
+                  <td>Servo axes  </td>
+                  <td> : </td>
+                  <td>4ch can be set to 1DSP(2 axes)</td>
+                </tr>
+                <tr>
+                  <td>Spindle axis</td>
+                  <td> : </td>
+                  <td>2ch can be set to 1DSP(=1 spindle amplifier)</td>
+                </tr>
+              </table>
+            </content>
+          </item>
+          <item>
+            <name>datanum</name>
+            <type>in</type>
+            <content>
+              <p>
+                Specify the number of total points of the data which wants to be sampled. (Specify the value of eight or more.)<br/>
+                If you wants to read data after all sampling ends, the maximum number which can be set is as follows.
+              </p>
+
+              <table border="1">
+                <colgroup align="center" valign="top">
+                  <colgroup align="center" valign="top">
+                    <tr>
+                      <th>setting channel numbers</th>
+                      <th>max. points</th>
+                    </tr>
+                    <tr>
+                      <td>1ch</td>
+                      <td>233008</td>
+                    </tr>
+                    <tr>
+                      <td>2ch</td>
+                      <td>123352</td>
+                    </tr>
+                    <tr>
+                      <td>3ch</td>
+                      <td>83872</td>
+                    </tr>
+                    <tr>
+                      <td>4ch</td>
+                      <td>63536</td>
+                    </tr>
+                  </colgroup>
+                </colgroup>
+              </table>
+              <br/>
+
+              <p>
+                So, when the sampling data of each 10msec is necessary, the following numbers can be sampled.
+
+              </p>
+
+              <table border="1">
+                <colgroup align="center" valign="top">
+                  <colgroup align="center" valign="top">
+                    <tr>
+                      <th>setting channel numbers</th>
+                      <th>sampling points</th>
+                    </tr>
+                    <tr>
+                      <td>1ch</td>
+                      <td>23300</td>
+                    </tr>
+                    <tr>
+                      <td>2ch</td>
+                      <td>12335</td>
+                    </tr>
+                    <tr>
+                      <td>3ch</td>
+                      <td>8387</td>
+                    </tr>
+                    <tr>
+                      <td>4ch</td>
+                      <td>6353</td>
+                    </tr>
+                  </colgroup>
+                </colgroup>
+              </table>
+              <br/>
+
+              <p>
+                In case that data is serially read during the sampling execution, this limitation does not exist.<br/>
+                When -1 is specified, the limitation of a total number is lost.<br/>
+                Please serially read the data by the sampling data reading function(cnc_sdtreadsmpl).<br/>
+                When the reading buffer is filled, the sampling data reading function returns EW_BUFFER.
+              </p>
+            </content>
+          </item>
+
+
+          <item>
+            <name>channel</name>
+            <type>in</type>
+            <content>
+              <p>
+                Pointer to the IDBSFBCHAN structure including the channel data.<br/>
+                Prepare the number of the channel data  which you want to set as an array, and specify the top pointer of the array for this argument(channel).
+              </p>
+              <p>
+                The structure of IDBSFBCHAN is as follows.
+              </p>
+              <pre>
+                typedef struct idbsdtchan {
+                short           type;       /* data type */
+                char            chno;       /* channel number */
+                char            axis;       /* axis number */
+                unsigned short  shift;      /* upper byte : sampling cycle,
+                lower byte : right shift amount */
+                } IDBSDTCHAN;
+              </pre>
+              <dl>
+                <dt>type</dt>
+                <dd>Specify the sampling data type.</dd>
+                <dd>In case of positive value(sampling axis is servo):</dd>
+                <table border="1" class="dd">
+                  <colgroup align="center" valign="top">
+                    <colgroup align="left" valign="top">
+                      <colgroup align="left" valign="top">
+                        <colgroup align="left" valign="top" empty-cells = "show">
+                          <tr>
+                            <th>Value</th>
+                            <th>The sampling data type</th>
+                            <th colspan = "2">
+                              The unit of the sampling data<br/>(In case of shift's lower byte=0)
+                            </th>
+                            <th>note</th>
+                          </tr>
+                          <tr>
+                            <td> 0</td>
+                            <td>Summation of position feedback pulse data (POSF)</td>
+                            <td>1</td>
+                            <td>= Detection unit(1 pulse)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 1</td>
+                            <td>Position error (ERR)</td>
+                            <td>1</td>
+                            <td>= Detection unit(1 pulse)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 2</td>
+                            <td>Velocity command (VCMD)</td>
+                            <td>16,777,216</td>
+                            <td>
+                              = 3750min-1<br/>
+                              (In case of shift = 9 : 32768=3750min-1)
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 3</td>
+                            <td>Torque command (TCMD)</td>
+                            <td>7,282     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 4</td>
+                            <td>Speed feedback signal (SPEED)</td>
+                            <td>262,144   </td>
+                            <td>
+                              = 3750min-1<br/>
+                              (In case of shift=3 : 32768=3750min-1)
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 5</td>
+                            <td>Estimated disturbance torque (DTRQ)</td>
+                            <td>7,282     </td>
+                            <td>The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 6</td>
+                            <td>Synchronous error on rigid tapping (SYNC)</td>
+                            <td>1         </td>
+                            <td>= 1/4096 rotation of spindle</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 7</td>
+                            <td>OVC simulation data (OVCLV)</td>
+                            <td>1         </td>
+                            <td>= 1%</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 8</td>
+                            <td>Effective current (IEFF)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 9</td>
+                            <td>DC link voltage(VDC)</td>
+                            <td>8,192     </td>
+                            <td>= 640V (200V) or 1280V (400V)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>10</td>
+                            <td>Semi-Full error(SFERR)</td>
+                            <td>1         </td>
+                            <td>= Detection unit(1 pulse)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>11</td>
+                            <td>
+                              Analog signal command(ALGCMD)
+                            </td>
+                            <td>32,767    </td>
+                            <td>
+                              = 100% (Maximum analog signal command)<br/>
+                              (In case of pressure and position control : Maximum pressure command value)
+                            </td>
+                            <td>
+                              Pressure command in case of pressure and position control (90BP only)
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>12</td>
+                            <td>
+                              Analog signal feedback(ALGFB)
+                            </td>
+                            <td>32,767    </td>
+                            <td>
+                              = 100% (Maximum analog signal feedback)<br/>
+                              (In case of pressure and position control : Maximum pressure detecting value)
+                            </td>
+                            <td>
+                              Pressure feedback in case of pressure and position control (90BP only)
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>13</td>
+                            <td>R-phase current(IR)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>14</td>
+                            <td>R-phase current(PDM slave1)(IR1)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>15</td>
+                            <td>R-phase current(PDM slave2)(IR2)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>16</td>
+                            <td>R-phase current(PDM slave3)(IR3)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>17</td>
+                            <td>R-phase current(PDM slave4)(IR4)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>18</td>
+                            <td>S-phase current(IS)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>19</td>
+                            <td>S-phase current(PDM slave1)(IS1)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>20</td>
+                            <td>S-phase current(PDM slave2)(IS2)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>21</td>
+                            <td>S-phase current(PDM slave3)(IS3)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>22</td>
+                            <td>S-phase current(PDM slave4)(IS4)</td>
+                            <td>6,554     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>23</td>
+                            <td>Reactive current(ID)</td>
+                            <td>8,027     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>24</td>
+                            <td>Active current(IQ)</td>
+                            <td>8,027     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>25</td>
+                            <td>Motor winding temperature(MTTMP)</td>
+                            <td>1         </td>
+                            <td>1 degrees centigrade</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>26</td>
+                            <td>Pulsecoder temperature(PCTMP)</td>
+                            <td>1         </td>
+                            <td>1 degrees centigrade</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>27</td>
+                            <td>Velocity command without FF(VCOUT)</td>
+                            <td colspan =" 2">Same as VCMD</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>28</td>
+                            <td>Advanced velocity command(VCC0)</td>
+                            <td colspan =" 2">Internal unit(not open)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>29</td>
+                            <td>Backlash acceleration amount(BLACL)</td>
+                            <td colspan =" 2">Internal unit(not open)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>30</td>
+                            <td>Absolute position detected internal pulse coder(ABS)</td>
+                            <td>1         </td>
+                            <td>= 1/2^21 rotation</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>31</td>
+                            <td>Disturbance input frequency(FREQ)</td>
+                            <td>1         </td>
+                            <td>= 1Hz</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>32</td>
+                            <td>Disturbance input torque(FRTCM)</td>
+                            <td>7,282     </td>
+                            <td>= The maximum current value of amplifier (A)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>33</td>
+                            <td>DC link voltage(VDC)</td>
+                            <td>
+                              <br/>
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                            <td>
+                              Same as type=9
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>34</td>
+                            <td>Acceleration feedback in direction specified by No.2277#7,6,5(ACC)</td>
+                            <td>512     </td>
+                            <td>= 0.1G = 0.98m/s^2</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>35</td>
+                            <td>1st direction acceleration feedback(ACC1)</td>
+                            <td>512     </td>
+                            <td>= 0.1G = 0.98m/s^2</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>36</td>
+                            <td>2nd direction acceleration feedback(ACC2)</td>
+                            <td>512     </td>
+                            <td>= 0.1G = 0.98m/s^2</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>37</td>
+                            <td>3rd direction acceleration feedback(ACC3)</td>
+                            <td>512     </td>
+                            <td>= 0.1G = 0.98m/s^2</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                <dd>type=14-17, 19-22 are avilable on 90B1/06 or later and 90BP/01 or later.</dd>
+
+                <br/>
+                <dd>In case of negative value(sampling axis is spindle):</dd>
+                <table border="1" class="dd">
+                  <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <colgroup valign="top">
+                          <tr>
+                            <th>Value</th>
+                            <th>The sampling data type</th>
+                            <th colspan = "2">
+                              The unit of the sampling data<br/>(In case of shift's lower byte=0)
+                            </th>
+                            <th>note</th>
+                          </tr>
+                          <tr>
+                            <td rowspan = "2"> 0</td>
+                            <td rowspan = "2">Summation of position feedback pulse data (CSPOS)</td>
+                            <td>360,000 pulses  </td>
+                            <td>= 1 rotation(In case of No.4005#0=0)</td>
+                            <td rowspan = "2">
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>3,600,000 pulses</td>
+                            <td>= 1 rotation(In case of No.4005#0=1)</td>
+                          </tr>
+                          <tr>
+                            <td> 1</td>
+                            <td>Moter speed (SPEED)</td>
+                            <td>4,096           </td>
+                            <td>= 1min-1</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 2</td>
+                            <td>Torque command (TCMD)</td>
+                            <td>16,384          </td>
+                            <td>= Maximun moter torque</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 3</td>
+                            <td>Moter speed command (VCMD)</td>
+                            <td>4,096           </td>
+                            <td>= 1min-1</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td rowspan = "5"> 4</td>
+                            <td rowspan = "5">Position error (ERR)</td>
+                            <td colspan ="2">At Cs:          </td>
+                            <td rowspan = "5">
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>360,000 pulses  </td>
+                            <td>= 1 rotation(In case of No.4005#0=0)</td>
+                          </tr>
+                          <tr>
+                            <td>3,600,000 pulses</td>
+                            <td>= 1 rotation(In case of No.4005#0=1)</td>
+                          </tr>
+                          <tr>
+                            <td colspan ="2">Others:         </td>
+                          </tr>
+                          <tr>
+                            <td>4,096 pulses    </td>
+                            <td>= 1 rotation</td>
+                          </tr>
+                          <tr>
+                            <td> 5</td>
+                            <td>Load meter data (LMDAT)</td>
+                            <td>32,768          </td>
+                            <td>= 10 Volts</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 6</td>
+                            <td>Spindle load torque (DTRQ)</td>
+                            <td>16,384          </td>
+                            <td>= Maximun moter torque</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 7</td>
+                            <td>Amplitude of moter current (INORM)</td>
+                            <td colspan = "2">Changed with the kind of the motor and the amplifier.</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 8</td>
+                            <td>Moter winding temperature (MTTMP)</td>
+                            <td>1               </td>
+                            <td>= 1 degree</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td rowspan = "4"> 9</td>
+                            <td rowspan = "4">
+                              Spindle axis power consumption(EPMTR)
+                            </td>
+                            <td>1               </td>
+                            <td>= 10kW   (In case of No.4541#2,#1=0,0)</td>
+                            <td rowspan = "4">
+                              When you get this data, the setting of the power consumption monitor function is necessary.(No.4541#0=1 etc.)<br/>
+                              Refer to the "Power consumption monitor Specifications(A-92737E etc.)" for detail. (Series 9D80 or later)<br/>
+                              Note) type=9 will become valid at 9D80/T(20) or later(plan).
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>1               </td>
+                            <td>= 1kW    (In case of No.4541#2,#1=0,1)</td>
+                          </tr>
+                          <tr>
+                            <td>1               </td>
+                            <td>= 0.1kW  (In case of No.4541#2,#1=1,0)</td>
+                          </tr>
+                          <tr>
+                            <td>1               </td>
+                            <td>= 0.01kW (In case of No.4541#2,#1=1,1)</td>
+                          </tr>
+                          
+                          <tr>
+                            <td>10</td>
+                            <td>Frequency of disturbance torque(FREQ)</td>
+                            <td>1               </td>
+                            <td>= 1Hz</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>11</td>
+                            <td>Gain data(GAIN)</td>
+                            <td>4096            </td>
+                            <td>= 100%</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>12</td>
+                            <td>Torque command 2(TCMD2)</td>
+                            <td>16,384          </td>
+                            <td>= Maximun moter torque</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>13</td>
+                            <td>A/D data of motor sensor (A phase)(PA1)</td>
+                            <td>65536       </td>
+                            <td>= 1.48V</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>14</td>
+                            <td>A/D data of motor sensor (B phase)(PB1)</td>
+                            <td>65536       </td>
+                            <td>= 1.48V</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>15</td>
+                            <td>A/D data of spindle sensor (A phase)(PA2)</td>
+                            <td>65536       </td>
+                            <td>= 1.48V</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>16</td>
+                            <td>A/D data of spindle sensor (B phase)(PB2)</td>
+                            <td>65536       </td>
+                            <td>= 1.48V</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>17</td>
+                            <td>Velocity error(VERR)</td>
+                            <td>4096        </td>
+                            <td>= 1min-1</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>18</td>
+                            <td>Spindle speed(SPSPD)</td>
+                            <td>4096        </td>
+                            <td>= 1min-1</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>19</td>
+                            <td>Present value of loadmeter  (Normalized by cont. rated output(LMDTC)</td>
+                            <td>1           </td>
+                            <td>
+                              = 1%<br/>100% is equivalent to continuous rated output.
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>20</td>
+                            <td>Maximum value of loadmeter at the present speed (Normalized by cont. rated output)(LMMAX) </td>
+                            <td>1           </td>
+                            <td>
+                              = 1%<br/>100% is equivalent to continuous rated output.
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>21</td>
+                            <td>Duration time for cutting(DURTM)(TCMD2)</td>
+                            <td>1           </td>
+                            <td>= 1sec</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+
+              </dl>
+              <dl>
+                <dt>chno</dt>
+                <dd>Specify the channel number(1-8).</dd>
+              </dl>
+              <dl>
+                <dt>axis</dt>
+                <dd>Specify the sampling axis number.</dd>
+                <table border="0" class="dd">
+                  <colgroup align="left" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <tr>
+                          <td>Servo axis number  </td>
+                          <td> : </td>
+                          <td>1 to 32 </td>
+                        </tr>
+                        <tr>
+                          <td>Spindle axis number</td>
+                          <td>  </td>
+                          <td>-1 to -8</td>
+                        </tr>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                <br/>
+                <dd>Specify the logical axis number which is allocated to the entire paths of CNC system.</dd>
+                <dd>The axis number is not the relative axis number of each path.</dd>
+                <dd>(It is the same as the order of CNC parameter No.981(Spindle axis is No.982).)</dd>
+              </dl>
+              <dl>
+                <dt>shift</dt>
+
+                <dd>Specify sampling period at upper byte and right shift value at lower byte.</dd>
+                
+                <br/>
+                <dd>Specify sampling period at upper byte as follows. </dd>
+                <dd>
+                  <table border="0" class="dd">
+                    <colgroup align="left" valign="top">
+                      <colgroup valign="top">
+                        <colgroup valign="top">
+                          <tr>
+                            <td>0</td>
+                            <td>：</td>
+                            <td>1msec</td>
+                          </tr>
+                          <tr>
+                            <td>2</td>
+                            <td>：</td>
+                            <td>0.25msec</td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </table>
+                  <br/>
+                </dd>
+                <dd>
+                  * 0.25msec can be set in case of servo data.
+                  In case of setting any value except 0 to shift's upper byte, EW_DATA(5)(No.24 for detail) is returned.
+                </dd>
+                <dd>
+                  * In case of difference of sampling period of servo between channels, EW_DATA(5)(No.24 for detail) is returned.
+                  Make the same sampling period of servo between channels.
+                </dd>
+                <dd>* In case of setting under the following conditions simultaneously, EW_DATA(5)(No.3 for detail) is returned.</dd>
+                <dd>
+                  <ul type="disc">
+                    <li>0.25msec（Sampling period of servo)</li>
+                    <li>1msec (Sampling period of spindle)</li>
+                    <li>any normal value except -1(The number of total points of sampling data to read(per one channel), datanum) </li>
+                  </ul>
+                </dd>
+                <br/>
+                <dd>
+                  In case of setting channel of servo(Sampling period : 0.25msec) and spindle(Sampling period : 1ms) at the same time,
+                  set the number of total points which wants to be sampled（per one channel), datanum to -1 and
+                  execute process of count the number of reading data and of end of sampling in program.
+                </dd>
+
+                <br/>
+                <dd>Specify the right shift amount(0-15) for the sampling data at lower byte. </dd>
+                <dd>The sampling data acquired by specifying this data is as follows.</dd>
+                <br/>
+                <dd>
+                  <table border="0" class="dd">
+                    <colgroup align="left" valign="top">
+                      <colgroup valign="top">
+                        <colgroup valign="top">
+                          <tr>
+                            <td>In case of shift = 0 </td>
+                            <td> : </td>
+                            <td>1 detection unit(or 1 rotation)</td>
+                          </tr>
+                          <tr>
+                            <td>In case of shift = 1 </td>
+                            <td> : </td>
+                            <td>2 detection units</td>
+                          </tr>
+                          <tr>
+                            <td>In case of shift = 2 </td>
+                            <td> : </td>
+                            <td>4 detection unit</td>
+                          </tr>
+                          <tr>
+                            <td>              </td>
+                            <td>: </td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>In case of shift = 7 </td>
+                            <td> : </td>
+                            <td>128 detection units</td>
+                          </tr>
+                          <tr>
+                            <td>              </td>
+                            <td>: </td>
+                            <td> </td>
+                          </tr>
+                          <tr>
+                            <td>In case of shift = 15</td>
+                            <td> : </td>
+                            <td>32,768 detection units</td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </table>
+                </dd>
+                <dt>
+                  <img src="Motor/setchnl.gif"/>
+                </dt>
+              </dl>
+            </content>
+          </item>
+        </vc>
+      </common>
+    </argument>
+
+
+
+    <errcode>
+      <item>
+        <name>EW_NUMBER</name>
+        <content>
+          Data number error<br/>
+          Channel number(num) data is wrong.
+        </content>
+      </item>
+      <item>
+        <name>EW_DATA</name>
+        <content>
+          Data error<br/>
+          In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.  The following detail status will be set onto the member, err_no of ODBERR structure.<br/>
+          <table>
+            <colgroup align="center" valign="top">
+              <colgroup align="center" valign="top">
+                <colgroup valign="top">
+                  <tr>
+                    <td> 3</td>
+                    <td>:</td>
+                    <td>Total point number(datanum) is not 8 or more.</td>
+                  </tr>
+                  <tr>
+                    <td> 4</td>
+                    <td>:</td>
+                    <td>The motor of the specified channel cannot be used.</td>
+                  </tr>
+                  <tr>
+                    <td>20</td>
+                    <td>:</td>
+                    <td>Sampling data type(channel.type) is wrong.</td>
+                  </tr>
+                  <tr>
+                    <td>21</td>
+                    <td>:</td>
+                    <td>Channel number(channel.chno) is wrong.</td>
+                  </tr>
+                  <tr>
+                    <td>22</td>
+                    <td>:</td>
+                    <td>Axis number(channel.axis) is wrong.</td>
+                  </tr>
+                  <tr>
+                    <td>23</td>
+                    <td>:</td>
+                    <td>Right shift amount(channel.shift) is wrong.</td>
+                  </tr>
+                  <tr>
+                    <td>24</td>
+                    <td>:</td>
+                    <td>Sampling period(channel.shift) is wrong, or inconsistent between channels.</td>
+                  </tr>
+                </colgroup>
+              </colgroup>
+            </colgroup>
+          </table>
+        </content>
+      </item>
+      <item>
+        <name>EW_PATH</name>
+        <content>
+          Path number error<br/>
+          Path which is corresponding to specified sampling axis number (axis) does not exist.
+        </content>
+      </item>
+      <item>
+        <name>EW_REJECT</name>
+        <content>
+          CNC execution denied<br/>
+          Sampling is already starting.<br/>
+          Execute this function again after executing of cnc_sdtcancelsmpl or cnc_sdtendsmpl.
+        </content>
+      </item>
+    </errcode>
+
+
+
+    <option>
+      <hssb>
+        The extended driver/library function is necessary.
+      </hssb>
+      <ethr>
+        <p>The Ethernet function and the extended driver/library function are necessary.</p>
+        <p>However, in case of 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+        <p>When Embedded Ethernet is used,</p>
+        <p>
+          <ul>above two optional functions are not required.</ul>
+        </p>
+        <p>When Ethernet board is used,</p>
+        <p>
+          <ul>only Ethernet function is required.</ul>
+        </p>
+      </ethr>
+
+      <is>
+        <hssb>
+          The following functions are necessary for this function.
+          <ul type="disc">
+            <li>The extended driver/library function.</li>
+          </ul>
+        </hssb>
+      </is>
+    </option>
+
+
+
+    <parameter></parameter>
+
+
+
+    <mode></mode>
+
+
+
+    <support>
+      <m>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>O</fs0id>
+        <fs0if>O</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>O</fs30ia>
+        <fs30ib>O</fs30ib>
+      </m>
+      <t>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>O</fs0id>
+        <fs0if>O</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>O</fs30ia>
+        <fs30ib>O</fs30ib>
+      </t>
+      <lc>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </lc>
+      <p>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </p>
+      <l>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </l>
+      <w>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </w>
+      <pw>
+        <d>X</d>
+        <h>X</h>
+        <a>O</a>
+      </pw>
+      <is>
+        <m>
+          <fs30isa>O</fs30isa>
+          <fs30isb>O</fs30isb>
+        </m>
+        <t>
+          <fs30isa>O</fs30isa>
+          <fs30isb>O</fs30isb>
+        </t>
+        <w>
+          <fs30isa>X</fs30isa>
+          <fs30isb>X</fs30isb>
+        </w>
+      </is>
+    </support>
+
+
+
+    <reference>
+      <item>
+        <name>cnc_sdtclrchnl</name>
+        <file>motor/cnc_sdtclrchnl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtstartsmpl</name>
+        <file>motor/cnc_sdtstartsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtcancelsmpl</name>
+        <file>motor/cnc_sdtcancelsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtreadsmpl</name>
+        <file>motor/cnc_sdtreadsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtendsmpl</name>
+        <file>motor/cnc_sdtendsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtread1shot</name>
+        <file>motor/cnc_sdtread1shot.htm</file>
+      </item>
+    </reference>
+
+
+
+  </func>
+</root>

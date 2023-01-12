@@ -1,0 +1,25 @@
+[Version]
+Signature="$WINDOWS NT$"
+
+[DestinationDirs]
+Driver.DelList = 12	; DIRID_DRIVERS
+System.DelList = 11	; DIRID_SYSTEM
+
+[Driver.DelList]
+mmcncd.sys
+
+[System.DelList]
+ncboot32.exe
+hssb2.cpl
+
+[DefaultInstall.NT]
+DelFiles=Driver.DelList,System.DelList
+DelReg=mmcncd.DelReg,ncboot32.DelReg
+;Reboot
+
+[mmcncd.DelReg]
+HKLM,System\CurrentControlSet\Services\mmcncd
+
+[ncboot32.DelReg]
+HKLM,Software\Microsoft\Windows\CurrentVersion\Run,Ncboot32
+

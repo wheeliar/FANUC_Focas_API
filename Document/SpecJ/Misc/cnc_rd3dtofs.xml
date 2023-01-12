@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rd3dtofs</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rd3dtofs(unsigned short FlibHndl, ODB3DTO *tofs3d);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+  3次元工具補正モード、及び3次元工具補正ベクトルを読み出します。データはODB3DTO内の各メンバに格納されます。
+</p>
+<p>
+  位置情報の小数点位置は、<a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。
+</p>
+      </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>tofs3d</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            3次元工具補正データを返すODB3DTO構造体へのポインタです。ODB3DTO構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odb3dto {
+    short   mode;       /* 3次元工具補正モード */
+    short   ofs_axes[3];/* 3次元工具補正軸 */
+    long    ofsvct[3];  /* 3次元工具補正ベクトル */
+} ODB3DTO ;
+</pre>
+
+<dl>
+    <dt>mode</dt>
+        <dd>3次元工具補正モードがセットされます。</dd>
+            <dd><table class="dd">
+            <tr> <td>0</td> <td>:</td> <td>3次元工具補正キャンセルモード</td> </tr>
+            <tr> <td>1</td> <td>:</td> <td>3次元工具補正モード</td> </tr>
+            </table></dd>
+        <dd>※ modeが0の時、mode以外のメンバは無効です。</dd>
+    <dt>center</dt>
+        <dd>3次元工具補正軸の軸番号がセットされます。</dd>
+        <dd>(0～MAX_AXIS-1) MAX_AXIS：最大制御軸数</dd>
+            <dd><table class="dd">
+            <tr> <td>ofs_axes[0]</td> <td>:</td> <td>3次元工具補正第1軸用軸番号</td> </tr>
+            <tr> <td>ofs_axes[1]</td> <td>:</td> <td>3次元工具補正第2軸用軸番号</td> </tr>
+            <tr> <td>ofs_axes[2]</td> <td>:</td> <td>3次元工具補正第3軸用軸番号</td> </tr>
+            </table></dd>
+    <dt>ofsvct</dt>
+        <dd>3次元工具補正ベクトルがセットされます。</dd>
+            <dd><table class="dd">
+            <tr> <td>ofsvct[0]</td> <td>:</td> <td>3次元工具補正ベクトル第1軸</td> </tr>
+            <tr> <td>ofsvct[1]</td> <td>:</td> <td>3次元工具補正ベクトル第2軸</td> </tr>
+            <tr> <td>ofsvct[2]</td> <td>:</td> <td>3次元工具補正ベクトル第3軸</td> </tr>
+            </table></dd>
+</dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>15T/15TTでは使用できません。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>3次元工具補正、及び拡張ドライバ/ライブラリ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。
+        </ethr>
+        <need>3次元工具補正機能が必要です。</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdradofs</name>
+            <file>misc/cnc_rdradofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdlenofs</name>
+            <file>misc/cnc_rdlenofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdfixcycle</name>
+            <file>misc/cnc_rdfixcycle.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdcdrotate</name>
+            <file>misc/cnc_rdcdrotate.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dcdcnv</name>
+            <file>misc/cnc_rd3dcdcnv.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmirimage</name>
+            <file>misc/cnc_rdmirimage.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdscaling</name>
+            <file>misc/cnc_rdscaling.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdposofs</name>
+            <file>misc/cnc_rdposofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

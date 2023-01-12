@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet NCデータの保護</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>NCデータの保護(16i/18i/21i/0i-B/0i-C/Power Mate iのみ)</h2>
+
+
+<p>従来のライブラリにおいては、CNC/PMCとパソコン部が密接に接続されているという観点から、各種データをリード/ライトする際に特に保護措置を講じていませんでした。<br>
+しかし、Ethernet版になると、CNC/PMCとパソコンはイーサネットで接続され、LANにおいて、更にはインターネット経由で運用されます。<br>
+この場合､そのLAN内に、或いは外部より当初システム設計者が予想していなかった者が接続してくる恐れがあります。<br>
+この者が故意、或いは過失によってNCのデータに不当にアクセスしたり、破壊したりしないようにEthernet版では保護措置が設けられています。
+
+<p>NCの各種データの内、保護するデータは以下の通りです。
+<ul>
+	<li>FROMユーザファイル
+		<table>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>ラダープログラム、C言語エグゼキュータ、マクロエグゼキュータ、オーダメイドマクロ、PMC C言語、保守情報、組込みマクロ
+			</tr>
+		</table>
+	<li>SRAM全体イメージ
+	<li>NCプログラム
+	<li>Pコードマクロ変数
+	<li>NCパラメータ
+	<li>PMCパラメータ
+		<table>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>R [内部リレー]、T [可変タイマ]、K [キープリレー]、C [カウンタ]、D [データテーブル]
+			</tr>
+		</table>
+</ul>
+
+<p>これらのデータ項目について、MTB殿、エンドユーザ殿毎に独立して保護する/しないの設定をNC上で行うことができます。<br>
+これはNCパラメータのビット形データとして保存され(以後、「保護パターンデータ」と呼びます)、更にこのデータにアクセスすることへの制限の為にNCパラメータにパスワード/キーワードを設けています。<br>
+NCで設定された保護パターンデータはマスタデータとして保存され、NC上でのみ設定変更が可能です。<br>
+Ethernet版のアプリケーションが実行された際に、そのアプリケーションに対して１組、保護パターンデータのコピーイメージがイーサネットボードのワーク領域に取られます。<br>
+Ethernet版ライブラリにおいて、この保護パターンデータのコピーイメージを参照し、アプリケーションが保護されているデータにアクセスする関数を発行した時、エラーコードEW_PASSWD(=17)で異常終了します。<br>
+正常にアクセスするためには、前もって保護パターンデータのコピーイメージを更新しておかなければなりません(<a href=".\misc\cnc_chgprotbit.htm">cnc_chgprotbit</a>関数を参照)。<br>
+この変更はそのアプリケーションの終了まで有効で、且つ、他のアプリケーションには設定変更の影響が及びません。
+
+<p><img src="protect.gif"></p>
+
+<table>
+	<colgroup align=top valign=top>
+	<colgroup valign=top>
+	<tr><td>※<td>保護パターンデータの取得、変更については<a href=".\misc\cnc_getlockstat.htm">cnc_getlockstat</a>、<a href=".\misc\cnc_chgprotbit.htm">cnc_chgprotbit</a>関数を参照してください。</tr>
+</table>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

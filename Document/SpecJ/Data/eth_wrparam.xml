@@ -1,0 +1,867 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>eth_wrparam</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_wrparam(unsigned short FlibHndl, short type, IN_ETHPRMFLAG *flag, IN_ETHPRM *param); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>イーサネット機能（<!--組込みイーサネット[内蔵ポート、PCMCIAカード]、-->ファストイーサネットボード、ファストデータサーバボード<!--、Windows CE 組込みイーサネット[内蔵ポート、PCMCIAカード]-->）のパラメータを設定します。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        設定するパラメータの種類を指定します。<br/>
+                        設定可能なパラメータの種類は、以下の通りです。<br/>
+                        <dl>
+                        <dd>組込みイーサネット[内蔵ポート]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>1   </td><td>:</td><td>共通パラメータ</td> </tr>
+                        <tr> <td>2   </td><td>:</td><td>FOCAS2/Ethernet機能用パラメータ</td> </tr>
+                        <tr> <td>3   </td><td>:</td><td>FTP転送機能用パラメータ</td> </tr>
+<!--                    <tr> <td>5   </td><td>:</td><td>機械リモート診断機能用パラメータ</td> </tr> -->
+<!--                    <tr> <td>6   </td><td>:</td><td>FACTOLINK機能用パラメータ</td> </tr>        -->
+<!--                    <tr> <td>7   </td><td>:</td><td>保守機能用パラメータ</td> </tr>             -->
+                        </table></dd>
+
+                        <dd>組込みイーサネット[PCMCIA LANカード]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>21   </td><td>:</td><td>共通パラメータ</td> </tr>
+                        <tr> <td>22   </td><td>:</td><td>FOCAS2/Ethernet機能用パラメータ</td> </tr>
+                        <tr> <td>23   </td><td>:</td><td>FTP転送機能用パラメータ</td> </tr>
+<!--                    <tr> <td>25   </td><td>:</td><td>機械リモート診断機能用パラメータ</td> </tr> -->
+<!--                    <tr> <td>26   </td><td>:</td><td>FACTOLINK機能用パラメータ</td> </tr>        -->
+<!--                    <tr> <td>27   </td><td>:</td><td>保守機能用パラメータ</td> </tr>             -->
+                        </table></dd>
+
+                        <dd>ファストイーサネットボードまたはファストデータサーバボード</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>41   </td><td>:</td><td>共通パラメータ</td> </tr>
+                        <tr> <td>42   </td><td>:</td><td>FOCAS2/Ethernet機能用パラメータ</td> </tr>
+                        <tr> <td>44   </td><td>:</td><td>データサーバ機能用パラメータ</td> </tr>
+<!--                    <tr> <td>45   </td><td>:</td><td>機械リモート診断機能用パラメータ</td> </tr> -->
+<!--                    <tr> <td>46   </td><td>:</td><td>FACTOLINK機能用パラメータ</td> </tr> -->
+<!--                    <tr> <td>47   </td><td>:</td><td>保守機能用パラメータ</td> </tr> -->
+                        </table></dd>
+<!--
+                        <dd>組込みイーサネット(WinCE)[内蔵ポート]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>61   </td><td>:</td><td>共通パラメータ</td> </tr>
+                        <tr> <td>62   </td><td>:</td><td>FOCAS2/Ethernet機能用パラメータ</td> </tr>
+                        <tr> <td>63   </td><td>:</td><td>FTP転送機能用パラメータ</td> </tr>
+                        <tr> <td>65   </td><td>:</td><td>機械リモート診断機能用パラメータ</td> </tr>
+                        <tr> <td>66   </td><td>:</td><td>FACTOLINK機能用パラメータ</td> </tr>
+                        <tr> <td>67   </td><td>:</td><td>保守機能用パラメータ</td> </tr>
+                        </table></dd>
+
+                        <dd>組込みイーサネット(WinCE)[内蔵ポート]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>81   </td><td>:</td><td>共通パラメータ</td> </tr>
+                        <tr> <td>82   </td><td>:</td><td>FOCAS2/Ethernet機能用パラメータ</td> </tr>
+                        <tr> <td>83   </td><td>:</td><td>FTP転送機能用パラメータ</td> </tr>
+                        <tr> <td>85   </td><td>:</td><td>機械リモート診断機能用パラメータ</td> </tr>
+                        <tr> <td>86   </td><td>:</td><td>FACTOLINK機能用パラメータ</td> </tr>
+                        <tr> <td>87   </td><td>:</td><td>保守機能用パラメータ</td> </tr>
+                        </table></dd>
+-->
+                        </dl>
+                    </content>
+                </item>
+
+                <item>
+                    <name>flag</name>
+                    <type>in</type>
+                    <content>
+                        設定するパラメータの項目に印をつけるためのIN_ETHPRMFLAG構造体へのポインタを指定します。<br/>
+                        IN_ETHPRMFLAG構造体は以下のとおりです。<br/>
+<pre>
+typedef struct _in_ethprm_flag {
+    union {
+        COMMON_PRM_FLG      common;
+        FOCAS2_PRM_FLG      focas2;
+        FTPTRANS_PRM_FLG    ftpTrans;
+        DTSVR_PRM_FLG       dataServer;
+<!--    RMTDIAG_PRM_FLG     remoteDiag; -->
+<!--    FACTO_PRM_FLG       factolink; -->
+<!--    MAINTAIN_PRM_FLG    maintain; -->
+    } flg;
+} IN_ETHPRMFLAG;
+
+typedef struct _common_prm_flg {
+    char    OwnIpAddress;
+    char    SubNetmask;
+    char    RouterIpAddress;
+    char    DnsServer1IpAddress;
+    char    DnsServer2IpAddress;
+    char    OwnHostName;
+    char    OwnDomain;
+} COMMON_PRM_FLG;
+
+typedef struct _focas2_prm_flg {
+    char    TcpPort;
+    char    UdpPort;
+    char    TimeInterval;
+} FOCAS2_PRM_FLG;
+
+typedef struct _ftptrans_prm_flg {
+    FTP_CLIENT_PRM_FLG  opposite[3];
+} FTPTRANS_PRM_FLG;
+
+typedef struct _dtsvr_prm_flg {
+    FTP_CLIENT_PRM_FLG  opposite[3];
+    FTP_SERVER_PRM_FLG  own;
+} DTSVR_PRM_FLG;
+
+typedef struct _ftp_client_prm_flg {
+    char    HostName;
+    char    ControlPort;
+    char    Dummy;
+    char    UserName;
+    char    Password;
+    char    LoginDirectory;
+} FTP_CLIENT_PRM_FLG;
+
+typedef struct _ftp_server_prm_flg {
+    char    UserName;
+    char    Password;
+    char    LoginDirectory;
+} FTP_SERVER_PRM_FLG;
+<!--
+typedef sturct _rmtdiag_prm_flg {
+    char                    MtbInformation;
+    char                    MachineInformation;
+    RMTDIAG_CLIENT_PRM_FLG  opposite[3];
+} RMTDIAG_PRM_FLG;
+
+typedef struct _rmtdiag_client_prm_flg {
+    char    HostName;
+    char    Port;
+    char    InquiryName;
+} RMTDIAG_CLIENT_PRM_FLG;
+
+typedef struct _facto_prm_flg {
+    FACTO_CLIENT_PRM_FLG    opposite[3];
+} FACTO_PRM_FLG;
+
+typedef struct _facto_client_prm_flg {
+    char    HostName;
+    char    Port;
+} FACTO_CLIENT_PRM_FLG;
+
+typedef sturct _maintain_prm_flg {
+    PING_PRM_FLG    opposite;
+} MAINTAIN_PRM_FLG;
+
+typedef sturct _ping_prm_flg {
+    char    HostName;
+    char    Count;
+} PING_PRM_FLG;
+-->
+</pre>
+
+<dl>
+<dt>flg.common.OwnIpAddress</dt>
+<dt>flg.common.SubNetmask</dt>
+<dt>flg.common.RouterIpAddress</dt>
+<dt>flg.common.DnsServer1IpAddress</dt>
+<dt>flg.common.DncServer2IpAddress</dt>
+<dt>flg.common.OwnHostName</dt>
+<dt>flg.common.OwnDomain</dt>
+<dt>flg.focas2.TcpPort</dt>
+<dt>flg.focas2.UpdPort</dt>
+<dt>flg.focas2.TimeInterval</dt>
+<dt>flg.ftpTrans.opposite[n].HostName</dt>
+<dt>flg.ftpTrans.opposite[n].ControlPort</dt>
+<dt>flg.ftpTrans.opposite[n].UserName</dt>
+<dt>flg.ftpTrans.opposite[n].Password</dt>
+<dt>flg.ftpTrans.opposite[n].LoginDirectory</dt>
+<dt>flg.dataServer.opposite[n].HostName</dt>
+<dt>flg.dataServer.opposite[n].ControlPort</dt>
+<dt>flg.dataServer.opposite[n].UserName</dt>
+<dt>flg.dataServer.opposite[n].Password</dt>
+<dt>flg.dataServer.opposite[n].LoginDirectory</dt>
+<dt>flg.dataServer.own.UserName</dt>
+<dt>flg.dataServer.own.Password</dt>
+<dt>flg.dataServer.own.LoginDirectory</dt>
+<!--
+<dt>flg.remoteDiag.MtbInformation</dt>
+<dt>flg.remoteDiag.MachineInformation</dt>
+<dt>flg.remoteDiag.opposite[n].HostName</dt>
+<dt>flg.remoteDiag.opposite[n].Port</dt>
+<dt>flg.remoteDiag.opposite[n].InquiryName</dt>
+<dt>flg.factolink.opposite[n].HostName</dt>
+<dt>flg.factolink.opposite[n].Port</dt>
+<dt>flg.maintain.opposite.HostName</dt>
+<dt>flg.maintain.opposite.Count</dt>
+-->
+<dd>設定したい項目に1を代入します。0の場合、IN_ETHPRM構造体に値が代入されていても設定することができません。</dd>
+</dl>
+                    </content>
+                </item>
+
+                <item>
+                    <name>param</name>
+                    <type>in</type>
+                    <content>
+                        設定したパラメータを格納するためのIN_ETHPRM構造体へのポインタを指定します。<br/>
+                        IN_ETHPRM構造体は以下の通りです。<br/>
+<pre>
+typedef struct _in_ethprm {
+    short   reserve01;
+    short   reserve02;
+    short   reserve03;
+    short   reserve04;
+    short   reserve05;
+    short   reserve06;
+    union {
+        COMMON_PRM      common;
+        FOCAS2_PRM      focas2;
+        FTPTRANS_PRM    ftpTrans;
+        DTSVR_PRM       dataServer;
+<!--    RMTDIAG_PRM     remoteDiag; -->
+<!--    FACTO_PRM       factolink; -->
+<!--    MAINTAIN_PRM    maintain; -->
+    } prm;
+} IN_ETHPRM;
+
+typedef struct _common_prm {
+    char    OwnMacAddress[13];
+    char    OwnIpAddress[40];
+    char    SubNetmask[16];
+    char    RouterIpAddress[40];
+    char    DnsServer1IpAddress[40];
+    char    DnsServer2IpAddress[40];
+    char    OwnHostName[32];
+    char    OwnDomain[63];
+} COMMON_PRM;   /*j 共通パラメータ */
+
+typedef struct _focas2_prm {
+    unsigned long   TcpPort;
+    unsigned long   UdpPort;
+    unsigned long   TimeInterval;
+} FOCAS2_PRM;   /*j FOCAS2/Ethernet機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _ftptrans_prm {
+    FTP_CLIENT_PRM  opposite[3];
+} FTPTRANS_PRM; /*j FTP転送機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _dtsvr_prm {
+    FTP_CLIENT_PRM  opposite[3];
+    FTP_SERVER_PRM  own;
+} DTSVR_PRM;    /*j ﾃﾞｰﾀｻｰﾊﾞ機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _ftp_client_prm {
+    char            HostName[64];
+    unsigned long   ControlPort;
+    unsigned long   Dummy;
+    char            UserName[32];
+    char            Password[32];
+    char            LoginDirectory[128];
+} FTP_CLIENT_PRM;
+
+typedef struct _ftp_server_prm {
+    char            UserName[32];
+    char            Password[32];
+    char            LoginDirectory[128];
+} FTP_SERVER_PRM
+<!--
+typedef struct _rmtdiag_prm {
+    char                MtbInformation[17];
+    char                MachineInformation[17];
+    RMTDIAG_CLIENT_PRM  opposite[3];
+} RMTDIAG_PRM;  /*j 機械ﾘﾓｰﾄ診断機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _rmtdiag_client_prm {
+    char            HostName[64];
+    unsigned long   Port;
+    char            InquiryName[64];
+} RMTDIAG_CLIENT_PRM;
+
+typedef struct _factolink_prm {
+    FACTOLINK_CLIENT_PRM    opposite[3];
+} FACTO_PRM;    /*j FACTOLINK機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _factolink_client_prm {
+    char            HostName[64];
+    unsigned long   Port;
+} FACTOLINK_CLIENT_PRM;
+
+typedef struct _maintenance_prm {
+    PING_PRM        opposite;
+} MAINTAIN_PRM; /*j 保守機能用ﾊﾟﾗﾒｰﾀ */
+
+typedef struct _ping_prm {
+    char            HostName[64];
+    unsigned short  Count;
+} PING_PRM;
+-->
+</pre>
+                        <dl>
+                            <dt>reserve01 ～ reserve06</dt>
+                            <dd>本変数は、使用できません。本変数に入力された値は、本関数では無視されます。</dd>
+
+                            <dt>prm.common.OwnIpAddress</dt>
+                            <dd>CNCのIPアドレス</dd>
+                            <dd>NULLを含めて40文字以内のアスキー文字列です。</dd>
+                            <dd>例）"192.168.0.100"</dd>
+
+                            <dt>prm.common.SubNetmask</dt>
+                            <dd>CNCが所属するネットワークのサブネットマスク</dd>
+                            <dd>NULLを含めて16文字以内のアスキー文字列です。</dd>
+                            <dd>例）"255.255.255.0"</dd>
+
+                            <dt>prm.common.RouterIpAddress</dt>
+                            <dd>CNCが使用するルータのIPアドレス</dd>
+                            <dd>NULLを含めて40文字以内のアスキー文字列です。</dd>
+                            <dd>例）"192.168.0.253"</dd>
+
+                            <dt>prm.common.DnsServer1IpAddress</dt>
+                            <dd>CNCが使用する優先DNSサーバのIPアドレス</dd>
+                            <dd>NULLを含めて40文字以内のアスキー文字列です。</dd>
+                            <dd>例）"192.168.0.252"</dd>
+
+                            <dt>prm.common.DnsServer2IpAddress</dt>
+                            <dd>CNCが使用する代替DNSサーバのIPアドレス</dd>
+                            <dd>NULLを含めて40文字以内のアスキー文字列です。</dd>
+                            <dd>例）"192.168.0.251"</dd>
+
+                            <dt>prm.common.OwnHostName</dt>
+                            <dd>CNCのホスト名</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>ただし、OwnHostNameとOwnDomain合わせて、最大64文字です。</dd>
+                            <dd>例）"cnc"</dd>
+
+                            <dt>prm.common.OwnDomain</dt>
+                            <dd>CNCが所属するドメイン</dd>
+                            <dd>NULLを含めて63文字以内のアスキー文字列です。</dd>
+                            <dd>ただし、OwnHostNameとOwnDomain合わせて、最大64文字です。</dd>
+                            <dd>例）"factory"</dd>
+
+                            <dt>prm.focas2.TcpPort</dt>
+                            <dd>TCP用ポート番号</dd>
+                            <dd>FOCAS2/Ethernet機能<!-- またはDNC1/Ethernet機能 -->で使用します。</dd>
+                            <dd>範囲）5001 ～ 65535, 0</dd>
+                            <dd>例）8193</dd>
+
+                            <dt>prm.focas2.UdpPort</dt>
+                            <dd>UDP用ポート番号</dd>
+<!--                        <dd>DNC1/Ethernet機能で使用します。</dd> -->
+                            <dd>範囲）5001 ～ 65535, 0</dd>
+                            <dd>例）8192</dd>
+
+                            <dt>prm.focas2.TimeInterval</dt>
+                            <dd>ブロードキャストフレームの送出する時間間隔 (単位10ms)</dd>
+<!--                        <dd>DNC1/Ethernet機能で使用します。</dd> -->
+                            <dd>範囲）10 ～ 65535, 0</dd>
+                            <dd>例）50</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].HostName</dt>
+                            <dd>FTP転送機能の通信相手のホスト名またはIPアドレス</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"ftp.factory" または "192.168.0.250"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].ControlPort</dt>
+                            <dd>FTP転送機能の通信相手（FTPサーバ）の制御用ポート番号</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>範囲）1 ～ 65535</dd>
+                            <dd>例）21</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].UserName</dt>
+                            <dd>FTP転送機能の通信相手（FTPサーバ）にログインするためのユーザ名</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"user"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].Password</dt>
+                            <dd>FTP転送機能の通信相手（FTPサーバ）にログインするためのパスワード</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"user1234"</dd>
+
+                            <dt>prm.ftpTrans.opposite[n].LoginDirectory</dt>
+                            <dd>FTP転送機能の通信相手（FTPサーバ）にログインできるディレクトリ名</dd>
+                            <dd>NULLを含めて128文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"/ncdata"</dd>
+
+                            <dt>prm.dataServer.opposite[n].HostName</dt>
+                            <dd>データサーバ機能の通信相手（FTPサーバ）のホスト名またはIPアドレス</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"ftp.factory" または "192.168.0.250"</dd>
+
+                            <dt>prm.dataServer.opposite[n].ControlPort</dt>
+                            <dd>データサーバ機能の通信相手（FTPサーバ）の制御用ポート番号</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>範囲）1 ～ 65535</dd>
+                            <dd>例）21</dd>
+
+                            <dt>prm.dataServer.opposite[n].UserName</dt>
+                            <dd>データサーバ機能の通信相手（FTPサーバ）にログインするためのユーザ名</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"user"</dd>
+
+                            <dt>prm.dataServer.opposite[n].Password</dt>
+                            <dd>データサーバ機能の通信相手（FTPサーバ）にログインするためのパスワード</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"user1234"</dd>
+
+                            <dt>prm.dataServer.opposite[n].LoginDirectory</dt>
+                            <dd>データサーバ機能の通信相手（FTPサーバ）にログインできるディレクトリ名</dd>
+                            <dd>NULLを含めて128文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"/ncdata"</dd>
+
+                            <dt>prm.dataServer.own.UserName</dt>
+                            <dd>FTPサーバ機能の通信相手（FTPクライアント）にログインを許可するためのユーザ名</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>例）"user"</dd>
+
+                            <dt>prm.dataServer.own.Password</dt>
+                            <dd>FTPサーバ機能の通信相手（FTPクライアント）にログインを許可するためのパスワード</dd>
+                            <dd>NULLを含めて32文字以内のアスキー文字列です。</dd>
+                            <dd>例）"user1234"</dd>
+
+                            <dt>prm.dataServer.own.LoginDirectory</dt>
+                            <dd>FTPサーバ機能の通信相手（FTPクライアント）がログインできるディレクトリ名</dd>
+                            <dd>NULLを含めて128文字以内のアスキー文字列です。</dd>
+                            <dd>例）"/ncdata"</dd>
+<!--
+                            <dt>prm.remoteDiag.MtbInformation</dt>
+                            <dd>MTB（機械メーカ）を識別する情報</dd>
+                            <dd>機械リモート診断機能で使用します。</dd>
+                            <dd>NULLを含めて17文字以内のアスキー文字列です。</dd>
+                            <dd>例）"FANUC"</dd>
+
+                            <dt>prm.remoteDiag.MachineInformation</dt>
+                            <dd>機械を識別する情報</dd>
+                            <dd>機械リモート診断機能で使用します。</dd>
+                            <dd>NULLを含めて17文字以内のアスキー文字列です。</dd>
+                            <dd>例）"Machine1234"</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].HostName</dt>
+                            <dd>機械リモート診断機能の通信相手（機械リモート診断受付サーバ）のホスト名またはIPアドレス</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>問合せ先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>問合せ先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>問合せ先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"rmtdiag.factory" または "192.168.0.249"</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].Port</dt>
+                            <dd>機械リモート診断機能の通信相手（機械リモート診断受付サーバのポート番号</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>問合せ先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>問合せ先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>問合せ先3</td> </tr>
+                            </table></dd>
+                            <dd>範囲）5001 ～ 65535</dd>
+                            <dd>例）8194</dd>
+
+                            <dt>prm.remoteDiag.opposite[n].InquiryName</dt>
+                            <dd>機械リモート診断機能の通信相手（機械リモート診断受付サーバを識別する情報（問合せ先名）</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>問合せ先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>問合せ先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>問合せ先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"FANUC support center"</dd>
+
+                            <dt>prm.factolink.opposite[n].HostName</dt>
+                            <dd>FACTOLINK機能の通信相手（FACTOLINKサーバ）のホスト名またはIPアドレス</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>例）"factolink.factory" または "192.168.0.248"</dd>
+
+                            <dt>prm.factolink.opposite[n].Port</dt>
+                            <dd>FACTOLINK機能の通信相手（FACTOLINKサーバ）のポート番号</dd>
+                            <dd>n の範囲(0 ～ 2)</dd>
+                            <dd><table border="0" class="dd">
+                                <tr> <td>0   </td><td>:</td><td>接続先1</td> </tr>
+                                <tr> <td>1   </td><td>:</td><td>接続先2</td> </tr>
+                                <tr> <td>2   </td><td>:</td><td>接続先3</td> </tr>
+                            </table></dd>
+                            <dd>範囲）5001 ～ 65535</dd>
+                            <dd>例）9000</dd>
+
+                            <dt>prm.maintain.opposite.HostName</dt>   
+                            <dd>PINGの通信相手のホスト名またはIPアドレス</dd>
+                            <dd>NULLを含めて64文字以内のアスキー文字列です。</dd>
+
+                            <dt>prm.maintain.opposite.Count</dt> 
+                            <dd>PINGの実行回数</dd>
+                            <dd>範囲）0 ～ 10</dd>
+                            <dd>0の場合、PINGの実行回数は3が指定されたものとします。</dd>
+-->
+                        </dl>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>20</td><td>:</td><td>組込みイーサネットがない</td> </tr>
+<!--                    <tr> <td>21</td><td>:</td><td>Windows CE版組込みイーサネットがない</td> </tr> -->
+                        <tr> <td>22</td><td>:</td><td>オプションボードがない</td> </tr>
+                        <tr> <td>23</td><td>:</td><td>イーサネット機能がない</td> </tr>
+                        <tr> <td>24</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>25</td><td>:</td><td>バッファモード機能がない</td> </tr>
+                        <tr> <td>26</td><td>:</td><td>ATAカードがない</td> </tr>
+<!--                    <tr> <td>27</td><td>:</td><td>FACTOLINK機能がない</td> </tr> -->
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>機能失敗<br/>
+                     パラメータ等の取得に失敗しました。<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>10</td><td>:</td><td>File SRAMからの読み取りに失敗した</td> </tr>
+<!--                    <tr> <td>14</td><td>:</td><td>ライブラリハンドルの取得に失敗した</td> </tr> -->
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>ライトプロテクト<br/>
+                     パラメータの書き込みに失敗しました。<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                        11  : File SRAMへの書き込みに失敗した
+                        13  : DHCP機能が有効である
+                    <table class="dd">
+                        <tr> <td>11</td><td>:</td><td>File SRAMへの書き込みに失敗した</td> </tr>
+                        <tr> <td>13</td><td>:</td><td>DHCP機能が有効である           </td> </tr>
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>2</td><td>:</td><td>データ範囲外</td> </tr>
+                        <tr> <td>3</td><td>:</td><td>形式エラー  </td> </tr>
+                    </table>
+                     ODBERR構造体のメンバ err_dtnoに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>1      </td><td>:</td><td>パラメータ種類(type)の誤り</td> </tr>
+                        <tr> <td>101    </td><td>:</td><td>prm.common.OwnIpAddressの誤り</td> </tr>
+                        <tr> <td>102    </td><td>:</td><td>prm.common.SubNetmaskの誤り</td> </tr>
+                        <tr> <td>103    </td><td>:</td><td>prm.common.RouterIpAddressの誤り</td> </tr>
+                        <tr> <td>104    </td><td>:</td><td>prm.common.DnsServer1IpAddressの誤り</td> </tr>
+                        <tr> <td>105    </td><td>:</td><td>prm.common.DnsServer2IpAddressの誤り</td> </tr>
+                        <tr> <td>106    </td><td>:</td><td>prm.common.OwnHostNameの誤り</td> </tr>
+                        <tr> <td>107    </td><td>:</td><td>prm.common.OwnDomainの誤り</td> </tr>
+                        <tr> <td>201    </td><td>:</td><td>prm.focas2.TcpPortの誤り</td> </tr>
+                        <tr> <td>202    </td><td>:</td><td>prm.focas2.UdpPortの誤り</td> </tr>
+                        <tr> <td>203    </td><td>:</td><td>prm.focas2.TimeIntervalの誤り</td> </tr>
+                        <tr> <td>301    </td><td>:</td><td>接続ホスト番号範囲の誤り</td> </tr>
+                        <tr> <td>302    </td><td>:</td><td>データサーバ動作モードの誤り</td> </tr>
+                        <tr> <td>3[i+1]1</td><td>:</td><td>prm.dataServer.opposite[i].HostNameの誤り</td> </tr>
+                        <tr> <td>       </td><td> </td><td>i=0の時</td> </tr>
+                        <tr> <td>       </td><td> </td><td>311:prm.dataServer.opposite[0]の意味(i=0-2)</td> </tr>
+                        <tr> <td>3[i+1]2</td><td>:</td><td>prm.dataServer.opposite[i].ControlPortの誤り</td> </tr>
+                        <tr> <td>3[i+1]3</td><td>:</td><td>prm.dataServer.opposite[i].Dummyの誤り (番号確保のみ)</td> </tr>
+                        <tr> <td>3[i+1]4</td><td>:</td><td>prm.dataServer.opposite[i].UserNameの誤り</td> </tr>
+                        <tr> <td>3[i+1]5</td><td>:</td><td>prm.dataServer.opposite[i].Passwordの誤り</td> </tr>
+                        <tr> <td>3[i+1]6</td><td>:</td><td>prm.dataServer.opposite[i].LoginDirectoryの誤り</td> </tr>
+                        <tr> <td>344    </td><td>:</td><td>prm.dataServer.own.UserNameの誤り</td> </tr>
+                        <tr> <td>345    </td><td>:</td><td>prm.dataServer.own.Passwordの誤り</td> </tr>
+                        <tr> <td>346    </td><td>:</td><td>prm.dataServer.own.LoginDirectoryの誤り</td> </tr>
+                        <tr> <td>3[i+5]1</td><td>:</td><td>prm.ftpTrans.opposite[i].HostNameの誤り</td> </tr>
+                        <tr> <td>       </td><td> </td><td>i=0の時</td> </tr>
+                        <tr> <td>       </td><td> </td><td>351:prm.ftpTrans.opposite[0]の意味(i=0-2)</td> </tr>
+                        <tr> <td>3[i+5]2</td><td>:</td><td>prm.ftpTrans.opposite[i].ControlPortの誤り</td> </tr>
+                        <tr> <td>3[i+5]3</td><td>:</td><td>prm.ftpTrans.opposite[i].Dummyの誤り(番号確保のみ)</td> </tr>
+                        <tr> <td>3[i+5]4</td><td>:</td><td>prm.ftpTrans.opposite[i].UserNameの誤り</td> </tr>
+                        <tr> <td>3[i+5]5</td><td>:</td><td>prm.ftpTrans.opposite[i].Passwordの誤り</td> </tr>
+                        <tr> <td>3[i+5]6</td><td>:</td><td>prm.ftpTrans.opposite[i].LoginDirectoryの誤り</td> </tr>
+<!--
+                        <tr> <td>401    </td><td>:</td><td>prm.remoteDiag.MtbInformationの誤り</td> </tr>
+                        <tr> <td>402    </td><td>:</td><td>prm.remoteDiag.MachineInformationの誤り</td> </tr>
+                        <tr> <td>4[i+1]1</td><td>:</td><td>prm.remoteDiag.opposite[i].HostNameの誤り</td> </tr>
+                        <tr> <td>4[i+1]2</td><td>:</td><td>prm.remoteDiag.opposite[i].Portの誤り</td> </tr>
+                        <tr> <td>4[i+1]3</td><td>:</td><td>prm.remoteDiag.opposite[i].InquiryNameの誤り</td> </tr>
+                        <tr> <td>5[i+1]1</td><td>:</td><td>prm.factolink.opposite[i].HostNameの誤り</td> </tr>
+                        <tr> <td>5[i+1]2</td><td>:</td><td>prm.factolink.opposite[i].Portの誤り</td> </tr>
+                        <tr> <td>601    </td><td>:</td><td>prm.maintain.opposite.HostNameの誤り</td> </tr>
+                        <tr> <td>602    </td><td>:</td><td>prm.maintain.opposite.Countの誤り</td> </tr>
+-->
+                    </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>eth_rdparam</name>
+            <file>Data/eth_rdparam.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

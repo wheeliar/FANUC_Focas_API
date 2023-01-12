@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_vrfend</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_vrfend(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側にNCプログラムの照合終了を通知します。(照合を行った後、必ず使用する必要があります)</p>
+<p><a href="Program/cnc_verify.htm" target="_parent">cnc_verify</a>(<a href="Program/cnc_cverify.htm" target="_parent">cnc_cverify</a>)でのエラー(EW_DATA)が本関数で返されることがあります。</p>
+<p>また、<a href="Program/cnc_verify.htm" target="_parent">cnc_verify</a>(<a href="Program/cnc_cverify.htm" target="_parent">cnc_cverify</a>)で出力したデータの照合が終了するまで本関数からは戻ってきません。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り
+                <ul>
+                    <li>プログラム照合時に相違点が検出された。</li>
+                    <li>NCプログラムで使用できない文字が検出された。</li>
+                    <li>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</li>
+                </ul>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_FUNC</name>
+                <content>
+                    <a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a>関数が実行されていません。
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    データの誤り
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>プログラム照合時に相違点が検出された。</li>
+                        <li>NCプログラムで使用できない文字が検出された。</li>
+                        <li>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</li>
+                    </ul>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15/15i</li>
+                0020=16(EDITモード)     (必ず設定して下さい) (HSSB接続の時)<br/>
+                0022=16(EDITモード以外) (必ず設定して下さい) (HSSB接続の時)<br/>
+                0020=7 (EDITモード)     (必ず設定して下さい) (Ethernet接続の時)<br/>
+                0022=7 (EDITモード以外) (必ず設定して下さい) (Ethernet接続の時)<br/>
+                0000#0<br/>
+                0011#0,2201#0<br/>
+                2210,2211,2212,2213<br/>
+            <br/>
+            <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+            <br/>
+            <li>Series 16i/18i-W, Power Mate i</li>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4
+            </ul>
+        </type>
+    </parameter>
+
+   <is_parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <li>Series 15/15i</li>
+                <span class="dd">すべてのモードで使用できます。</span><br/>
+                <span class="dd">(モードに応じたパラメータ設定を行う必要があります)</span><br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+                <span class="dd">MDI以外のモードで使用できます。</span>
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>H</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_vrfstart</name>
+            <file>Program/cnc_vrfstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_verify</name>
+            <file>Program/cnc_verify.htm</file>
+        </item>
+        <item>
+            <name>cnc_cverify</name>
+            <file>Program/cnc_cverify.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_delall</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_delall(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCに登録されているすべてのプログラム番号を削除します。<br/>
+                CNCの操作の "O-9999" での削除と同等の機能です。
+            </p>
+            <p>プロテクトされているプログラムに対する削除は行われません。</p>
+            <p>Series 15/15i では、以下の場合、削除が待たされます。</p>
+            <p class="dd">
+                    ・CNC側が編集中(バックグラウンド編集状態を含む)<br/>
+                    ・ダウンロード、照合実行中
+            </p>
+        </cmn>
+
+        <is>
+            <p>CNCに登録されているすべてのプログラム番号を削除します。<br/>
+                CNCの操作の "O-9999" での削除と同等の機能です。
+            </p>
+            <p>プロテクトされているプログラムに対する削除は行われません。</p>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                Series 15i(Ethernetのみ)
+                <ul style="margin-top:0">
+                    <li>CNC側がバックグラウンド編集中</li>
+                        バックグラウンド編集を終了させて下さい。<br/>
+                    <li>ダウンロード、照合実行中</li>
+                        <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。<br/>
+                    <li>&quot;OP&quot;信号オン中(EDIT,MEMORYモードのみ)</li>
+                        加工プログラムを運転中です。<br/>
+                </ul>
+                <br/>
+                Series 30i/31i/32i, 0i-D/F, PMi-A
+                <ul style="margin-top:0">
+                    <li>ダウンロード、照合実行中</li>
+                        <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。<br/>
+                </ul>
+                <br/>
+                Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i
+<br/>
+                <ul style="margin-top:0">
+                    <li>CNC側がバックグラウンド編集中</li>
+                        バックグラウンド編集を終了させて下さい。<br/>
+                    <li>ダウンロード、照合実行中</li>
+                        <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。<br/>
+                    <li>CNCがアラーム(PS000,PS101)状態</li>
+                        CNC側のアラームを解除して下さい。<br/>
+                    <li>CNCがMEMORY,MDIモード</li>
+                        モードを MEMORY,MDI 以外に変更して下さい。<br/>
+                    <li>&quot;OP&quot;信号オン中(EDIT,MEMORYモードのみ)</li>
+                        加工プログラムを運転中です。
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                <ul style="margin-top:0">
+                    <li>プロテクトKEY(DI)がOFFになっています</li>
+                        (Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i)<br/>
+<!--
+                    <li>CNCのパラメータ(8000番台/9000番台プロテクト、暗号化)が書き込み禁止の設定になっています。</li>
+-->
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_PASSWD<br/>Ethernet接続</name>
+            <content>
+                プログラムが保護されているため削除できません。(Series 16i/18i/21i, 0i-A/B/C)
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    ビジィ
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>CNC側がバックグラウンド編集中</li>
+                            バックグラウンド編集を終了させて下さい。
+                        <li>ダウンロード、照合実行中</li>
+                            <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。
+                        <li>&quot;OP&quot;信号オン中(EDIT,MEMORYモードのみ)</li>
+                            加工プログラムを運転中です。<br/>
+                    </ul>
+                </content>
+            </item>
+<!--
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    ライトプロテクト<br/>
+                    CNCのパラメータ(8000番台/9000番台プロテクト、暗号化)が書き込み禁止の設定になっています。
+                </content>
+            </item>
+-->
+        </is>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i<br/>
+                    0011#0,2201#0<br/>
+                    2210,2211,2212,2213
+                </li>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A<br/>
+                    3202#0,#4<br/>
+                    3204#3,#4<br/>
+                    3210,3211
+                </li>
+                <li>Power Mate i<br/>
+                    3202#0,#4<br/>
+                    3204#3,#4
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <li>Series 15/15i, 30i, 0i-D/F, PMi-A</li>
+                <span class="dd">すべてのモードで使用できます。</span><br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                <span class="dd">MEM,MDI以外のモードで使用できます。</span>
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_delete</name>
+            <file>Program/cnc_delete.htm</file>
+        </item>
+        <item>
+            <name>cnc_delrange</name>
+            <file>Program/cnc_delrange.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+以下のプログラムは全プログラムを削除し、結果を表示します。
+
+#include "fwlib32.h"
+
+void example( void )
+{
+        short ret ;
+        ret = cnc_delall( h ) ;
+        switch ( ret ) {
+                case EW_OK:
+                        printf( "ALL PROGRAMS has been deleted.\n", num ) ;
+                        break;
+                case EW_PROT:
+                        printf( "PROTECTED.\n" ) ;
+                        break;
+                case EW_BUSY:
+                        printf( "REJECTED.\n" ) ;
+                        break;
+        }
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

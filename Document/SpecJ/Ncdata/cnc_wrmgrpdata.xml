@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrmgrpdata</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrmgrpdata(unsigned short FlibHndl, IDBMGRP *buf);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定された所から指定された個数のMコードグループデータを書き込みます。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き込むMコードグループデータを指定するIDBMGRP構造体へのポインタです。IDBMGRP構造体は次の通りです。</p>
+
+<pre>
+typedef struct idbmgrp {
+        short   s_no;
+        short   dummy;
+        short   num;
+        short   group[N];
+} IDBMGRP;
+/* N は書き込むMコードグループデータの個数(最大500) */
+</pre>
+                        <dl>
+                            <dt>s_no</dt>
+                            <dd>
+                                開始番号を指定します。<br/>
+                                データの有効範囲は0～499です。
+                            </dd>
+                            <br/>
+                            <dt>num</dt>
+                            <dd>
+                                書き込み個数を指定します。<br/>
+                                データの有効範囲は1～500です。
+                            </dd>
+                            <br/>
+                            <dt>group</dt>
+                            <dd>
+                                書き込むMコードグループ番号を指定します。<br/>
+                                データの有効範囲は0～127です。
+                            </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データ長の誤り<br/>個数( num )の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>開始番号( s_no )の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                Mコードグループ番号の指定が不適切です。<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <tr>
+                        <td>0</td>
+                        <td>:</td>
+                        <td>EW_DATA以外のエラー</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>Mコードグループ番号の誤り</td>
+                    </tr>
+                </table>
+                また、ODBERR構造体のメンバerr_dtnoに不正なデータの番号が格納されます。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>Mコードグループ化機能、及び拡張ドライバ／ライブラリ機能が必要です。</content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNCのモードの誤り<br/>MDIモードではありません。</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC側処理の実行拒否<br/>MDI運転中です。</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>書き込み禁止<span class="xis">(Series 15, 0i-F, 30i)</span><br/>NCのパラメータライトイネーブルがオフ(0)です。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>
+            <p>Mコードグループ化機能が必要です。</p>
+        </need>
+         <is>
+            <hssb>
+                拡張ドライバ/ライブラリ機能が必要です。<br/>
+                Mコードグループ化機能が必要です。
+            </hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                8000#0=1<br/>
+                <br/>
+                <li>Series 16/18</li>
+                8900#0=1<br/>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            ＭＤＩモードで使用できます。
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdmgrpdata</name>
+            <file>ncdata/cnc_rdmgrpdata.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

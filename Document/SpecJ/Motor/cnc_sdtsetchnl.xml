@@ -1,0 +1,1208 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_sdtsetchnl</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_sdtsetchnl(unsigned short FlibHndl, short num, long datanum, IDBSDTCHAN *channel); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+      <cmn>
+        <p>
+          サーボ、主軸の各種データサンプリング用のチャンネルデータを設定します。<br/>
+          取得可能なデータに関しては、引数のchannel.typeを確認してください。
+        </p>
+        <br/>
+        <p>サーボ、主軸の位置フィードバックデータは、電源投入時からの位置フィードバックの積算値をあらわしています(電源投入時 = 0)。</p>
+        <p>サンプリング周期は、サーボデータは、0.25msec または 1msec、スピンドルデータは、1msec です。</p>
+
+        <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+          <tr>
+            <td>
+              サーボガイドまたは、サーボガイドメイト機能を使用中に本機能を使用した場合は、EW_REJECTが返りますので、サーボガイドまたは、サーボガイドメイト機能を終了させて下さい。
+            </td>
+          </tr>
+        </table>
+        <br/>
+        <p>当関数群を使った、処理の流れの例を以下に示します。</p>
+
+        <p>
+          <img src="Motor/sdtflow.GIF"/>
+        </p>
+      </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+      <common>
+        <vc>
+          <item>
+            <name>FlibHndl</name>
+            <type>in</type>
+            <content>
+              <p>
+                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+              </p>
+            </content>
+          </item>
+          <item>
+            <name>num</name>
+            <type>in</type>
+            <content>
+              <p>
+                設定するチャンネルデータの数です。測定可能なチャンネル数は、1～8です。<br/>
+                ただし、同時に取得できるデータには以下のような制限があります。
+              </p>
+              <table border="0" class="dd">
+                <tr>
+                  <td>サーボ軸の場合</td>
+                  <td>：</td>
+                  <td>1DSP(2軸) あたり 4chまで設定可能</td>
+                </tr>
+                <tr>
+                  <td>主軸の場合    </td>
+                  <td>：</td>
+                  <td>1DSP(=1スピンドルアンプ)あたり 2ch まで設定可能</td>
+                </tr>
+              </table>
+            </content>
+          </item>
+          <item>
+            <name>datanum</name>
+            <type>in</type>
+            <content>
+              <p>
+                読み出す測定データ(1ch当り)の総点数(測定ワードデータの総WORD数)を指定します。8以上を指定して下さい。<br/>
+                全てのサンプリング終了後に測定データを読み出す場合に設定できる最大点数は、以下の通りです。
+              </p>
+
+              <table border="1">
+                <colgroup align="center" valign="top">
+                  <colgroup align="center" valign="top">
+                    <tr>
+                      <th>設定ch数</th>
+                      <th>最大点数</th>
+                    </tr>
+                    <tr>
+                      <td>1ch</td>
+                      <td>233008</td>
+                    </tr>
+                    <tr>
+                      <td>2ch</td>
+                      <td>123352</td>
+                    </tr>
+                    <tr>
+                      <td>3ch</td>
+                      <td>83872</td>
+                    </tr>
+                    <tr>
+                      <td>4ch</td>
+                      <td>63536</td>
+                    </tr>
+                  </colgroup>
+                </colgroup>
+              </table>
+              <br/>
+
+              <p>
+                したがって、10ms ごとのサンプリングデータが必要な場合、以下の点数までのサンプリングが可能です。
+
+              </p>
+
+              <table border="1">
+                <colgroup align="center" valign="top">
+                  <colgroup align="center" valign="top">
+                    <tr>
+                      <th>設定ch数</th>
+                      <th>サンプリング点数</th>
+                    </tr>
+                    <tr>
+                      <td>1ch</td>
+                      <td>23300</td>
+                    </tr>
+                    <tr>
+                      <td>2ch</td>
+                      <td>12335</td>
+                    </tr>
+                    <tr>
+                      <td>3ch</td>
+                      <td>8387</td>
+                    </tr>
+                    <tr>
+                      <td>4ch</td>
+                      <td>6353</td>
+                    </tr>
+                  </colgroup>
+                </colgroup>
+              </table>
+              <br/>
+
+              <p>
+                サンプリング実行中に測定データの読み出しを行う場合は、上記のような制限はありません。<br/>
+                -1を指定すると､総点数の制限はなくなります。<br/>
+                測定データの読出し関数(cnc_sdtreadsmpl)で、順次データを取得して下さい。<br/>
+                読込み用バッファが一杯になると読出し関数が、EW_BUFFERを返し、処理が中断されます。
+              </p>
+            </content>
+          </item>
+
+
+          <item>
+            <name>channel</name>
+            <type>in</type>
+            <content>
+              <p>
+                設定するチャンネルデータ配列のポインタです。<br/>
+                設定したい数のチャンネルデータを配列として用意し、その先頭ポインタを本引数channelに設定してください。
+              </p>
+              <p>
+                IDBSDTCHAN構造体は次の通りです。
+              </p>
+<pre>
+  typedef struct idbsdtchan {
+      short           type;       /* データタイプ */
+      char            chno;       /* 測定チャンネル番号 */
+      char            axis;       /* 測定軸番号 */
+      unsigned short  shift;      /* 上位バイト：サンプリング周期
+                                        下位バイト：右シフト量 */
+  } IDBSDTCHAN;
+</pre>
+              <dl>
+                <dt>type</dt>
+                <dd>サンプリングデータの種類を指定します。</dd>
+                <dd>測定を行う軸番号(axis)が正(サーボ軸)の場合:</dd>
+                <table border="1" class="dd">
+                  <colgroup align="center" valign="top">
+                    <colgroup align="left" valign="top">
+                      <colgroup align="left" valign="top">
+                        <colgroup align="left" valign="top" empty-cells = "show">
+                          <tr>
+                            <th>設定値</th>
+                            <th>サンプリングデータの種類</th>
+                            <th colspan = "2">取得データの単位(右シフトが0の時)</th>
+                            <th>備考</th>
+                          </tr>
+                          <tr>
+                            <td> 0</td>
+                            <td>サーボ位置フィードバック積算値 (POSF)</td>
+                            <td>1 </td>
+                            <td>= 1検出単位 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 1</td>
+                            <td>サーボ位置偏差値 (ERR)</td>
+                            <td>1 </td>
+                            <td>= 1検出単位 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 2</td>
+                            <td>速度指令値(VCMD)</td>
+                            <td>16777216 </td>
+                            <td>
+                              = 3750min-1<br/>(右シフトが9の時 32768=3750min-1)
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 3</td>
+                            <td>トルク指令値(TCMD)</td>
+                            <td>7282 </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 4</td>
+                            <td>速度フィードバック信号(SPEED)</td>
+                            <td>262144  </td>
+                            <td>
+                              = 3750min-1<br/>(右シフトが3の時 32768=3750min-1)
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 5</td>
+                            <td>外乱推定値(DTRQ)</td>
+                            <td>7282 </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 6</td>
+                            <td>リジットタップ同期誤差(SYNC)</td>
+                            <td>1  </td>
+                            <td>= 主軸の1/4096回転</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 7</td>
+                            <td>ＯＶＣレベル(熱シミュレーションデータ)(OVCLV)</td>
+                            <td>1  </td>
+                            <td>= 1% </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 8</td>
+                            <td>実電流(IEFF)</td>
+                            <td> 6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 9</td>
+                            <td>DCリンク電圧(VDC)</td>
+                            <td>8192  </td>
+                            <td>= 640V (200V) or 1280V (400V) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>10</td>
+                            <td>セミフル誤差(SFERR)</td>
+                            <td>1  </td>
+                            <td>= 1検出単位 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>11</td>
+                            <td>アナログ信号指令(ALGCMD) </td>
+                            <td>32767  </td>
+                            <td>
+                              = 100% (アナログ信号指令最大値)<br/>(圧力・位置制御時は最大圧力指令値)
+                            </td>
+                            <td>圧力・位置制御時は圧力指令(90BP系列のみ)</td>
+                          </tr>
+                          <tr>
+                            <td>12</td>
+                            <td>アナログ信号フィードバック(ALGFB)</td>
+                            <td>32767  </td>
+                            <td>
+                              = 100% (アナログ信号ＦＢ最大値)<br/>(圧力・位置制御時は最大圧力検出値)
+                            </td>
+                            <td> 圧力・位置制御時は圧力フィードバック(90BP系列のみ)</td>
+                          </tr>
+                          <tr>
+                            <td>13</td>
+                            <td>R相電流(IR)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>14</td>
+                            <td>R相電流(PDM1台目)(IR1)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>15</td>
+                            <td>R相電流(PDM2台目)(IR2)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>16</td>
+                            <td>R相電流(PDM3台目)(IR3)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>17</td>
+                            <td>R相電流(PDM4台目)(IR4)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>18</td>
+                            <td>S相電流(IS)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>19</td>
+                            <td>S相電流(PDM1台目)(IS1)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>20</td>
+                            <td>S相電流(PDM2台目)(IS2)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>21</td>
+                            <td>S相電流(PDM3台目)(IS3)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>22</td>
+                            <td>S相電流(PDM4台目)(IS4)</td>
+                            <td>6554  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>23</td>
+                            <td>無効電流(ID)</td>
+                            <td>8027  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>24</td>
+                            <td>有効電流(IQ)</td>
+                            <td>8027  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>25</td>
+                            <td>モータ巻線温度(MTTMP)</td>
+                            <td>1  </td>
+                            <td>= 1℃ </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>26</td>
+                            <td>パルスコーダ温度(PCTMP)</td>
+                            <td>1  </td>
+                            <td>= 1℃ </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>27</td>
+                            <td>ＦＦ項を含まない速度指令(VCOUT)</td>
+                            <td colspan =" 2">VCMDと同じ</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>28</td>
+                            <td>先行速度指令(VCC0)</td>
+                            <td colspan =" 2">内部単位(非公開)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>29</td>
+                            <td>バックラッシ加速量(BLACL)</td>
+                            <td colspan =" 2">内部単位(非公開)</td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>30</td>
+                            <td>モータ内蔵検出器の絶対位置(ABS)</td>
+                            <td>1  </td>
+                            <td>= 1/2^21 回転 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>31</td>
+                            <td>外乱入力周波数(FREQ)</td>
+                            <td>1  </td>
+                            <td>= 1Hz </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>32</td>
+                            <td>外乱入力トルク(FRTCM)</td>
+                            <td>7282  </td>
+                            <td>= アンプ最大電流値(A) </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>33</td>
+                            <td>DCリンク電圧(VDC)</td>
+                            <td>
+                              <br/>
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                            <td>type=9と同じ</td>
+                          </tr>
+                          <tr>
+                            <td>34</td>
+                            <td>No.2277#7,6,5により指定した方向の加速度フィードバック(ACC)</td>
+                            <td>512  </td>
+                            <td>= 0.1G = 0.98m/s^2 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>35</td>
+                            <td>第1方向の加速度フィードバック(ACC1)</td>
+                            <td>512  </td>
+                            <td>= 0.1G = 0.98m/s^2 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>36</td>
+                            <td>第2方向の加速度フィードバック(ACC2)</td>
+                            <td>512  </td>
+                            <td>= 0.1G = 0.98m/s^2 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>37</td>
+                            <td>第3方向の加速度フィードバック(ACC3)</td>
+                            <td>512  </td>
+                            <td>= 0.1G = 0.98m/s^2 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                <dd>注) type=14～17、19～22は、90B1/06以降、90BP/01以降</dd>
+                
+                <br/>
+                <dd>測定を行う軸番号(axis)が負(主軸)の場合：</dd>
+                <table border="1" class="dd">
+                  <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <colgroup valign="top">
+                          <tr>
+                            <th>設定値</th>
+                            <th>サンプリングデータの種類</th>
+                            <th colspan = "2">
+                              取得データの単位<br/>(右シフトが0の時)
+                            </th>
+                            <th>備考</th>
+                          </tr>
+                          <tr>
+                            <td rowspan = "2"> 0</td>
+                            <td rowspan = "2">スピンドル位置フィードバック積算値 (CSPOS)</td>
+                            <td>36万パルス  </td>
+                            <td>= 1回転 (No.4005#0=0の時)</td>
+                            <td rowspan = "2">
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>360万パルス  </td>
+                            <td>= 1回転 (No.4005#0=1の時) </td>
+                          </tr>
+                          <tr>
+                            <td> 1</td>
+                            <td>モータ速度(SPEED)</td>
+                            <td>4096  </td>
+                            <td>= 1min-1 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 2</td>
+                            <td>トルク指令(TCMD)</td>
+                            <td>16384  </td>
+                            <td>= モータ最大トルク </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 3</td>
+                            <td>モータ速度指令(VCMD)</td>
+                            <td>4096  </td>
+                            <td>= 1min-1 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td rowspan = "5"> 4</td>
+                            <td rowspan = "5">位置偏差(ERR)</td>
+                            <td colspan ="2">Cs時:</td>
+                            <td rowspan = "5">
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>36万パルス  </td>
+                            <td>= 1回転 (No.4005#0=0の時) </td>
+                          </tr>
+                          <tr>
+                            <td>360万パルス  </td>
+                            <td>= 1回転 (No.4005#0=1の時) </td>
+                          </tr>
+                          <tr>
+                            <td colspan ="2">その他:</td>
+                          </tr>
+                          <tr>
+                            <td>4096パルス</td>
+                            <td>= 1回転</td>
+                          </tr>
+                          <tr>
+                            <td> 5</td>
+                            <td>ロードメータデータ(LMDAT)</td>
+                            <td>32768  </td>
+                            <td>= 10V </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 6</td>
+                            <td>主軸負荷トルク(DTRQ)</td>
+                            <td>16384  </td>
+                            <td>= モータ最大トルク </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 7</td>
+                            <td>モータ電流の振幅(INORM)</td>
+                            <td colspan = "2">
+                              使用するモータ、アンプにより変化
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td> 8</td>
+                            <td>モータ巻線温度(MTTMP)</td>
+                            <td>1  </td>
+                            <td>= 1℃ </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td rowspan = "4"> 9</td>
+                            <td rowspan = "4">主軸消費電力(EPMTR)</td>
+                            <td>1</td>
+                            <td>= 10kW (No.4541#2,#1=0,0の時)</td>
+                            <td rowspan = "4">
+                              本データを観測するためには消費電力モニタ機能の設定が必要です。(No.4541#0=1他)<br/>
+                              詳細は消費電力モニタ機能の仕様書(A-92737等)を確認してください。(9D80系列以降)<br/>
+                              注) type=9は、9D80/T(20)以降(予定)
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>1</td>
+                            <td>= 1kW (No.4541#2,#1=0,1の時) </td>
+                          </tr>
+                          <tr>
+                            <td>1</td>
+                            <td>= 0.1kW (No.4541#2,#1=1,0の時) </td>
+                          </tr>
+                          <tr>
+                            <td>1</td>
+                            <td>= 0.01kW (No.4541#2,#1=1,1の時)</td>
+                          </tr>
+                          <tr>
+                            <td>10</td>
+                            <td>外乱トルク指令の周波数(FREQ)</td>
+                            <td>1  </td>
+                            <td>= 1Hz </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>11</td>
+                            <td>ゲイン(GAIN)</td>
+                            <td>4096  </td>
+                            <td>= 100% </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>12</td>
+                            <td>トルク指令2(TCMD2)</td>
+                            <td>16384  </td>
+                            <td>= モータ最大トルク </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>13</td>
+                            <td>モータセンサA相のA/D値(PA1)</td>
+                            <td>65536  </td>
+                            <td>= 1.48V </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>14</td>
+                            <td>モータセンサB相のA/D値(PB1)</td>
+                            <td>65536  </td>
+                            <td>= 1.48V </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>15</td>
+                            <td>主軸センサA相のA/D値(PA2)</td>
+                            <td>65536  </td>
+                            <td>= 1.48V </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>16</td>
+                            <td>主軸センサB相のA/D値(PB2)</td>
+                            <td>65536  </td>
+                            <td>= 1.48V </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>17</td>
+                            <td>速度偏差(VERR)</td>
+                            <td>4096  </td>
+                            <td>= 1min-1 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>18</td>
+                            <td>主軸速度(SPSPD)</td>
+                            <td>4096  </td>
+                            <td>= 1min-1 </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>19</td>
+                            <td>
+                              ロードメータの現在値<br/>(連続出力基準)(LMDTC)
+                            </td>
+                            <td>1  </td>
+                            <td>
+                              = 1%<br/>100%が連続定格出力に相当します。
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>20</td>
+                            <td>
+                              現在速度におけるロードメータの最大値<br/>(連続出力基準)(LMMAX)
+                            </td>
+                            <td>1  </td>
+                            <td>
+                              = 1%<br/>100%が連続定格出力に相当します。
+                            </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>21</td>
+                            <td>加工可能時間(DURTM)(TCMD2)</td>
+                            <td>1  </td>
+                            <td>= 1sec </td>
+                            <td>
+                              <br/>
+                            </td>
+                          </tr>
+                        </colgroup>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+
+              </dl>
+              <dl>
+                <dt>chno</dt>
+                <dd>測定チャンネル番号(1～8)を指定します。</dd>
+              </dl>
+              <dl>
+                <dt>axis</dt>
+                <dd>測定を行う軸番号を指定します。</dd>
+                <table border="0" class="dd">
+                  <colgroup align="left" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <tr>
+                          <td>軸番号  </td>
+                          <td>：</td>
+                          <td> 1 ～ 32 </td>
+                        </tr>
+                        <tr>
+                          <td>主軸番号</td>
+                          <td>：</td>
+                          <td>-1 ～ -8 </td>
+                        </tr>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                <dd>指定する軸(主軸)番号は、システム全体を通して1～32(主軸は1～8)に割り振られた論理軸(主軸)番号です。</dd>
+                <dd>系統内の相対軸番号ではありません。(CNCパラメータNo.981(主軸は982)の順番と同じ)</dd>
+              </dl>
+              <dl>
+                <dt>shift</dt>
+                <dd>上位バイトにサンプリング周期、下位バイトに測定データの右シフト量を指定します。</dd>
+                <dd>shift の上位バイトにサンプリング周期を以下のように指定します。</dd>
+                <dd>
+                <table border="0" class="dd">
+                  <colgroup align="left" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <tr>
+                          <td>0</td>
+                          <td>：</td>
+                          <td>1msec</td>
+                        </tr>
+                        <tr>
+                          <td>2</td>
+                          <td>：</td>
+                          <td>0.25msec</td>
+                        </tr>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                </dd>
+                <dd>
+                  * 0.25msecは、サーボデータの時のみ指定可能です。
+                  スピンドルでshift の上位バイトに0 以外の値が設定された場合、EW_DATA(5)（詳細エラーNo.24）となります。
+                </dd>
+                <dd>
+                  * サーボのサンプリング周期がチャンネル間で異なる場合、EW_DATA(5)（詳細エラーNo.24）となります。
+                  サーボのサンプリング周期はチャンネル間で統一してください。
+                </dd>
+                <dd>* 以下の条件を同時に設定した場合、EW_DATA(5)（詳細エラーNo.3）となります。</dd>
+                <dd>
+                  <ul type="disc">
+                    <li>サーボのチャンネル（サンプリング周期 0.25msec）</li>
+                    <li>スピンドルのチャンネル（サンプリング周期 1msec）</li>
+                    <li>読み出す測定データ（1ch あたり）の総点数datanum が-1以外の正常値 </li>
+                  </ul>
+                </dd>
+                <br/>
+                <dd>
+                  サーボ（サンプリング周期 0.25msec）、スピンドル（サンプリング周期1ms）のチャネルを同時に設定する場合、
+                  読み出す測定データ（1ch あたり）の総点数datanum に-1 を指定し、
+                  読み出したデータ数のカウント、サンプリングの終了処理をアプリケーションプログラムで実行してください。
+                </dd>
+
+                <dd>測定データを右シフトする場合、shift の下位バイトに測定データの右シフト量を以下のように指定します。0～15が指定可能です。</dd>
+                <dd>右シフト量の指定によって得られる計測データは以下のような単位になります。</dd>
+                <dd>
+                <table border="0" class="dd">
+                  <colgroup align="left" valign="top">
+                    <colgroup valign="top">
+                      <colgroup valign="top">
+                        <tr>
+                          <td>shift = 0 の時</td>
+                          <td>：</td>
+                          <td>1検出単位(または、1回転)</td>
+                        </tr>
+                        <tr>
+                          <td>shift = 1 の時</td>
+                          <td>：</td>
+                          <td>2検出単位</td>
+                        </tr>
+                        <tr>
+                          <td>shift = 2 の時</td>
+                          <td>：</td>
+                          <td>4検出単位</td>
+                        </tr>
+                        <tr>
+                          <td>              </td>
+                          <td>: </td>
+                          <td> </td>
+                        </tr>
+                        <tr>
+                          <td>shift = 7 の時</td>
+                          <td>：</td>
+                          <td>128検出単位</td>
+                        </tr>
+                        <tr>
+                          <td>              </td>
+                          <td>: </td>
+                          <td> </td>
+                        </tr>
+                        <tr>
+                          <td>shift = 15の時</td>
+                          <td>：</td>
+                          <td>32768検出単位</td>
+                        </tr>
+                      </colgroup>
+                    </colgroup>
+                  </colgroup>
+                </table>
+                </dd>
+                <dt>
+                  <img src="Motor/setchnl.gif"/>
+                </dt>
+              </dl>
+            </content>
+          </item>
+        </vc>
+      </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+      <item>
+        <name>EW_NUMBER</name>
+        <content>
+          データ番号の誤り<br/>
+          設定するチャンネルデータの数(num)の指定が不適切です。
+        </content>
+      </item>
+      <item>
+        <name>EW_DATA</name>
+        <content>
+          データの誤り<br/>
+          この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+          <table>
+            <colgroup align="center" valign="top">
+              <colgroup align="center" valign="top">
+                <colgroup valign="top">
+                  <tr>
+                    <td> 3</td>
+                    <td>:</td>
+                    <td>読み出す測定データの総点数から計算したCNCにおける繰り返し回数が設定チャンネル間で不整合(datanumが８以上でない)</td>
+                  </tr>
+                  <tr>
+                    <td> 4</td>
+                    <td>:</td>
+                    <td>測定するチャンネルのモータが使用可能でない。</td>
+                  </tr>
+                  <tr>
+                    <td>20</td>
+                    <td>:</td>
+                    <td>サンプリングデータの種類(channel.type)の指定が不適切です。</td>
+                  </tr>
+                  <tr>
+                    <td>21</td>
+                    <td>:</td>
+                    <td>測定チャンネル番号(channel.chno)の指定が不適切です。</td>
+                  </tr>
+                  <tr>
+                    <td>22</td>
+                    <td>:</td>
+                    <td>測定を行う軸番号(channel.axis)の指定が不適切です。</td>
+                  </tr>
+                  <tr>
+                    <td>23</td>
+                    <td>:</td>
+                    <td>測定データの右シフト量(channel.shift)の指定が不適切です。</td>
+                  </tr>
+                  <tr>
+                    <td>24</td>
+                    <td>:</td>
+                    <td>サンプリング周期の指定が不適切、またはチャンネル間で不整合です。</td>
+                  </tr>
+                </colgroup>
+              </colgroup>
+            </colgroup>
+          </table>
+        </content>
+      </item>
+      <item>
+        <name>EW_PATH</name>
+        <content>
+          系統番号の誤り<br/>
+          指定された測定軸番号(axis)に対応する系統は存在しません。
+        </content>
+      </item>
+      <item>
+        <name>EW_REJECT</name>
+        <content>
+          CNCの実行拒否<br/>
+          測定データのサンプリング開始が指示されています。<br/>
+          cnc_sdtcancelsmpl()、またはcnc_sdtendsmpl()を実行してから再度実行してください。
+        </content>
+      </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+      <hssb>
+        拡張ドライバ/ライブラリ機能が必要です。
+      </hssb>
+      <ethr>
+        <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+        <p>但し、0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+        <p>組込みイーサネットを使用のとき、</p>
+        <p class="dd">上記２つの機能は必要ありません。</p>
+        <p>イーサネットボードを使用のとき、</p>
+        <p class="dd">イーサネット機能のみ必要です。</p>
+      </ethr>
+
+      <!-- 30i(WinCE) -->
+      <is>
+        <hssb>
+          以下の機能が必要です。
+          <ul type="disc">
+            <li>拡張ドライバ/ライブラリ機能</li>
+          </ul>
+        </hssb>
+      </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+      <!-- M（ミリング） -->
+      <m>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>O</fs0id>
+        <fs0if>O</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>O</fs30ia>
+        <fs30ib>O</fs30ib>
+      </m>
+      <!-- T（旋盤） -->
+      <t>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>O</fs0id>
+        <fs0if>O</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>O</fs30ia>
+        <fs30ib>O</fs30ib>
+      </t>
+      <!-- LC（ローダ制御） -->
+      <lc>
+        <fs0ia>X</fs0ia>
+        <fs0ib>X</fs0ib>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs15>X</fs15>
+        <fs15i>X</fs15i>
+        <fs16>X</fs16>
+        <fs18>X</fs18>
+        <fs21>X</fs21>
+        <fs16ia>X</fs16ia>
+        <fs18ia>X</fs18ia>
+        <fs21ia>X</fs21ia>
+        <fs16ib>X</fs16ib>
+        <fs18ib>X</fs18ib>
+        <fs21ib>X</fs21ib>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </lc>
+      <!-- P（パンチプレス） -->
+      <p>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </p>
+      <!-- L（レーザ） -->
+      <l>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </l>
+      <!-- W（ワイヤカット） -->
+      <w>
+        <fs0id>X</fs0id>
+        <fs0if>X</fs0if>
+        <fs16i>X</fs16i>
+        <fs18i>X</fs18i>
+        <fs30ia>X</fs30ia>
+        <fs30ib>X</fs30ib>
+      </w>
+      <!-- PM（パワーメート） -->
+      <pw>
+        <d>X</d>
+        <h>X</h>
+        <a>O</a>
+      </pw>
+      <!-- 30i(WinCE) -->
+      <is>
+        <m>
+          <fs30isa>O</fs30isa>
+          <fs30isb>O</fs30isb>
+        </m>
+        <t>
+          <fs30isa>O</fs30isa>
+          <fs30isb>O</fs30isb>
+        </t>
+        <w>
+          <fs30isa>X</fs30isa>
+          <fs30isb>X</fs30isb>
+        </w>
+      </is>
+    </support>
+
+
+
+    <reference>
+      <item>
+        <name>cnc_sdtclrchnl</name>
+        <file>motor/cnc_sdtclrchnl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtstartsmpl</name>
+        <file>motor/cnc_sdtstartsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtcancelsmpl</name>
+        <file>motor/cnc_sdtcancelsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtreadsmpl</name>
+        <file>motor/cnc_sdtreadsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtendsmpl</name>
+        <file>motor/cnc_sdtendsmpl.htm</file>
+      </item>
+      <item>
+        <name>cnc_sdtread1shot</name>
+        <file>motor/cnc_sdtread1shot.htm</file>
+      </item>
+    </reference>
+
+
+
+  </func>
+</root>

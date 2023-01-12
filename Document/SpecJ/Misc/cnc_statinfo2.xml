@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_statinfo2</title>
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_statinfo2(unsigned short FlibHndl, ODBST2 *statinfo);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCのステータス情報を読み出します。各種情報はODBST2内の各メンバに格納されます。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>statinfo </name>
+                    <type>out</type>
+                    <content>
+                        <p>CNCステータス情報を返すODBST2構造体へのポインタです。</p>
+                            <p>※多系統の場合、全ステータスが系統毎にあります。</p>
+                            <p>
+<pre>
+typedef struct odbst2 {
+    short  hdck ;        /* 手パリトレースの状態     */
+    short  tmmode ;      /* T/Mモード選択            */
+    short  aut ;         /* 自動・手動運転モード選択 */
+    short  run ;         /* 自動運転状態             */
+    short  motion ;      /* 軸移動・ドウェルの状態   */
+    short  mstb ;        /* M, S, T, B機能の状態     */
+    short  emergency ;   /* 非常停止の状態           */
+    short  alarm ;       /* アラーム状態             */
+    short  edit ;        /* プログラム編集状態       */
+    short  warning;      /* 警告メッセージの状態     */
+    short  o3dchk;       /* 3次元干渉チェック中の状態*/
+    short  ext_opt;      /* オプションの状態         */
+    short  restart;      /* プログラム編集後再開確認状態 */
+} ODBST2 ;
+</pre>
+                                <dl>
+                                    <dt>hdck</dt>
+                                    <dd>手パリトレースの状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>手パリトレース無効状態</td></tr>
+                                            <tr><td>1</td><td>:</td><td>M.H.RTR.(手パリトレス)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>NO RVRS.(逆行禁止)    </td></tr>
+                                            <tr><td>3</td><td>:</td><td>NO CHAG.(反転禁止)    </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>tmmode</dt>
+                                    <dd>T/Mモード選択(複合加工機能のみ)
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>Tモード</td></tr>
+                                            <tr><td>1</td><td>:</td><td>Mモード</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>aut</dt>
+                                    <dd>自動・手動運転モード選択
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>MDI                    </td></tr>
+                                            <tr><td>1</td><td>:</td><td>MEMory                 </td></tr>
+                                            <tr><td>2</td><td>:</td><td>****                   </td></tr>
+                                            <tr><td>3</td><td>:</td><td>EDIT                   </td></tr>
+                                            <tr><td>4</td><td>:</td><td>HaNDle                 </td></tr>
+                                            <tr><td>5</td><td>:</td><td>JOG                    </td></tr>
+                                            <tr><td>6</td><td>:</td><td>Teach in JOG           </td></tr>
+                                            <tr><td>7</td><td>:</td><td>Teach in HaNDle        </td></tr>
+                                            <tr><td>8</td><td>:</td><td>INC&#183;feed          </td></tr>
+                                            <tr><td>9</td><td>:</td><td>REFerence              </td></tr>
+                                            <tr><td>10</td><td>:</td><td>ReMoTe                </td></tr>
+<!--                                        <tr><td>11</td><td>:</td><td>TEST(テスト運転モード)</td></tr> -->
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                    <dt>run</dt>
+                                    <dd>自動運転状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(reset)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>STOP</td></tr>
+                                            <tr><td>2</td><td>:</td><td>HOLD</td></tr>
+                                            <tr><td>3</td><td>:</td><td>STaRT</td></tr>
+                                            <tr><td>4</td><td>:</td><td>MSTR(工具退避&#38;復帰の復帰動作中、リポジショニング中、及び手動数値指令運転中)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>motion</dt>
+                                    <dd>軸移動・ドウェルの状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***   </td></tr>
+                                            <tr><td>1</td><td>:</td><td>MoTioN</td></tr>
+                                            <tr><td>2</td><td>:</td><td>DWeLl </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>mstb</dt>
+                                    <dd>M,S,T,B機能の状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(その他)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>FIN        </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>emergency</dt>
+                                    <dd>非常停止の状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(非常停止解除)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EMerGency     </td></tr>
+                                            <tr><td>2</td><td>:</td><td>ReSET         </td></tr>
+                                            <tr><td>3</td><td>:</td><td>WAIT(FS35i専用)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>alarm</dt>
+                                    <dd>アラーム状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>***(その他)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>ALarM      </td></tr>
+                                            <tr><td>2</td><td>:</td><td>BATtery low</td></tr>
+                                            <tr><td>3</td><td>:</td><td>FAN(NCおよびサーボアンプのFAN故障)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>PS Warning</td></tr>
+                                            <tr><td>5</td><td>:</td><td>FSsB warning</td></tr>
+                                            <tr><td>6</td><td>:</td><td>LeaKaGe warning</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ENCoder warning</td></tr>
+                                            <tr><td>8</td><td>:</td><td>PMC alarm</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>edit</dt>
+                                    <dd>その他の状態
+                                    <p>0i-Dの場合、パラメータNo.13104#0によって16,21,23,42,44,46の意味が変わります(30iと同じ意味になります)。</p>
+                                    <ul>
+                                        <li>M系
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(無編集)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(編集中)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(サーチ中)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(データ出力中)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(データ入力中)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE(照合中)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Label SKip(ラベルスキップ状態)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>ReSTaRt(プログラム再開中)</td></tr>
+<!--                                        <tr><td>8</td><td>:</td><td>HPCC(RISC運転中)</td></tr> このステータスはなし -->
+                                            <tr><td>9</td><td>:</td><td>PTRR(工具退避&#38;復帰モード中)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>RVRS(リトレース/逆行中)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>RTRY(リトレース/再順行中)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>RVED(リトレース/逆行終了)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>HANDLE(ハンドル割込み中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>OFfSeT(工具長補正量測定モード中)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>Work OFfSet(ワーク原点補正量測定モード中)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC(AI輪郭制御運転中)(30i, 0i-F)(0i-D:パラメータNo.13104#0=1)<br/>
+                                                                         AI APC(AI先行制御運転中)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>MEmory-CHecK(テープメモリチェック中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>CusToMer&#180;s BoarD(カスタマーズボード制御運転中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>SAVE(ファイントルクセンシングデータ保存中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>AI NANO(AIナノ制御運転中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>AI APC(AI先行制御運転中)(0i-D:パラメータNo.13104#0=1)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>AICC 2(AI輪郭制御Ⅱ運転中)(30i, 0i-F)(0i-D:パラメータNo.13104#0=1)<br/>
+                                                                         AICC(AI輪郭制御運転中)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>LEN(手動アクティブオフセット量変更：長補正変更モード中)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>RAD(手動アクティブオフセット量変更：径補正変更モード中)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(手動アクティブオフセット量変更：ワーク原点オフセット量変更モード中)</td></tr>
+                                            <tr><td>39</td><td>:</td><td>TCP(5軸加工用工具先端点制御中)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(傾斜面加工指令中)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(5軸加工用工具先端点制御中かつ傾斜面加工指令中)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(先行制御)(0i-D:パラメータNo.13104#0=1)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(高速プログラムチェックモード中)</td></tr>
+                                            <tr class="xis"><td>44</td><td>:</td><td>APC(先行制御)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(スムーズTCP中)(30i, 0i-F)</td></tr>
+                                            <tr><td>46</td><td>:</td><td>AICC 2(AI輪郭制御Ⅱ運転中)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(高速プログラム管理のFROM保存中)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(高速プログラム管理の未保存状態)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+
+                                        <li>T系
+
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>****(無編集)</td></tr>
+                                            <tr><td>1</td><td>:</td><td>EDIT(編集中)</td></tr>
+                                            <tr><td>2</td><td>:</td><td>SeaRCH(サーチ中)</td></tr>
+                                            <tr><td>3</td><td>:</td><td>OUTPUT(データ出力中)</td></tr>
+                                            <tr><td>4</td><td>:</td><td>INPUT(データ入力中)</td></tr>
+                                            <tr><td>5</td><td>:</td><td>COMPARE(照合中)</td></tr>
+                                            <tr><td>6</td><td>:</td><td>Label SKip(ラベルスキップ状態)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>7</td><td>:</td><td>OFfSeT(工具長補正量書き込みモード中)</td></tr>
+                                            <tr><td>8</td><td>:</td><td>Work ShiFT(ワークシフト量書き込みモード中)</td></tr>
+                                            <tr><td>9</td><td>:</td><td>ReSTaRt(プログラム再開中)</td></tr>
+                                            <tr><td>10</td><td>:</td><td>RVRS(リトレース/逆行中)</td></tr>
+                                            <tr><td>11</td><td>:</td><td>RTRY(リトレース/再順行中)</td></tr>
+                                            <tr><td>12</td><td>:</td><td>RVED(リトレース/逆行終了)</td></tr>
+                                            <tr><td>13</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>14</td><td>:</td><td>PTRR(工具退避&#38;復帰モード中)</td></tr>
+                                            <tr><td>15</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>16</td><td>:</td><td>AICC(AI輪郭制御運転中)(30i, 0i-F)(0i-D:パラメータNo.13104#0=1)<br/>
+                                                                         AI APC(AI先行制御運転中)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>17</td><td>:</td><td>MEmory-CHecK(テープメモリチェック中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>18</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>19</td><td>:</td><td>SAVE(ファイントルクセンシングデータ保存中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>20</td><td>:</td><td>AI NANO(AIナノ制御運転中)(30i,0i-D/Fは未使用)</td></tr>
+                                            <tr><td>21</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>22</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>23</td><td>:</td><td>AICC 2(AI輪郭制御Ⅱ運転中)(30i, 0i-F)(0i-D:パラメータNo.13104#0=1)<br/>
+                                                                         AICC(AI輪郭制御運転中)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>26</td><td>:</td><td>OFSX(手動アクティブオフセット量変更：X軸補正変更モード中)</td></tr>
+                                            <tr><td>27</td><td>:</td><td>OFSZ(手動アクティブオフセット量変更：Z軸補正変更モード中)</td></tr>
+                                            <tr><td>28</td><td>:</td><td>WZR(手動アクティブオフセット量変更：ワーク原点オフセット量変更モード中)</td></tr>
+                                            <tr><td>29</td><td>:</td><td>OFSY(手動アクティブオフセット量変更：Y軸補正変更モード中)</td></tr>
+                                            <tr><td>31</td><td>:</td><td>TOFS(手動アクティブオフセット量変更：工具補正変更モード中)</td></tr>
+
+                                            <tr><td>39</td><td>:</td><td>TCP(5軸加工用工具先端点制御中)</td></tr>
+                                            <tr><td>40</td><td>:</td><td>TWP(傾斜面加工指令中)</td></tr>
+                                            <tr><td>41</td><td>:</td><td>TCP+TWP(5軸加工用工具先端点制御中かつ傾斜面加工指令中)</td></tr>
+                                            <tr><td>42</td><td>:</td><td>APC(先行制御)(0i-D:パラメータNo.13104#0=1)</td></tr>
+                                            <tr><td>43</td><td>:</td><td>PRG-CHK(高速プログラムチェックモード中)</td></tr>
+                                            <tr class="xis"><td>44</td><td>:</td><td>APC(先行制御)(0i-D:パラメータNo.13104#0=0)</td></tr>
+                                            <tr><td>45</td><td>:</td><td>S-TCP(スムーズTCP中)(30i, 0i-F)</td></tr>
+                                            <tr><td>59</td><td>:</td><td>ALLSAVE(高速プログラム管理のFROM保存中)</td></tr>
+                                            <tr><td>60</td><td>:</td><td>NOTSAVE(高速プログラム管理の未保存状態)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                        </li>
+                                    </ul>
+                                    </dd>
+
+                                    <dt>warning</dt>
+                                    <dd>ワーニング状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>(警告なし)                           </td></tr>
+                                            <tr><td>1</td><td>:</td><td>WaRNing(プログラム途中からのスタート)</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>o3dchk</dt>
+                                    <dd>3次元干渉チェック中の状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>3次元干渉チェック中ではない         </td></tr>
+                                            <tr><td>1</td><td>:</td><td>標準CNCによる3次元干渉チェック中    </td></tr>
+                                            <tr><td>2</td><td>:</td><td>パソコン機能による3次元干渉チェック中</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>ext_opt</dt>
+                                    <dd>オプション状態
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>通常状態        </td></tr>
+                                            <tr><td>2</td><td>:</td><td>仮設定中状態    </td></tr>
+                                            <tr><td>3</td><td>:</td><td>認証待ち状態    </td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+
+                                    <dt>restart</dt>
+                                    <dd>プログラム編集後に自動運転再開する時の確認
+                                        <table class="dd">
+                                            <colgroup align="right" valign="top">
+                                            <colgroup valign="top">
+                                            <colgroup valign="top">
+                                            <tr><td>0</td><td>:</td><td>以下のいずれかの状態です</td></tr>
+                                            <tr><td> </td><td> </td><td>・プログラムが編集されていない</td></tr>
+                                            <tr><td> </td><td> </td><td>・自動運転を再開する時に確認メッセージを表示するパラメータ10330#7が有効になっていない</td></tr>
+                                            <tr><td> </td><td> </td><td>・NCが未対応</td></tr>
+                                            <tr><td>1</td><td>:</td><td>・プログラムが編集されている</td></tr>
+                                            </colgroup>
+                                            </colgroup>
+                                            </colgroup>
+                                        </table>
+                                    </dd>
+                                </dl>
+                            </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>X</fs0id>
+              <fs0if>X</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 追加情報 -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_statinfo</name>
+                <file>Misc/cnc_statinfo.htm</file>
+            </item>
+        </reference>
+
+
+
+  </func>
+</root>

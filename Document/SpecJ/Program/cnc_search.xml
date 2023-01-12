@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_search</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_search(unsigned short FlibHndl, short number);</prottype>
+        <prottype><br/><br/></prottype>
+        <prottype>プログラム番号8桁の場合<br/>
+                  FWLIBAPI short WINAPI cnc_search(unsigned short FlibHndl, long number);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            CNCのプログラムメモリに登録されているプログラム番号をサーチします。<br/>
+            <li>HSSB接続の場合</li>
+            <ul>Series 15/15i では、以下の場合、サーチが待たされます。<br/>
+                <span class="dd">・CNC側が編集中(バックグラウンド編集状態を含む)</span><br/>
+                <span class="dd">・ダウンロード、照合実行中</span><br/>
+                <br/>
+                Series16/18, 16i/18i, 0i-F, 30i, Power Mate i ではプログラム番号Ｏ８桁の場合も使用出来ますがAPI を８桁対応に切り替える必要があります。
+Series 15i では必ずAPIを８桁対応に切り替えて下さい。<br/>
+                (詳しくは<a href="general.htm#O8" target="_parent">『プログラム番号8桁対応』</a>を参照して下さい)
+            </ul>
+            <li>Ethernet接続の場合</li>
+            <ul>
+                プログラム番号8桁の場合も使用出来ますが、APIを8桁対応に切り替える必要があります。Series 15iでは必ずAPIを8桁対応に切り替えて下さい。(詳しくは<a href="general.htm#O8" target="_parent">『プログラム番号8桁対応』</a>を参照して下さい)
+            </ul>
+        </cmn>
+
+        <is>
+            CNCのプログラムメモリに登録されているプログラム番号をサーチします。<br/>
+            プログラム番号O8桁の場合も使用出来ますがAPI を8桁対応に切り替える必要があります。
+            (詳しくは<a href="general.htm#O8" target="_parent">『プログラム番号8桁対応』</a>を参照して下さい)
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            プログラム番号を指定します。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>
+                    プログラム番号8桁用として作成されていません。<br/>
+                    <a href="general.htm#O8" target="_parent">『プログラム番号8桁対応』</a>を参照して下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                <ul>
+                    <li>&quot;OP&quot;信号オン中(EDIT,MEMORYモードのみ)</li>
+                        加工プログラムを運転中です。<br/>
+                    <li>ダウンロード、照合実行中</li>
+                        <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a>, <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。<br/>
+                    <li>CNCがアラーム(PS000,PS101)状態 (15i, 30i, 0i-D/F, PMi-Aを除く)</li>
+                        CNC側のアラームを解除して下さい。
+                    <li>非常停止中 (30i/31i/32i, 0i-D/F, PMi-A)</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                プログラム(number)がNC内に存在しません。 
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                編集禁止のプログラムです。<br/>
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    ビジィ<br/>
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>&quot;OP&quot;信号オン中(EDIT,MEMORYモードのみ)</li>
+                            加工プログラムを運転中です。
+                        <li>ダウンロード、照合実行中</li>
+                            <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>, <a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>にて処理を終了させて下さい。
+                    </ul>
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    データの誤り<br/>
+                    プログラム(number)がNC内に存在しません。 
+                </content>
+            </item>
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    編集禁止のプログラムです。
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+                <ul>
+                    <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, PMi-A</li>
+                        3202#0,#4,#6 (設定の影響を受けます)<br/>
+                        3204#3,#4 (設定の影響を受けます)<br/>
+                        3210,3211 (設定の影響を受けます)<br/>
+                    <br/>
+                    <li>Power Mate i</li>
+                        3202#0,#4,#6 (設定の影響を受けます)<br/>
+                        3204#3,#4 (設定の影響を受けます)<br/>
+                </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                3202#0,#4,#6<br/>
+                3204#3,#4<br/>
+                3210,3211
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            HSSB接続
+            <li>Series 15</li>
+                <table class="dd">
+                    <tr><td>EDITモード</td><td>:</td><td>フォアグラウンドサーチ</td></tr>
+                    <tr><td>上記以外のモード</td><td>:</td><td>バックグラウンドサーチ</td></tr>
+                </table>
+            <br/>
+            <li>Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+                <table class="dd">
+                    <tr><td>EDIT,MEMモード</td><td>:</td><td>フォアグラウンドサーチ</td></tr>
+                    <tr><td>上記以外のモード</td><td>:</td><td>バックグラウンドサーチ</td></tr>
+                </table>
+            <br/>
+            Ethernet接続<br/>
+            <br/>
+            <li>CNCのモードにより、動作内容が変わります。</li>
+            <table class="dd">
+                <tr><td>EDIT,MEMモード</td><td>:</td><td>フォアグラウンドサーチ</td></tr>
+                <tr><td>上記以外のモード</td><td>:</td><td>バックグラウンドサーチ</td></tr>
+            </table>
+            <br/>
+            (フォアグラウンドサーチ：選択中プログラムの再設定を行います)<br/>
+            (バックグラウンドサーチ：指定プログラムの存在確認を行います)
+        </cmn>
+    </mode>
+
+    <is_mode>
+        <cmn>
+            <p>CNCのモードにより、動作内容が変わります。</p>
+            <table class="dd">
+                <tr><td>EDIT,MEMORYモード</td><td>:</td><td>フォアグラウンドサーチ</td></tr>
+                <tr><td>上記以外のモード</td><td>:</td><td>バックグラウンドサーチ</td></tr>
+            </table>
+            <p>
+            (フォアグラウンドサーチ：選択中プログラムの再設定を行います)<br/>
+            (バックグラウンドサーチ：指定プログラムの存在確認を行います)
+            </p>
+        </cmn>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+
+    </support>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+<vc>
+以下のプログラムは指定された番号のプログラムをサーチし、結果を表示します。
+
+#include "fwlib32.h"
+
+/* num is program number to be searched. */
+void example( short num )
+{
+        short ret ;
+        ret = cnc_search( h, num ) ;
+        switch ( ret ) {
+                case EW_OK:
+                        printf( "PROGRAM O%d has been searched.\n", num ) ;
+                        break;
+                case EW_DATA:
+                        printf( "PROGRAM O%d doesn't exist.\n", num ) ;
+                        break;
+                case EW_PROT:
+                        printf( "PROTECTED.\n" ) ;
+                        break;
+                case EW_BUSY:
+                        printf( "REJECTED.\n" ) ;
+                        break;
+        }
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdbaxis</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdbaxis(unsigned short FlibHndl, ODBBAXIS *baxis);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>B軸の指令データ(実行中の指令、及び次の指令)を読み出します。</p>
+            <p>移動量の単位は以下の通りです。</p>
+            <ul>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table border="1">
+                <tr>
+                    <th>    </th><th>1004#1<br/>(ISC)</th>
+                    <th>直線軸<br/>ミリ入力<br/>[mm]</th>
+                    <th>直線軸<br/>インチ入力<br/>[inch]</th>
+                </tr>
+                <tr>
+                    <td>IS-B    </td><td>0  </td><td>0.001  </td><td>0.0001</td>
+                </tr>
+                <tr>
+                    <td>IS-C    </td><td>1  </td><td>0.0001 </td><td>0.00001</td>
+                </tr>
+            </table>
+            </ul>
+
+            <p>速度の単位は以下の通りです。</p>
+
+            <ul>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table border="1">
+                <tr>
+                    <th>    </th><th>ミリ入力<br/>[mm]  </th><th>インチ入力<br/>[inch]</th>
+                </tr>
+                <tr>
+                    <td>G98 </td><td>1  </td><td>0.01</td>
+                </tr>
+                <tr>
+                    <td>G99 </td><td>0.0001 </td><td>0.000001</td>
+                </tr>
+            </table>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>baxis</name>
+                    <type>out</type>
+                    <content>
+                        <p>B軸の指令データを返すODBBAXIS構造体配列へのポインタです。
+                        ODBBAXIS構造体は次の通りです。</p>
+<pre>
+typedef struct odbbaxis {
+        short           flag ;        /* 指令の有無 */
+        short           command ;     /* 指令 */
+        unsigned short  speed ;       /* 速度 */
+        long            sub_data ;    /* 指令補足量 */
+} ODBBAXIS ;
+
+ODBBAXIS    baxis[2] ;
+
+        baxis[0] : 実行中の指令データ
+        baxis[1] : 次の指令データ
+</pre>
+
+                        <dl>
+                            <dt>flag</dt>
+                                <dd>指令の有無</dd>
+                                <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0   </td><td>:  </td><td>無</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1   </td><td>:  </td><td>有</td>
+                                    </tr>
+                                </table>
+                                </dd>
+
+                            <dt>command</dt>
+                                <dd>指令</dd>
+                                <dd>以下の属性が設定されます。</dd>
+                                <dd>bit 0,1,2 : 指令コード</dd>
+                                <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0   </td><td>:  </td><td>G00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1   </td><td>:  </td><td>G01</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2   </td><td>:  </td><td>G04</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3   </td><td>:  </td><td>G28</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4   </td><td>:  </td><td>M</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5   </td><td>:  </td><td>S</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6   </td><td>:  </td><td>T</td>
+                                    </tr>
+
+                                </table>
+                                </dd>
+                                <dd>bit  3 - 11 : (リザーブ)</dd>
+                                <dd>bit  12 : G99/G98 (速度の表示に使用)</dd>
+                                <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0   </td><td>:  </td><td>G98</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1   </td><td>:  </td><td>G99</td>
+                                    </tr>
+
+                                </table>
+                                </dd>
+                                <dd>bit 13 - 15 : (リザーブ)</dd><br/>
+
+                            <dt>speed</dt>
+                                <dd>速度</dd>
+                                <dd>実行中の指令データで指令コードがG01の時に限り有効</dd>
+
+                            <dt>sub_data</dt>
+                                <dd>指令補足量</dd>
+                                <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>G00, G01    </td><td>:  </td><td>移動量</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G04 </td><td>:  </td><td>ドウェル時間</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G28 </td><td>:  </td><td>(無効)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>M, S, T </td><td>:  </td><td>指令コード</td>
+                                    </tr>
+                                </table>
+                                </dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                M系では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                Ｂ軸制御機能、及び拡張ドライバ／ライブラリ機能が必要です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        
+        <need>B軸制御機能</need>
+        
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <span class="dd">Series 16/18, 16i/18i</span><br/>
+            <span class="dd">1004#1</span>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

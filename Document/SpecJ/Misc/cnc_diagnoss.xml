@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_diagnoss</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_diagnoss(unsigned short FlibHndl, short number, short axis, short length, ODBDGN *diag);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    numberで指定された番号、axisで指定された軸(軸型のダイアグノーズデータのみ)のダイアグノーズデータを読み出します。
+                    データ形式は各ダイアグノーズデータによりますが、バイト/ワード/2ワード型のダイアグノーズデータは一般に符号付のバイナリ形式です。
+                </p>
+                <p>
+                    axisにALL_AXESを指定することにより全軸の読み取りを一度に行うことができます。
+                    その際、各軸のダイアグノーズデータはODBDGN内の各配列に格納されます。
+                </p>
+                ダイアグノーズデータには型と軸の属性により以下のような種類があり、ダイアグノーズデータ番号ごとに異なります。
+                <a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a>関数により、これらの属性情報をリードできます。<br/>
+                <table class="dd" border="1">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <th>ダイアグノーズデータの種類</th>
+                        <th>目的</th>
+                        <th>バイトサイズ</th>
+                    </tr>
+                    <tr>
+                        <td>ビット型データ</td>
+                        <td>1ビットごとに意味を持つ</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>ビット軸型データ</td>
+                        <td>1ビットごとに意味を持つ(軸毎)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>バイト型データ</td>
+                        <td>1バイト長のデータを記憶</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>バイト軸型データ</td>
+                        <td>1バイト長のデータを記憶(軸毎)</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>ワード型データ</td>
+                        <td>2バイト長のデータを記憶</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>ワード軸型データ</td>
+                        <td>2バイト長のデータを記憶(軸毎)</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>2ワード型データ</td>
+                        <td>4バイト長のデータを記憶</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>2ワード軸型データ</td>
+                        <td>4バイト長のデータを記憶(軸毎)</td>
+                        <td>4</td>
+                    </tr>
+                    <tr>
+                        <td>実数型データ<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                        <td>4バイト長のデータ部 + <br/>4バイト長の小数点以下桁数部を記憶</td>
+                        <td>8</td>
+                    </tr>
+                    <tr>
+                        <td>実数軸型データ<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                        <td>4バイト長のデータ部 + <br/>4バイト長の小数点以下桁数部を記憶(軸毎)</td>
+                        <td>8</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <p>
+                    ただし、ビット型データを1ビット単位で読み出すことはできません。
+                    同一のダイアグノーズデータ番号に属する8ビット(つまり1バイト)単位で一度に読み出すことになります。 
+                </p>
+                <p>
+                    各ダイアグノーズデータの詳細についてはCNCの保守説明書を参照して下さい。 
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>number</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                リードするダイアグノーズデータ番号を指定します。
+                            </p>
+                            <p>
+                                指定可能なダイアグノーズデータ番号は CNCの保守説明書を参照してください。
+                                また、<a href="misc/cnc_rddiagnum.htm" target="_parent">cnc_rddiagnum</a>関数、
+                                及び<a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a>関数でも取得できます。 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                リードする軸番号を指定します。 
+                            </p>
+                            <table class="dd">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>軸型でないダイアグノーズデータ</td>
+                                </tr>
+                                <tr>
+                                    <td>1～m</td>
+                                    <td>:</td>
+                                    <td>軸型ダイアグノーズデータの1軸指定(m : 最大制御軸数)</td>
+                                </tr>
+                                <tr>
+                                    <td>ALL_AXES</td>
+                                    <td>:</td>
+                                    <td>軸型ダイアグノーズデータの全軸指定(ALL_AXES : -1)</td>
+                                </tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                データブロック長(ODBDGN構造体のサイズ)を指定します。
+                            </p>
+                            <blockquote>
+                                4+(ダイアグノーズデータのバイトサイズ)×(読み出す軸数) 
+                            </blockquote>
+                            <p>
+                                下図はダイアグノーズデータのサイズが4バイトの場合です。
+                                ダイアグノーズデータのサイズが 1,2,8バイトの場合は、1個(1軸)あたりのデータ部のサイズがそれぞれ1,2,8バイトになります。 
+                            </p>
+                            <b>ODBDGN</b><br/>
+                            <table>
+                                <tr>
+                                    <th align="left" valign="top">軸なし/1軸指定</th>
+                                    <th align="left" valign="top">全軸指定</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="misc/prm.gif"></img></td>
+                                    <td valign="top"><img src="misc/prma.gif"></img></td>
+                                </tr>
+                            </table>
+                              Series 15/15i, 30i, 0i-D/F, PMi-A : n = 最大制御軸数<br/>
+                              Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i : n = 制御軸数<br/>
+                        </content>
+                    </item>
+                    <item>
+                        <name>diag</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                ダイアグノーズデータを返すODBDGN構造体へのポインタです。 ODBDGN構造体は次の通りです。
+                            </p>
+<pre>
+<li>Series 15, 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i の場合</li><![CDATA[
+typedef struct  odbdgn {
+    short datano;               /* ダイアグノーズデータ番号 */
+    short type;                 /* 上位バイト:型属性 */
+                                /* 下位バイト:軸番号 */
+    union {
+        char  cdata;            /* ビット/バイト型データ */
+        short idata;            /* ワード型データ */
+        long  ldata;            /* 2ワード型データ */
+        char  cdatas[MAX_AXIS]; /* ビット/バイト軸型データ */
+        short idatas[MAX_AXIS]; /* ワード軸型データ */
+        long  ldatas[MAX_AXIS]; /* 2ワード軸型データ */
+    } u ;
+} ODBDGN ;                      /* MAX_AXIS : 最大制御軸数 */
+
+]]></pre>
+<pre>
+<li>Series 15i, 30i, 0i-D/F, PMi-A の場合</li><![CDATA[
+typedef struct realdgn {       /* 実数型ダイアグノーズデータ */
+    long   dgn_val;              /* データ部 */
+    long   dec_val;              /* 小数点以下桁数部 */
+} REALDGN ;
+
+typedef struct odbdgn {
+    short  datano;               /* ダイアグノーズデータ番号 */
+    short  type;                 /* 上位バイト:型属性 */
+                                 /* 下位バイト:軸番号 */
+    union {
+        char    cdata;           /* ビット/バイト型データ */
+        short   idata;           /* ワード型データ */
+        long    ldata;           /* 2ワード型データ */
+        REALDGN rdata;           /* 実数型データ */
+        char    cdatas[MAX_AXIS];/* ビット/バイト軸型データ */
+        short   idatas[MAX_AXIS];/* ワード軸型データ */
+        long    ldatas[MAX_AXIS];/* 2ワード軸型データ */
+        REALDGN rdatas[MAX_AXIS];/* 実数軸型データ */
+    } u ;
+} ODBDGN ;                       /* MAX_AXIS : 最大制御軸数 */]]>
+</pre>
+                            <dl>
+                            <dt>datano</dt>
+                                <dd>リードしたダイアグノーズデータ番号が格納されます。</dd>
+                            <dt>type</dt>
+                                <dd>リードしたダイアグノーズデータの属性が格納されます。</dd>
+                                <dd>上位バイト : 型属性 (Series 15/15i)</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>バイト型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>ワード型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>2ワード型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>ビット型(8 bit)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>:</td>
+                                            <td>未使用</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>:</td>
+                                            <td>実数型(Series 15i)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <dd>下位バイト : 軸番号</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>軸型でないダイアグノーズデータ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1～m</td>
+                                            <td>:</td>
+                                            <td>軸型データの1軸指定(m : 最大制御軸数)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>軸型データの全軸指定(ALL_AXES : -1)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                            <dt>rdata, rdatas (Series 15i, 30i, 0i-D/F, PMi-A)</dt>
+                                <dd>実数型データが格納されます。<br/>dgn_valにデータが、dec_valに小数点以下桁数が格納されます。</dd>
+                                <dd>
+                                    <div class="dd">
+                                        <p>実数型データ = dgn_val * 10 ** (-dec_val)<br/>
+                                        (例) dgn_val = 12345, dec_val = 3の場合、実数型データが12.345であることを表します。</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    <vc>
+                        <item>
+                            <name>FlibHndl</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>number</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    リードするダイアグノーズデータ番号を指定します。
+                                </p>
+                                <p>
+                                    指定可能なダイアグノーズデータ番号は CNCの保守説明書を参照してください。
+                                    また、<a href="misc/cnc_rddiagnum.htm" target="_parent">cnc_rddiagnum</a>関数、
+                                    及び<a href="misc/cnc_rddiaginfo.htm" target="_parent">cnc_rddiaginfo</a>関数でも取得できます。 
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>axis</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    リードする軸番号を指定します。 
+                                </p>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>軸型でないダイアグノーズデータ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1～m</td>
+                                        <td>:</td>
+                                        <td>軸型ダイアグノーズデータの1軸指定(m : 最大制御軸数)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>軸型ダイアグノーズデータの全軸指定(ALL_AXES : -1)</td>
+                                    </tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>length</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    データブロック長(ODBDGN構造体のサイズ)を指定します。
+                                </p>
+                                <blockquote>
+                                    4+(ダイアグノーズデータのバイトサイズ)×(読み出す軸数) 
+                                </blockquote>
+                                <p>
+                                    下図はダイアグノーズデータのサイズが4バイトの場合です。
+                                    ダイアグノーズデータのサイズが 1,2,8バイトの場合は、
+                                    1個(1軸)あたりのデータ部のサイズがそれぞれ1,2,8バイトになります。 
+                                </p>
+                                <b>ODBDGN</b><br/>
+                                <table>
+                                    <colgroup align="left" valign="top"/>
+                                    <colgroup align="left" valign="top"/>
+                                    <tr>
+                                        <th>軸なし/1軸指定</th>
+                                        <th>全軸指定</th>
+                                    </tr>
+                                    <tr>
+                                        <td><img src="misc/prm.gif"></img></td>
+                                        <td><img src="misc/prma.gif"></img></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td>n = 最大制御軸数(有効データは制御軸数分)</td>
+                                    </tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>diag</name>
+                            <type>out</type>
+                            <content>
+                                <p>
+                                    ダイアグノーズデータを返すODBDGN構造体へのポインタです。 ODBDGN構造体は次の通りです。
+                                </p>
+<pre>
+<![CDATA[
+typedef struct realdgn {         /* 実数型ダイアグノーズデータ */
+    long   dgn_val;              /* データ部 */
+    long   dec_val;              /* 小数点以下桁数部 */
+} REALDGN ;
+
+typedef struct odbdgn {
+    short  datano;               /* ダイアグノーズデータ番号 */
+    short  type;                 /* 上位バイト:型属性 */
+                                 /* 下位バイト:軸番号 */
+    union {
+        char    cdata;           /* ビット/バイト型データ */
+        short   idata;           /* ワード型データ */
+        long    ldata;           /* 2ワード型データ */
+        REALDGN rdata;           /* 実数型データ */
+        char    cdatas[MAX_AXIS];/* ビット/バイト軸型データ */
+        short   idatas[MAX_AXIS];/* ワード軸型データ */
+        long    ldatas[MAX_AXIS];/* 2ワード軸型データ */
+        REALDGN rdatas[MAX_AXIS];/* 実数軸型データ */
+    } u ;
+} ODBDGN ;                       /* MAX_AXIS : 最大制御軸数 */]]>
+</pre>
+                                <dl>
+                                <dt>datano</dt>
+                                    <dd>リードしたダイアグノーズデータ番号が格納されます。</dd>
+                                <dt>type</dt>
+                                    <dd>リードしたダイアグノーズデータの属性が格納されます。</dd>
+                                    <dd>
+                                        <table class="dd">
+                                            <tr>
+                                                <td>0</td>
+                                                <td>:</td>
+                                                <td>軸型でないダイアグノーズデータ</td>
+                                            </tr>
+                                            <tr>
+                                                <td>1～m</td>
+                                                <td>:</td>
+                                                <td>軸型ダイアグノーズデータの1軸指定(m : 最大制御軸数)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>ALL_AXES</td>
+                                                <td>:</td>
+                                                <td>軸型ダイアグノーズデータの全軸指定(ALL_AXES : -1)</td>
+                                            </tr>
+                                        </table>
+                                    </dd>
+                                <dt>rdata, rdatas</dt>
+                                    <dd>実数型データが格納されます。<br/>dgn_valにデータが、dec_valに小数点以下桁数が格納されます。</dd>
+                                    <dd>
+                                        <div class="dd">
+                                            <p>実数型データ = dgn_val * 10 ** (-dec_val)<br/>
+                                            (例) dgn_val = 12345, dec_val = 3の場合、実数型データが12.345であることを表します。</p>
+                                        </div>
+                                    </dd>
+                                    </dl>
+                            </content>
+                        </item>
+                    </vc>
+                </hssb>
+            </is>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    データブロック長の誤り<br/>
+                    ODBDGN構造体のサイズ(length)が不正です。
+                </content>
+            </item>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>
+                    データ番号の誤り<br/>
+                    ダイアグノーズデータ番号(number)の指定が不適切です。
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>
+                    データ属性の誤り<br/>
+                    軸番号(axis)の指定が不適切です。
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                  <dd>上記２つの機能は必要ありません。</dd>
+                  <p>イーサネットボードを使用のとき、</p>
+                  <dd>イーサネット機能のみ必要です。</dd>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>E</fs16i>
+                <fs18i>E</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_diagnosr</name>
+                <file>misc/cnc_diagnosr.htm</file>
+            </item>
+            <item>
+                <name>cnc_rddiag_ext</name>
+                <file>misc/cnc_rddiag_ext.htm</file>
+            </item>
+            <item>
+                <name>cnc_rddiaginfo</name>
+                <file>misc/cnc_rddiaginfo.htm</file>
+            </item>
+            <item>
+                <name>cnc_rddiagnum</name>
+                <file>misc/cnc_rddiagnum.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

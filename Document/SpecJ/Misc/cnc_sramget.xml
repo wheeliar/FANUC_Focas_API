@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_sramget</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_sramget(unsigned short FlibHndl, short *stat, void *data, long *length);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC制御部のSRAMデータの読み込みを行います。<br/>
+                本機能で読み出したSRAMデータをリストアするには、ブート機能を使用してください(SRAMデータはシステム起動中に戻せません)。<br/>
+                ブート機能を使用してSRAMデータをリストアするには、<a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数で取得したファイル名のファイルを作成する必要があります。ファイルの作成方法は下記を参照ください。</p>
+                <p>SRAMデータを読み込み、そのデータをファイルに格納する手順を以下に示します。</p>
+
+                <p><img src="Misc/sramget.gif"></img></p>
+
+                <p>最終的に読み込める総サイズは、<a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数で取得したSRAMサイズ(sramsize)です。</p>
+
+                <p>読み込んだSRAMデータをファイルに格納する場合、<a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数で取得したファイル名の順番に、分割して格納してください。<br/>
+                1つのファイルのサイズは<a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数の情報から次のように算出します。</p>
+            <blockquote>
+                <ul>
+                    <table>
+
+<tr> <td></td>                       <td></td>  <td align="center">ＳＲＡＭデータのサイズ(sramsize)</td> </tr>
+<tr> <td>１つのファイルのサイズ</td> <td>=</td> <td><hr/></td> </tr>
+<tr> <td></td>                       <td></td>  <td align="center">ＳＲＡＭファイルの分割数(divnumber)</td> </tr>
+                    </table><p/>
+
+                    <table>
+                        <tr><td rowspan="6" valign="top">例) </td><td colspan="3">i Series で1MバイトのSRAMを持つ場合</td></tr>
+                        <tr><td><a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数で取得される情報</td></tr>
+                        <table class="dd">
+                            <tr><td>sramsize    </td><td>=  </td><td>1Mバイト(1048576バイト) = 1024Kバイト  </td></tr>
+                            <tr><td>divnumber   </td><td>=  </td><td>2  </td></tr>
+                            <tr><td>fname[0]    </td><td>=  </td><td>"SRAM1_0A.FDB" </td></tr>
+                            <tr><td>fname[1]    </td><td>=  </td><td>"SRAM1_0B.FDB" </td></tr>
+                            <tr><td>1つのファイルのサイズ   </td><td>= </td><td>1024Kバイト/2 = 512Kバイト  </td></tr>
+                        <tr><td><p/></td></tr>
+                        </table>
+                        <tr><td>SRAM1_0A.FDB、SRAM1_0B.FDB の順にそれぞれ 512Kバイトずつ格納します。</td></tr>
+                    </table>
+                </ul>
+                </blockquote>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>stat</name>
+                    <type>out</type>
+                    <content>
+                        <p>SRAMデータの読み込み状態を格納する変数のアドレスを指定します。</p>
+                       <table class="dd">
+                            <tr>
+                                <td>0</td>
+                                <td>:</td>
+                                <td>読み込み処理終了</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>:</td>
+                                <td>読み込み処理継続中</td>
+                            </tr>
+                        </table>
+                        <p>stat = 0 の場合、<a href="Misc/cnc_sramgetend.htm" target="_parent">cnc_sramgetend</a>関数を呼出して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>読み込みデータ格納変数のポインタ<br/>
+                        SRAMデータを格納するための変数のポインタを指定して下さい。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           読み込みたいデータ長をセットした変数のポインタ<br/>
+                           ポインタが指し示す変数には、読み込みたいサイズをバイト長でセットして下さい。本関数実行後に、実際に読み込んだサイズがバイト長でセットされます。<br/>
+                           一度に読み込める最大データ長は<a href="Misc/cnc_getsraminfo.htm" target="_parent">cnc_getsraminfo</a>関数で取得したSRAMサイズ(sramsize)です。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません。または<a href="Misc/cnc_sramgetstart.htm" target="_parent">cnc_sramgetstart</a>関数が実行されていません。
+    </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>lengthの指定に誤りがあります(0以下の値が指定されました)。 </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>バッファ空/フル<br/>バッファが空状態ですのでリトライしてください。</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>NCが『非常停止』状態ではありません。 </content>
+        </item>        
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+        すべてのモードで使用できます。
+            <ul>
+                <li> 読み込み時は『非常停止』にして下さい。<br/>
+                    『非常停止』状態の無いシステム(FAPT等)の SRAMデータを読み込むとき、読み込み途中でシステム操作があった場合には内容は保証されません。</li>
+            </ul>
+        </cmn>
+        <add></add>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_getsraminfo</name>
+            <file>Misc/cnc_getsraminfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_sramgetstart</name>
+            <file>Misc/cnc_sramgetstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_sramgetend</name>
+            <file>Misc/cnc_sramgetend.htm</file>
+        </item>        
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdwaveprm2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rdwaveprm2(unsigned short FlibHndl, IODBWVPRM *wave);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>波形診断パラメータの設定状況を読み出します。</p>
+               本関数を使用する場合は、CNCの波形診断画面を使用しないで下さい。CNCの波形診断画面を使用した場合は、本関数の動作は保証されません。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>wave</name>
+                     <type>out</type>
+                    <content>
+                        <p>波形診断パラメータを返すIODBWVPRM構造体へのポインタです。IODBWVPRM構造体は次の通りです。</p>
+<pre>
+typedef struct iodbwvprm {
+    short   condition ;         /* 条件                     */
+    char    trg_adr ;           /* トリガ信号のアドレス種類 */
+    char    trg_bit ;           /* トリガ信号のビット       */
+    short   trg_no ;            /* トリガ信号のアドレス番号 */
+    short   reserve1 ;
+    long    delay ;             /* 遅延時間                 */
+    long    t_range ;           /* サンプリング時間         */
+    struct {
+        short   kind ;          /* 波形データの種類         */
+        union {
+            long        axis ;  /* 軸情報                   */
+            struct {            /* 機械信号                 */
+                char    adr ;   /* 機械信号のアドレス種類   */
+                char    bit ;   /* 機械信号のビット         */
+                short   no ;    /* 機械信号のアドレス番号   */
+            } io ;
+        } u ;
+        long    reserve2 ;
+    } ch[12] ;
+} IODBWVPRM ;
+</pre>
+    <dl>
+        <dt>condition</dt>
+        <dd>条件</dd>
+        <dd>以下の条件のいずれかが格納されます。
+            <table class="dd">
+            <colgroup valign="top" width="12%">
+            <colgroup valign="top">
+            <colgroup valign="top">
+                <tr>
+                    <td>0</td>
+                    <td>:</td>
+                    <td><a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a>関数にてデータの採取を開始し、サンプリング時間だけ採取した後、停止します。</td>
+                </tr>
+                <tr>
+                    <td>1～20</td>
+                    <td>:</td>
+                    <td><a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a>関数コール後、トリガイベントの発生でデータの採取を開始し、サンプリング時間だけ採取した後、停止します。トリガイベントは以下の通りです。</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <table>
+                            <tr><td>1</td><td>:</td><td>機械信号オン</td><td></td></tr>
+                            <tr><td>2</td><td>:</td><td>機械信号オフ</td><td></td></tr>
+                            <tr><td>3</td><td>:</td><td>機械信号変化</td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>10 </td><td>:</td><td>サーボアラーム                        </td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>11 </td><td>:</td><td>サーボアラーム、または機械信号オン    </td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>12 </td><td>:</td><td>サーボアラーム、または機械信号オフ    </td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>13 </td><td>:</td><td>サーボアラーム、または機械信号変化    </td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>20 </td><td>:</td><td>トリガイベントが設定されていない  </td><td>(Series 15iのみ)</td></tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td>100～120</td><td>:</td><td><a href="Wave/cnc_wavestart.htm" target="_parent">cnc_wavestart</a>関数にてデータの採取を開始し、トリガイベントの発生でデータの採取を停止します。トリガイベントは以下の通りです。</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <table>
+                            <tr><td>100</td><td>:</td><td>サーボアラーム                        </td><td></td></tr>
+                            <tr><td>101</td><td>:</td><td>サーボアラーム、または機械信号オン    </td><td></td></tr>
+                            <tr><td>102</td><td>:</td><td>サーボアラーム、または機械信号オフ    </td><td></td></tr>
+                            <tr><td>103</td><td>:</td><td>サーボアラーム、または機械信号変化    </td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>111</td><td>:</td><td>機械信号オン</td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>112</td><td>:</td><td>機械信号オフ</td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>113</td><td>:</td><td>機械信号変化</td><td>(Series 15iのみ)</td></tr>
+                            <tr><td>120</td><td>:</td><td>トリガイベントが設定されていない  </td><td>(Series 15iのみ)</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </table>
+            ※ Series 16/18, 16i/18i, 0i の場合、100～102で採取したデータは電源断でも保持されます。<br/>
+            <!-- ※ Series 16i/18i-Wの場合、100～102の条件はありません。-->
+        </dd>
+        <br/>
+        <dt>trg_adr</dt>
+            <dd>トリガーアドレス</dd>
+            <dd>トリガーになる機械信号にあたるPMCアドレスの種類がASCIIコードで格納されます。</dd>
+            <dd>条件が1～3, 11～13, 101～103, 111～113の時有効です。</dd>
+            <dd>格納されるPMCアドレスの種類 : 「G」「F」「Y」「X」</dd>
+            <dd>トリガ信号が設定されていないときには、<b>0</b>が格納されます。</dd>
+            <br/>
+        <dt>trg_bit</dt>
+            <dd>トリガービット</dd>
+            <dd>トリガーになる機械信号にあたるPMCアドレスのビット番号が格納されます。</dd>
+            <dd>条件が1～3, 11～13, 101～103, 111～113の時有効です。</dd>
+            <dd>格納されるビット番号の範囲 : 0～7</dd>
+            <br/>
+        <dt>trg_no</dt>
+            <dd>トリガー番号</dd>
+            <dd>トリガーになる機械信号にあたるPMCアドレスの番号が格納されます。</dd>
+            <dd>条件が1～3, 11～13, 101～103, 111～113の時有効です。</dd>
+            <dd>格納される番号の範囲は、<a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a>関数を参照下さい。</dd>
+            <br/>
+        <dt>delay</dt>
+            <dd>遅延時間</dd>
+            <dd>データ採取の終了条件成立後、本遅延時間を経過して採取を止めます。</dd>
+            <dd>範囲
+                <table class="dd">
+                    <tr><td>Series 15 の場合   </td><td>0～32000</td></tr>
+                    <tr><td>Series 15i の場合   </td><td>0～160000</td></tr>
+                    <tr><td>Series 16/18, 16i/18i, 0i の場合</td><td>0～32760</td></tr>
+                </table>
+            </dd>
+            <dd>単位 1 msec</dd>
+            <dd>条件が100～103, 111～113の時有効です。</dd>
+            <br/>
+        <dt>t_range</dt>
+            <dd>サンプリング時間</dd>
+            <dd>サンプリング時間が格納されます。</dd>
+            <dd>範囲
+                <table class="dd">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr><td>Series 15 の場合           </td><td>25/50/100/200/400/800 がそれぞれ 500/1000/2000/4000/8000/16000 の時間を表します。</td></tr>
+                    <tr><td>Series 15i の場合           </td><td>10～80000</td></tr>
+                    <tr><td>Series 16/18, 16i/18i, 0i の場合  </td><td>10～8192</td></tr>
+                    </colgroup>
+                    </colgroup>
+                </table>
+            </dd>
+            <dd>単位 1 msec</dd>
+            <dd>全ての条件で有効です。</dd>
+            <br/>
+        <dt>ch[n].kind</dt>
+            <dd>波形データの種類　(nはチャネル番号0～11)</dd>
+            <dd>後述の<a href="#Wavekind">波形データの種類</a>の表の番号が格納されます。</dd>
+            <dd>機種や条件により有効なチャネル番号と波形データの種類は以下のようになります。
+            <table border="1">
+                <tr>
+                    <th rowspan="2">channel No (n)</th>
+                    <th colspan="3">ch[n].kindの値<br>(波形データの種類)</br></th>
+                </tr>
+                <tr>
+                    <th>Series 16/18, 16i/18i, 0i</th>
+                    <th>Series 15</th>
+                    <th>Series 15i</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>0 (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7  (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7, 9～11 (第1波形)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1 (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7  (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7, 9～11 (第2波形)</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2 (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7  (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7, 9～11 (第3波形)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>5 (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7  (条件 100/101/102の場合)</td>
+                    <td>0～2, 4～7, 9～11 (第4波形)</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>6 (条件 100/101/102の場合)</td>
+                    <td>未使用</td>
+                    <td>未使用</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>7 (条件 100/101/102の場合)</td>
+                    <td>未使用</td>
+                    <td>未使用</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>0～3, 5～7, 9～13 (条件 0/1/2の場合)</td>
+                    <td>0～2, 4～7, 9～11 (条件 0/1/2の場合)</td>
+                    <td>未使用</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>0～3, 5～7, 9～13 (条件 0/1/2の場合)</td>
+                    <td>0～2, 4～7, 9～11 (条件 0/1/2の場合)</td>
+                    <td>未使用</td>
+                </tr>
+                <tr>
+                    <td>8 </td>
+                    <td>未使用</td>
+                    <td>13 (条件 0/1/2の場合)</td>
+                    <td>13 (機械信号1)</td>
+                </tr>
+                <tr>
+                    <td>9 </td>
+                    <td>未使用</td>
+                    <td>13 (条件 0/1/2の場合)</td>
+                    <td>13 (機械信号2)</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>未使用</td>
+                    <td>13 (条件 0/1/2の場合)</td>
+                    <td>13 (機械信号3)</td>
+                </tr>
+                <tr>
+                    <td>11</td>
+                    <td>未使用</td>
+                    <td>13 (条件 0/1/2の場合)</td>
+                    <td>13 (機械信号4)</td>
+                </tr>
+            </table>
+            <ul>
+                ※ ch[n].kindに<b>-1</b>が格納されている場合、そのチャネルのデータは無効です。(未使用のチャネルのkindの値は不定です)<br/>
+                ※ ch[n].kindの値をもとにして、共用体のメンバーを使い分けて下さい。<br/>
+                <table class="dd">
+                    <tr><td>ch[n].u.axis    </td><td>kindが13以外の時</td></tr>
+                    <tr><td>ch[n].u.io      </td><td>kindが13の時   </td></tr>
+                </table>
+
+                <!-- <p>※ Series 16i/18i-W の場合、nKind の値として 10～12 はありません。</p> -->
+            </ul>
+            <br/>
+            <a>波形データの種類</a> (O：有効 &#160; X：無効)
+            <table border="1">
+                <colgroup width="10%">
+                <colgroup width="30%">
+                <colgroup width="20%">
+                <colgroup align="center" width="10%">
+                <colgroup align="center" width="10%">
+                <colgroup align="center" width="10%">
+                <colgroup align="center" width="10%">
+                <colgroup align="center" width="10%">
+                <colgroup align="center" width="10%">
+                <tr>
+                    <th rowspan="2">番号</th>
+                    <th rowspan="2">意味</th>
+                    <th rowspan="2">単位</th>
+                    <th colspan="2">Series 16/18, 16i/18i, 0i</th>
+                    <th colspan="2">Series 15</th>
+                    <th rowspan="2">Series 15i</th>
+                </tr>
+                <tr>
+                    <th>0/1/2</th>
+                    <th>100/101/102</th>
+                    <th>0/1/2</th>
+                    <th>100/101/102</th>
+                </tr>
+                <tr>
+                    <td>-1</td><td>データはありません</td><td>-</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>0</td><td>サーボ位置偏差量(8msec)</td><td>Pulse(検出単位)</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>1</td><td>サーボの分配後のパルス量</td><td>Pulse(検出単位)</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>2</td><td>サーボのトルク量</td><td>%(最大電流比)</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>3</td><td>サーボ位置偏差量(2msec)</td><td>Pulse(検出単位)</td>
+                    <td>O</td><td>X</td><td>X</td><td>X</td><td>X</td>
+                </tr>
+                <tr>
+                    <td>4</td><td>サーボの加減速後のパルス量</td><td>Pulse(検出単位)</td>
+                    <td>X</td><td>X</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">5</td><td rowspan="2">サーボの実速度</td>
+                    <td>rpm</td>
+                    <td>O</td><td>O</td><td>X</td><td>X</td><td>X</td>
+                </tr>
+                <tr>
+                    <td>Pulse(検出単位)</td>
+                    <td>X</td><td>X</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>6</td><td>サーボの電流指令値</td><td>%(最大電流比)</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>7</td><td>サーボの熱シミュレーション中のデータ</td><td>%(OVCアラーム比)</td>
+                    <td>O</td><td>O</td><td>O</td><td>O</td><td>O</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">9</td><td>第1、第2、第軸の合成速度</td><td>Pulse(検出単位)</td>
+                    <td>O</td><td>X</td><td>X</td><td>X</td><td>X</td>
+                </tr>
+                <tr>
+                    <td>全軸の合成速度</td><td>mm/min, inch/min、またはrpm</td>
+                    <td>X</td><td>X</td><td>O</td><td>X</td><td>O</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">10</td><td rowspan="2">スピンドルの速度</td><td>%(最高回転比)</td>
+                    <td>O</td><td>X</td><td>X</td><td>X</td><td>X</td>
+                </tr>
+                <tr>
+                    <td>rpm</td>
+                    <td>X</td><td>X</td><td>O</td><td>X</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>11</td><td>スピンドルのロードメータ</td><td>%(最高出力比)</td>
+                    <td>O</td><td>X</td><td>O</td><td>X</td><td>O</td>
+                </tr>
+                <tr>
+                    <td>12</td><td>主軸換算位置偏差の差</td><td>Pulse(検出単位)</td>
+                    <td>O</td><td>X</td><td>X</td><td>X</td><td>X</td>
+                </tr>
+                <tr>
+                    <td>13</td><td>信号アドレスで指定された機械信号のon/off状態</td><td>-</td>
+                    <td>O</td><td>X</td><td>O</td><td>X</td><td>O</td>
+                </tr>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </colgroup>
+            </table>
+            </dd>
+            <br/>
+            <dt>ch[n].u.axis</dt>
+                    <dd>波形データの軸情報</dd>
+                    <dd>波形データの軸情報が格納されます。</dd>
+                    <dd>波形データの種類が13以外の時有効です。</dd>
+                    <dd>
+                    <br>波形データの種類によって、値は以下のような意味になります。</br>
+                    <li>Series 15</li>
+                    <table border="1">
+                        <tr>
+                            <th>波形データの種類</th>
+                            <th>ch[n].axisの値<br>(波形データの軸情報)</br></th>
+                        </tr>
+                        <tr>
+                            <td>0～2<br/>4～7</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2軸指定</td></tr>
+                                <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                <tr><td>bit 22 ON</td><td>:</td><td>第23軸指定</td></tr>
+                                <tr><td>bit 23 ON</td><td>:</td><td>第24軸指定</td></tr>
+                                <tr><td>bit 24～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>系統1指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>系統2指定(多系統のみ)</td></tr>
+                                <tr><td>bit 2～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td>10～11</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1主軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2主軸指定</td></tr>
+                                <tr><td>bit 2～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <li>Series 15i</li>
+                    <table border="1">
+                        <tr>
+                            <th>波形データの種類</th>
+                            <th>ch[n].axisの値<br>(波形データの軸情報)</br></th>
+                        </tr>
+                        <tr>
+                            <td>0～2<br/>4～7</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2軸指定</td></tr>
+                                <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                <tr><td>bit 22 ON</td><td>:</td><td>第23軸指定</td></tr>
+                                <tr><td>bit 23 ON</td><td>:</td><td>第24軸指定</td></tr>
+                                <tr><td>bit 24～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>系統1指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>系統2指定(多系統のみ)</td></tr>
+                                <tr><td>bit 2～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td>10～11</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1主軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2主軸指定</td></tr>
+                                <tr><td>bit 2 ON</td><td>:</td><td>第3主軸指定</td></tr>
+                                <tr><td>bit 3 ON</td><td>:</td><td>第4主軸指定</td></tr>
+                                <tr><td>bit 4～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <li>Series 16/18, 16i/18i, 0i</li>
+                    <table border="1">
+                        <tr>
+                            <th>チャネル</th>
+                            <th>波形データの種類</th>
+                            <th>ch[n].axisの値<br>(波形データの軸情報)</br></th>
+                        </tr>
+                        <tr>
+                            <td>0～5</td>
+                            <td>関係なし</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2軸指定</td></tr>
+                                <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                <tr><td>bit 7 ON</td><td>:</td><td>第8軸指定</td></tr>
+                                <tr><td>bit 8～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">6, 7</td>
+                            <td>0～3<br/>5～7</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2軸指定</td></tr>
+                                <tr><td>&#160;&#160;&#160;:</td><td></td><td></td></tr>
+                                <tr><td>bit 7 ON</td><td>:</td><td>第8軸指定</td></tr>
+                                <tr><td>bit 8～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                        <tr>
+                            <td>10～11</td>
+                            <td><table>
+                                <tr><td>bit 0 ON</td><td>:</td><td>第1主軸指定</td></tr>
+                                <tr><td>bit 1 ON</td><td>:</td><td>第2主軸指定</td></tr>
+                                <tr><td>bit 2 ON</td><td>:</td><td>第3主軸指定</td></tr>
+                                <tr><td>bit 3～31</td><td>:</td><td>未使用</td></tr>
+                            </table></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    ※ nは最大制御軸数
+                    </dd>
+                    <br/>
+                    <dt>ch[n].u.io.adr</dt>
+                    <dd>機械信号のPMCアドレスの種類</dd>
+                    <dd>トレースしたい機械信号にあたるPMCアドレスの種類がASCIIコードで格納されます。</dd>
+                    <dd>波形データの種類が13の時のみ有効です。</dd>
+                    <dd>格納されるPMCアドレスの種類：「G」「F」「Y」「X」</dd>
+                <br/>
+                <dt>ch[n].u.io.bit</dt>
+                    <dd>機械信号のビット番号</dd>
+                    <dd>トレースしたい機械信号にあたるPMCアドレスのビット番号が格納されます。</dd>
+                    <dd>波形データの種類が13の時のみ有効です。</dd>
+                    <dd>格納されるビット番号の範囲 : 0～7</dd>
+                <br/>
+                <dt>ch[n].u.io.no</dt>
+                    <dd>機械信号のPMCアドレスの番号</dd>
+                    <dd>トレースしたい機械信号にあたるPMCアドレスの番号が格納されます。</dd>
+                    <dd>波形データの種類が13の時のみ有効です。</dd>
+                    <dd>格納される番号の範囲は、<a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a>関数を参照して下さい。</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>拡張ドライバ/ライブラリ機能が必要です。 </content>        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>CNCパラメータの誤り(Series 16/18, 16i/18i/21i, 0i のみ)
+            <br/>電源投入時に3112#0=0になっていました。3112#0=1に設定して立上げ直して下さい。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16/18, 16i/18i/21i, 0i</li>
+                    3112#0=1 (必ず設定して下さい)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdwaveprm</name>
+            <file>Wave/cnc_rdwaveprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm</name>
+            <file>Wave/cnc_wrwaveprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrwaveprm2</name>
+            <file>Wave/cnc_wrwaveprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestart</name>
+            <file>Wave/cnc_wavestart.htm</file>
+        </item>
+        <item>
+            <name> cnc_wavestop</name>
+            <file>Wave/cnc_wavestop.htm</file>
+        </item>
+        <item>
+            <name>cnc_wavestat</name>
+            <file>Wave/cnc_wavestat.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdwavedata</name>
+            <file>Wave/cnc_rdwavedata.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

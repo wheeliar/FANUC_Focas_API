@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_verify4</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_verify4(unsigned short FlibHndl, long *length, char *data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側に既に登録されているNCプログラムと照合するためのNCプログラムを出力します。</p>
+            <p>本関数は*length で指定された文字数を出力しますが、その時にCNCへのデータ転送用バッファの空きサイズが指定された文字数より少ないと、空きサイズ分のデータを出力し、その文字数を*length にセットします。 </p>
+            <p>1文字も出力できない場合は、戻り値としてEW_BUFFERを返します。この戻り値の場合は、再度この関数を呼び出します。</p>
+            <p>CNCへのデータ転送の速度を重視しているため、エラー(EW_DATA等)は一般的には遅れて返ります。すなわち、ある時のエラーは実際には数回前に出力されたデータに対するものになります。また、終了前の数回分のデータに対するエラーは<a href="Program/cnc_vrfend4.htm" target="_parent">cnc_vrfend4</a>で返されます。</p>
+            <br/>
+
+            出力データのフォーマットについては、<a href="Program/cnc_download4.htm" target="_parent">cnc_download4</a>関数を参照して下さい。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>出力するNCデータの文字数がセットされているlong型の変数のポインタを指定して下さい。本関数から戻る時に、実際に出力された文字数がセットされます。</p>
+                        <p>出力する文字数に0以下の値を指定すると、戻り値が EW_LENGTHとなります。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data </name>
+                    <type>out</type>
+                    <content>
+                        <p>出力するNCデータがセットされている領域の先頭アドレスを指定します。</p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                リセット、停止要求<br/>
+                CNCから照合の停止が要求されました。<br/>
+                <a href="Program/cnc_vrfend4.htm" target="_parent">cnc_vrfend4</a>関数をコールして下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_vrfstart4.htm" target="_parent">cnc_vrfstart4</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                出力文字数に0以下の値が指定されています。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td><td>:</td><td>NCデータ内の構文の誤り。</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>:</td><td>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>:</td><td>プログラム照合時に相違点が検出された。</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                バッファフル<br/>
+                バッファがフル状態ですのでリトライしてください。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                CNCが登録できる状態ではありません。(運転中、モード変更中、リセット中)<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                アラーム状態<br/>
+                ダウンロード中にアラームが発生しました。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3201#2,#5,#6<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+                8900#0
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_vrfstart4</name>
+            <file>Program/cnc_vrfstart4.htm</file>
+        </item>
+        <item>
+            <name>cnc_vrfend4</name>
+            <file>Program/cnc_vrfend4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

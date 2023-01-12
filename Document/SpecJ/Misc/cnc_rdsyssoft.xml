@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdsyssoft</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsyssoft(unsigned short FlibHndl, ODBSYSS *syssoft); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+  CNCのシステムソフトの系列／版数を読み出します。各情報はODBSYSS内の各メンバに格納されます。
+</p>
+<p>
+  系統に依存したデータは、<a href="misc/cnc_setpath.htm" target="_parent">cnc_setpath</a>関数で系統を切り換えて読み出して下さい。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>syssoft</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNCのシステムソフトの系列／版数を返すODBSYSS構造体へのポインタです。ODBSYSS構造体は次の通りです。
+                        </p>
+<pre><![CDATA[
+typedef struct odbsyss {
+     char    slot_no_p[16];       /* 物理スロット番号 */
+     char    slot_no_l[16];       /* 論理スロット番号 */
+     short   module_id[16];       /* モジュールID     */
+     short   soft_id[16];         /* ソフトID         */
+     char    soft_series[16][5];  /* CPU付モジュール用ソフトの系列 */
+     char    soft_version[16][5]; /* CPU付モジュール用ソフトの版数 */
+     short   soft_inst;           /* ソフトの組み付け状態 */
+     char    boot_ser[5];         /* ブートソフトの系列   */
+     char    boot_ver[5];         /* ブートソフトの版数   */
+     char    servo_ser[5];        /* サーボソフトの系列   */
+     char    servo_ver[5];        /* サーボソフトの版数   */
+     char    pmc_ser[5];          /* PMC管理ソフトの系列  */
+     char    pmc_ver[5];          /* PMC管理ソフトの版数  */
+     char    ladder_ser[5];       /* ラダーの系列 */
+     char    ladder_ver[5];       /* ラダーの版数 */
+     char    mcrlib_ser[5];       /* マクロ用ライブラリの系列 */
+     char    mcrlib_ver[5];       /* マクロ用ライブラリの版数 */
+     char    mcrapl_ser[5];       /* マクロ用アプリの系列     */
+     char    mcrapl_ver[5];       /* マクロ用アプリの版数     */
+     char    spl1_ser[5];         /* スピンドルソフト(1台目)の系列 */
+     char    spl1_ver[5];         /* スピンドルソフト(1台目)の版数 */
+     char    spl2_ser[5];         /* スピンドルソフト(2台目)の系列 */
+     char    spl2_ver[5];         /* スピンドルソフト(2台目)の版数 */
+     char    spl3_ser[5];         /* スピンドルソフト(3台目)の系列 */
+     char    spl3_ver[5];         /* スピンドルソフト(3台目)の版数 */
+     char    c_exelib_ser[5];     /* C言語エグゼキュータ用ライブラリの系列 */
+     char    c_exelib_ver[5];     /* C言語エグゼキュータ用ライブラリの版数 */
+     char    c_exeapl_ser[5];     /* C言語エグゼキュータ用アプリケーションの系列 */
+     char    c_exeapl_ver[5];     /* C言語エグゼキュータ用アプリケーション版数   */
+     char    int_vga_ser[5];      /* VGAソフト(内蔵)の系列    */
+     char    int_vga_ver[5];      /* VGAソフト(内蔵)の版数    */
+     char    out_vga_ser[5];      /* VGAソフト(外付け)の系列  */
+     char    out_vga_ver[5];      /* VGAソフト(外付け)の版数  */
+     char    pmm_ser[5];          /* パワーモーションマネージャの系列 */
+     char    pmm_ver[5];          /* パワーモーションマネージャの版数 */
+     char    pmc_mng_ser[5];      /* PMC管理ソフトの系列  */
+     char    pmc_mng_ver[5];      /* PMC管理ソフトの版数  */
+     char    pmc_shin_ser[5];     /* PMC管理ソフトの系列 (SH内蔵) */
+     char    pmc_shin_ver[5];     /* PMC管理ソフトの版数 (SH内蔵) */
+     char    pmc_shout_ser[5];    /* PMC管理ソフトの系列 (SH外付け) */
+     char    pmc_shout_ver[5];    /* PMC管理ソフトの版数 (SH外付け) */
+     char    pmc_c_ser[5];        /* PMC管理ソフトの系列 (C言語) */
+     char    pmc_c_ver[5];        /* PMC管理ソフトの版数 (C言語) */
+     char    pmc_edit_ser[5];     /* PMC管理ソフトの系列 (編集カード) */
+     char    pmc_edit_ver[5];     /* PMC管理ソフトの版数 (編集カード) */
+     char    lddr_mng_ser[5];     /* ラダーの系列         */
+     char    lddr_mng_ver[5];     /* ラダーの版数         */
+     char    lddr_apl_ser[5];     /* ラダーの系列 (C言語アプリ) */
+     char    lddr_apl_ver[5];     /* ラダーの版数 (C言語アプリ) */
+     char    spl4_ser[5];         /* スピンドルソフト(4台目)の系列 */
+     char    spl4_ver[5];         /* スピンドルソフト(4台目)の版数 */
+     char    mcr2_ser[5];         /* 第2マクロエグゼキュータの系列 */
+     char    mcr2_ver[5];         /* 第2マクロエグゼキュータの版数 */
+     char    mcr3_ser[5];         /* 第3マクロエグゼキュータの系列 */
+     char    mcr3_ver[5];         /* 第3マクロエグゼキュータの版数 */
+     char    eth_boot_ser[5];     /* Ethernetボードのブートソフトの系列 */
+     char    eth_boot_ver[5];     /* Ethernetボードのブートソフトの版数 */
+     char    reserve[8][5];       /* (リザーブ) */
+} ODBSYSS ;
+]]></pre>
+
+<dl>
+    <dt>slot_no_p</dt>
+    <dd>物理スロット番号<br/>
+        実装されているモジュールの物理スロット番号が実装順にバイナリで格納されます。この配列は、0FFHにより終端されています。0FFH以降のデータは無効です。</dd>
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>00H～0FH</td>   <td>:</td>  <td>表の物理スロット番号</td>   </tr>
+                <tr>    <td>80H～8FH</td>   <td>:</td>  <td>裏の物理スロット番号</td>   </tr>
+            </table>
+        </blockquote></dd>
+    
+    <dt>slot_no_l</dt>
+    <dd>論理スロット番号<br/>
+        実装されているモジュールの論理スロット番号が実装順にバイナリで格納されます。この配列は、FFHにより終端されています。FFH以降のデータは無効です。</dd>
+    
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>00H～0FH</td>   <td>:</td>  <td>論理スロット番号</td>       </tr>
+            </table>
+        </blockquote></dd>
+    
+    <dt>module_id</dt>
+    <dd>モジュールID<br/>
+        実装されているモジュールのモジュールIDが実装順にバイナリで格納されます。この配列は、FFHにより終端されています。FFH以降のデータは無効です。『XX』は内部情報です。<br/>
+        以下は主なモジュールIDです。</dd>
+    <dd><ul>
+            <li>Series 15i</li>
+            <table border="0">
+                <tr>    <td>XXEBH</td>  <td>:</td>  <td>CNC Main            </td>   </tr>
+                <tr>    <td>XXE0H</td>  <td>:</td>  <td>PMC C言語ボード     </td>   </tr>
+                <tr>    <td>XXD8H</td>  <td>:</td>  <td>付加軸ボード        </td>   </tr>
+                <tr>    <td>XXFEH</td>  <td>:</td>  <td>Ethernetボード      </td>   </tr>
+                <tr>    <td>XXAAH</td>  <td>:</td>  <td>HSSB I/F            </td>   </tr>
+                <tr>    <td>XX81H</td>  <td>:</td>  <td>カスタマーズボード  </td>   </tr>
+                <tr>    <td>XXFCH</td>  <td>:</td>  <td>PROFIBUS DP(Master) </td>   </tr>
+                <tr>    <td>XXE3H</td>  <td>:</td>  <td>PROFIBUS DP(Slave)  </td>   </tr>
+                <tr>    <td>XXEFH</td>  <td>:</td>  <td>DEVICENET(Master)   </td>   </tr>
+                <tr>    <td>XXBFH</td>  <td>:</td>  <td>DEVICENET(Slave)    </td>   </tr>
+                <tr>    <td>XX59H</td>  <td>:</td>  <td>FL-NET              </td>   </tr>
+            </table>
+            <li>Series 16/18, 16i/18i/21i, 0i, Power Mate i</li>
+            <table border="0">
+                <tr>    <td>XX3FH</td>  <td>:</td>  <td>Remote buffer   </td>       </tr>
+                <tr>    <td>XX45H</td>  <td>:</td>  <td>Graphic(CAP-II) </td>       </tr>
+                <tr>    <td>XX46H</td>  <td>:</td>  <td>I/Oカード       </td>       </tr>
+                <tr>    <td>XX6DH</td>  <td>:</td>  <td>CAP-II          </td>       </tr>
+                <tr>    <td>XX7FH</td>  <td>:</td>  <td>RISC(64bit)     </td>       </tr>
+                <tr>    <td>XX94H</td>  <td>:</td>  <td>MMC-IV          </td>       </tr>
+                <tr>    <td>XX9AH</td>  <td>:</td>  <td>Graphic(標準)   </td>       </tr>
+                <tr>    <td>XX9DH</td>  <td>:</td>  <td>PMC-SC          </td>       </tr>
+                <tr>    <td>XXA7H</td>  <td>:</td>  <td>FS16B/Main(6軸) </td>       </tr>
+                <tr>    <td>XX95H</td>  <td>:</td>  <td>I/O Link-2（ゲートアレイ版）</td></tr>
+                <tr>    <td>XXAAH</td>  <td>:</td>  <td>HSSB            </td>       </tr>
+                <tr>    <td>XXC4H</td>  <td>:</td>  <td>I/O Link-2      </td>       </tr>
+                <tr>    <td>XXDDH</td>  <td>:</td>  <td>Power Mate i    </td>       </tr>
+                <tr>    <td>XXADH</td>  <td>:</td>  <td>FS18B/Main(4軸) </td>       </tr>
+                <tr>    <td>XXAEH</td>  <td>:</td>  <td>FS18B/Main(6軸) </td>       </tr>
+                <tr>    <td>XXB0H</td>  <td>:</td>  <td>FS16B/SUB       </td>       </tr>
+                <tr>    <td>XXB2H</td>  <td>:</td>  <td>FS16B/Main(4軸) </td>       </tr>
+                <tr>    <td>XXB4H</td>  <td>:</td>  <td>FS18B/SUB       </td>       </tr>
+                <tr>    <td>XXB7H</td>  <td>:</td>  <td>FS16C/Main(6軸) </td>       </tr>
+                <tr>    <td>XXB9H</td>  <td>:</td>  <td>FS16C,18C/SUB   </td>       </tr>
+                <tr>    <td>XXBAH</td>  <td>:</td>  <td>FS16C,18C/SUB   </td>       </tr>
+                <tr>    <td>XXBDH</td>  <td>:</td>  <td>FS18C/Main(6軸) </td>       </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_id</dt>
+    <dd>ソフトID<br/>
+        実装されているモジュールのソフトIDが実装順にバイナリで格納されます。この配列は、FFHにより終端されています。FFH以降のデータは無効です。<br/>
+        以下は主なソフトIDです。</dd>
+    <dd><ul>
+            <li>Series 15i</li>
+            <table border="0">
+                <tr>    <td>40H</td>    <td>:</td>  <td>CNC Main            </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>PMC C言語ボード     </td>   </tr>
+                <tr>    <td>50H</td>    <td>:</td>  <td>付加軸ボード        </td>   </tr>
+                <tr>    <td>61H</td>    <td>:</td>  <td>Ethernetボード      </td>   </tr>
+                <tr>    <td>65H</td>    <td>:</td>  <td>HSSB I/F            </td>   </tr>
+                <tr>    <td>44H</td>    <td>:</td>  <td>カスタマーズボード  </td>   </tr>
+                <tr>    <td>6AH</td>    <td>:</td>  <td>PROFIBUS DP(Master) </td>   </tr>
+                <tr>    <td>69H</td>    <td>:</td>  <td>PROFIBUS DP(Slave)  </td>   </tr>
+                <tr>    <td>70H</td>    <td>:</td>  <td>DEVICENET(Master)   </td>   </tr>
+                <tr>    <td>71H</td>    <td>:</td>  <td>DEVICENET(Slave)    </td>   </tr>
+                <tr>    <td>76H</td>    <td>:</td>  <td>FL-NET              </td>   </tr>
+            </table>
+            <li>Series 16/18, 16i/18i/21i, 0i, Power Mate i</li>
+            <table border="0">
+                <tr>    <td>40H</td>    <td>:</td>  <td>CNC             </td>   </tr>
+                <tr>    <td>41H</td>    <td>:</td>  <td>PMC-SC          </td>   </tr>
+                <tr>    <td>42H</td>    <td>:</td>  <td>内蔵I/Oカード   </td>   </tr>
+                <tr>    <td>43H</td>    <td>:</td>  <td>CNC SUB         </td>   </tr>
+                <tr>    <td>45H</td>    <td>:</td>  <td>Graphic(標準)   </td>   </tr>
+                <tr>    <td>46H</td>    <td>:</td>  <td>Graphic(CAP-II) </td>   </tr>
+                <tr>    <td>49H</td>    <td>:</td>  <td>CAP-II          </td>   </tr>
+                <tr>    <td>4AH</td>    <td>:</td>  <td>Remote buffer   </td>   </tr>
+                <tr>    <td>4FH</td>    <td>:</td>  <td>PMC-SE          </td>   </tr>
+                <tr>    <td>5EH</td>    <td>:</td>  <td>MMC-IV,HSSB I/F </td>   </tr>
+                <tr>    <td>67H</td>    <td>:</td>  <td>PMC-SB5/SB6     </td>   </tr>
+            </table>
+        </ul>
+    </dd>
+    <dt>soft_series</dt>
+    <dd>ソフトの系列<br/>
+        実装されているボードのソフトの系列が実装順にASCIIコード(4バイト＋NULL)で格納されます。</dd>
+    <dt>soft_version</dt>
+    <dd>ソフトの版数<br/>
+        実装されているボードのソフトの版数が実装順にASCIIコード(4バイト＋NULL)で格納されます。</dd>
+    <dt>soft_inst</dt>
+    <dd>CNC/CNC SUB/LOADER用ソフトの組み付け状態 (系統依存)</dd>
+    <dd><blockquote>
+            <table border="0">
+                <tr>    <td>bit0</td>   <td>:</td>  <td>OPTION-A1あり</td>  </tr>
+                <tr>    <td>bit1</td>   <td>:</td>  <td>OPTION-A2あり</td>  </tr>
+                <tr>    <td>bit2</td>   <td>:</td>  <td>OPTION-A3あり</td>  </tr>
+                <tr>    <td>bit3</td>   <td>:</td>  <td>OPTION-A4あり</td>  </tr>
+            </table>
+        </blockquote>
+    </dd>
+    <dt>boot_ser</dt>
+    <dd>ブートソフトの系列</dd>
+    <dt>boot_ver</dt>
+    <dd>ブートソフトの版数</dd>
+    <dt>servo_ser</dt>
+    <dd>サーボソフトの系列 (系統依存)</dd>
+    <dt>servo_ver</dt>
+    <dd>サーボソフトの版数 (系統依存)</dd>
+    <dt>pmc_ser</dt>
+    <dd>PMC管理ソフトの系列 (系統依存)<br/>
+        PMC管理ソフトの系列は、pmc_mng_serを使用して下さい。</dd>
+    <dt>pmc_ver</dt>
+    <dd>PMC管理ソフトの版数 (系統依存)<br/>
+        PMC管理ソフトの版数は、pmc_mng_verrを使用して下さい。</dd>
+    <dt>ladder_ser</dt>
+    <dd>ラダーの系列 (系統依存)<br/>
+        ラダーの系列は、ladder_mng_serを使用して下さい。</dd>
+    <dt>ladder_ver</dt>
+    <dd>ラダーの版数(系統依存)<br/>
+        ラダーの版数は、ladder_mng_serを使用して下さい。</dd>
+    <dt>mcrlib_ser</dt>
+    <dd>マクロ用ライブラリ/オーダメードマクロの系列 (系統依存)</dd>
+    <dt>mcrlib_ver</dt>
+    <dd>マクロ用ライブラリ/オーダメードマクロの版数 (系統依存)</dd>
+    <dt>mcrapl_ser</dt>
+    <dd>マクロ用アプリケーションの系列 (系統依存)</dd>
+    <dt>mcrapl_ver</dt>
+    <dd>マクロ用アプリケーションの版数 (系統依存)</dd>
+    <dt>spl1_ser</dt>
+    <dd>スピンドルソフト(1台目)の系列 (系統依存)</dd>
+    <dt>spl1_ver</dt>
+    <dd>スピンドルソフト(1台目)の版数 (系統依存)</dd>
+    <dt>spl2_ser</dt>
+    <dd>スピンドルソフト(2台目)の系列 (系統依存)</dd>
+    <dt>spl2_ver</dt>
+    <dd>スピンドルソフト(2台目)の版数 (系統依存)</dd>
+    <dt>spl3_ser</dt>
+    <dd>スピンドルソフト(3台目)の系列 (系統依存)</dd>
+    <dt>spl3_ver</dt>
+    <dd>スピンドルソフト(3台目)の版数 (系統依存)</dd>
+    <dt>c_exelib_ser</dt>
+    <dd>C言語エグゼキュータ用ライブラリの系列</dd>
+    <dt>c_exelib_ver</dt>
+    <dd>C言語エグゼキュータ用ライブラリの版数</dd>
+    <dt>c_exeapl_ser</dt>
+    <dd>C言語エグゼキュータ用アプリケーションの系列</dd>
+    <dt>c_exeapl_ver</dt>
+    <dd>C言語エグゼキュータ用アプリケーションの版数</dd>
+    <dt>int_vga_ser</dt>
+    <dd>VGA用ソフト(内蔵)の系列</dd>
+    <dt>int_vga_ver</dt>
+    <dd>VGA用ソフト(内蔵)の版数</dd>
+    <dt>out_vga_ser</dt>
+    <dd>VGA用ソフト(外付け)の系列</dd>
+    <dt>out_vga_ver</dt>
+    <dd>VGA用ソフト(外付け)の版数</dd>
+
+    <p>※以下に示す項目は、Series 15i, 16i/18i/21i, 0i, Power Mate iでのみ有効です。</p>
+
+    <dt>pmm_ser</dt>
+    <dd>パワーモーションマネージャの系列 (系統依存)</dd>
+    <dt>pmm_ver</dt>
+    <dd>パワーモーションマネージャの版数 (系統依存)</dd>
+    <dt>pmc_mng_ser</dt>
+    <dd>PMC管理ソフトの系列 (系統依存)<br/>
+        Series 15i, 16i/18i/21i, 0i,Power Mate i の場合、PMC管理ソフトの系列としてはpmc_serではなく、こちらを使用して下さい。</dd>
+    <dt>pmc_mng_ver</dt>
+    <dd>PMC管理ソフトの版数 (系統依存)<br/>
+        Series 15i, 16i/18i/21i, 0i,Power Mate i の場合、PMC管理ソフトの系列としてはpmc_verではなく、こちらを使用して下さい。</dd>
+    <dt>pmc_shin_ser</dt>
+    <dd>PMC管理ソフトの系列 (SH内蔵) (系統依存)</dd>
+    <dt>pmc_shin_ver</dt>
+    <dd>PMC管理ソフトの版数 (SH内蔵) (系統依存)</dd>
+    <dt>pmc_shout_ser</dt>
+    <dd>PMC管理ソフトの系列 (SH外付け) (系統依存)</dd>
+    <dt>pmc_shout_ver</dt>
+    <dd>PMC管理ソフトの版数 (SH外付け) (系統依存)</dd>
+    <dt>pmc_c_ser</dt>
+    <dd>PMC 管理ソフトの系列 (C言語) (系統依存)</dd>
+    <dt>pmc_c_ver</dt>
+    <dd>PMC管理ソフトの版数 (C言語) (系統依存)</dd>
+    <dt>pmc_edit_ser</dt>
+    <dd>PMC管理ソフトの系列 (編集カード) (系統依存)</dd>
+    <dt>pmc_edit_ver</dt>
+    <dd>PMC管理ソフトの版数 (編集カード) (系統依存)</dd>
+    <dt>lddr_mng_ser</dt>
+    <dd>ラダーの系列 (系統依存)<br/>
+        Series 15i, 16i/18i/21i, 0i,Power Mate i の場合、ラダーの系列としてはladder_serではなく、こちらを使用して下さい。</dd>
+    <dt>lddr_mng_ver</dt>
+    <dd>ラダーの版数 (系統依存)<br/>
+        Series 15i, 16i/18i/21i, 0i,Power Mate i の場合、ラダーの版数としてはladder_verではなく、こちらを使用して下さい。</dd>
+    <dt>lddr_apl_ser</dt>
+    <dd>ラダーの系列 (C言語アプリケーション) (系統依存)</dd>
+    <dt>lddr_apl_ver</dt>
+    <dd>ラダーの版数 (C言語アプリケーション) (系統依存)</dd>
+    <dt>spl4_ser</dt>
+    <dd>スピンドルソフト(4台目)の系列 (系統依存)</dd>
+    <dt>spl4_ver</dt>
+    <dd>スピンドルソフト(4台目)の版数 (系統依存)</dd>
+    <dt>mcr2_ser</dt>
+    <dd>第2マクロエグゼキュータの系列 (系統依存)</dd>
+    <dt>mcr2_ver</dt>
+    <dd>第2マクロエグゼキュータの版数 (系統依存)</dd>
+    <dt>mcr3_ser</dt>
+    <dd>第3マクロエグゼキュータの系列 (系統依存)</dd>
+    <dt>mcr3_ver</dt>
+    <dd>第3マクロエグゼキュータの版数 (系統依存)</dd>
+    <dt>eth_boot_ser</dt>
+    <dd>Ethernetボードのブートソフトの系列</dd>
+    <dt>eth_boot_ver</dt>
+    <dd>Ethernetボードのブートソフトの版数</dd>
+    <dt>reserve</dt>
+    <dd>(リザーブ)</dd>
+</dl>
+<p/>※ 以上の系列／版数は、ASCII コード(4バイト＋NULL)で格納されます。また、ソフトがない場合は先頭がNULLになります。
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                 <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdsyssoft2</name>
+            <file>misc/cnc_rdsyssoft2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsyssoft3</name>
+            <file>misc/cnc_rdsyssoft3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

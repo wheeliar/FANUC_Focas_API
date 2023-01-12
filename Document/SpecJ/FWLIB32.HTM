@@ -1,0 +1,492 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/2</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+<script language="JavaScript">
+
+    //**************************************************************//
+    //
+    //【 機 能 】
+    //  クッキーに保存
+    //
+    //【 概 要 】
+    //  チェックボックスの変更をクッキーに保存する。
+    //
+    //*************************************************************//
+
+
+          var endPrefix = "@";                       // 接頭語の終了識別子(上書き禁止)
+          var endResult = "?";                       // 結果の終了識別子(上書き禁止)
+          var typeCookie = "#FANUC_Ver2.0#"; // クッキー情報の終了識別子(上書き禁止)
+          var typeDivid = "=";                        // 分離識別子(上書き禁止)
+          var listInfo = "FANUC_LIST=";             // 関数一覧リストのリンク先をクッキーに設定
+
+          // HTMLロード時に呼出し
+          function loadHtml(){
+              // クッキーの内容を取得する
+              var strCookieInfo = document.cookie;
+              var sIndex = 0;                // 開始オフセットの位置
+              var eIndex = 0;                // 終了オフセットの位置
+              // クッキーに情報がない場合
+              sIndex = strCookieInfo.indexOf(typeCookie);
+              // フォーム内のオブジェクト数取得
+              var elemNum = checkGroup.elements.length;
+              if(sIndex == -1)    // クッキーに情報がない場合
+              {
+                  // 初期状態はチェックボックスを「ON」にする
+                  for(var i=0 ; i < elemNum ; i++){
+                      document.checkGroup.elements[i].checked=true;
+                  }
+                  createCookieInfo();
+                  // クッキー情報再取得
+                  strCookieInfo = document.cookie;
+              }
+              sIndex = strCookieInfo.indexOf(typeCookie);
+              eIndex = strCookieInfo.indexOf(typeCookie , sIndex+typeCookie.length);
+
+              // 取得文字列
+　            var strResult = strCookieInfo.substring(sIndex+typeCookie.length , eIndex);
+              sIndex = strResult.indexOf(typeDivid,0);
+              sIndex ++;
+              var state=false;
+              var strTemp="";
+              for(var i=0 ;  i < elemNum ; i++) {
+                  eIndex = strResult.indexOf( endResult ,  sIndex);
+                  strTemp = strResult.substring(sIndex , eIndex);
+                  sIndex = eIndex + 1;
+                  j = strTemp.indexOf("true" ,  0);
+                  if(j != -1)    // trueがある場合
+                  {
+                      state = true;
+                  }
+                  else    // falseがある場合
+                  {
+                      state= false;
+                  }
+                  // クッキーによってチェックボックスの状態を変更する
+                  document.checkGroup.elements[i].checked = state;
+              }
+              createCookieInfo();
+          }
+
+    //
+    // 接続方法の情報をクッキーに保存
+    //
+        function writeCookie(param) {
+             var dayls = new Date();
+             var temp;
+             temp = dayls.getYear();
+             if(temp < 1900){
+                 temp += 1900;
+             }
+             temp++;
+             dayls.setYear(temp);
+             dayls.setMonth(dayls.getMonth());
+             dayls.setDate(dayls.getDate());
+             dayls.setHours(dayls.getHours());
+             dayls.setMinutes(dayls.getMinutes());
+             dayls.setSeconds(dayls.getSeconds());
+             document.cookie=""+param+ "; expires=" + dayls.toGMTString();
+        }
+        
+        function createCookieInfo(){
+             var prefixVal = "";
+             var resultVal = "";
+             elemNum = checkGroup.elements.length;
+             for(var i=0 ; i < elemNum ; i++) {
+                 prefixVal += checkGroup.elements[i].value + endPrefix;
+                 resultVal += checkGroup.elements[i].checked + endResult;
+             }
+             var setVal = typeCookie + prefixVal + typeDivid + resultVal + typeCookie;
+             writeCookie(setVal);
+        }
+
+        function validcheck(){
+            var checked_1st;
+            var checked_2nd;
+            var alertType = 0;    // 0:正常  
+                                      // 1:接続方法にチェックがなし  
+                                      // 2:開発言語にチェックなし 
+                                      // 3:接続方法・開発言語にチェックなし
+            // 接続方法にチェックがついているか確認する
+            checked_1st = checkGroup.chkAcs_HSSB.checked;
+            checked_2nd =  checkGroup.chkAcs_Ethr.checked;
+            if( !checked_1st && !checked_2nd ){
+                alertType+=1;
+            }
+            // 開発言語にチェックがついているか確認する
+//          checked_1st = checkGroup.chkLng_VC.checked;
+//          checked_2nd = checkGroup.chkLng_VB.checked;
+//          if( !checked_1st && !checked_2nd ){
+//              alertType+=2;
+//          }
+//          switch(alertType)
+//          {
+//              case 1:
+//                  alert("接続方法を１つ以上選択してください。");
+//                  return;
+//              case 2:
+//                  alert("開発言語を１つ以上選択してください。");
+//                  return;
+//              case 3:
+//                  alert("接続方法と開発言語それぞれ１つ以上選択してください。");
+//                  return;
+//              default:
+//                   break;
+//          }
+
+            // クッキーの内容を取得する
+            var strCookieInfo = document.cookie;
+            var val = strCookieInfo.indexOf(listInfo);
+            if(val == -1)   // クッキーに関数一覧情報がない場合
+            {
+                // cookieに関数一覧情報を設定する(デフォルト：ライブラリハンドル情報)
+                var setListInfo = listInfo + "Handle" + endResult;
+                writeCookie(setListInfo);
+            }
+            location.href="./flist_com.htm";    // flist.htmへリンク
+        }
+
+        // 接続方法にチェックがついているかチェックする関数
+        function connectCheck(order){
+            var checked_1st;
+            var checked_2nd;
+            // 接続方法にチェックがついているか確認する
+            checked_1st = checkGroup.chkAcs_HSSB.checked;
+            checked_2nd =  checkGroup.chkAcs_Ethr.checked;
+            if( !checked_1st && !checked_2nd ){
+                alert("接続方法を１つ以上選択してください。");
+                if(order==0) // HSSBからのCALL
+                {
+                    checkGroup.chkAcs_HSSB.checked=true;
+                    checkGroup.chkAcs_Ethr.checked=false;
+                }
+                else    // EthernetからのCALL
+                {
+                    checkGroup.chkAcs_HSSB.checked=false;
+                    checkGroup.chkAcs_Ethr.checked=true;
+                }
+                return;
+            }
+            createCookieInfo();
+        }
+
+
+        // 開発言語にチェックがついているかチェックする関数
+        function languageCheck(order){
+            var checked_1st;
+            var checked_2nd;
+            // 接続方法にチェックがついているか確認する
+//          checked_1st = checkGroup.chkLng_VC.checked;
+//          checked_2nd = checkGroup.chkLng_VB.checked;
+//          if( !checked_1st && !checked_2nd ){
+//             alert("開発言語を１つ以上選択してください。");
+//              if(order==0) // VCからのCALL
+//              {
+//                  checkGroup.chkLng_VC.checked=true;
+//                  checkGroup.chkLng_VB.checked=false;
+//              }
+//              else    // VBからのCALL
+//              {
+//                  checkGroup.chkLng_VC.checked=false;
+//                  checkGroup.chkLng_VB.checked=true;
+//              }
+//              return;
+//          }
+            checked_1st = true;
+            checked_2nd = false;
+            createCookieInfo();
+        }
+
+</script>
+</head>
+
+<body bgcolor='#FFFFFF' onLoad='loadHtml()'>
+<div class='fanucyellow'>
+<!--<h1 align='center' class='fanuc'><font color='#FF0000'>FANUC</font> Open CNC</h1>-->
+<h1 align='center' class='fanuc'><font color='#FF0000'>FANUC</font> FOCAS1/2ライブラリ</h1>
+<h2 align='center'>FOCAS1 / FOCAS2<br>
+CNC/PMCデータウィンドウライブラリ</h2>
+<!--<p align='center'>FOCAS1/2 : <b>F</b>ANUC <b>O</b>pen <b>C</b>NC <b>A</b>PI <b>S</b>pecifications version <b>1</b> or <b>2</b></p>-->
+</div>
+<ol>
+    <li><a href='overview.htm'>概要</a>
+    <li><a href='general.htm'>ライブラリ全般</a>
+    <li><a href='dnc1.htm'>イーサネットボードとの通信</a>
+    <li><a href='protect.htm'>NCデータの保護(16i/18i/21i/0i-B/0i-C/Power Mate i のみ)</a>
+    <li><a href='Unsolic.htm'>CNC主導メッセージ通知機能</a>
+    <li><a href='handle.htm'>ライブラリハンドル</a>
+    <li><a href='hssb.htm'>HSSB版とEthernet版の共存</a>
+    <li><a href='log.htm'>通信ログ機能</a>
+    <li><a href='errcode.htm'>データウィンドウ関数の戻り値</a>
+    <li><a href='javascript:validcheck()'>関数仕様</a>
+    <li><a href='update.htm'>更新履歴</a>
+</ol>
+
+<hr>
+<p>本説明書は、下記FANUC製CNCのFOCAS1/2 CNC/PMCデータウィンドウライブラリを使用したアプリケーションソフトウェアを作成する際に必要となる情報について述べたものです。</p>
+
+<ul>
+    <li>FOCAS1 : FS30i/31i/32i/35i,FS0i-D/F,PMi-A以外のCNC用ライブラリ (32ビット版のみ)</li>
+    <li>FOCAS2 : FS30i/31i/32i/35i,FS0i-D/F,PMi-A用ライブラリ (32/64ビット版)</li>
+</ul>
+
+<p>本説明書を使用される際には、下記適用CNCそれぞれの取扱説明書もあわせて参照して下さい。</p>
+
+<div align='left'><left>
+
+<fieldset border=5>
+
+<br>
+<form name='checkGroup'>
+<ul>
+<table border=1>
+    <caption align='left'><strong>接続方法</strong></caption>
+    <tr>
+        <td><input type='checkbox' name='chkAcs_HSSB' value='FANUC_HSSB' onClick='connectCheck(0)'>HSSB</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkAcs_Ethr' value='FANUC_Ethr' onClick='connectCheck(1)'>Ethernet</td>
+    </tr>
+</table>
+
+<br>
+
+<!-- 以下、コメント開始
+<table border=1>
+    <caption align='left'><strong>開発言語</strong></caption>
+    <tr>
+        <td><input type='checkbox' name='chkLng_VC' value='FANUC_VC' onClick='languageCheck(0)'>Visual C++ 6.0</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkLng_VB' value='FANUC_VB' onClick='languageCheck(1)'>Visual Basic 6.0</td>
+    </tr>
+</table>
+<br>
+<br>
+以上、コメント終了 -->
+<table border=1>
+    <caption align='left'><strong>適用CNC</strong></caption>
+    <tr>
+        <th></th>
+        <th>機種名</th>
+        <th colspan='2'>略称</th>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iA' value='FANUC_F0iA' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-MODEL A</td>
+        <td>0i-A</td>
+        <td>Series 0i-A</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iB' value='FANUC_F0iB' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-MODEL B</br>
+            FANUC Series 0i-MODEL C 注1)</td>
+        <td>0i-B/C 注1)</td>
+        <td>Series 0i-B</br>
+            Series 0i-C 注1)</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iD' value='FANUC_F0iD' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-MODEL D</br>
+            FANUC Series 0i Mate-MODEL D</td>
+        <td>0i-D</td>
+        <td>Series 0i-D</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iF' value='FANUC_F0iF' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-MODEL F</br>
+            FANUC Series 0i Mate-MODEL F</td>
+        <td>0i-F</td>
+        <td>Series 0i-F</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iP' value='FANUC_F0iP' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-PD</td>
+        <td>0i-PD</td>
+        <td>Series 0i-PD</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F0iPF' value='FANUC_F0iPF' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 0i-PF</td>
+        <td>0i-PF</td>
+        <td>Series 0i-PF</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F15B' value='FANUC_F15B' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 15/150-MODEL B</td>
+        <td>15</td>
+        <td>Series 15</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F15iAB' value='FANUC_F15iAB' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 15i/150i-MODEL A</br>
+            FANUC Series 15i/150i-MODEL B</td>
+        <td>15i</td>
+        <td>Series 15i</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16BC' value='FANUC_F16BC' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16/160-MODEL B</br>
+            FANUC Series 16/160-MODEL C</br>
+            FANUC Series 18/180-MODEL B</br>
+            FANUC Series 18/180-MODEL C</br>
+            FANUC Series 21/210-MODEL B</td>
+        <td>16</br>
+            18</br>
+            21</td>
+        <td>Series 16/(18/21)</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16iA' value='FANUC_F16iA' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16i/160i-MODEL A</br>
+            FANUC Series 18i/180i-MODEL A</br>
+            FANUC Series 21i/210i-MODEL A</td>
+        <td>16i-A</br>
+            18i-A</br>
+            21i-A</td>
+        <td>Series 16i/(18i/21i)-A</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16iB' value='FANUC_F16iB' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16i/160i-MODEL B</br>
+            FANUC Series 18i/180i-MODEL B</br>
+            FANUC Series 21i/210i-MODEL B</td>
+        <td>16i-B</br>
+            18i-B</br>
+            21i-B</td>
+        <td>Series 16i/(18i/21i)-B</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16iP' value='FANUC_F16iP' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16i/160i-P</br>
+            FANUC Series 18i/180i-P</td>
+        <td>16i-P</br>
+            18i-P</td>
+        <td>Series 16i/(18i)-P</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16iL' value='FANUC_F16iL' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16i/160i-L</td>
+        <td>16i-L</td>
+        <td>Series 16i-L</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F16iW' value='FANUC_F16iW' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 16i/160i-W</br>
+            FANUC Series 18i/180i-W</td>
+        <td>16i-W</br>
+            18i-W</td>
+        <td>Series 16i-W/(18i-W)</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iA' value='FANUC_F30iA' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 30i-MODEL A</br>
+            FANUC Series 31i-MODEL A</br>
+            FANUC Series 32i-MODEL A</td>
+        <td>30i-A</br>
+            31i-A</br>
+            32i-A</td>
+        <td>Series 30i/(31i/32i)-A</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iB' value='FANUC_F30iB' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 30i-MODEL B</br>
+            FANUC Series 31i-MODEL B</br>
+            FANUC Series 32i-MODEL B</br>
+            FANUC Series 35i-MODEL B</td>
+        <td>30i-B</br>
+            31i-B</br>
+            32i-B</br>
+            35i-B</td>
+        <td>Series 30i/(31i/32i/35i)-B</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iP' value='FANUC_F30iP' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 30i-P MODEL B</br>
+            FANUC Series 31i-P MODEL B</td>
+        <td>30i-P</br>
+            31i-P</td>
+        <td>Series 30i/(31i)-P</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iL' value='FANUC_F30iL' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 30i-L MODEL B</br>
+            FANUC Series 31i-L MODEL B</td>
+        <td>30i-L</br>
+            31i-L</td>
+        <td>Series 30i/(31i)-L</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iWA' value='FANUC_F30iWA' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 31i-W MODEL A</td>
+        <td>31i-WA</td>
+        <td>Series 31i-WA</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_F30iWB' value='FANUC_F30iWB' onClick='createCookieInfo()'></td>
+        <td>FANUC Series 31i-W MODEL B</td>
+        <td>31i-WB</td>
+        <td>Series 31i-WB</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_FPMiH' value='FANUC_FPMiH' onClick='createCookieInfo()'></td>
+        <td>FANUC Power Mate i-MODEL H</td>
+        <td>PMi-H</td>
+        <td>Power Mate i-H</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_FPMiD' value='FANUC_FPMiD' onClick='createCookieInfo()'></td>
+        <td>FANUC Power Mate i-MODEL D</td>
+        <td>PMi-D</td>
+        <td>Power Mate i-D</td>
+    </tr>
+    <tr>
+        <td><input type='checkbox' name='chkPrdct_FPMiA' value='FANUC_FPMiA' onClick='createCookieInfo()'></td>
+        <td>FANUC Power Motion i-MODEL A</td>
+        <td>PMi-A</td>
+        <td>Power Motion i-A</td>
+    </tr>
+</table>
+</ul>
+</form>
+<dd>注1) FANUC Series 0i-MODEL Cは、HSSB機能をサポートしません。Fast Ethernet機能のみ有効です。</dd></br>
+<!-- <dd>注2) FANUC Series 0i-MODEL Dは、HSSB機能をサポートしません。組込みEthernet/Fast Ethernet機能のみ有効です。</dd></br> -->
+<br>
+</fieldset>
+</center></div>
+<!--
+<p align="center">
+※単に『15』とある場合は、『15i』を示します。<br>
+※単に『16,18,21』とある場合は、『16i,18i,21i』を示します。<br>
+※単に『Power Mate』とある場合は、『Power Mate i』を示します。</p>
+-->
+
+<p class="caution">&lt;注意&gt;<br>
+<br>
+開発の対象となるCNCの機種とモデルとタイプ、制御ソフトの系列と版数の違いにより利用できる関数に制限があります。<br>
+この対応機種表は、15i、16i、18i、21i、0i、30i、31i、32i、35i、PowerMate i、Power Motion iの最新モデルに基づいて作成されています。また、最新モデルであっても、制御ソフト側の対応を必要とする関数もありますので、お客様が現在、開発対象とされているCNCの系列と版数では利用出来ない関数が存在することがあります。<br>
+従って、アプリケーションの開発を行う場合、事前に対象のCNC制御ソフトにて使用関数の対応の可否を確認のうえ、開発を進めて頂きますようお願い申し上げます｡<br>
+特に旧モデルのアプリケーション開発や、新規追加関数をご利用になる場合は、事前確認を必ず行って頂きますようお願い致します｡</p>
+
+
+<p>著作権、その他</p>
+
+<ul>
+    <li>FOCAS1/2機能のソフトウェアの著作権は、ファナック株式会社にあります。</li>
+    <li>上記ソフトウェアの本体、及びマニュアルは、一部、または全部を無断で使用、複写することはできません。</li>
+    <li>上記ソフトウェアの本体、及びマニュアルを、FOCAS1/2機能と独立して販売することはできません。</li>
+</ul>
+
+<p class="info">
+※ Microsoft, MS, MS-DOS, Windows, Visual Basicは米国Microsoft社の登録商標です。<br>
+※ Visual C++は米国Microsoft社の商標です。<br>
+※ その他、記載されている会社名、製品名は各社の登録商標、または商標です。
+</p>
+</body>
+
+</html>

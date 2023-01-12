@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_download</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_download(unsigned short FlibHndl,char *data, short number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>登録用NCデータの出力（ダウンロード）を行います。</p>
+            <p>CNC側のデータ処理が遅れてデータが出力できない場合は出力できるまでライブラリの中で待ちます。<br/>
+            待ちたくない場合は、<a href="Program/cnc_cdownload.htm" target="_parent">cnc_cdownload</a>関数を使用してください。</p>
+            <p>
+                ダウンロードを行う手順を以下に示します。<br/>
+                <img src="Program/dwnload_1.gif"/>
+            </p>
+            <p>
+                 データの転送用に 256バイトのバッファが 4個あり、1回のコールではデータ
+                サイズには無関係に必ず 1個のバッファが使用されます。<br/>
+                このため、1回の呼び出しにて転送できる最大サイズは 256バイトとなります。
+            </p>
+            <p><img src="Program/buff.gif"/></p>
+            <p>
+                CNC へのデータ転送の速度を重視しているため、エラー(EW_DATA, EW_OVRFLOW
+                等)は一般的には遅れて返ります。すなわち、ある時のエラーは実際には数回前
+                に出力されたデータに対するものになります。<br/>
+                また、終了前の数回分のデータに対するエラーは『登録用ＮＣ指令データの出
+                力の終了』で返されます。<br/>
+            </p>
+                <b>出力データのフォーマット</b>
+                <p>CNC側に登録するNCプログラムは以下のようなフォーマットのASCIIコードの
+                文字列です。</p>
+            
+
+            <p class="dd">
+                LF Oxxxx LF ブロック1 LF ブロック2 LF ... LF Mxx LF %<br/>
+                <br/>
+                <table>
+                    <tr><td>ただし</td><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                    <tr><td></td><td>Oxxxx</td><td>プログラム番号</td></tr>
+                    <tr><td></td><td>Mxx</td><td>プログラム末尾のＭコード(M02,M30など)</td></tr>
+                </table>
+            </p>
+            <p>
+                プログラム全体の先頭には LF を、末尾には '%' を付加して下さい。<br/>
+                先頭の LF よりも前にあるデータは無視されます。<br/>
+                登録するプログラムの先頭には必ずアドレス 'O' に続けてプログラム番号を指定して下さい。<br/>
+                例えば、<br/>
+                <p class="dd">
+                    O1234 ;<br/>
+                    G1 F0.3 W10. ;<br/>
+                    M30 ;<br/>
+                    %<br/>
+                </p>
+                というプログラムを登録する時は、<br/>
+                <p class="dd">
+                    "\nO1234\nG1F0.3W10.\nM30\n%"<br/>
+                </p>
+                を cnc_download関数で転送します。転送を複数回に分けることも可能です。<br/>
+                上の例では<br/>
+                <p class="dd">
+                    "\n"<br/>
+                    "O1234\n"<br/>
+                    "G1F0.3W10.\n"<br/>
+                    "M30\n"<br/>
+                    "%"<br/>
+                </p>
+                のように１ブロックずつ転送することもできます。さらに、１ブロックを複数回に分けて転送することも可能です。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>ＮＣ指令データの先頭アドレスを指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>ＮＣ指令データの文字数を指定します。(1～256)</p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                リセット、停止要求<br/>
+                CNCからダウンロードの停止が要求されました。<br/>
+                『RESET or STOP』が押されました。(Series 15/15i)<br/>
+                <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a>関数をコールして下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart.htm" target="_parent">cnc_dwnstart</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                データブロック長(number)が256バイトを超えています。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                <li>同一のプログラム番号が既に登録されている。</li>
+                <li>同一のプログラム番号がNC側で選択されている。</li>
+                <li>NCプログラムで使用できない文字が検出された。</li>
+                <li>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</li><br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                CNCのパラメータ（8000番台/9000番台プロテクト、暗号化）が書き込み禁止の設定になっています。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                メモリオーバーフロー<br/>
+                NC側の空き容量が足りませんので、容量を確保してください。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 15/15i</li><br/>
+                <ul>
+                    0020=16(EDITモード) (必ず設定して下さい)<br/>
+                    0022=16(EDITモード以外) (必ず設定して下さい)<br/>
+                    0000#0 (設定の影響を受けます)<br/>
+                    2200#1,#3,#4 (設定の影響を受けます)<br/>
+                    0011#0,2201#0 (設定の影響を受けます)<br/>
+                    2210,2211,2212,2213
+                </ul>
+            
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, PMi-A</li><br/>
+                <ul>
+                    0000#0 (設定の影響を受けます)<br/>
+                    3201#2,#5,#6 (設定の影響を受けます)<br/>
+                    3202#0,#4 (設定の影響を受けます)<br/>
+                    3210,3211 (設定の影響を受けます)<br/>
+                    3290#7 (設定の影響を受けます)
+                </ul>
+            <li> 16i/18i-W, Power Mate i</li><br/>
+                <ul>
+                    0000#0 (設定の影響を受けます)<br/>
+                    3201#2,#5,#6 (設定の影響を受けます)<br/>
+                    3202#0,#4 (設定の影響を受けます)<br/>
+                    3290#7 (設定の影響を受けます)
+                </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <li>Series 15/15i すべてのモードで使用できます。</li><br/>
+            <span class="dd">(モードに応じたパラメータ設定を行う必要があります)</span><br/>
+            <br/>
+            <li>Series 16i/18i/21i, 16/18/21, 0i, 30i, Power Mate i, PMi-A</li><br/>
+            <span class="dd">MDI 以外のモードで使用できます。</span><br/>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dwnstart</name>
+            <file>Program/cnc_dwnstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdownload</name>
+            <file>Program/cnc_cdownload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend</name>
+            <file>Program/cnc_dwnend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

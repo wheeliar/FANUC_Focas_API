@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_wrpmcparam</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_wrpmcparam(unsigned short FlibHndl, long *length, char *buff);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            PMCパラメータ（タイマ、カウンタ、キープリレー、データ）をテープフォーマットで書込みます。<br/>
+            本関数を実行する場合、CNCのパラメータPWEに1をセットし、CNC側を非常停止状態にして下さい。<br/>
+            PMCパラメータのフォーマットについては、関数<a href="Pmc/pmc_rdpmcparam.htm" target="_parent">pmc_rdpmcparam</a>の解説を参照して下さい。<br/>
+            *lengthの指定されたサイズのバッファの最後の文字が"；"または"％"以外の場合、本関数はEW_DATAのエラーとなります。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                         書込む文字数がセットされているlong型変数へのポインタを指定します。<br/>
+                         本関数を実行すると、実際に書込まれた文字数が*lengthにセットされます。
+                    </content>
+                </item>
+                <item>
+                    <name>buff</name>
+                    <type>in</type>
+                    <content>
+                        書込むＰＭＣパラメータが格納されている領域へのポインタを指定します。
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                停止要求<br/>
+                全てのPMCパラメータが書込まれました。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                関数未実行<br/>
+                関数<a href="Pmc/pmc_wrprmstart.htm" target="_parent">pmc_wrprmstart</a>が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                書込みサイズ（*length）に0以下の値が指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                書込みフォーマットに誤りがあります。<br/>
+                <span class="xis">0i-F,30i/31i/32iの場合、</span>この戻り値に対して、より詳細な情報を得るには<a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a> 関数を実行して下さい。<br/>
+            ODBPMCERR構造体のメンバerr_noに下記詳細ステータスがセットされます。
+                <table>
+                    <tr><td> 1</td><td>:</td><td>開始直後の文字列が "%;" でなかった                                      </td></tr>
+                    <tr><td> 2</td><td>:</td><td>文字列の最後が ";"(0x0A)または、"%" でなかった                          </td></tr>
+                    <tr><td> 3</td><td>:</td><td>"%;"の直後(2ブロック目)が ヘッダ情報でなかった                          </td></tr>
+                    <tr><td> 4</td><td>:</td><td>ヘッダ情報の機種名と実際の機種が異なる                                  </td></tr>
+                    <tr><td> 5</td><td>:</td><td>ヘッダ情報の機種とID情報の区切り文字が "," でなかった                   </td></tr>
+                    <tr><td> 6</td><td>:</td><td>ヘッダ情報のID情報の文字列が、"MSID=" でなかった                        </td></tr>
+                    <tr><td> 7</td><td>:</td><td>ヘッダ情報のID番号が、開始時のPMCユニットタイプと違う                   </td></tr>
+                    <tr><td> 8</td><td>:</td><td>ヘッダ情報の最後の文字が ")" でなかった                                 </td></tr>
+                    <tr><td> 9</td><td>:</td><td>パラメータブロックの先頭が "N" でなかった                               </td></tr>
+                    <tr><td>10</td><td>:</td><td>パラメータブロックのアドレス番号の誤り(6桁なかった場合)                 </td></tr>
+                    <tr><td>11</td><td>:</td><td>パラメータブロックのアドレス番号の誤り(N番号の先頭が "6" でなかった場合)</td></tr>
+                    <tr><td>12</td><td>:</td><td>パラメータブロックの３文字目が、"0", "1", "2", "3", "4", "9" でなかった </td></tr>
+                    <tr><td>13</td><td>:</td><td>グループ総数より大きいグループ情報のブロックが指定された                </td></tr>
+                    <tr><td>14</td><td>:</td><td>データテーブル制御情報の誤り(指定できない番号)                          </td></tr>
+                    <tr><td>15</td><td>:</td><td>パラメータブロック中の設定値の文字列の先頭が "P" でなかった             </td></tr>
+                    <tr><td>16</td><td>:</td><td>設定値のデータに数値以外の文字が含まれていた(設定値のフォーマットの誤り)</td></tr>
+                    <tr><td>17</td><td>:</td><td>ビットパターンの文字数が８文字でなかった(設定値のフォーマットの誤り)    </td></tr>
+                    <tr><td>18</td><td>:</td><td>アドレス範囲の誤り                                                      </td></tr>
+                    <tr><td>19</td><td>:</td><td>データテーブル制御情報の総数の誤り                                      </td></tr>
+                    <tr><td>20</td><td>:</td><td>データテーブル制御情報の誤り                                            </td></tr>
+                </table>
+                また、ODPMCBERR構造体のメンバerr_dtnoに不正データが含まれるブロック番号(0-)がセットされます。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り<br/>
+                CNCのパラメータPWEの設定が0になっています。
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>
+                PMCユニットタイプの誤り<span class="xis">(0i-F,30i/31i/32iのみ)</span><br/>
+                PMCのユニットタイプが変更されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                実行拒否<br/>
+                CNC側が非常停止状態になっていません。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                No.8900#0(PWE)  --- １を設定して下さい。
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>pmc_rdprmstart</name>
+            <file>Pmc/pmc_rdprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdpmcparam</name>
+            <file>Pmc/pmc_rdpmcparam.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdprmend</name>
+            <file>Pmc/pmc_rdprmend.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmstart</name>
+            <file>Pmc/pmc_wrprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmend</name>
+            <file>Pmc/pmc_wrprmend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

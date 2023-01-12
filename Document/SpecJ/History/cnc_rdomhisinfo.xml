@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdomhisinfo</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdomhisinfo(unsigned short FlibHndl, ODBOMIF *hisif); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>外部オペレータメッセージ履歴の最大履歴数、現在の履歴数、最大文字数のリードを行います。</p>
+
+             <p>本関数を使用する前に、外部オペレータメッセージ履歴データのサンプリングの停止(<a href="History/cnc_stopomhis.htm" target="_parent">cnc_stopomhis</a>)を行う必要があります。</p>
+        </cmn>
+   </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hisif</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            外部オペレータメッセージ履歴の最大履歴数、現在の履歴数、最大文字数を返すODBOMIF構造体へのポインタです。
+                            ODBOMIF構造体は次の通りです。
+<pre>
+typedef struct odbomif {
+    unsigned short  om_max ;   /* 最大履歴数 */
+    unsigned short  om_sum ;   /* 現在の履歴数 */
+    unsigned short  om_char ;  /* 最大文字数(nullを含む) */
+} ODBOMIF ;
+</pre>
+                            <table border="1">
+                            <tr>
+                            <th>3113#7</th><th>3113#6</th><th>最大履歴数</th><th>最大文字数(NULLを含む)</th>
+                            </tr>
+                                <tr><td>0</td><td>0</td><td>8</td><td>256</td></tr>
+                            <tr><td>0</td><td>1</td><td>10</td><td>201</td></tr>
+                            <tr><td>1</td><td>0</td><td>18</td><td>101</td></tr>
+                                <tr><td>1</td><td>1</td><td>32</td><td>51</td></tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>関数未実行<br/>
+             外部オペレータメッセージ履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopomhis</a>)が行われていません。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     外部メッセージ機能、または外部データ入力機能、及び拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>CNCパラメータの誤り<br/>
+             パラメータ3112#2=1にして下さい。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                 <p>但し、FS16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+                 <p>組込みイーサネットを使用のとき、</p>
+                    <p class="dd">上記２つの機能は必要ありません。</p>
+                 <p>イーサネットボードを使用のとき、</p>
+                     <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            外部メッセージ機能、または外部データ入力機能が必要です。 
+        </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <!-- li>Series 16/18/21, 16i/18i/21i, 0i, 30i<br/ -->
+            <li>Series 16/18/21, 16i/18i/21i, 0i<br/>
+            3112#2=1 (必ず設定して下さい)<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>        
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_stopomhis</name>
+            <file>History/cnc_stopomhis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startomhis</name>
+            <file>History/cnc_startomhis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdomhistry</name>
+            <file>History/cnc_rdomhistry.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearomhis</name>
+            <file>History/cnc_clearomhis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_dtsvdownload</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dtsvdownload(unsigned short FlibHndl, char *nc_file);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                CNC に対してデータサーバからファイルをダウンロードするように指示します。<br/>
+                従って、本関数が正常終了したときは、データサーバからのダウンロードが開始されたことを示します。<br/>
+                ダウンロードの結果については、<a href="Data/cnc_dtsvupdnstat.htm" target="_parent">cnc_dtsvupdnstat</a>で取得して下さい。<br/>
+                <br/>
+                本関数が正常終了してから<a href="Data/cnc_dtsvupdnstat.htm" target="_parent">cnc_dtsvupdnstat</a>"により完了ステータスの EW_OK、または EW_DTSRVR を取得するまで、CNC 側でデータサーバ機能(DNC運転を除く)を使用してはいけません。<br/>
+            </p>
+            <p class="dd"><img src="Data/dtsv_dwn_dis.gif"/></p>
+            <p class="dd">
+                また、使用禁止期間では以下の関数の完了ステータスが EW_BUSY になります。<br/>
+                    <span class="dd"><a href="Program/cnc_dwnstart.htm" target="_parent">cnc_dwnstart</a></span><br/>
+                    <span class="dd"><a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a></span><br/>
+                    <span class="dd"><a href="Program/cnc_dncstart.htm" target="_parent">cnc_dncstart</a></span><br/>
+                    <span class="dd"><a href="Program/cnc_delete.htm" target="_parent">cnc_delete</a></span><br/>
+                    <span class="dd"><a href="Program/cnc_delall.htm" target="_parent">cnc_delall</a></span><br/>
+                    <span class="dd"><a href="Program/cnc_search.htm" target="_parent">cnc_search</a></span><br/>
+                    <span class="dd">cnc_dtsvdownload</span><br/>
+                    <span class="dd"><a href="Data/cnc_dtsvupload.htm" target="_parent">cnc_dtsvupload</a></span><br/>
+                <br/>
+                従って、本関数を実行し正常終了した場合は、必ず <a href="Data/cnc_dtsvupdnstat.htm" target="_parent">cnc_dtsvupdnstat</a>により完了ステータスの EW_OK 、または EW_DTSRVR を取得する必要があります。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>nc_file</name>
+                    <type>in</type>
+                    <content>
+                        ダウンロードするデータサーバ内のファイル名へのポインタ<br/>
+                        ASCII文字列を使用して<br/>
+                        <span class="dd">"O" + 数字１～４桁 + NULL</span><br/>
+                        と指定して下さい。
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                    <dt>・CNC でアップ／ダウンロード実行中</dt>
+                          <dd>リトライして下さい。( <a href="Data/cnc_dtsvupdnstat.htm" targeT="_parent">cnc_dtsvupdnstat</a> の未実行を含みます。)</dd>
+                    <dt>・CNC がアラーム状態(P/S000, P/S101)</dt>
+                        <dd>CNC 側のアラームを解除して下さい。</dd>
+                        <dd>※Series 16/18, 16i/18i/21i, 0iのみです</dd>
+                    <dt>・CNC のI/O チャンネル番号がデータサーバ以外</dt>
+                        <dd>I/O チャンネル番号をデータサーバにして下さい。</dd>
+                        <dd>※Series 15の場合</dd>
+                            <span class="dd">PRM 0020=14 、及び PRM 0022=14</span>
+                        <dd>※Series 16/18, 16i/18i/21i, 0iの場合</dd>
+                            <span class="dd">PRM 0020=5</span>
+                    <dt>・CNC が BG編集状態(Series 15/16/18, 16i/18i/21i, 0i)、またはMDI編集状態(Series 16/18, 16i/18i/21i, 0i)</dt>
+                        <dd>CNC 側の裏編集を終了させる、またはモードをMDI 以外にして下さい。</dd>
+                        <dd>※Series 15でPRM 2217#5=0 の場合</dd>
+                            <span class="dd">エラーにならず、BG編集が終了するまで待たされます。</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                ファイル名の誤り<br/>
+                ファイル名(nc_file)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                ・拡張ドライバ/ライブラリ機能が必要です。<br/>
+                ・データサーバボード(ハード)が必要です。<br/>
+<p/>
+                パラメータの誤り<br/>
+                ・PRM 0900#0=0 と設定して下さい。<br/>
+                <span class="dd">※Series 16/18, 16i/18i/21i, 0iのみです</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                データサーバのエラー<br/>
+                この戻り値に対して、より詳細な情報を得るには <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table class="dd">
+                    <tr>
+                        <td>1 ～ 498</td>
+                        <td>:</td>
+                        <td>データサーバエラー</td>
+                    </tr>
+                    <tr>
+                        <td>499</td>
+                        <td>:</td>
+                        <td>データサーバシステムエラー</td>
+                    </tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <dtsv>
+            <ul>
+            <li>Series 15</li><br/>
+                0020 = 14 (必ず設定して下さい)<br/>
+                0022 = 14 (必ず設定して下さい)<br/>
+                2217#5 (設定の影響を受けます)
+            </ul>
+            <ul>
+            <li>Series 16/18, 16i/18i/21i, 0i</li><br/>
+                0020=5 (必ず設定して下さい)<br/>
+                0900#0=0 (必ず設定して下さい)<br/>
+            </ul>
+        </dtsv>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            MDIモード以外で使用できます。
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_dtsvcnclupdn</name>
+            <file>Data/cnc_dtsvcnclupdn.htm</file>
+        </item>
+        <item>
+            <name>cnc_dtsvupdnstat</name>
+            <file>Data/cnc_dtsvupdnstat.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

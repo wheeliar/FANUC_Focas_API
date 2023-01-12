@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdlpwrdat</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlpwrdat(unsigned short FlibHndl, ODBLOPDT *pwrdat); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> レーザパワーデータを読み出します。
+                データはODBLOPDT内の各メンバに格納されます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pwrdat</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            レーザパワーデータを返すODBLOPDT構造体へのポインタです。
+                            ODBLOPDT構造体は次の通りです。
+                        </p>
+<pre>
+・Series 16i/18i-Lの場合
+typedef struct odblopdt {
+    short   slct;       /* データ有効フラグ */
+    short   pwr_mon;    /* パワーモニタ値 */
+    short   pwr_ofs;    /* パワーオフセット */
+    short   pwr_act;    /* 実出力表示値 */
+    long    feed_act;   /* 実速度表示値 */
+    short   reserve[4]; /* リザーブ */
+} ODBLOPDT ;
+
+・Series 30i/31i-LBの場合
+typedef struct odblopdt {
+    short   slct;       /* データ有効フラグ */
+    short   pwr_mon;    /* パワーモニタ値 */
+    short   pwr_ofs;    /* パワーオフセット */
+    short   pwr_act;    /* 実出力表示値 */
+    long    feed_act;   /* 実速度表示値 */
+    char    feed_dec;   /* 小数点以下桁数部 */
+    char    reserve;    /* リザーブ */
+    short   reserves[3];/* リザーブ */
+} ODBLOPDT ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>データ有効フラグがセットされます。</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>bit 0</td><td>：</td><td>パワーモニタ値</td> </tr>
+                                    <tr> <td>bit 1</td><td>：</td><td>パワーオフセット</td> </tr>
+                                    <tr> <td>bit 2</td><td>：</td><td>実出力表示値</td> </tr>
+                                    <tr> <td>bit 3</td><td>：</td><td>実速度表示値</td> </tr>
+                                    <tr> <td>bit 4 ～ 7</td><td>：</td><td>リザーブ</td> </tr>
+                                    <tr> <td>bit 8 ～ 15</td><td>：</td><td>未使用</td> </tr>
+                                </table></dd>
+                                <dd>※  各データに対応するビットが0の時は、そのデータは無効になります。</dd>
+                            <dt>pwr_mon</dt>
+                                <dd>パワーモニタ値がセットされます。</dd>
+                            <dt>pwr_ofs</dt>
+                                <dd>パワーオフセットがセットされます。</dd>
+                            <dt>pwr_act</dt>
+                                <dd>実出力表示値がセットされます。</dd>
+                            <dt>feed_act</dt>
+                                <dd>実速度表示値がセットされます。</dd>
+                            <dt>feed_dec</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>実速度表示値の小数点以下桁数部です。</dd>
+                            <dt>reserve</dt>
+                                <dd>リザーブです。</dd>
+                            <dt>reserves</dt>
+                                <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                <dd>リザーブです。</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                16i/18i-L、30i/31i-LB以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り(Series 30i/31i-LBのみ)<br/>
+                レーザ発振器(パラメータNo.15030)の誤り
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+            <d>-</d>
+        <pw>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

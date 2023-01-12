@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_dnc2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dnc2(unsigned short FlibHndl, long *length, char *data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側でリモートプログラムの運転(DNC 運転、M198の実行)を行うためのNC指令データを出力します。</p>
+            <p>本関数はlengthで指定された文字数を出力しますが、その時にCNCへのデータ転送用バッファの空きサイズが指定された文字数より少ないと、空きサイズ分のデータを出力し、その文字数をlengthにセットします。</p>
+            <p>1文字も出力できない場合は、戻り値としてEW_BUFFERを返します。この戻り値の場合は、再度この関数を呼び出します。</p>
+
+            <p>CNC側でDNC運転M198の実行が中止されると、EW_RESETが戻り値として返されます。本関数の戻り値が EW_RESETの場合は、<a href="Program/cnc_dncend2.htm" target="_parent">cnc_dncend2</a>において出力結果に『DNC_CANCEL』を指定し、NC指令データの出力を終了して下さい。</p>
+            <p>出力するNC指令データのフォーマットを以下に示します。</p>
+            <p class="dd">
+                EOB 指令1 EOB 指令2 EOB ..... 指令n EOB Mxx EOB<br/>
+                <table class="dd">
+                    <tr>
+                        <td>指令1～n    </td><td>ASCIIコード文字列</td>
+                    </tr>
+                    <tr>
+                        <td>EOB         </td><td>LF(0x0A)</td>
+                    </tr>
+                    <tr>
+                        <td>Mxx         </td><td>DNC運転終了のＭコード(M02, M30等)</td>
+                    </tr>
+                </table>
+            </p>
+            <p>ただし、M198運転の場合は、サブプログラム呼び出しであるため MxxにM99を指定します。</p>
+            <br/>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>
+                     Ethernetで本機能を使用する場合、ネットワークの状態により転送速度が保障されませんので注意が必要です。<br/>
+                     また、組込みEthernetでは、使用できません。
+                </td></tr>
+            </table>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            出力するNC指令データの文字数がセットされているlong型の変数のポインタを指定して下さい。本関数から戻る時に、実際に出力された文字数がセットされます。
+                        </p>
+                        <p>出力する文字数に0以下の値を指定すると、戻り値が EW_LENGTHとなります。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data </name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            出力するNC指令データがセットされている領域の先頭アドレスを指定します。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                運転停止要求<br/>
+                DNC運転、またはM198の実行開始後に CNC側からリモートプログラムの運転の停止要求が来ました。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dncstart2.htm" target="_parent">cnc_dncstart2</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                出力文字数の誤り<br/>
+                出力文字数に負の値が指定されています。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの設定の誤り<br/>
+                以下のようにパラメータを設定します。<br/>
+                Series 15<br/>
+                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;7713#0 = 1<br/>
+                Series 16/18/21, 16i/18i/21i, 0i-A/B/C<br/>
+                &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;8706#1 = 1
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                バッファフル<br/>
+                バッファに空きがないため出力できませんでした。<br/>
+                リトライして下さい。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>HSSB接続</li>
+                <ul>
+                <li>Series 15</li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        7713#0 = 1 (必ず設定して下さい)<br/>
+                        0020 = 15 (必ず設定します)<br/>
+                <br/>
+                <li>Series 15i</li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        0020 = 15 (必ず設定します)<br/>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B</li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        8706#0 (設定の影響を受けます)(このパラメータは第１系統でのみ有効です。第１系統以外では、0を設定して下さい。)<br/>
+                        8706#1 = 1 (必ず設定します)<br/>
+                        0020 = 15 (必ず設定します)<br/>
+                        0020 = 16 (必ず設定します)(HSSB PORT2の場合)<br/>
+                <br/>
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        0020 = 15 (必ず設定します)<br/>
+                        0020 = 16 (必ず設定します)(HSSB PORT2、NCガイド･プロの場合)<br/>
+                </ul>
+            <br/>
+            <li>Ethernet接続</li>
+                <ul>
+                <li>Series 15i</li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        0020 = 6 (必ず設定します)<br/>
+                <br/>
+                <li>Series 16i/18i/21i, 0i, 30i/31i/32i, PMi-A<!--, Power Mate i--></li>
+                        0000#0 (設定の影響を受けます)<br/>
+                        0020 = 6 (必ず設定します)<br/>
+                </ul>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0000#0 (設定の影響を受けます)<br/>
+                0020 = 15 (必ず設定します)
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <ul>
+            <li>HSSB接続</li>
+                <ul>
+                    <li>Series 15<br/>
+                        TAPEモードにする必要があります。<br/><br/>
+                    </li>
+                    <li>Series 15i<br/>
+                        DNCモードにする必要があります。<br/><br/>
+                    </li>
+                    <li>Series 16/18/21, 16i/18i/21i, 0i-A/B<br/>
+                        DNC運転の場合、MEMモードで、DI:DMMC&#60;G042#7&#62;=1 にする必要があります。<br/><br/>
+                    </li>
+                    <li>Series 30i/31i/32i, Series 0i-D/F, PMi-A, Series 16i/18i/21i(HSSB PORT2の場合)<br/>
+                            DNC運転の場合、MEMモードでDI:DNCI&lt;G043#5&gt;=1にする必要があります。<br/><br/>
+                    </li>
+                </ul>
+            <li>Ethernet接続</li>
+                <ul>
+                    <li>Series 15i<br/>
+                        DNC運転の場合、DNCモードにする必要があります。<br/><br/>
+                    </li>
+                    <li>Series 16i/18i/21i, 0i, 30i/31i/32i, PMi-A<!--, Power Mate i--><br/>
+                        DNC運転の場合、MEMモードでDI:DNCI&#60;G043#5&#62;=1にする必要があります。<br/><br/>
+                    </li>
+                </ul>
+            </ul>
+        </cmn>
+    </mode>
+
+    <is_mode>
+        <cmn>
+            DNC運転の場合、MEMモードでDI:DNCI&lt;G043#5&gt;=1にする必要があります。
+        </cmn>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dncstart2</name>
+            <file>Program/cnc_dncstart2.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend2</name>
+            <file>Program/cnc_dncend2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rddncdgndt</name>
+            <file>Program/cnc_rddncdgndt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example>
+<vc>
+以下のプログラムは次のNC指令をDNC運転で実行します。
+
+        M3 S1500 ;
+        G28 U0 W0 ;
+        T0101 ;
+        G0 X35. Z-10. ;
+        M30 ;
+
+#include "fwlib32.h"
+
+short example( void )
+{
+        char* prg =
+                "\n"
+                "M3S1500\n"
+                "G28U0W0\n"
+                "T0101\n"
+                "G0X35.Z-10.\n"
+                "M30\n"
+                "%";
+
+        char fname[16];
+        long len, n;
+        short ret;
+
+        ret = cnc_dncstart2( h, fname ) ;
+        if ( ret ) return ( ret ) ;
+
+        len = strlen( prg ) ;
+        while ( len > 0 ) {
+                n = len ;
+                ret = cnc_dnc2( h, &#38;n, prg ) ;
+                if ( ret == EW_BUFFER ) {
+                        continue ;
+                }
+                if ( ret == EW_OK ) {
+                        prg += n ;
+                        len -= n ;
+                }
+                if ( ret != EW_OK ) {
+                        break ;
+                }
+        }
+        if ( ret == EW_RESET )
+                ret = cnc_dncend2( h, DNC_CANCEL ) ;
+        else
+                ret = cnc_dncend2( h, DNC_NORMAL ) ;
+        return ( ret ) ;
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

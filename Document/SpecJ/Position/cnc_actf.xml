@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_actf</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_actf(unsigned short FlibHndl, ODBACT *actualfeed);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>制御軸の実速度(F)を読み出します。実速度はODBACT内のdataに格納されます。</p></cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>actualfeed</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            制御軸の実速度を返すODBACT構造体へのポインタです。ODBACT構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbact {
+    short  dummy[2];                /* 未使用 */
+    long  data;                     /* 実速度(F)*/
+} ODBACT ;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <!--  30i(WinCE) -->
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>actualfeed</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                制御軸の実速度を返すODBACT構造体へのポインタです。ODBACT構造体は次の通りです。
+                            </p>
+<pre>
+typedef struct odbact {
+    short  dummy[2];                /* 未使用 */
+    long  data;                     /* 実速度(F)*/
+} ODBACT ;
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_PARAM<br/>(Series 15のみ)</name>
+            <content>ＣＮＣパラメータの誤り<br/>電源投入時に 7613#0=0 になっていた<br/>現在 7613#0=1,7613#1=0,7613#2=0 になっている<br/>のいずれかです。<br/>7613#0=1,7613#1=1 に設定して下さい。<br/>注）7613#0=1,7613#1=0,7613#2=1 の場合、エラーにはなりませんが、データは無効です。
+            </content>
+        </item>
+        <add></add>
+        
+        <!-- 30i(WinCE) -->
+        <is></is>
+    </errcode>
+
+
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        
+        <!-- 30i(WinCE) -->
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        </is>
+    </option>
+
+
+
+
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                <p>7613#0=1, 7613#1=1（必ず設定して下さい）</p>
+            </ul>
+            <ul>
+                <li>Series 16/18/21, 16i/18i/21i</li><p/>
+                <p>3107#3, 3191#0, 3191#5</p>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <is_parameter>
+    </is_parameter>
+
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <!-- For Series 30is -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+
+    </support>
+
+
+
+
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+下記のNCプログラムのO1234/N20のブロック実行中に、以下のプログラムを実行する
+と、"CURRENT F=1200"と表示されます。(旋盤系でミリ入力とします。)
+O1234 ;
+N10 G98 F1200 ;
+N20 G1 U10. W200.
+N30 ...
+
+#include "fwlib32.h"
+
+void example( void )
+{
+        ODBACT buf ;
+        cnc_actf( h, &#38;buf ) ;
+        printf( "CURRENT F=%ld\n", buf.data ) ;
+}
+        </vc>
+    </example>
+
+
+
+
+
+  </func>
+</root>

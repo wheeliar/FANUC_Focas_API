@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrunsolicprm</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrunsolicprm( unsigned short FlibHndl, short number, IODBUNSOLIC *data ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+CNC主導メッセージ用パラメータの設定を行います。 本関数は、Series 16i/18i/21i, 0i, Power Mate i でのみ有効です。 Visual Basic では、使用できません。本関数を使用する場合は、Visual C++ をご使用下さい。<br/>
+本機能の詳細については、<a href="./Unsolic.htm" target="_parent">CNC主導メッセージ通知機能</a>を参照下さい。
+</p>
+<p>
+この関数で設定したパラメータは、<a href="UnSolic/cnc_unsolicstart.htm" target="_parent">cnc_unsolicstart</a>関数を呼出した後に有効になります。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージ用パラメータ番号です。現在未使用(必ず"1"を設定して下さい)。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージ用パラメータを設定するIODBUNSOLIC構造体へのポインタです。IODBUNSOLIC構造体は以下の通りです。
+                        </p><pre>
+typedef struct iodbunsolic {
+    char            ipaddr[16] ;
+    unsigned short  port ;
+    short           reqaddr ;
+    short           pmcno ;
+    short           retry ;
+    short           timeout ;
+    short           alivetime;
+    short           setno ;
+    union {
+        struct {
+            short   type ;
+            short   rdaddr ;
+            short   rdno ;
+            short   rdsize ;
+        } pmc ;
+        struct {
+            short   type ;
+            long    dummy1 ;
+            short   dummy2 ;
+        } dmy ;
+    } rddata[3] ;
+} IODBUNSOLIC ;</pre>
+                        <dl>
+                            <dt>ipaddr</dt>
+                                <dd>通信先パソコンのIPアドレス</dd>
+                                <dd>例) "192.168.0.1"</dd>
+                            <dt>port</dt>
+                                <dd>通信先パソコンのTCP/UDPポート番号</dd>
+                                <dd>CNC主導メッセージは、同じポート番号のTCPとUDPを使用します。また、このポート番号に対してファイヤウォールが設定されている場合、CNC主導メッセージは正常に動作しませんので注意して下さい。</dd>
+                            <dt>reqaddr</dt>
+                                <dd>ラダーがデータ送信を要求するための制御用PMCアドレス "R"、"E" のみ設定可能です(必ず"5"または、"12"を設定して下さい)。</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>5</td>  <td>:</td> <td>R(内部リレー)</td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>E(拡張リレー)</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>pmcno</dt>
+                                <dd>ラダーがデータ送信を要求するための制御用PMCアドレス番号</dd>
+                            <dt>retry</dt>
+                                <dd>通信ボードがデータ送信時に監視する送信リトライ回数 (0～) データ送信に対する返答が無い場合にリトライする回数を設定します。</dd>
+                            <dt>timeout</dt>
+                                <dd>通信ボードがデータ送信時に監視するタイムアウト時間(秒) (1～) データ送信に対する返答までのタイムアウト時間(秒)を設定します。</dd>
+                            <dt>alivetime</dt>
+                                <dd>通信ボードが正常動作している間送信する生存信号の時間間隔(秒)を設定 します。(1～) この値は、timeout時間以下の値を設定して下さい。</dd>
+                            <dt>setno</dt>
+                                <dd>データ送信用データを設定するデータの個数(1～3)</dd>
+                            <dt>type</dt>
+                                <dd>送信データの種類を指定します。 現在未使用(必ず"1"を設定して下さい)。</dd>
+                            <dt>rdaddr</dt>
+                                <dd>データ送信の内容となるPMCアドレス</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0</td>  <td>:</td> <td>G (PMC→CNCへの信号)</td></tr>
+                                        <tr><td>1</td>  <td>:</td> <td>F (CNC→PMCへの信号)</td></tr>
+                                        <tr><td>2</td>  <td>:</td> <td>Y (PMC→機械への信号)</td></tr>
+                                        <tr><td>3</td>  <td>:</td> <td>X (機械→PMCへの信号)</td></tr>
+                                        <tr><td>4</td>  <td>:</td> <td>A (メッセージ要求)</td></tr>
+                                        <tr><td>5</td>  <td>:</td> <td>R (内部リレー)</td></tr>
+                                        <tr><td>6</td>  <td>:</td> <td>T (可変タイマ)</td></tr>
+                                        <tr><td>7</td>  <td>:</td> <td>K (キープリレー) </td></tr>
+                                        <tr><td>8</td>  <td>:</td> <td>C (カウンタ)</td></tr>
+                                        <tr><td>9</td>  <td>:</td> <td>D (データテーブル)</td></tr>
+                                        <tr><td>10</td> <td>:</td> <td>M (他デバイスからの入力信号)</td></tr>
+                                        <tr><td>11</td> <td>:</td> <td>N (他デバイスへの出力信号)</td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>E (拡張リレー)</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>rdno</dt>
+                                <dd>データ送信の内容となるPMCデータの開始番号</dd>
+                            <dt>rdsize</dt>
+                                <dd>データ送信の内容となるPMCデータサイズ(バイト) データ送信用データを設定するデータの個数(setno)によって設定できる最大数は以下のようになります。</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>setno = 1 の場合</td>  <td>:</td> <td>最大1430バイト</td></tr>
+                                        <tr><td>setno = 2 の場合</td>  <td>:</td> <td>総計最大1414バイト</td></tr>
+                                        <tr><td>setno = 3 の場合</td>  <td>:</td> <td>総計最大1398バイト</td></tr>
+                                    </table>
+                                </dd>
+                            <dt>設定例)</dt>
+                                    <table class="dd">
+                                        <tr><td>IPアドレス</td>           <td>:</td> <td>192.168.0.1</td></tr>
+                                        <tr><td>ポート番号</td>           <td>:</td> <td>8196</td></tr>
+                                        <tr><td>制御用PMCアドレス</td>    <td>:</td> <td>R2000</td></tr>
+                                        <tr><td>リトライ回数</td>         <td>:</td> <td>3回</td></tr>
+                                        <tr><td>タイムアウト時間</td>     <td>:</td> <td>10秒</td></tr>
+                                        <tr><td>送信メッセージデータ</td> <td>:</td> <td>2個</td></tr>
+                                        <tr><td>1個目のメッセージ </td>   <td>:</td> <td>R2100-2149</td></tr>
+                                        <tr><td>2個目のメッセージ</td>    <td>:</td> <td>D110-149</td></tr>
+
+                                        <tr><td><br/></td></tr>
+
+                                        <tr><td>IODBUNSOLIC data;</td></tr>
+                                        <tr><td>strcpy(data.ipaddr,"192.168.0.1");</td> <td>//</td> <td>IPアドレス</td></tr>
+                                        <tr><td>data.port = 8196;</td>                  <td>//</td> <td>ポート番号</td></tr>
+                                        <tr><td>data.reqaddr = 5;</td>                  <td>//</td> <td>"R"</td></tr>
+                                        <tr><td>data.pmcno = 2000;</td>                 <td>//</td> <td>2000</td></tr>
+                                        <tr><td>data.retry = 3;</td>                    <td>//</td> <td>リトライ回数</td></tr>
+                                        <tr><td>data.timeout = 10;</td>                 <td>//</td> <td>タイムアウト時間</td></tr>
+                                        <tr><td>data.alivetime = 5;</td>                <td>//</td> <td>生存信号の送信間隔</td></tr>
+                                        <tr><td>data.setno = 2;</td>                    <td>//</td> <td>送信メッセージデータ</td></tr>
+                                        <tr><td>data.rddata[0].pmc.type = 1;</td>       <td>//</td> <td>データの種類 "1" 固定</td></tr>
+                                        <tr><td>data.rddata[0].pmc.rdaddr = 5;</td>     <td>//</td> <td>"R"</td></tr>
+                                        <tr><td>data.rddata[0].pmc.rdno = 2100;</td>    <td>//</td> <td>2100</td></tr>
+                                        <tr><td>data.rddata[0].pmc.rdsize = 50;</td>    <td>//</td> <td>1個目のメッセージサイズ</td></tr>
+                                        <tr><td>data.rddata[1].pmc.type = 1;</td>       <td>//</td> <td>データの種類 "1" 固定</td></tr>
+                                        <tr><td>data.rddata[1].pmc.rdaddr = 9;</td>     <td>//</td> <td>"D"</td></tr>
+                                        <tr><td>data.rddata[1].pmc.rdno = 110;</td>     <td>//</td> <td>110</td></tr>
+                                        <tr><td>data.rddata[1].pmc.rdsize = 40;</td>    <td>//</td> <td>2個目のメッセージサイズ</td></tr>
+                                    </table>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>本関数は使用できません。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>CNC主導メッセージ用パラメータ番号(number)の値が不正です。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+              CNC主導メッセージ用パラメータの内容が不正です。<br/>
+              この戻り値に対して、より詳細な情報を得るには<a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。 ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+<table>
+        <tr><td>0</td>  <td>:</td> <td>EW_DATA 以外のエラー</td></tr>
+        <tr><td>1</td>  <td>:</td> <td>通信先パソコンのIPアドレス(ipaddr)の誤り</td></tr>
+        <tr><td>2</td>  <td>:</td> <td>通信先パソコンのTCP/UDPポート番号(port)の誤り</td></tr>
+        <tr><td>3</td>  <td>:</td> <td>ラダーがデータ送信を要求するための制御用PMCアドレス(reqaddr)の誤り</td></tr>
+        <tr><td>4</td>  <td>:</td> <td>ラダーがデータ送信を要求するための制御用PMCアドレス番号(pmcno)の誤り</td></tr>
+        <tr><td>5</td>  <td>:</td> <td>通信ボードがデータ送信時に監視する送信リトライ回数(retry)の誤り</td></tr>
+        <tr><td>6</td>  <td>:</td> <td>通信ボードがデータ送信時に監視するタイムアウト時間(timeout)の誤り</td></tr>
+        <tr><td>7</td>  <td>:</td> <td>通信ボードが正常動作している間送信する生存信号の時間間隔(alivetime)の誤り</td></tr>
+        <tr><td>8</td>  <td>:</td> <td>データ送信用データを設定するデータの個数(1～3)(setno)の誤り</td></tr>
+        <tr><td>9</td>  <td>:</td> <td>送信データの種類(type)の誤り</td></tr>
+        <tr><td>10</td> <td>:</td> <td>データ送信の内容となるPMCアドレス(rdaddr)の誤り</td></tr>
+        <tr><td>11</td> <td>:</td> <td>データ送信の内容となるPMCデータの開始番号(rdno)の誤り</td></tr>
+        <tr><td>12</td> <td>:</td> <td>データ送信の内容となるPMCデータサイズ(バイト)(rdsize)の誤り</td></tr>
+</table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>CNC主導メッセージ送信中。</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>他の通信先パソコンでメッセージ送信が開始されています。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <dd>上記２つの機能は必要ありません。</dd>
+              <p>イーサネットボードを使用のとき、</p>
+              <dd>イーサネット機能のみ必要です。</dd>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <fast>
+          <ul>
+            <li>Series 16i/18i/21i, 0i, Power Mate i<br/>
+                No.904#4=1 (必ず設定して下さい)<br/>
+            </li>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdunsolicprm</name>
+            <file>Unsolic/cnc_rdunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg</name>
+            <file>Unsolic/cnc_rdunsolicmsg.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

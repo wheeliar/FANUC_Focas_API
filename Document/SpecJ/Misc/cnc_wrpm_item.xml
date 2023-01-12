@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrpm_item</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpm_item(unsigned short FlibHndl, short start_num, short type, short data_num, IODBPMAINTE* item);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            指定された項目インデックスの以下のデータをすべてを書き込みます。
+            <dd/><li>名称</li>
+            <dd/><li>寿命カウントタイプ</li>
+            <dd/><li>寿命時間データ</li>
+            <dd/><li>寿命残り時間データ</li>
+            <dd/><li>寿命カウント状態</li>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>start_num</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライトを開始する項目インデックスを指定します。(1～10)
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            書き込むデータの種類を指定します。
+                        </p>
+                        <table class="dd">
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>全情報の消去(全ての情報を初期化します(文字はNULL、数値は0))</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>名称文字列</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>寿命カウントタイプ</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>寿命時間データ</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>寿命残り時間データ</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>寿命カウント状態</td> </tr>
+                               <tr> <td align="right">-1</td> <td>:</td> <td>上記全て一括</td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            書き込む項目の数を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>item</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            項目のデータを設定するIODBPMAINTE構造体へ配列のポインタです。この配列は(data_num)で指定した数分必要です。
+                        </p>
+IODBPMAINTE構造体は次の通りです。
+<pre>
+typedef struct tagIODBPMAINTE {
+    char  name[62]; /* 名称文字列 */
+    long  type;     /* 寿命カウントタイプ */
+    long  total;    /* 寿命時間（単位は分）*/
+    long  remain;   /* 寿命残り時間 */
+    long  stat;     /* 寿命カウント状態 */
+} IODBPMAINTE;
+</pre>
+            <dt>name</dt>
+            <dd>名称文字列を指定します。</dd>
+                        <dd>名称の指定方法は、<a href="misc/cnc_wrpm_mcnitem.htm" target="_parent">cnc_wrpm_mcnitem</a>関数の説明を参照して下さい。</dd>
+
+            <dt>type</dt>
+            <dd>寿命カウントタイプを指定します。</dd>
+            <dd>
+                        <table class="dd">
+                            <tr><td>0</td><td>:</td><td>寿命カウンタ無効</td></tr>
+                            <tr><td>1</td><td>:</td><td>全時間</td></tr>
+                            <tr><td>2</td><td>:</td><td>通電中</td></tr>
+                            <tr><td>3</td><td>:</td><td>運転中</td></tr>
+                            <tr><td>4</td><td>:</td><td>切削中</td></tr>
+                        </table>
+            </dd>
+
+            <dt>total</dt>
+            <dd>寿命時間を指定します。</dd>
+            <span class="xis">
+                <dd>16i/18i/21iの場合、単位は、"時間" です。</dd>
+                <dd>30i/31i/32i, 0i-D, PMi-Aの場合、単位は、"分" です。</dd>
+            </span>
+            <span class="ois">
+                <dd>単位は、"分" です。</dd>
+            </span>
+
+            <dt>remain</dt>
+            <dd>寿命時間を指定します。</dd>
+            <span class="xis">
+                <dd>16i/18i/21iの場合、単位は、"時間" です。</dd>
+                <dd>30i/31i/32i, 0i-D, PMi-Aの場合、単位は、"分" です。</dd>
+            </span>
+            <span class="ois">
+                <dd>単位は、"分" です。</dd>
+            </span>
+
+            <dt>stat</dt>
+            <dd>寿命カウント状態を指定します。</dd>
+            <span class="xis">
+                <dd>16i/18i/21iは未使用。</dd>
+            </span>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+             <name>EW_FUNC</name>
+         <content>
+        項目名称または、寿命時間が設定されていません。<br/>
+                <span class="xis">または、プログラム運転中です。(16i18i/21iのみ)</span>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+        データブロック長の誤り<br/>
+        書き込む項目数(data_num)が0です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+        データ番号の誤り<br/>
+        ライト開始項目インデックス(start_num)が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+        データ属性の誤り<br/>
+        書き込むデータの種類(type)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+        データ番号の誤り<br/>
+        cnc_getdtailerr関数の詳細ステータスerr_noに、以下の値がセットされています。<br/>
+        1 : 名称の誤り<br/>
+        2 : 寿命カウントタイプの誤り<br/>
+        3 : 寿命時間データの誤り<br/>
+        4 : 寿命残り時間データの誤り<br/>
+        5 : 寿命カウント状態の誤り<br/>
+        また、err_dtno に不正データが含まれる項目インデックスがセットされます。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+        CNC側の処理実行拒否<br/>
+        CNCが運転中です。
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+            但し、Series 0i-D, Series 30i, PMi-A に関しては次のようになります。<br/><br/>
+            組込みイーサネットを使用のとき、<br/>
+            <p class="dd">上記２つの機能は必要ありません。</p>
+            イーサネットボードを使用のとき、<br/>
+            <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdpm_item</name>
+            <file>misc/cnc_rdpm_item.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

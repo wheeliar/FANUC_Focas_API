@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_sdtstartsmpl2</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_sdtstartsmpl2(unsigned short FlibHndl,short path, short condition, TRG_DATA trg_data); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    The start of sampling is notified.
+                </p>
+                <p>
+                    In case of cnc_sdtstartsmpl, start sampling after trigger. However, in case of this function, start sampling immediately after function call.
+                </p>
+                <p>
+                    Therefore, after function call, acquire data immediately by cnc_sdtreadsmpl2. Trigger is confirmed by trg, the one argument of cnc_sdtreadsmpl2.
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>path</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                When sequence number is set to triger, specify CNC path number.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>condition</name>
+                        <type>in</type>
+                        <content>
+                            <p><img src="Motor/sdtstart.gif"/></p>
+                            <p>
+                                trigger information
+                            </p>
+                            <table border="0" class="dd">
+                                <colgroup align="left" valign="top">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr><td>SEQ</td><td>：</td><td>set sequence number to trigger</td></tr>
+                                <tr><td>P_UP</td><td>：</td><td>set rise-up of the signal to trigger</td></tr>
+                                <tr><td>P_DW</td><td>：</td><td>set rise-down of the signal to trigger</td></tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            <p>
+                                ※ When change of the signal is set to trigger, set 1 to P_UP and P_DW.
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>trg_data</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specified trigger data.
+                            </p>
+<pre>
+typedef struct trg_data {           /* trigger data */
+    long seq_no;                    /* sequence number */
+    typedef struct pmc_data{    /* PMC signal */
+        short unittype;         /* PMC path (unit type)  */
+        char adr;               /* kind of PMC address */
+        unsigned char bit;      /* bit number */
+        unsigned short no;      /* PMC address number */
+    } pmc_trg;
+} TRG_DATA;
+</pre>
+                            <br/>
+                            <p>
+                               The member of the pmc_trg structure is as follows.
+                            </p>
+                            <dl>
+                                <dt>unittype</dt>
+                                <dd>PMC path (unit type)</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>not sampled (at this bit position) </td></tr>
+                                    <tr><td>1</td><td>：</td><td>1st PMC(include PMC-L)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>2nd PMC(optional)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>3rd PMC(optional)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>4th PMC(optional)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>5th PMC(optional)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>Dual-check safety PMC(optional) </td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                            <dl>
+                                <dt>adr</dt>
+                                <dd>kind of PMC address</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>G(Signal to PMC->CNC)</td></tr>
+                                    <tr><td>1</td><td>：</td><td>F(Signal to CNC->PMC)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>Y(Signal to PMC->machine)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>X(Signal to machine->PMC)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>A(Message display)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>R(Internal relay)</td></tr>
+                                    <tr><td>7</td><td>：</td><td>K(Keep relay)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>D(Data table)</td></tr>
+                                    <tr><td>10</td><td>：</td><td>M(Input signal from other PMC path)</td></tr>
+                                    <tr><td>11</td><td>：</td><td>N(Output signal to other PMC path)</td></tr>
+                                    <tr><td>12</td><td>：</td><td>E(Extra relay)</td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dd>※T(Timer)・C(Counter) address cannot be sampled.</dd>
+                            </dl>
+                            <dl>
+                                <dt>bit</dt>
+                                <dd>bit number of PMC address</dd>
+                            </dl>
+                            <dl>
+                                <dt>no</dt>
+                                <dd>PMC address number</dd>
+                            </dl>
+                        </content>
+                    </item>
+
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    condition is wrong.
+                </content>
+            </item>
+            <item>
+                <name>EW_FUNC</name>
+                <content>
+                    Channel data setting is invalid.<br/>
+                    Channel data setting is not completed. 
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    Trigger option of signal is not set.
+                </content>
+            </item>
+            <item>
+                <name>EW_PATH</name>
+                <content>
+                    Path number is wrong.
+                </content>
+            </item>
+            <item>
+                <name>EW_REJECT</name>
+                    <content>
+                    CNC execution denied<br/>
+                    In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function.<br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr><td> 1</td><td>:</td><td>Sampling already started.<br/>Execute this function again after executing of cnc_sdtcancelsmpl or cnc_sdtendsmpl. </td></tr>
+                        <tr><td>20</td><td>:</td><td>PMC signal setting(unit type) is wrong.</td></tr>
+                        <tr><td>21</td><td>:</td><td>PMC signal setting(kind of PMC address) is wrong.</td></tr>
+                        <tr><td>22</td><td>:</td><td>PMC signal setting(PMC address number) is wrong.</td></tr>
+                        <tr><td>23</td><td>:</td><td>PMC signal setting(bit number) is wrong.</td></tr>
+                        <tr><td> 4</td><td>:</td><td>the others</td></tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>
+                The extended driver/library function is necessary. 
+            </hssb>
+            <ethr>
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                    <p class="dd">above two optional functions are not required.</p>
+                <p>When Ethernet board is used,</p>
+                    <p class="dd">only Ethernet function is required.</p>
+            </ethr>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    The following functions are necessary for this function.
+                    <ul type="disc">
+                        <li>The extended driver/library function.</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+    <reference>
+        <item>
+            <name>cnc_sdtclrchnl</name>
+            <file>motor/cnc_sdtclrchnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtsetchnl2</name>
+            <file>motor/cnc_sdtsetchnl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtcancelsmpl</name>
+            <file>motor/cnc_sdtcancelsmpl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtreadsmpl2</name>
+            <file>motor/cnc_sdtreadsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtendsmpl2</name>
+            <file>motor/cnc_sdtendsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtread1shot</name>
+            <file>motor/cnc_sdtread1shot.htm</file>
+        </item>
+    </reference>
+
+
+
+
+    </func>
+</root>

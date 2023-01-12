@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdfixcycle</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdfixcycle(unsigned short FlibHndl, ODBFIX *fixcyc);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+  穴あけ固定サイクルモード、及び固定サイクルデータを読み出します。データはODBFIX内の各メンバに格納されます。
+</p>
+<p>
+位置情報の小数点位置は、<a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。
+</p>
+      </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>fixcyc</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            固定サイクルデータを返すODBFIX構造体へのポインタです。ODBFIX構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbfix {
+    short   mode;       /* 固定サイクルモード */
+    short   pln_axes[2];/* 平面選択軸 */
+    short   drl_axes;   /* 穴あけ軸 */
+    long    i_pos;      /* イニシャル点の絶対位置 */
+    long    r_pos;      /* R点の絶対位置 */
+    long    z_pos;      /* Z点の絶対位置 */
+    long    cmd_cnt;    /* 繰返し回数の指令値 */
+    long    act_cnt;    /* 繰返し回数の現在値 */
+    long    cut;        /* 切込み量 */
+    long    shift[2];   /* シフト量 */
+} ODBFIX ;
+</pre>
+<dl>
+    <dt>mode</dt>
+        <dd>固定サイクルモードがセットされます。</dd>
+            <dd><table class="dd">
+            <tr> <td>0</td> <td>:</td> <td>固定サイクルキャンセルモード</td> </tr>
+            <tr> <td>1</td> <td>:</td> <td>固定サイクルモード          </td> </tr>
+            </table></dd>
+        <dd>※ modeが0の時、mode以外のメンバは無効です。</dd>
+    <dt>pln_axes</dt>
+        <dd>平面選択軸の軸番号がセットされます。</dd>
+        <dd>(0～MAX_AXIS-1) MAX_AXIS：最大制御軸数</dd>
+            <dd><table class="dd">
+            <tr> <td>pln_axes[0]</td> <td>:</td> <td>平面選択第1軸用軸番号</td> </tr>
+            <tr> <td>pln_axes[1]</td> <td>:</td> <td>平面選択第2軸用軸番号</td> </tr>
+            </table></dd>
+    <dt>drl_axes</dt>
+        <dd>穴あけ軸の軸番号がセットされます。</dd>
+        <dd>(0～MAX_AXIS-1) MAX_AXIS：最大制御軸数</dd>
+    <dt>i_pos</dt>
+        <dd>イニシャル点の絶対位置がセットされます。</dd>
+    <dt>r_pos</dt>
+        <dd>R点の絶対位置がセットされます。</dd>
+    <dt>z_pos</dt>
+        <dd>Z点の絶対位置がセットされます。</dd>
+    <dt>cmd_cnt</dt>
+        <dd>繰返し回数の指令値がセットされます。</dd>
+    <dt>act_cnt</dt>
+        <dd>繰返し回数の現在値がセットされます。</dd>
+    <dt>cut</dt>
+        <dd>G73(高速深穴あけサイクル)、G83(深穴あけサイクル)における切込み量がセットされます。</dd>
+    <dt>shift</dt>
+        <dd>G76(ファインボーリング)、G87(ボーリング)におけるシフト量がセットされます。</dd>
+            <dd><table class="dd">
+            <tr> <td>shift[0]</td> <td>:</td> <td>第1軸</td> </tr>
+            <tr> <td>shift[1]</td> <td>:</td> <td>第2軸</td> </tr>
+            </table></dd>
+        <dd>CNCパラメータ6200#2=0の時、shift[1]は未使用です。</dd>
+</dl>
+
+<p/>ODBFIXの各メンバがどの軸に対応しているかは、CNCパラメータと平面選択のGコードにより以下のようになります。
+<p/>※ 下表には基本軸のみ記載されていますが、実際はその平行軸も含まれます。
+
+<p/>CNCパラメータ6200#2 = 1、6200#0 = 1の場合
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td colspan="4">Z軸</td> <td>X軸</td> <td>Y軸</td> </tr>
+        <tr> <td>G18</td> <td colspan="4">Y軸</td> <td>Z軸</td> <td>X軸</td> </tr>
+        <tr> <td>G19</td> <td colspan="4">X軸</td> <td>Y軸</td> <td>Z軸</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNCパラメータ6200#2 = 1、6200#0 = 0の場合
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td rowspan="3" colspan="4">Z軸</td> <td>X軸</td> <td>Y軸</td> </tr>
+        <tr> <td>G18</td> <td>Z軸</td> <td>X軸</td> </tr>
+        <tr> <td>G19</td> <td>Y軸</td> <td>Z軸</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNCパラメータ6200#2 = 0、6200#0 = 1の場合
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+        <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+        <tr> <td>G17</td> <td colspan="4">Z軸</td> <td rowspan="3">注)</td> <td rowspan="3">未使用</td> </tr>
+        <tr> <td>G18</td> <td colspan="4">Y軸</td> </tr>
+        <tr> <td>G19</td> <td colspan="4">X軸</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>CNCパラメータ6200#2 = 0、6200#0 = 0の場合
+<table border="1">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <colgroup align="center" valign="center">
+    <thead>
+    <tr> <th></th> <th>i_pos</th> <th>r_pos</th> <th>z_pos</th> <th>cut</th> <th>shift[0]</th> <th>shift[1]</th> </tr>
+    </thead>
+    <tbody>
+    <tr> <td>G17</td> <td rowspan="3" colspan="4">Z軸</td> <td rowspan="3">注)</td> <td rowspan="3">未使用</td> </tr>
+    <tr> <td>G18</td> </tr>
+    <tr> <td>G19</td> </tr>
+    </tbody>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+    </colgroup>
+</table>
+<p/>注) CNCパラメータ6240で設定された軸。
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>穴あけ固定サイクル、及び拡張ドライバ/ライブラリ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</ethr>
+        <need>穴あけ固定サイクル機能が必要です。</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li><p/>
+                <p>6200#0,#2, 6240 (設定の影響を受けます)</p>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdradofs</name>
+            <file>misc/cnc_rdradofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdlenofs</name>
+            <file>misc/cnc_rdlenofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdcdrotate</name>
+            <file>misc/cnc_rdcdrotate.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dcdcnv</name>
+            <file>misc/cnc_rd3dcdcnv.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmirimage</name>
+            <file>misc/cnc_rdmirimage.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdscaling</name>
+            <file>misc/cnc_rdscaling.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dtofs</name>
+            <file>misc/cnc_rd3dtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdposofs</name>
+            <file>misc/cnc_rdposofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

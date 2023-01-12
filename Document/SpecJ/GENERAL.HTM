@@ -1,0 +1,1841 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>ライブラリ全般</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+<style>
+<!--
+ol li ul {list-style-type:disc}
+ol li ul li ul{list-style-type:circle}
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a>
+
+<hr>
+
+<h2>ライブラリ全般</h2>
+
+<ol>
+
+<ol>
+    <li><a href="#File">ファイル構成</a>
+    <li><a href="#WinApi">API関数呼び出し規約</a>
+    <li><a href="#Multi">マルチスレッド対応</a>
+    <li><a href="#Lang">開発言語</a>
+    <li><a href="#Struct">構造体メンバのアライメント</a>
+    <li><a href="#Header">ヘッダファイル</a>
+    <li><a href="#UserDef">Visual Basic 6.0でユーザ定義型の配列を使用する場合</a>
+    <li><a href="#AxisNum">データウィンドウでのCNCの軸数</a>
+    <li><a href="#O8">プログラム番号8桁対応 (Series 15i, 16/18)</a>
+    <li><a href="#FS15">関数仕様の違い (Series 15iと他のCNC(Series 16/18/21/0, Power Mate))</a>
+    <li><a href="#FS15vsFS15i">関数仕様の違い (Series 15-B、Series 15i)</a>
+    <li><a href="#FS30">関数仕様の違い (Series 30i, 0i-D/F, PMi-Aと他のCNC)</a>
+    <li><a href="#FS30iAvsFS30iB">関数仕様の違い (Series 30i-A、Series 30i-B)</a>
+    <li><a href="#FS16Comp">FS30i本来の仕様(32軸)とFS16i互換(8軸)仕様
+    <li><a href="#HSSBvsEther">HSSB版とEthernet版の相違点</a>
+    <li><a href="#DriveName">FS30i, 0i-D/F, PMi-Aのフォルダ名/ファイル名の指定方法について</a>
+    <li><a href="#NonVolatileMemory">FS30i, 0i-D/F, PMi-Aの不揮発性メモリについて</a>
+</ol>
+<p>
+<br/>
+
+<!---------------------------------------------------------------------------->
+<li><a name="File">ファイル構成</a>
+<ul>
+	<li>32ビット版
+</ul>
+<blockquote>
+<table class=dt>
+	<tr><td>FWLIB32.DLL  <td> : <td>CNC/PMCデータウィンドウ統轄ライブラリ			</tr>
+	<tr><td>FWLIBE1.DLL  <td> : <td>Ethernet用ライブラリ (*1)				</tr>
+	<tr><td>FWLIB150.DLL <td> : <td>HSSB用機種別ライブラリ(15-B用)				</tr>
+	<tr><td>FWLIB15i.DLL <td> : <td>HSSB用機種別ライブラリ(15i用)				</tr>
+	<tr><td>FWLIB160.DLL <td> : <td>HSSB用機種別ライブラリ(16/18/21用)			</tr>
+	<tr><td>FWLIB16W.DLL <td> : <td>HSSB用機種別ライブラリ(16i/18i-W用)			</tr>
+	<tr><td>FWLIB0i.DLL  <td> : <td>HSSB用機種別ライブラリ(0i-A用)				</tr>
+	<tr><td>FWLIB0iB.DLL <td> : <td>HSSB用機種別ライブラリ(0i-B用)				</tr>
+	<tr><td>FWLIB0iD.DLL <td> : <td>HSSB用機種別ライブラリ(0i-D用)				</tr>
+	<tr><td>FWLIBPM.DLL  <td> : <td>HSSB用機種別ライブラリ(Power Mate-D/H用)		</tr>
+	<tr><td>FWLIBPMi.DLL <td> : <td>HSSB用機種別ライブラリ(Power Mate i-D/H用)		</tr>
+	<tr><td>FWLIB30i.DLL <td> : <td>HSSB用機種別ライブラリ(30i/31i/32i/35i,0i-F,PMi-A用)	</tr>
+	<tr><td>FWLIBNCG.DLL <td> : <td>HSSB用機種別ライブラリ(NCガイド(31i/32i/35i,0i-F)用)	</tr>
+	<tr><td>FWLIB0DN.DLL <td> : <td>HSSB用機種別ライブラリ(NCガイド(0i-D)用)		</tr>
+	<tr><td>FWLIB32.LIB  <td> : <td>インポートライブラリ					</tr>
+	<tr><td>FWLIB32.H    <td> : <td>C/C++用関数のプロトタイプ宣言、構造体宣言、戻り値の定義用ヘッダファイル (*2)(*3)(*4) </tr>
+	<tr><td>FWLIB32.BAS  <td> : <td>Visual Basic用関数のプロトタイプ宣言、構造体宣言、戻り値の宣言用ヘッダファイル (*2)(*3)(*4) </tr>
+</table>
+</blockquote>
+<ul>
+	<li>64ビット版
+</ul>
+<blockquote>
+<table class=dt>
+	<tr><td>FWLIB64.DLL   <td> : <td>CNC/PMCデータウィンドウ統轄ライブラリ			</tr>
+	<tr><td>FWLIBE64.DLL  <td> : <td>Ethernet用ライブラリ (*1)				</tr>
+	<tr><td>FWLIB0iD64.DLL<td> : <td>HSSB用機種別ライブラリ(0i-D用)				</tr>
+	<tr><td>FWLIB30i64.DLL<td> : <td>HSSB用機種別ライブラリ(30i/31i/32i/35i,0i-F,PMi-A用)	</tr>
+	<tr><td>FWLIBNCG64.DLL<td> : <td>HSSB用機種別ライブラリ(NCガイド(31i/32i/35i,0i-F)用)	</tr>
+	<tr><td>FWLIB0DN64.DLL<td> : <td>HSSB用機種別ライブラリ(NCガイド(0i-D)用)		</tr>
+	<tr><td>FWLIB64.LIB   <td> : <td>インポートライブラリ					</tr>
+	<tr><td>FWLIB64.H     <td> : <td>C/C++用関数のプロトタイプ宣言、構造体宣言、戻り値の定義用ヘッダファイル (*2)(*3)(*4) </tr>
+</table>
+	<br/>
+	<p>(*1)Ethernet用ライブラリは、0i-B/C/D/F, 16i/18i/21i, 15i, Power Mate i-D/H, Power Motion i-A, 30i/31i/32i/35iおよび、NCガイドで共通に使用できます。
+	<p>(*2)ヘッダファイルは、機種ごとにその内容が異なります。
+	<p>(*3)機種ごとのヘッダファイルは、HSSB、Ethernet共通に使用できます。
+	<p>(*4)Ethernet用のヘッダファイルは機種毎に区別ありません(定数を定義することによって機種ごとに使用できます)。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="WinApi">API関数呼び出し規約</a>
+<blockquote>
+<p>32ビット版のライブラリの各関数は、WIN32 API呼び出し規約に従っています。従って、32ビット開発環境を持つVisual C++ や Visual Basicからの呼び出しが可能です。
+<p>64ビット版のライブラリの各関数は、x64 API呼び出し規約に従っています。従って、64ビット開発環境を持つVisual C++からの呼び出しが可能です。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Multi">マルチスレッド対応</a>
+<blockquote>
+<p>WIN32/x64ではマルチスレッドがサポートされています。本ライブラリ中の関数は、複数のスレッドから同時に使用する事が可能です。単一の資源(CNC/PMCの内部メモリ等)への同時アクセスは、本ライブラリ中で排他制御が行われます。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Lang">開発言語</a>
+<blockquote>
+<p>データウィンドウライブラリは以下の開発言語で動作確認を行いました。
+<ul>
+	<li>32ビット版<br/>
+	    - Visual C++ 6.0<br/>
+	    - Visual Basic 6.0
+</ul>
+<ul>
+	<li>64ビット版<br/>
+	    - Visual Studio 2010
+</ul>
+<p>なお、データウィンドウライブラリは、Microsoft社の開発ツールを使って作成されています。その他のベンダから出ている開発ツールと共に使った場合の動作は保証されていません。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Struct">構造体メンバのアライメント</a>
+<blockquote>
+<p>本ライブラリは、<!--WIN32対応のため、-->「4バイトアライメント」で設計されています。
+<p>4バイトアライメントでは、4バイト以上の長さのデータが4の倍数のアドレスに配置されます。例えば、<br>
+<pre>
+    struct {
+        short   a1;     /* 2バイト長 */
+        long    a2;     /* 4バイト長 */
+    };
+</pre>
+<p>のような構造体では、a1とa2との間に2バイトの隙間が空く事になります。また、構造体のサイズは4の倍数に切り上げられます。
+<p>4バイトアライメントに変更した結果、構造体のサイズやメンバのオフセットが変わりました。それゆえ、<b>16ビット版データウィンドウライブラリの仕様説明(「MMC-IV取扱説明書」中の記述)に書いてある情報に従って、構造体のサイズや、メンバのオフセットを計算で求めているプログラムは正しく動作しません。</b>構造体のサイズは&quot;sizeof(構造体)&quot;で求めて下さい。
+<p>ヘッダファイル FWLIB32.H/FWLIB64.Hでは、&quot;#pragma pack(4)&quot;を使用して、構造体のアライメントを強制的に4バイトに指定しています。アプリケーションで、データウィンドウライブラリとのインタフェースのため、構造体をソース中で再定義する場合は、<b>&quot;#pragma pack(4)&quot;を指定するか、コンパイラオプション&quot;/Zp4&quot;で4バイトアライメントを指定して下さい。</b>
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="Header">ヘッダファイル</a>
+<blockquote>
+<p>本ライブラリの各関数は&quot;dllexport&quot;を指定して作成してあります。C/C++言語からこれらの関数を使用するには&quot;dllimport&quot;を指定する必要があります。
+<p>ヘッダファイル FWLIB32.H/FWLIB64.Hで、この指定を行っています。従って、<b>ヘッダファイルをインクルードしないでアプリケーションを作成しようとした場合、リンクエラーになります。</b>ヘッダファイルは、必ず使用して下さい。
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="#UserDef">Visual Basic 6.0でユーザ定義型の配列を使用する場合</a>
+<blockquote>
+<p>Visual Basic 6.0でユーザ定義型の配列を使用する場合、次のように新たなユーザ定義型を定義してそのユーザ定義型を指定して下さい。
+<p>例) cnc_rdprogdir3関数
+<pre>
+Type MyPrgDir3
+    DirBuf(0 To 9) As PRGDIR3
+End Type' 読み取り個数=10の場合
+</pre>
+
+<pre>
+プログラム例
+        以下のプログラムは全てのNCプログラムの登録状況を読みだし、その内容をファイルに出力します。
+
+        Type MyPrgDir3
+            DirBuf(0 To 99) As PRGDIR3
+        End Type'
+
+
+        Dim ret As Integer
+        Dim prg As MyPrgDir3
+        Dim i As Integer
+        Dim num As Integer
+        Dim top As Long
+        Dim dir3 As String
+
+        Open "C:\\temp\\sample.dat" For Output As #1
+
+        top = 0
+        Do
+            num = 100
+            ret = cnc_rdprogdir3(h, 0, top, num, prg)
+            If ret = EW_NUMBER Then
+                Exit Do
+            ElseIf ret <> 0 Then
+                dir3 = "ERROR: " + Format(ret, "###0")
+                Print #1, dir3
+                Exit Do
+            End If
+
+            For i = 0 To num - 1
+                dir3 = "O" + Format(prg.DirBuf(i).lNumber, "######0")
+                Print #1, dir3
+            Next
+            top = prg.DirBuf(num - 1).lNumber + 1
+        Loop While (num >= 100)
+
+        Close #1
+</pre>
+
+
+<p>次のような指定をした場合、正しく動作しません(データが取得できない。アプリケーションエラーが発生する。等の現象が発生する)ので注意して下さい。
+<pre>
+Dim prg(0 To 9) As PRGDIR3
+ret = cnc_rdprogdir3(h, 0, top, num, prg)
+</pre>
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="AxisNum">データウィンドウでのCNCの軸数</a>
+<blockquote>
+<dl>
+	<dt>最大軸数	<dd>データウィンドウ用インタフェースの最大軸数
+	<dt>制御軸数	<dd>CNCシステムで現在制御している軸数
+</dl>
+<p>最大軸数はヘッダファイルにてMAX_AXISと定義されています。この定数の値は使用するシステムによって異なります。必要に応じて、C/C++言語の場合、コンパイル時に-Dオプションにて、以下の文字定数を定義して下さい。
+
+	<ul>
+	<li>Ethernet版用ヘッダファイルを使用する場合<br/>
+	    Ethernet用のヘッダファイルは、次の -Dオプションで、全ての機種(HSSB, Ethernet共)に対応できます。<br/>
+	    HSSB用に使用する場合は、"HSSB_LIB" も定義して下さい。
+	<table border=1>
+		<tr> <th>機種						 <th>定数(-D)	</tr>
+		<tr> <td>FS16/18/21, 0i-B, 0i-C, 16i/18i-W, Power Mate i(8軸)	 <td>(なし)	</tr>
+		<tr> <td>FS0i-D(32軸)					 <td>FS0IDD	</tr>
+		<tr> <td>FS30i/31i/32i/35i, 0i-F, PMi-A(32軸)		 <td>FS30D	</tr>
+		<tr> <td>FS15-B/15i多軸(24軸)				 <td>M_AXIS2	</tr>
+		<tr> <td>FS15-B多軸(15軸)				 <td>M_AXIS1	</tr>
+		<tr> <td>FS15-B(10軸)					 <td>FS15BD	</tr>
+		<tr> <td>FS15i(10軸)					 <td>FS15D	</tr>
+		<tr> <td>FS0i-A(4軸)					 <td>FS0ID	</tr>
+		<tr> <td>Power Mate(6軸)				 <td>PMD	</tr>
+	</table>
+	<p>* FS15の場合は、シリーズにより、"FS15BD"(FS15-Bの場合)、"FS15D"(FS15iの場合) も定義して下さい。</p>
+<pre>
+#if defined (FS30D) || defined (FS0IDD)
+#define MAX_AXIS        32
+#elif defined (M_AXIS2)
+#define MAX_AXIS        24
+#elif defined(M_AXIS1)
+#define MAX_AXIS        15
+#elif defined (FS15BD)
+#define MAX_AXIS        10
+#elif defined (FS15D)
+#define MAX_AXIS        10
+#elif defined (FS0ID)
+#define MAX_AXIS        4
+#elif defined (PMD)
+#define MAX_AXIS        6
+#else
+#define MAX_AXIS        8
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>Series 30i/31i/32i/35i, 0i-D/F, PMi-A用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(32軸)	<td>	(なし)		</tr>
+	</table>
+<pre>
+#define MAX_AXIS        32
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>Series 15-B用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(10軸)	<td>	(なし)		</tr>
+		<tr>	<td>多軸(15軸)	<td>	M_AXIS1		</tr>
+		<tr>	<td>多軸(24軸)	<td>	M_AXIS2		</tr>
+	</table>
+<pre>
+#if defined(M_AXIS2)
+#define MAX_AXIS        24
+#elif defined(M_AXIS1)
+#define MAX_AXIS        15
+#else
+#define MAX_AXIS        10
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>Series 15i用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(10軸)	<td>	(なし)		</tr>
+		<tr>	<td>多軸(24軸)	<td>	M_AXIS2		</tr>
+	</table>
+<pre>
+#if defined(M_AXIS2)
+#define MAX_AXIS        24
+#else
+#define MAX_AXIS        10
+#endif
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>Series 16/18/21, 0i-B, 16i/18i-W, Power Mate i用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(8軸)	<td>	(なし)		</tr>
+	</table>
+<pre>
+#define MAX_AXIS        8
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>HSSB用Series 0i-A用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(4軸)	<td>	(なし)		</tr>
+	</table>
+<pre>
+#define MAX_AXIS        4
+</pre>
+</ul>
+<br/>
+
+<ul>
+	<li>HSSB用Power Mate用ヘッダファイルを使用する場合
+	<table border=1>
+		<tr>	<th>システム		<th>定数(-D)	</tr>
+		<tr>	<td>標準(6軸)	<td>	(なし)		</tr>
+	</table>
+<pre>
+#define MAX_AXIS        6
+</pre>
+</ul>
+<br/>
+
+
+<p>Visual Basicの場合、Visual Basicのメニュー[ツール]→[オプション]→[詳細設定]→[条件付きコンパイル引数]にて、指定して下さい。
+
+<p>制御軸数は、CNCシステム情報のリード(<a href="./misc/cnc_sysinfo.htm">cnc_sysinfo</a>)で取得できます。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="O8">プログラム番号8桁対応 (Series 15i, 16/18)</a>
+<blockquote>
+<p><b>プログラム番号8桁対応の場合には、後述のウインドウ関数のプログラム番号に関連する引き数、及び構造体のメンバがshortからlongに変更されます。</b>
+<p>C/C++言語の場合、コンパイル時に-Dオプションにて文字定数ONO8Dを定義することにより、プログラム番号8桁対応用に切り替わります。
+	<blockquote>
+	<table border=1>
+		<tr><th>システム			<th>定数(-D)	</tr>
+		<tr><td>プログラム番号4桁	<td>(なし)		</tr>
+		<tr><td>プログラム番号8桁	<td>ONO8D		</tr>
+	</table>
+	</blockquote>
+<p>Visual Basicの場合、プログラム番号8桁にするときは、Visual Basicのメニュー[ツール]→[オプション]→[詳細設定]→[条件付きコンパイル引数]にてONO8D=1と、指定して下さい。変数定義がない場合と、ONO8D=0を指定した場合はプログラム番号4桁となります。
+<p>プログラム番号8桁用としてコンパイルしたウインドウ関数は、CNC側がプログラム番号4桁の場合にも正常に動作します。逆にプログラム番号4桁用ウインドウ関数をCNC側がプログラム番号8桁の場合に使用するとエラー(EW_FUNC)となります。
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS15">関数仕様の違い (Series 15iと他のCNC(Series 16/18/21/0, Power Mate))</a>
+<blockquote>
+
+<p><b>Series 15i用のアプリケーションを作成する場合、コンパイルオプション(FS15D)を指定する必要があります。</b>
+<p>C/C++言語の場合、コンパイル時に-Dオプションにて文字定数<b>FS15D</b>を定義してください。Visual Basicの場合、VBのメニュー[ツール] → [オプション] → [詳細設定] → [条件付きコンパイル引数]にて<b>FS15D=1</b>と、指定して下さい。
+
+<p>また、Series 15iと他のCNC(Series 16/18/21/0, Power Mate)とでは、関数の仕様が異なります。主な相違点は次の通りです。
+
+<ul>
+<li>全軸指定のデータサイズ
+<div>
+<p>関数によっては、全軸指定のリード/ライトを行う場合、確保するデータのサイズが以下のように異なることがあります。
+<blockquote>
+	<table>
+		<tr><td>Series 16/18/21/0, Power Mate<td>:<td><b>制御軸数分</b>のサイズ</tr>
+		<tr><td>Series 15<td>:<td><b>最大制御軸数分</b>のサイズ</tr>
+	</table>
+</blockquote>
+<p>関係する関数は以下の通りです。
+<table border=1>
+	<tr>
+		<th>機能
+		<th>関数名
+	</tr>
+	<tr>
+		<td>制御軸の絶対位置のリード
+		<td><a href="./position/cnc_absolute.htm">cnc_absolute</a>, 
+			<a href="./position/cnc_absolute2.htm">cnc_absolute2</a>
+	</tr>
+	<tr>
+		<td>制御軸の機械位置のリード
+		<td><a href="./position/cnc_machine.htm">cnc_machine</a>
+	</tr>
+	<tr>
+		<td>制御軸の相対位置のリード
+		<td><a href="./position/cnc_relative.htm">cnc_relative</a>, 
+			<a href="./position/cnc_relative2.htm">cnc_relative2</a>
+	</tr>
+	<tr>
+		<td>制御軸の残移動量のリード
+		<td><a href="./position/cnc_distance.htm">cnc_distance</a>
+	</tr>
+	<tr>
+		<td>制御軸のスキップ位置のリード
+		<td><a href="./position/cnc_skip.htm">cnc_skip</a>
+	</tr>
+	<tr>
+		<td>制御軸のサーボ遅れ量のリード
+		<td><a href="./position/cnc_srvdelay.htm">cnc_srvdelay</a>
+	</tr>
+	<tr>
+		<td>制御軸の加減速遅れ量のリード
+		<td><a href="./position/cnc_accdecdly.htm">cnc_accdecdly</a>
+	</tr>
+	<tr>
+		<td>制御軸の相対位置のオリジン/プリセット
+		<td><a href="./position/cnc_wrrelpos.htm">cnc_wrrelpos</a>
+	</tr>
+	<tr>
+		<td>ワーク座標系のプリセット
+		<td><a href="./position/cnc_prstwkcd.htm">cnc_prstwkcd</a>
+	</tr>
+	<tr>
+		<td>ワーク原点オフセット量のリード
+		<td><a href="./ncdata/cnc_rdzofs.htm">cnc_rdzofs</a>
+	</tr>
+	<tr>
+		<td>ワーク原点オフセット量のライト
+		<td><a href="./ncdata/cnc_wrzofs.htm">cnc_wrzofs</a>
+	</tr>
+	<tr>
+		<td>パラメータのリード
+		<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+	</tr>
+	<tr>
+		<td>パラメータのライト
+		<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+	</tr>
+	<tr>
+		<td>セッティングデータのリード
+		<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+	</tr>
+	<tr>
+		<td>セッティングデータのライト
+		<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+	</tr>
+	<tr>
+		<td>ダイアグノーズデータのリード
+		<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+	</tr>
+</table>
+</div>
+
+
+<li>プログラム番号桁数
+<div>
+<p><b>Series 15iでは、プログラム番号が必ず8桁となります。</b>
+<p>よってSeries 15iでは、必ずAPIを8桁対応に切り替える必要があります。ライブラリをプログラム番号8桁に対応させる方法については、<a href="#O8">「プログラム番号8桁対応」</a>を参照して下さい。関係する関数は以下の通りです。
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>ダイナミックデータの一括リード
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>
+</tr>
+<tr>
+	<td>指定プログラムのサーチ
+	<td><a href="./program/cnc_search.htm">cnc_search</a>
+</tr>
+<tr>
+	<td>指定プログラムの削除
+	<td><a href="./program/cnc_delete.htm">cnc_delete</a>
+</tr>
+<tr>
+	<td>プログラムディレクトリのリード(2)
+	<td><a href="./program/cnc_rdprogdir2.htm">cnc_rdprogdir2</a>
+</tr>
+<tr>
+	<td>実行中のプログラム番号のリード
+	<td><a href="./program/cnc_rdprgnum.htm">cnc_rdprgnum</a>
+</tr>
+</table>
+</div>
+
+
+<li>工具番号桁数
+<div>
+<p><b>Series 15iでは、工具番号が必ず8桁となります。</b>
+<p>Series 15iでは、以下の表の工具番号4桁用の関数はサポートされていません。工具番号8桁用の関数を使用するようにしてください。
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>工具番号4桁用
+	<th>工具番号8桁用
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具グループ番号)のリード
+	<td><a href="./toollife/cnc_rdgrpid.htm">cnc_rdgrpid</a>
+	<td><a href="./toollife/cnc_rdgrpid2.htm">cnc_rdgrpid2</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具長補正番号1)のリード
+	<td><a href="./toollife/cnc_rd1length.htm">cnc_rd1length</a>
+	<td rowspan=4><a href="./toollife/cnc_rd1tlifedat2.htm">cnc_rd1tlifedat2</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具径補正番号1)のリード
+	<td><a href="./toollife/cnc_rd1radius.htm">cnc_rd1radius</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具情報1)のリード
+	<td><a href="./toollife/cnc_t1info.htm">cnc_t1info</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具データ1)のリード
+	<td><a href="./toollife/cnc_rd1tlifedata.htm">cnc_rd1tlifedata</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具データ1)のライト
+	<td><a href="./toollife/cnc_wr1tlifedata.htm">cnc_wr1tlifedata</a>
+	<td><a href="./toollife/cnc_wr1tlifedat2.htm">cnc_wr1tlifedat2</a>
+</tr>
+</table>
+</div>
+
+
+<li>実数型パラメータ/実数型ダイアグノーズデータ
+<div>
+<p><b>Series 15iでは、パラメータ/ダイアグノーズデータに、実数型データが追加されています。</b>
+<p>以下の関数において、<b>実数型データをサポートするために、Series 15iと他のCNCとでは、仕様が異なる部分があります。</b>詳しくは各関数の説明を参照して下さい。
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>パラメータのリード
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>, 
+		<a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>パラメータのライト
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>, 
+		<a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>パラメータ情報のリード
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>, 
+		<a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>, 
+		<a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>セッティングデータ情報のリード
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>, 
+		<a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータ情報のリード
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+</div>
+
+
+<li>アラームステータス
+<div>
+<p>他のCNCと異なり、<b>Series 15iではアラームステータスが、&quot;short&quot;ではなく&quot;long&quot;になっています。</b>
+<p>Series 15iでも、以下のshortステータス用の関数を使用することはできますが、<b>全てのアラームステータスを読み出すことはできません。</b>できるだけlongステータス用の関数を使用するようにしてください。
+
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>shortステータス用
+	<th>longステータス用
+</tr>
+<tr>
+	<td>ダイナミックデータの一括リード
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>
+	<td><a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>アラームステータスのリード
+	<td><a href="./misc/cnc_alarm.htm">cnc_alarm</a>
+	<td><a href="./misc/cnc_alarm2.htm">cnc_alarm2</a>
+</tr>
+</table>
+
+<p><b>アラームステータスの内容も、Series 15iと他のCNCとでは異なります。</b>以下の関数を使用する際は注意してください。
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>ダイナミックデータの一括リード
+	<td><a href="./position/cnc_rddynamic.htm">cnc_rddynamic</a>, 
+		<a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>操作履歴データのリード
+	<td><a href="./history/cnc_rdophistry.htm">cnc_rdophistry</a>, 
+		<a href="./history/cnc_rdophistry2.htm">cnc_rdophistry2</a>
+</tr>
+<tr>
+	<td>アラーム履歴データのリード
+	<td><a href="./history/cnc_rdalmhistry.htm">cnc_rdalmhistry</a>, 
+		<a href="./history/cnc_rdalmhistry2.htm">cnc_rdalmhistry2</a>
+</tr>
+<tr>
+	<td>アラームステータスのリード
+	<td><a href="./misc/cnc_alarm.htm">cnc_alarm</a>, 
+		<a href="./misc/cnc_alarm2.htm">cnc_alarm2</a>
+</tr>
+<tr>
+	<td>アラーム情報のリード
+	<td><a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>
+</tr>
+<tr>
+	<td>アラームメッセージの一括リード
+	<td><a href="./misc/cnc_rdalmmsg.htm">cnc_rdalmmsg</a>
+</tr>
+</table>
+</div>
+
+
+<li>構造体
+<div>
+<p>以下の関数では、<b>Series 15iと他のCNCとで、関数内で使用する構造体の内容が異なります。</b>
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>CNCステータス情報のリード
+	<td><a href="./misc/cnc_statinfo.htm">cnc_statinfo</a>
+</tr>
+<tr>
+	<td>アラーム情報のリード(※注)
+	<td><a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>
+</tr>
+<tr>
+	<td>オペレータメッセージのリード
+	<td><a href="./misc/cnc_rdopmsg.htm">cnc_rdopmsg</a>
+</tr>
+<tr>
+	<td>ソフトウェアオペレーターズパネルの出力信号イメージのリード
+	<td><a href="./misc/cnc_rdopnlsgnl.htm">cnc_rdopnlsgnl</a>
+</tr>
+<tr>
+	<td>ソフトウェアオペレーターズパネルの信号のライト
+	<td><a href="./misc/cnc_wropnlsgnl.htm">cnc_wropnlsgnl</a>
+</tr>
+</table>
+(※注) Series 15が<b>多軸</b>(最大制御軸数=24軸)の場合のみ異なる。
+</div>
+
+
+<li>使用可能な関数
+<div>
+<p>以下の機能において、Series 15iと他のCNCとでは、使用する関数が異なります。
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>Series 16/18/21, Power Mate
+	<th>Series 15
+</tr>
+<tr>
+	<td>操作履歴データのリード
+	<td><a href="./history/cnc_rdophistry.htm">cnc_rdophistry</a>
+	<td><a href="./history/cnc_rdophistry2.htm">cnc_rdophistry2</a>
+</tr>
+<tr>
+	<td>アラーム履歴データのリード
+	<td><a href="./history/cnc_rdalmhistry.htm">cnc_rdalmhistry</a>
+	<td><a href="./history/cnc_rdalmhistry2.htm">cnc_rdalmhistry2</a>
+</tr>
+<tr>
+	<td>波形診断パラメータのリード
+	<td><a href="./wave/cnc_rdwaveprm.htm">cnc_rdwaveprm</a>
+	<td><a href="./wave/cnc_rdwaveprm2.htm">cnc_rdwaveprm2</a>
+</tr>
+<tr>
+	<td>波形診断パラメータのライト
+	<td><a href="./wave/cnc_wrwaveprm.htm">cnc_wrwaveprm</a>
+	<td><a href="./wave/cnc_wrwaveprm2.htm">cnc_wrwaveprm2</a>
+</tr>
+<tr>
+	<td>モーダルデータのリード
+	<td><a href="./misc/cnc_modal.htm">cnc_modal</a>
+	<td><a href="./misc/cnc_rdgcode.htm">cnc_rdgcode</a>, 
+		<a href="./misc/cnc_rdcommand.htm">cnc_rdcommand</a>
+</tr>
+</table>
+
+<p>以下の関数は、Series 15iでのみ使用可能です。
+<ul>
+	<li>3次元ハンドル送り関係
+	<li>高速高精度設定関係
+	<li>フィクスチャオフセット関係
+	<li>プログラム再開用シーケンス番号のサーチ(2)(<a href="./misc/cnc_rstrseqsrch2.htm">cnc_rstrseqsrch2</a>)
+	<li>ブロック再開情報のリード(<a href="./misc/cnc_rdbrstrinfo.htm">cnc_rdbrstrinfo</a>)
+	<li>内部位置補正データ関係
+	<li>CNCタイマデータのリード/ライト(<a href="./misc/cnc_rdtimer.htm">cnc_rdtimer</a>, <a href="./misc/cnc_wrtimer.htm">cnc_wrtimer</a>)
+</ul>
+
+<p>以下の関数は、Series 15iではサポートされていません。
+<ul>
+	<li>Pコードマクロ変数関係
+	<li>Mコードグループデータ関係
+	<li>干渉チェックデータ関係
+	<li>ワークシフト(T系)関係
+	<li>B軸制御関係
+	<li>工具寿命管理(グループ任意番号、残量設定値)のリード/ライト
+	<li>外部オペレータメッセージ履歴データ関係
+	<li>スピンドル調整(同期制御モード)用データのリード(<a href="./motor/cnc_rdposerrs2.htm">cnc_rdposerrs2</a>, <a href="./motor/cnc_rdsynerrsy.htm">cnc_rdsynerrsy</a>)
+	<li>パンチプレス/レーザ関係
+</ul>
+</div>
+
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS15vsFS15i">関数仕様の違い (Series 15-Bと Series15i)</a>
+<blockquote>
+<ul>
+
+<p>Series 15-B と Series 15i では、ライブラリ関数の仕様が異なる部分がありますので、使用の際にはご注意下さい。主な相違点は次の通りです。
+<li>プログラム番号桁数
+<div>
+<p>プログラム番号桁数に関して、ＣＮＣ側の仕様が異なります。
+<blockquote>
+	<table>
+		<tr><td>Series 15-B <td>:<td>プログラム番号４桁</tr>
+		<tr><td>Series 15i<td>:<td>プログラム番号８桁</tr>
+	</table>
+</blockquote>
+
+<p>これにともない、Series 15iでは必ず APIを８桁対応に切り替える必要があります。ライブラリをプログラム番号８桁に対応させる方法について
+は、<a href="#O8">プログラム番号8桁対応 (Series 15i, 16/18)</a>を参照して下さい。
+
+<p>以下の関数が関係します。
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>ダイナミックデータの一括リード
+	<td><a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>
+</tr>
+<tr>
+	<td>ＮＣ指令データのリードの開始
+	<td><a href="./program/cnc_upstart.htm">cnc_upstart</a>
+</tr>
+<tr>
+	<td>指定プログラムのサーチ
+	<td><a href="./program/cnc_search.htm">cnc_search</a>
+</tr>
+<tr>
+	<td>指定プログラムの削除
+	<td><a href="./program/cnc_delete.htm">cnc_delete</a>
+</tr>
+<tr>
+	<td>プログラムディレクトリのリード
+	<td><a href="./program/cnc_rdprogdir.htm">cnc_rdprogdir</a>
+</tr>
+<tr>
+	<td>プログラムディレクトリのリード(2)
+	<td><a href="./program/cnc_rdprogdir2.htm">cnc_rdprogdir2</a>
+</tr>
+<tr>
+	<td>実行中のプログラム番号のリード
+	<td><a href="./program/cnc_rdprgnum.htm">cnc_rdprgnum</a>
+</tr>
+</table>
+
+<li>工具番号桁数
+<div>
+<p>工具番号桁数に関して、ＣＮＣ側の仕様が異なります。
+<blockquote>
+	<table>
+		<tr><td>Series 15-B <td>:<td>工具番号４桁</tr>
+		<tr><td>Series 15i<td>:<td>工具番号８桁</tr>
+	</table>
+</blockquote>
+<p>これにともない、Series 15iでは以下の関数が使用できなくなりました。代用関数に関しては、後述します。
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具グループ番号)のリード
+	<td><a href="./toollife/cnc_rdgrpid.htm">cnc_rdgrpid</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具長補正番号１)のリード
+	<td><a href="./toollife/cnc_rd1length.htm">cnc_rd1length</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具径補正番号１)のリード
+	<td><a href="./toollife/cnc_rd1radius.htm">cnc_rd1radius</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具情報１)のリード
+	<td><a href="./toollife/cnc_t1info.htm">cnc_t1info</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具データ１)のリード
+	<td><a href="./toollife/cnc_rd1tlifedata.htm">cnc_rd1tlifedata</a>
+</tr>
+<tr>
+	<td>工具寿命管理データ(工具データ１)のライト
+	<td><a href="./toollife/cnc_wr1tlifedata.htm">cnc_wr1tlifedata</a>
+</tr>
+</table>
+
+<li>実数形パラメータ／実数形ダイアグノーズデータ
+<div>
+<p>Series 15i では、実数形パラメータと実数形ダイアグノーズデータが新たに追加れました。これらのデータをリード／ライトするため、以下の関数のデータを格納する構造体に変更があります。
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>パラメータのリード
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>パラメータのライト
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>パラメータのリード(範囲指定)
+	<td><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>パラメータのライト(複数個指定)
+	<td><a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>パラメータ情報のリード
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード(範囲指定)
+	<td><a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト(複数個指定)
+	<td><a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>セッティングデータ情報のリード
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード(範囲指定)
+	<td><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータ情報のリード
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+
+<p>Series 15-B で使用していた関数が Series 15i でも使用可能か、以下にまとめます。下記関数以外でも、Series 15-B と Series 15i とで仕様が異なる関数がありますので、詳しくは各関数の説明を参照して下さい。
+
+<li>ＣＮＣ：制御軸／主軸関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_rddynamic
+	<td>ダイナミックデータの一括リード
+	<td>プログラム番号８桁にアプリケーションで対応する必要があります。また、本関数を使用することはできますが、Series 15i の全てのアラームステータスを読み出すことはできません。なるべく <a href="./position/cnc_rddynamic2.htm">cnc_rddynamic2</a>を使用して下さい。
+</tr>
+</table>
+<p>
+<li>ＣＮＣ：プログラム関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_dncstart
+	<td>運転用ＮＣ指令データの出力の開始
+	<td rowspan=6>使用できません。</td></td>
+</tr>
+<tr>
+	<td>cnc_dnc
+	<td>運転用ＮＣ指令データの出力
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>cnc_cdnc
+	<td>運転用ＮＣ指令データの出力(条件付)
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>cnc_dncend
+	<td>運転用ＮＣ指令データの出力の終了
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>cnc_rdmdipntr
+	<td>ＭＤＩ運転用実行ポインタのリード
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>cnc_wrmdipntr
+	<td>ＭＤＩ運転用実行ポインタのライト
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>cnc_upstart
+	<td>ＮＣ指令データのリードの開始
+	<td rowspan=6>プログラム番号８桁にアプリケーションで対応する必要があります。</td></td>
+</tr>
+<tr>
+	<td>cnc_search
+	<td>指定プログラムのサーチ
+<!--	<td>プログラム番号８桁にアプリケーションで対応する必要があります。-->
+</tr>
+<tr>
+	<td>cnc_delete
+	<td>指定プログラムの削除
+<!--	<td>プログラム番号８桁にアプリケーションで対応する必要があります。-->
+</tr>
+<tr>
+	<td>cnc_rdprogdir
+	<td>プログラムディレクトリのリード
+<!--	<td>プログラム番号８桁にアプリケーションで対応する必要があります。-->
+</tr>
+<tr>
+	<td>cnc_rdprogdir2
+	<td>プログラムディレクトリのリード(2)
+<!--	<td>プログラム番号８桁にアプリケーションで対応する必要があります。-->
+</tr>
+<tr>
+	<td>cnc_rdprgnum
+	<td>実行中のプログラム番号のリード
+<!--	<td>プログラム番号８桁にアプリケーションで対応する必要があります。-->
+</tr>
+</table>
+
+<p>
+<li>ＣＮＣ：ＮＣ用ファイルデータ関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_rdparam
+	<td>パラメータのリード
+	<td rowspan=10>実数形パラメータを扱うためデータを格納する構造体に変更があります。</td></td>
+</tr>
+<tr>
+	<td>cnc_wrparam
+	<td>パラメータのライト
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdparar
+	<td>パラメータのリード(範囲指定)
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_wrparas
+	<td>パラメータのライト(複数個指定)
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdparainfo
+	<td>パラメータ情報のリード
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdset
+	<td>セッティングデータのリード
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_wrset
+	<td>セッティングデータのライト
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdsetr
+	<td>セッティングデータのリード(範囲指定)
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_wrsets
+	<td>セッティングデータのライト(複数個指定)
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdsetinfo
+	<td>セッティングデータ情報のリード
+<!--	<td>実数形パラメータを扱うためデータを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rdhpccset
+	<td>高速高精度加工設定データのリード
+	<td rowspan=6>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。</td></td>
+</tr>
+<tr>
+	<td>cnc_wrhpccset
+	<td>高速高精度加工設定データのライト
+<!--	<td>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。-->
+</tr>
+<tr>
+	<td>cnc_rdhpcctupr
+	<td>高速高精度加工調整データ(パラメータ入力)のリード
+<!--	<td>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。-->
+</tr>
+<tr>
+	<td>cnc_wrhpcctupr
+	<td>高速高精度加工調整データ(パラメータ入力)のライト
+<!--	<td>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。-->
+</tr>
+<tr>
+	<td>cnc_rdhpcctuac
+	<td>高速高精度加工調整データ(加速度入力)のリード
+<!--	<td>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。-->
+</tr>
+<tr>
+	<td>cnc_wrhpcctuac
+	<td>高速高精度加工調整データ(加速度入力)のライト
+<!--	<td>使用できません。パラメータのリード／ライト(cnc_rdparam, cnc_wrparam, cnc_rdparar, cnc_wrparas)で代用可能です。-->
+</tr>
+</table>
+
+<p>
+<li>ＣＮＣ：工具寿命管理データ関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_rdgrpid
+	<td>工具グループ番号のリード
+	<td>使用できません。cnc_rdgrpid2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_rd1length
+	<td>工具長補正番号１のリード
+	<td>使用できません。cnc_rd1tlifedat2 で代用できます。
+</tr>
+<tr>
+	<td>cnc_rd1radius
+	<td>工具径補正番号１のリード
+	<td>使用できません。cnc_rd1tlifedat2 で代用できます。
+</tr>
+<tr>
+	<td>cnc_t1info
+	<td>工具情報１のリード
+	<td>使用できません。cnc_rd1tlifedat2 で代用できます。
+</tr>
+<tr>
+	<td>cnc_rd1tlifedata
+	<td>工具データ１のリード
+	<td>使用できません。cnc_rd1tlifedat2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_wr1tlifedata
+	<td>工具データ１のライト
+	<td>使用できません。cnc_wr1tlifedat2 を使用して下さい。
+</tr>
+</table>
+
+<p>
+<li>ＣＮＣ：履歴データ関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_rdophistry
+	<td>操作履歴データのリード
+	<td>使用できません。cnc_rdophistry2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_rdalmhistry
+	<td>アラーム履歴データのリード
+	<td>使用できません。cnc_rdalmhistry2 を使用して下さい。
+</tr>
+</table>
+
+<p>
+<li>ＣＮＣ：サーボ／スピンドル関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_rdwaveprm
+	<td>波形診断パラメータのリード
+	<td>使用できません。cnc_rdwaveprm2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_wrwaveprm
+	<td>波形診断パラメータのライト
+	<td>使用できません。cnc_wrwaveprm2 を使用して下さい。
+</tr>
+</table>
+
+<p>
+<li>ＣＮＣ：その他
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>cnc_sysconfig
+	<td>ＣＮＣシステム構成情報のリード
+	<td>使用できません。cnc_rdsyssoft を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_rdmdlconfig
+	<td>ＣＮＣモジュール構成情報のリード
+	<td>使用できません。cnc_rdmdlconfig2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_alarm
+	<td>アラームステータスのリード
+	<td>本関数を使用することはできますが、Series 15i の全てのアラームステータスを読み出すことはできません。なるべく cnc_alarm2 を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_modal
+	<td>モーダルデータのリード
+	<td>使用できません。nc_rdgcode, cnc_rdcommand を使用して下さい。
+</tr>
+<tr>
+	<td>cnc_diagnoss
+	<td>ダイアグノーズデータのリード
+	<td rowspan=3>実数形ダイアグノーズデータを扱うため、データを格納する構造体に変更があります。</td></td>
+</tr>
+<tr>
+	<td>cnc_diagnosr
+	<td>ダイアグノーズデータのリード(範囲指定)
+<!--	<td>実数形ダイアグノーズデータを扱うため、データを格納する構造体に変更があります。-->
+</tr>
+<tr>
+	<td>cnc_rddiaginfo
+	<td>ダイアグノーズデータ情報のリード
+<!--	<td>実数形ダイアグノーズデータを扱うため、データを格納する構造体に変更があります。-->
+</tr>
+</table>
+
+<p>
+<li>ＰＭＣ関係
+<div>
+<table border=1>
+<tr>
+	<th>関数名(15-B)
+	<th>機能
+	<th>Series 15i での対応
+</tr>
+<tr>
+	<td>pmc_rdmsg
+	<td>ＰＭＣからＭＭＣへの通信－リード
+	<td rowspan=4>使用できません。</td></td>
+</tr>
+<tr>
+	<td>pmc_wrmsg
+	<td>ＭＭＣからＰＭＣへの通信－ライト
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>pmc_crdmsg
+	<td>ＰＭＣからＭＭＣへの通信－条件付リード
+<!--	<td>使用できません。-->
+</tr>
+<tr>
+	<td>pmc_cwrmsg
+	<td>ＭＭＣからＰＭＣへの通信－条件付ライト
+<!--	<td>使用できません。-->
+</tr>
+</table>
+
+</ul>
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS30">関数仕様の違い (Series 30i, 0i-D/F, PMi-Aと他のCNC)</a>
+<blockquote>
+<ul>
+
+<p>従来のライブラリ(Series 30i, 0i-D/F, PMi-A以外)とSeries 30i, 0i-D/F, PMi-A用のライブラリとでは、関数の仕様が異なる部分がありますので、使用の際にはご注意下さい。主な相違点は次の通りです。
+
+<li>全軸指定のデータサイズ
+<div>
+<p>関数によっては、全軸指定のリード/ライトを行う場合、確保するデータのサイズが以下のように異なることがあります。
+
+<blockquote>
+	<table>
+		<tr><td>従来のライブラリ <td>:<td>実制御軸数分のサイズ</tr>
+		<tr><td>Series 30i, 0i-D/F, PMi-A用ライブラリ<td>:<td>インタフェースの最大軸数</tr>
+	</table>
+</blockquote>
+<p>最大軸数はヘッダファイルにて MAX_AXIS(=32) と定義されています。
+<p>関係する関数は以下の通りです。 
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>制御軸の絶対位置のリード
+	<td><a href="./position/cnc_absolute.htm">cnc_absolute</a>, 
+	    <a href="./position/cnc_absolute2.htm">cnc_absolute2</a>
+</tr>
+<tr>
+	<td>制御軸の機械位置のリード
+	<td><a href="./position/cnc_machine.htm">cnc_machine</a>
+</tr>
+<tr>
+	<td>制御軸の相対位置のリード
+	<td><a href="./position/cnc_relative.htm">cnc_relative</a>, 
+	    <a href="./position/cnc_relative2.htm">cnc_relative2</a>
+</tr>
+<tr>
+	<td>制御軸の残移動量のリード
+	<td><a href="./position/cnc_distance.htm">cnc_distance</a>
+</tr>
+<tr>
+	<td>制御軸のスキップ位置のリード
+	<td><a href="./position/cnc_skip.htm">cnc_skip</a>
+</tr>
+<tr>
+	<td>制御軸のサーボ遅れ量のリード
+	<td><a href="./position/cnc_srvdelay.htm">cnc_srvdelay</a>
+</tr>
+<tr>
+	<td>制御軸の加減速遅れ量のリード
+	<td><a href="./position/cnc_accdecdly.htm">cnc_accdecdly</a>
+</tr>
+<tr>
+	<td>制御軸の相対位置のオリジン/プリセット
+	<td><a href="./position/cnc_wrrelpos.htm">cnc_wrrelpos</a>
+</tr>
+<tr>
+	<td>ワーク座標系のプリセット
+	<td><a href="./position/cnc_prstwkcd.htm">cnc_prstwkcd</a>
+</tr>
+<tr>
+	<td>ワーク原点オフセット量のリード
+	<td><a href="./ncdata/cnc_rdzofs.htm">cnc_rdzofs</a>
+</tr>
+<tr>
+	<td>ワーク原点オフセット量のライト
+	<td><a href="./ncdata/cnc_wrzofs.htm">cnc_wrzofs</a>
+</tr>
+<tr>
+	<td>パラメータのリード
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>パラメータのライト
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+</table>
+
+<li>主軸関連のデータサイズ
+<div>
+<p>Series 30i, 0i-D/F では、最大主軸数が4から8に拡張されるのに伴い、主軸関連の関数において、確保するデータのサイズが異る場合があります。
+
+<p>最大主軸数はヘッダファイルにて MAX_SPINDLES(=8) と定義されています。
+<p>関係する関数は以下の通りです。 
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>スピンドルの負荷情報のリード
+	<td><a href="./position/cnc_rdspload.htm">cnc_rdspload</a>
+</tr>
+<tr>
+	<td>スピンドルの最高回転数比のリード
+	<td><a href="./position/cnc_rdspmaxrpm.htm">cnc_rdspmaxrpm</a>
+</tr>
+<tr>
+	<td>スピンドルのギヤ比のリード
+	<td><a href="./position/cnc_rdspgear.htm">cnc_rdspgear</a>
+</tr>
+<tr>
+	<td>実主軸回転数(S)のリード2
+	<td><a href="./position/cnc_acts2.htm">cnc_acts2</a>
+</tr>
+<tr>
+	<td>スピンドル設定用運転モードのリード
+	<td><a href="./motor/cnc_rdopmode.htm">cnc_rdopmode</a>
+</tr>
+<tr>
+	<td>スピンドル調整用位置偏差Sのリード
+	<td><a href="./motor/cnc_rdposerrs.htm">cnc_rdposerrs</a>
+</tr>
+<tr>
+	<td>スピンドルアラームのリード
+	<td><a href="./motor/cnc_rdspdlalm.htm">cnc_rdspdlalm</a>
+</tr>
+<tr>
+	<td>スピンドルモニタ用制御入力信号
+	<td><a href="./motor/cnc_rdctrldi.htm">cnc_rdctrldi</a>
+</tr>
+<tr>
+	<td>スピンドルモニタ用制御出力信号のリード
+	<td><a href="./motor/cnc_rdctrldo.htm">cnc_rdctrldo</a>
+</tr>
+</table>
+
+<li>プログラム関連
+<div>
+<p>これまでのO番号による管理から、ファイル名/階層化ディレクトリによる管理となり、関数仕様が一新されました。
+
+<li>実数型パラメータ／実数型ダイアグノーズデータ
+<div>
+<p>Series 30i, 0i-D/F, PMi-Aでは、実数型パラメータと実数型ダイアグノーズデータが新たに追加されました。これらのデータをリード／ライトするため、以下の関数のデータを格納する構造体に変更があります。
+<p>関係する関数は以下の通りです。 
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>パラメータのリード
+	<td><a href="./ncdata/cnc_rdparam.htm">cnc_rdparam</a>
+</tr>
+<tr>
+	<td>パラメータのライト
+	<td><a href="./ncdata/cnc_wrparam.htm">cnc_wrparam</a>
+</tr>
+<tr>
+	<td>パラメータのリード(範囲指定)
+	<td><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>
+</tr>
+<tr>
+	<td>パラメータのライト(複数個指定)
+	<td><a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>
+</tr>
+<tr>
+	<td>パラメータ情報のリード
+	<td><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード
+	<td><a href="./ncdata/cnc_rdset.htm">cnc_rdset</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト
+	<td><a href="./ncdata/cnc_wrset.htm">cnc_wrset</a>
+</tr>
+<tr>
+	<td>セッティングデータのリード(範囲指定)
+	<td><a href="./ncdata/cnc_rdsetr.htm">cnc_rdsetr</a>
+</tr>
+<tr>
+	<td>セッティングデータのライト(複数個指定)
+	<td><a href="./ncdata/cnc_wrsets.htm">cnc_wrsets</a>
+</tr>
+<tr>
+	<td>セッティングデータ情報のリード
+	<td><a href="./ncdata/cnc_rdsetinfo.htm">cnc_rdsetinfo</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード
+	<td><a href="./misc/cnc_diagnoss.htm">cnc_diagnoss</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータのリード(範囲指定)
+	<td><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>
+</tr>
+<tr>
+	<td>ダイアグノーズデータ情報のリード
+	<td><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>
+</tr>
+</table>
+
+<li>CNCアラーム
+<div>
+<p>Series 30i, 0i-D/F, PMi-Aではアラームステータスは32ビットになります。cnc_alarm 関数はサポートされていますが、Series 30i, 0i-D/F, PMi-A の<b>全てのアラームステータスを読み出すことはできません。</b>なるべく cnc_alarm2 を使用して下さい。
+<p>アラームステータスの内容も、FOCAS1とは異なります。
+<p>また、cnc_rdalminfo 関数で使用する構造体内の軸情報を格納する領域が short から long に拡張されています。
+
+<li>モーダル/指令値
+<div>
+<p>cnc_modal 関数はサポートされていますが、<b>Series 30i, 0i-D/F, PMi-A の拡張された全てのモーダル/指令値の情報を読み出すことはできません。</b>なるべく cnc_rdgocde, cnc_rdcommand を使用して下さい。
+<p>cnc_modal 関数の読み出し対象のブロックで、次の次のブロック(=2)は指定できません。
+<p>指令値（主にI,J,K）の12桁化に伴い、4バイト整数変換でオーバフローするデータは丸められ、小数点以下桁数がセットされます。このため、Fコード以外でも小数点以下桁数がセットされる場合があります。
+<p>小数点以下桁数が負になる場合もあり、これに伴い小数点以下桁数を従来の符号なし3ビットから8ビット符号付整数としています。</p>
+
+<img src="General1.gif">
+
+</ul>
+</blockquote>
+
+
+<li><a name="FS30iAvsFS30iB">関数仕様の違い (Series 30i-A、Series 30i-B)</a>
+
+<blockquote>
+<ul>
+
+<p>Series 30i-AとSeries 30i-Bでは、ライブラリ関数の仕様が異なる部分がありますので、使用の際にはご注意下さい。主な相違点は次の通りです。
+<li>実行中ポインタの取得
+<div>
+<p>Series 30i-Aでは、STL信号がONの場合は、EW_REJECTとなります。</p>
+<p>Series 30i-Bでは、STL信号がONの場合でも、EW_OKとなります(パラメータNo.13104#1=1の場合は、EW_REJECT)。</p>
+<p>Series 30i-Bでは、M198実行中も、EW_OKとなります。</p>
+
+<p>関係する関数は以下の通りです。 
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>実行ポインタの取得
+	<td><a href="./program/cnc_rdactpt.htm">cnc_rdactpt</a>
+</tr>
+<tr>
+	<td>実行中ポインタの取得
+	<td><a href="./program/cnc_rdexecpt.htm">cnc_rdexecpt</a>
+</tr>
+<tr>
+	<td>実行ポインタの取得(任意ファイル名対応)
+	<td><a href="./program/cnc_pdf_rdactpt.htm">cnc_pdf_rdactpt</a>
+</tr>
+</table>
+
+<li>CNCシステムソフトの系列／版数のリード
+<div>
+<p>CNCシステムソフトのソフトIDが異なります。
+
+<p>関係する関数は以下の通りです。 
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>CNCシステムソフトの系列／版数のリード3
+	<td><a href="./misc/cnc_rdsyssoft3.htm">cnc_rdsyssoft3</a>
+</tr>
+</table>
+
+<li>CNCのステータス情報の取得</li>
+<div>
+<p>Series 30i-Bでは、CNCのステータス情報の非常停止の状態の3(FS35i-Bのみ)と、アラーム状態の4～8が追加されました。
+
+<p>関係する関数は以下の通りです。 
+
+<table border=1>
+<tr>
+	<th>機能
+	<th>関数名
+</tr>
+<tr>
+	<td>CNCステータス情報のリード
+	<td><a href="./misc/cnc_statinfo.htm">cnc_statinfo</a>
+</tr>
+<tr>
+	<td>CNCステータス情報のリード(2)
+	<td><a href="./misc/cnc_statinfo2.htm">cnc_statinfo2</a>
+</tr>
+</table>
+
+
+</ul>
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="FS16Comp">FS30i本来の仕様(32軸)とFS16i互換(8軸)仕様
+<blockquote>
+
+<p>FS30i本来の仕様とFS16i互換仕様を、内部でアドバンスド/トラディショナルというモードで切り替えます。（仕様の切り替えは、<a href="./handle/cnc_setlibopt.htm">cnc_setlibopt</a>関数を使用します。）デフォルトは、アドバンスドモードです。
+<p>各モードの仕様は、以下の様になります。
+<table border=1>
+<tr>
+	<th>項目
+	<th>アドバンスドモード
+	<th>トラディショナルモード
+</tr>
+<tr>
+	<td>最大制御軸数
+	<td>32
+	<td>8
+</tr>
+<tr>
+	<td>最大制御スピンドル数
+	<td>8
+	<td>4
+</tr>
+<tr>
+	<td>全軸指定のリード/ライト
+	<td>確保するバッファのサイズは常に最大制御軸数分のサイズ
+	<td>FS16同様、範囲指定でなければ現在の制御軸数分のサイズ
+</tr>
+<tr>
+	<td>パラメータ/ダイアグノーズの実数型
+	<td>小数点付き8バイト
+	<td>4バイトの整数へ変換
+</tr>
+<tr>
+	<td>アラームステータス
+	<td>32ビット
+	<td>16ビット
+</tr>
+</table>
+
+<p>ここで言う軸数とは、軸関連データのアクセスに使用するバッファ数のことを示します。
+
+<p>トラディショナルモードは、以下の場合には使用できません。
+<ul>
+	<li>系統内の制御軸数が8を超える場合
+	<li>系統内の制御スピンドル数が4を超える場合
+</ul>
+
+<p>アドバンスドモードとトラディショナルモードでは、以下の様にデータ構造が異なります。
+
+<ul>
+<li>パラメータ/ダイアグノーズ
+<div>
+<p>トラディショナルモードでは、実数型パラメータ/ダイアグノーズは最小設定単位を1桁目とした2ワード整数型に擬似的に扱われます。
+<pre>
+　　例）1.230の場合 : データ=1230、小数点以下桁数=3
+</pre>
+<p>アドバンスドモードでは、FS30iのパラメータ/ダイアグノーズのサポートに伴い、ライブラリ関数を一部拡張します<b>(太線部)</b>。トラディショナルモードでは、この拡張部分が入出力されることはありません。
+
+<dl>
+	<dt><a href="./ncdata/cnc_rdparar.htm">cnc_rdparar</a>, <a href="./ncdata/cnc_wrparas.htm">cnc_wrparas</a>「構造体IODBPSDのtype」の説明から
+	<dd>type : リードしたパラメータの属性が格納されます。
+		<table class=dd>
+			<tr>	<td>0		<td>:		<td>ビット型	</tr>
+			<tr>	<td>1		<td>:		<td>バイト型	</tr>
+			<tr>	<td>2		<td>:		<td>ワード型	</tr>
+			<tr>	<td>3		<td>:		<td>2ワード型	</tr>
+			<tr>	<td><b>4</b><td><b>:</b><td><b>実数型</b></tr>
+		</table>
+
+	<dt><a href="./misc/cnc_diagnosr.htm">cnc_diagnosr</a>「構造体ODBDGNのtype」の説明から
+	<dd>type : パラメータの属性が格納されます。
+		<table class=dd>
+			<tr>	<td>0		<td>:		<td>バイト型	</tr>
+			<tr>	<td>1		<td>:		<td>ワード型	</tr>
+			<tr>	<td>2		<td>:		<td>2ワード型	</tr>
+			<tr>	<td>3		<td>:		<td>ビット型(8 bit) </tr>
+			<tr>	<td>4		<td>:		<td>ビット型(1 bit) </tr>
+			<tr>	<td><b>5</b><td><b>:</b><td><b>実数型</b></tr>
+		</table>
+
+	<dt><a href="./ncdata/cnc_rdparainfo.htm">cnc_rdparainfo</a>「構造体ODBPARAIFのprm_type」の説明から
+	<dd>info[N].prm_type : パラメータの属性、以下の属性が設定されます。 
+		<table class=dd>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>bit 0,1	<td>:	<td>型属性
+				<table class=dd>
+					<tr>	<td>0	<td>:	<td>ビット型	</tr>
+					<tr>	<td>1	<td>:	<td>バイト型	</tr>
+					<tr>	<td>2	<td>:	<td>ワード型	</tr>
+					<tr>	<td>3	<td>:	<td>2ワード、<b>または実数型</b>	</tr>
+				</table>
+			</tr>
+			<tr><td><td>:<br>:<td></tr>
+			<tr>
+				<td><b>bit 12</b>	<td><b>:</b>	<td><b>型属性3のとき</b>
+				<table class=dd>
+					<tr>	<td><b>0</b>	<td><b>:</b>	<td><b>実数型以外</b>	</tr>
+					<tr>	<td><b>1</b>	<td><b>:</b>	<td><b>実数型</b>		</tr>
+				</table>
+			</tr>
+		</table>
+
+	<dt><a href="./misc/cnc_rddiaginfo.htm">cnc_rddiaginfo</a>「構造体ODBDIAGIFのdiag_type」の説明から
+	<dd>info[N].prm_type : パラメータの属性、以下の属性が設定されます。
+		<table class=dd>
+			<colgroup valign=top>
+			<colgroup valign=top>
+			<tr>
+				<td>bit 0,1	<td>:	<td>型属性(bit 3 = 0 のとき、有効)
+				<table class=dd>
+					<tr>	<td>0	<td>:	<td>ビット型 (8 bit)	</tr>
+					<tr>	<td>1	<td>:	<td>バイト型			</tr>
+					<tr>	<td>2	<td>:	<td>ワード型			</tr>
+					<tr>	<td>3	<td>:	<td>2ワード、<b>または実数型</b>	</tr>
+				</table>
+			</tr>
+			<tr><td><td>:<br>:<td></tr>
+			<tr>
+				<td><b>bit 12</b>	<td><b>:</b>	<td><b>型属性3のとき</b>
+				<table class=dd>
+					<tr>	<td><b>0</b>	<td><b>:</b>	<td><b>実数型以外</b>	</tr>
+					<tr>	<td><b>1</b>	<td><b>:</b>	<td><b>実数型</b>		</tr>
+				</table>
+			</tr>
+		</table>
+</dl>
+</div>
+<li>アラームステータス
+<div>
+<p>16ビットアラームステータスで全てのアラーム情報を取得できるようにするために、トラディショナルモードでは、<a href="./misc/cnc_alarm2.htm">cnc_alarm2</a>関数の32ビットアラームステータスの上位ワード(ビット16から31)のアラームが発生すると、<a href="./misc/cnc_alarm.htm">cnc_alarm</a>関数の16ビットアラームステータスのビット14が立ちます。アドバンスドモードでは、ビット14は予約です。
+<p>
+<table class="dd">
+	<tr><td>#00</td> <td>:</td> <td>パラメータ書込みスイッチオン</td>		 <td>(SW)</td> </tr>
+	<tr><td>#01</td> <td>:</td> <td>電源断が必要なパラメータの入力</td> 	 <td>(PW)</td> </tr>
+	<tr><td>   </td> <td> </td> <td>:</td> 									 <td>    </td> </tr>
+	<tr><td>   </td> <td> </td> <td>:</td> 									 <td>    </td> </tr>
+	<tr><td>#13</td> <td>:</td> <td>同期誤差過大エラー</td> 				 <td>(SN)</td> </tr>
+	<tr><td><b>#14</b></td> <td>:</td> <td><b>その他(#16～#31が発生)</b></td><td>	 </td> </tr>
+	<tr><td>#15</td> <td>:</td> <td>外部アラームメッセージ</td> 			 <td>(EX)</td> </tr>
+</table>
+<p>このとき、<a href="./misc/cnc_rdalminfo.htm">cnc_rdalminfo</a>関数のアラーム種類に14を指定すれば、ビット16～31のアラーム情報が取得できます。
+</div>
+</ul>
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="HSSBvsEther">HSSB版とEthernet版の相違点</a>
+<blockquote>
+<ul>
+	<li>関数の戻り値に、EW_SOCKET、EW_PROTOCOL、EW_ALARM、EW_STOPの4つが追加されています。
+		<br>&nbsp
+	<li>以下の表のHSSBの関数はサポートされていません。<b>表右の関数を使用するようにしてください。</b>
+		<table border=1>
+			<thead>
+			<tr>
+				<th>機能
+				<th>HSSB
+				<th>Ethernet
+			</tr>
+			</thead><tbody> 
+			<tr>
+				<td>ライブラリハンドルの取得
+				<td>cnc_allclibhndl、cnc_allclibhndl2
+				<td><a href="./handle/cnc_allclibhndl3.htm">cnc_allclibhndl3</a>
+			</tr>
+			<tr>
+				<td>登録用NC指令データの出力の開始
+				<td>cnc_dwnstart
+				<td><a href="./program/cnc_dwnstart3.htm">cnc_dwnstart3</a>
+			</tr>
+			<tr>
+				<td>登録用NC指令データの出力
+				<td>cnc_download、cnc_cdownload
+				<td><a href="./program/cnc_download3.htm">cnc_download3</a>
+			</tr>
+			<tr>
+				<td>登録用NC指令データの出力の終了
+				<td>cnc_dwnend
+				<td><a href="./program/cnc_dwnend3.htm">cnc_dwnend3</a>
+			</tr>
+			<tr>
+				<td>運転用NC指令データの出力の開始
+				<td>cnc_dncstart
+				<td><a href="./program/cnc_dncstart2.htm">cnc_dncstart2</a>
+			</tr>
+			<tr>
+				<td>運転用NC指令データの出力
+				<td>cnc_dnc、cnc_cdnc
+				<td><a href="./program/cnc_dnc2.htm">cnc_dnc2</a>
+			</tr>
+			<tr>
+				<td>運転用NC指令データの出力の終了
+				<td>cnc_dncend
+				<td><a href="./program/cnc_dncend2.htm">cnc_dncend2</a>
+			</tr>
+			<tr>
+				<td>NC指令データのリードの開始
+				<td>cnc_upstart
+				<td><a href="./program/cnc_upstart3.htm">cnc_upstart3</a>
+			</tr>
+			<tr>
+				<td>NC指令データのリード
+				<td>cnc_upload、cnc_cupload
+				<td><a href="./program/cnc_upload3.htm">cnc_upload3</a>
+			</tr>
+			<tr>
+				<td>NC指令データのリードの終了
+				<td>cnc_upend
+				<td><a href="./program/cnc_upend3.htm">cnc_upend3</a>
+			</tr>
+			</tbody>
+		</table>
+		<br>&nbsp
+	<li>以下の関数は、Ethernet版ではサポートされていません。
+		<ul>
+			<li>データサーバ, DNC1, DNC2, OSI-Ethernet関係
+			<li>サーボ学習データ関係
+			<li>ラダーとのメッセージ転送(pmc_rdmsg、pmc_wrmsg)
+			<li>PROFIBUS-DP関係
+		</ul>
+		<br>&nbsp
+	<li>Ethernet版では、NCのBOOT/IPL機能(SRAMバックアップ/リストア、システムソフトの入れ替え等)はサポートされていません。
+		<br>&nbsp
+	<li>Ethernet版では、ローダ制御ボード(5系統目)はアクセスできません(FS30iは除く)。
+		<br>&nbsp
+	<li>1つのCNCに対して、同時にアクセスできるアプリケーションの数には制限があります。詳しくは、「<a href="dnc1.htm">イーサネットボードとの通信</a>」をご覧下さい。
+</ul>
+</blockquote>
+
+<!---------------------------------------------------------------------------->
+<li><a name="DriveName">FS30i, 0i-D/F, PMi-Aのフォルダ名/ファイル名の指定方法について</a>
+<blockquote>
+
+	<p>FS30i, 0i-D/F, PMi-Aでは、フォルダ名は "ドライブ名＋フォルダ文字列" のように指定します。(ただし、0i-Dは、CNCメモリにフォルダ名を使用しません。)</p>
+	<p>また、ファイル名は "ドライブ名＋フォルダ文字列＋ファイル名" のように指定します。</p>
+	<br/>
+	<p>フォルダ名の場合には、文字列の最後に"/"(スラッシュ)を置いてください｡ "/"がない場合はファイル名とみなされます｡ </p>
+	<p>形式は以下のようになります。</p>
+	<ul><li>//ドライブ名/フォルダ文字列1/フォルダ文字列2/.../フォルダ文字列n/ファイル名</li></ul>
+	<br/>
+	<p>例1) CNCメモリのフォルダ "USER/PATH1" の指定
+	<ul><li> //CNC_MEM/USER/PATH1/ </li></ul><br/>
+	<p>例2) データサーバのフォルダ "NCDATA/MACHINE1" にある "PART1.PRG" ファイルの指定
+	<ul><li> //DATA_SV/NCDATA/MACHINE1/PART1.PRG </li></ul>
+	<br/>
+	<p>なお、ドライブ名称は、<a href="./Program/cnc_rdpdf_drive.htm" target="_parent">cnc_rdpdf_drive</a>関数で取得できます。</p>
+
+</blockquote>
+
+
+<!---------------------------------------------------------------------------->
+<li><a name="NonVolatileMemory">FS30i, 0i-D/F, PMi-Aの不揮発性メモリについて</a>
+<blockquote>
+
+<p>加工プログラムは CNC 装置内部の不揮発性メモリに記憶されています。</p>
+<p>加工プログラムが格納される不揮発性メモリには書き込み回数の制限があります。</p>
+<p>上位のパソコンから加工の都度自動的に加工プログラムをダウンロードする使い方など、加工プログラムの登録・削除を頻繁に繰り返すような使い方の場合には、必ず「高速プログラム管理<a href="./Program/cnc_saveprog_start.htm" target="_parent">cnc_saveprog_start</a>/<a href="./Program/cnc_saveprog_end.htm" target="_parent">cnc_saveprog_end</a>」をご使用下さい。</p>
+<p>「高速プログラム管理<a href="./Program/cnc_saveprog_start.htm" target="_parent">cnc_saveprog_start</a>/<a href="./Program/cnc_saveprog_end.htm" target="_parent">cnc_saveprog_end</a>」では、プログラムの登録・変更・削除時に不揮発性メモリへの保存が行われません。</p>
+</blockquote>
+
+
+
+<!---------------------------------------------------------------------------->
+</ol>
+
+<hr>
+
+<!---------------------------------------------------------------------------->
+<p><a href="fwlib32.htm">トップページ</a>
+</body>
+</html>

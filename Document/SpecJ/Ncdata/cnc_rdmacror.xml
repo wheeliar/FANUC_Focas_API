@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_rdmacror</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI cnc_rdmacror( unsigned short FlibHndl, short s_number, short e_number, short length, IODBMR *macror );
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>s_number,e_numberで指定された範囲のカスタムマクロ変数を読み出します。データは符号付のバイナリ形式でIODBMR内に格納されます。</p>
+                <p>読み出し可能なカスタムマクロ変数の種類は以下の通りです。</p>
+                <ol>
+                    <li>ローカル変数 (#1～#33)</li>
+                        読み出す時点で実行されているカスタムマクロのローカル変数が読み出されます。<br/>
+                    <li>コモン変数 (#100～#999)</li>
+                        読み出し範囲は<a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a>関数の説明を参照して下さい。<br/>
+                </ol>
+                <p>
+                    <a href="ncdata/cnc_setmactype.htm" target="_parent">cnc_setmactype</a>関数により、
+                    読み出すカスタムマクロ変数の型を切り換えることができます。
+                </p>
+                <ul>
+                    <li>10進形式浮動小数点型(データ形式=M*10**(-E))</li><br/>
+                    <table>
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>mcr_val</td>
+                            <td>:</td>
+                            <td>変数値(=M)<br/>
+                            符号付の4バイトバイナリ形式<br/>
+                            (有効範囲:999999999～-999999999)</td>
+                        </tr>
+                        <tr>
+                            <td>dec_val</td>
+                            <td>:</td>
+                            <td>小数点以下桁数(=E)<br/>
+                            符号付の2バイトバイナリ形式<br/>
+                            (有効範囲:-128 ～ 127)</td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                    <p>mcr_valは必ず9桁で返り、その分をdec_valの値で調整します。</p><br/>
+                    <blockquote>
+                        例: 変数値が12.345の場合、以下のように読み出されます。<br/>
+                        mcr_val = 123450000<br/>
+                        dec_val = 7
+                    </blockquote>
+                    <li>2進形式浮動小数点型(データ形式=M*2**(-E))</li><br/>
+                    <table>
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>mcr_val</td>
+                            <td>:</td>
+                            <td>変数値(=M)<br/>
+                            符号付の4バイトバイナリ形式<br/>
+                            (有効範囲:制限なし)</td>
+                        </tr>
+                        <tr>
+                            <td>dec_val</td>
+                            <td>:</td>
+                            <td>小数点以下桁数(=E)<br/>
+                            符号付の2バイトバイナリ形式<br/>
+                            (有効範囲:-128 ～ 127)</td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </ul>
+                <p>なお、カスタムマクロ変数には『空』という特殊な値がありますが、10進形式浮動小数点型/2進形式浮動小数点型ともに以下で表します。</p>
+                <blockquote>
+                    <p>mcr_val = 0<br/>
+                    dec_val = -1</p>
+                </blockquote>
+                <p>カスタムマクロ変数の詳細については、CNCの取扱説明書を参照して下さい。</p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>s_number</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードを開始するカスタムマクロ変数番号を指定します。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>e_number</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードを終了するカスタムマクロ変数番号を指定します。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>データブロック長(IODBMR構造体のサイズ)を指定します。</p>
+                            <p class="dd">8+8×(読み出すカスタムマクロ変数の個数)</p>
+                            <p><b>IODBMR</b></p>
+                            <p><img src="ncdata/nmacro.gif"/></p>
+                            <p>Nは読み出すカスタムマクロ変数の個数です。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>macror</name>
+                        <type>out</type>
+                        <content>
+                            <p>カスタムマクロ変数を返すIODBMR構造体へのポインタです。 IODBMR構造体は次の通りです。</p>
+<pre>
+typedef struct  iodbmr {
+        short datano_s ; /* リード開始カスタムマクロ変数番号 */
+        short dummy ;    /* 未使用 */
+        short datano_e ; /* リード終了カスタムマクロ変数番号 */
+        struct {
+                long  mcr_val ; /* カスタムマクロ変数値 */
+                short dec_val ; /* 小数点以下桁数 */
+        } data[N] ;             /* N は読み出す変数の個数 */
+} IODBMR ;
+</pre>
+                            <dl>
+                                <dt>datano_s</dt>
+                                <dd>実際にリードされた最初のカスタムマクロ変数番号が格納されます。</dd>
+                                <br/>
+                                <dt>datano_e</dt>
+                                <dd>実際にリードされた最後のカスタムマクロ変数番号が格納されます。</dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>データブロック長の誤り<br/>IODBMR構造体のサイズ(length)が不正です。</content>
+            </item>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>データ番号の誤り<br/>カスタムマクロ変数番号(s_number, e_number)の指定が不適切です。</content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>オプションなし<br/>カスタムマクロ機能が必要です。</content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                  <p><ul>上記２つの機能は必要ありません。</ul></p>
+                  <p>イーサネットボードを使用のとき、</p>
+                  <p><ul>イーサネット機能のみ必要です。</ul></p>
+            </ethr>
+            <need>
+                <li>Series 15/15i, 30i/31i/32i, 0i-D, PMi-A</li>
+                カスタムマクロ<br/>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                カスタムマクロＢ<br/>
+                <br/>
+            </need>
+            <type>
+                <li>Series 15</li>
+                カスタムマクロコモン変数 200個<br/>
+                カスタムマクロコモン変数 300個<br/>
+                カスタムマクロコモン変数 600個<br/>
+                <br/>
+                <li>Series 15i</li>
+                カスタムマクロコモン変数 900個<br/>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i, PMi-A</li>
+                カスタムマクロコモン変数追加<br/>
+                <br/>
+                <li>Series 0i-F</li>
+                組込みマクロ機能<br/>
+                <br/>
+                <li>Series 30i/31i/32i, 0i-D</li>
+                カスタムマクロコモン変数追加<br/>
+                組込みマクロ機能<br/>
+                <br/>
+            </type>
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+                <need>カスタムマクロ</need>
+                <type>
+                  カスタムマクロコモン変数追加<br/>
+                  組込みマクロ機能<br/>
+                </type>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter>
+            <type>
+                <ul>
+                <li>Series 16i/18i-W</li>
+                6005#4,#5,#7 (設定の影響を受けます)
+                </ul>
+            </type>
+        </parameter>
+        <!-- 30i(WinCE) -->
+        <is_parameter></is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                  <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                  <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                  <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_rdmacro</name>
+                <file>ncdata/cnc_rdmacro.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrmacro</name>
+                <file>ncdata/cnc_wrmacro.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrmacror</name>
+                <file>ncdata/cnc_wrmacror.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdmacror2</name>
+                <file>ncdata/cnc_rdmacror2.htm</file>
+            </item>
+            <item>
+                <name>cnc_wrmacror2</name>
+                <file>ncdata/cnc_wrmacror2.htm</file>
+            </item>
+            <item>
+                <name>cnc_rdmacroinfo</name>
+                <file>ncdata/cnc_rdmacroinfo.htm</file>
+            </item>
+            <item>
+                <name>cnc_getmactype</name>
+                <file>ncdata/cnc_getmactype.htm</file>
+            </item>
+            <item>
+                <name>cnc_setmactype</name>
+                <file>ncdata/cnc_setmactype.htm</file>
+            </item>
+        </reference>
+
+
+
+        <!-- プログラム例 -->
+        <example>
+<vc>
+以下のプログラムは指定された範囲のカスタムマクロ変数を読み出して表示します。
+
+#include "fwlib32.h"
+
+/* start/end are start/end variable number to be read. */
+short example( short start, short end )
+{
+        IODBMR *macror ;
+        char strbuf[11] ;
+        short ret, idx ;
+        macror = (IODBMR *)malloc( 1000 ) ;
+        ret = cnc_rdmacror( h, start, end, 1000, macror ) ;
+        if ( !ret )
+                for ( idx = 0 ; idx &#60;= end-start ; idx++ ) {
+                        sprintf( &#38;strbuf[1], "%09ld",
+                                        macror-&#62;data[idx].mcr_val ) ;
+                        if ( strbuf[1] == '0' ) strbuf[1] = ' ' ;
+                        strncpy( &#38;strbuf[0], &#38;strbuf[1],
+                                        9 - macror-&#62;data[idx].dec_val ) ;
+                        strbuf[9-macror-&#62;data[idx].dec_val] = '.' ;
+                        printf( "#%04d  %s\n", start+idx, strbuf ) ;
+                }
+        else
+                printf( "ERROR!(%d)\n", ret ) ;
+        free( macror ) ;
+        return ( ret ) ;
+}
+</vc>
+        </example>
+
+
+
+    </func>
+</root>

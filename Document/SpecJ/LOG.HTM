@@ -1,0 +1,231 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>通信ログ機能</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>通信ログ機能</h2>
+
+<hr>
+
+<h3><a name="About Error Log"></a>1. 通信ログ機能</h3>
+
+<p>通信ログ機能は、データウィンドウライブラリ内部においてエラーが発生した場合、その原因をファイルに記録し、早期に問題を解決をすることを目的としています。</p>
+
+<p>通信ログの内容は、Windowsディレクトリ内のFwlibフォルダに以下のファイル名で保存されます。(Windows Vistaの場合は、共通アプリケーションフォルダ(例:C:\ProgramData)の\FANUC\Fwlibフォルダに保存されます。)</p>
+
+<table class="dd">
+	<tr> <td>Ethetnet版(Fwlibe1.dll)               </td><td>:</td><td>Fwlibeth.log</td> </tr>
+	<tr> <td>FS15i(HSSB版)(Fwlib15i.dll)           </td><td>:</td><td>FS150i.log  </td> </tr>
+	<tr> <td>FS16/18/21(HSSB版)(Fwlib160.dll)      </td><td>:</td><td>Fwlib160.log</td> </tr>
+	<tr> <td>FS0i-A(HSSB版)(Fwlib0i.dll)           </td><td>:</td><td>Fwlib0i.log </td> </tr>
+	<tr> <td>FS0i-B(HSSB版)(Fwlib0iB.dll)          </td><td>:</td><td>Fwlib0iB.log</td> </tr>
+	<tr> <td>Power Mate i-H/D(HSSB版)(FwlibPMi.dll)</td><td>:</td><td>FwlibPMi.log</td> </tr>
+</table>
+
+<p>* 上記以外のHSSB版ではログは出力されません。</p>
+
+<hr>
+
+<h3><a name="Error Log Viewer"></a>2. ログ記録内容の表示</h3>
+
+<p>現在のログの内容は、&quot;FWLOG.EXE&quot;ユーティリティを使用することによって確認することができます。</p>
+
+<p>CD-ROMから&quot;FWLOG.EXE&quot;を直接起動するか、このファイルをハードディスク上の適当なフォルダにコピーしてから、起動してください。&quot;FWLOG.EXE&quot;ユーティリティを起動すると、Openダイアログボックスが表示されます。表示したい&quot;ログファイル名&quot;を矢印キーで選んで、[OK]ボタンをクリックすると、ログ内容画面が表示されます。</p>
+
+<p>以下に、ログ表示画面の操作方法を説明します。</p>
+
+<dl>
+    <dt><strong>カーソルの移動</strong> </dt>
+    <dd>キーボードの矢印キーを押します。 </dd>
+    <dd>また、次のいずれかの方法で、ページを送ることができます。
+        <ul>
+            <li>メニューの[View]-[Previous Page]、[View]-[Next
+                Page]を選択します。 </li>
+            <li>キーボードの「Page Up」キー、「Page
+                Down」キーを押します。 </li>
+        </ul>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>クリップボードへのコピー</strong> </dt>
+    <dd>次の方法で、表示エリアの文字列をクリップボードへコピーすることができます。
+        <ol>
+            <li>キーボードの[Shift]キーを押しながら矢印キーを押して、コピーしたいログレコードを反転表示させます。
+            </li>
+            <li>メニューの[Edit]-[Copy]を選択、またはキーボードの[Ctrl]+[C]キーを押します。
+            </li>
+        </ol>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>指定行の表示</strong> </dt>
+    <dd>次のいずれかの方法で、Jumpダイアログボックスを表示させます。
+        <ul>
+            <li>メニューの[Edit]-[Jump...]を選択します。
+            </li>
+            <li>キーボードの[Ctrl]+[J]キーを押します。 </li>
+        </ul>
+    </dd>
+    <dd>表示したいレコード番号を入力し、[OK]ボタンをクリックします。
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>検索</strong> </dt>
+    <dd>次のいずれかの方法で、Findダイアログボックスを表示させます。
+        <ul>
+            <li>メニューの[Edit]-[Find...]を選択します。
+            </li>
+            <li>キーボードの[Ctrl]+[F]キーを押します。 </li>
+        </ul>
+    </dd>
+    <dd>検索するキーワードを入力し、[OK]ボタンをクリックします。
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>印刷</strong> </dt>
+    <dd>次のいずれかの方法で、Printダイアログボックスを表示させます。
+        <ul>
+            <li>メニューの[File]-[Print...]を選択します。
+            </li>
+            <li>キーボードの[Ctrl]+[P]キーを押します。 </li>
+        </ul>
+    </dd>
+    <dd>印刷する範囲を選択し、[OK]ボタンをクリックします。
+        <blockquote>
+            <table border="1">
+                <tr>
+                    <th>範囲</th>
+                    <th>意味</th>
+                </tr>
+                <tr>
+                    <td width="20%">All</td>
+                    <td>ログファイル全てを印刷します。</td>
+                </tr>
+                <tr>
+                    <td>This Page</td>
+                    <td>現在画面に表示されているページのみを印刷します。</td>
+                </tr>
+            </table>
+        </blockquote>
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>ログの消去</strong> </dt>
+    <dd>メニューの[View]-[Clear]を選択し、ログ消去ダイアログボックスを表示します。
+    </dd>
+    <dd>[OK]ボタンをクリックします。 </dd>
+</dl>
+
+<dl>
+    <dt><strong>モニタモード</strong> </dt>
+    <dd>モニタモードでは、ログファイルを一定周期（デフォルト2秒）で読み出し、画面の更新を行います。デフォルトはモニタモードOFFとします。<br>
+        モニタモードONの時は、以下の機能を無効にしています。
+        <ul>
+            <li>印刷 </li>
+            <li>コピー </li>
+            <li>検索 </li>
+            <li>ジャンプ </li>
+            <li>前ページ／次ページ </li>
+            <li>ログのクリア </li>
+        </ul>
+    </dd>
+    <dd>メニューの[View]-[Monitor]を選択することによって、モニタモードのON／OFFが切り替わります。
+    </dd>
+</dl>
+
+<dl>
+    <dt><strong>ページの設定</strong> </dt>
+    <dd>次の方法で、１ページのログレコード数とモニタモードの更新間隔を変更できます。
+        <ol>
+            <li>メニューの[View]-[Page Setting...]を選択し、Pageダイアログボックスを表示させます。
+            </li>
+            <li>ログレコード数とモニタモードの更新間隔を変更します。
+            </li>
+            <li>[OK]ボタンをクリックします。 </li>
+        </ol>
+    </dd>
+</dl>
+
+<hr>
+
+<h3><a name="Control Error Log"></a>3. ログ記録内容の制御</h3>
+
+<p>Ethetnet版のデータウィンドウライブラリが出力するログ内容は、4段階(Level)に設定可能です。</p>
+
+<blockquote>
+<dl>
+    <dt><em>Level 0</em></dt>
+    <dd>ログは出力されません。</dd>
+    <dt><em>Level 1</em> (デフォルト)</dt>
+    <dd>TCP/IPの起動／終了イベントの内容、および全ての発生したエラーの内容が出力されます。</dd>
+    <dt><em>Level 2</em></dt>
+    <dd>Level 1の内容に加え、TCP/IP関連の全イベントの内容が出力されます。</dd>
+    <dt><em>Level 3</em></dt>
+    <dd>Level 2の内容に加え、全ての通信データの内容が出力されます。</dd>
+</dl>
+</blockquote>
+
+<p>HSSB版のデータウィンドウライブラリ(Fwlib15i.dllを除く)が出力するログ内容は、4段階(Level)に設定可能です。</p>
+
+<blockquote>
+<dl>
+    <dt><em>Level 0</em></dt>
+    <dd>ログは出力されません。</dd>
+    <dt><em>Level 1</em> (デフォルト)</dt>
+    <dd>関数でエラーが発生した場合の内容が出力されます。</dd>
+    <dt><em>Level 2</em></dt>
+    <dd>Level 1と同じです。</dd>
+    <dt><em>Level 3</em></dt>
+    <dd>Level 1の内容に加え、関数の入力情報の内容が出力されます。</dd>
+</dl>
+</blockquote>
+
+<p>HSSB版のFS15i用データウィンドウライブラリは、関数でエラーが発生した場合の内容が出力されます。ログ記録の制御はできません</p>
+
+<p>現在のログのLevelは、&quot;LOGLEVEL.EXE&quot;ユーティリティを使用することによって確認することができます。（CD-ROMから&quot;LOGLEVEL.EXE&quot;を直接起動するか、このファイルをハードディスク上の適当なフォルダにコピーしてから、起動してください。）</p>
+
+<dl>
+    <dt>(使用例)</dt>
+    <dd><pre>C:\&gt;LOGLEVEL
+Current log level = 1 (Standard)
+
+C:\&gt;
+</pre>
+    </dd>
+</dl>
+
+<p>また、&quot;LOGLEVEL.EXE&quot;ユーティリティの引数にLevelを指定して、ログのLevelを変更することができます。変更したログのLevelを有効にするには、データウィンドウライブラリを使用しているアプリケーションを再度起動し直す必要があります。</p>
+
+<dl>
+    <dt>(使用例)</dt>
+    <dd><pre>C:\&gt;LOGLEVEL 3
+New log level = 3 (Full)
+
+C:\&gt;</pre>
+    </dd>
+</dl>
+
+<p>* ログのLevelを変更するとすべてのログファイルに対して変更が反映されてしまいますので注意して下さい。</p>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+</body>
+</html>

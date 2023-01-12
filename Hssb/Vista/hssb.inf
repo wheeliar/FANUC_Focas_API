@@ -1,0 +1,176 @@
+; hssb.inf
+;
+; Installation inf for the HSSB driver of Windows Vista.
+;
+; (c) Copyright 2007- FANUC CORPORATION
+;
+[Version]
+Signature="$WINDOWS NT$"
+ClassGuid={DBED883A-7BBE-11D3-A9EE-00C04FB6D18E}
+Class=CNC
+Provider=%String0%
+DriverVer=10/02/2013,2.0.0.2
+
+[DestinationDirs]
+Driver.CopyList = 12	; DIRID_DRIVERS
+System.CopyList = 11	; DIRID_SYSTEM
+
+[SourceDisksNames.x86]
+1 = %DiskName1%
+
+[SourceDisksFiles]
+mmcncd.sys   = 1
+ncboot32.exe = 1
+hssbset.exe  = 1
+
+[Driver.CopyList]
+mmcncd.sys
+
+[System.CopyList]
+ncboot32.exe
+hssbset.exe ; ControlPanel Applet
+
+;******************************** FANUC-HSSB class installer
+
+[ClassInstall32]
+AddReg=CNC.Reg
+
+[CNC.Reg]
+HKR,,,0,%String7%
+HKR,,Icon,0,-5
+
+;******************************** FANUC-manufacturer device list
+
+[Manufacturer]
+%String1%=HSSB.Devices
+
+[HSSB.Devices]
+%String2%=HSSB_PCI_CH1.Install,PCI\VEN_141e&DEV_1001
+%String3%=HSSB_PCI_CH2.Install,PCI\VEN_141e&DEV_2001
+%String4%=HSSBSX_PCI_CH1.Install,PCI\VEN_141e&DEV_1002
+%String5%=HSSBSX_PCI_CH2.Install,PCI\VEN_141e&DEV_1003
+%String6%=HSSBSX_PCI_CH1.Install,PCI\VEN_141e&DEV_1004
+
+;******************************** HSSB Driver Installation Sections
+
+[HSSB_PCI_CH1.Install.NT]
+CopyFiles=Driver.CopyList,System.CopyList
+AddReg=mmcncd_ch1.AddReg,ncboot32.AddReg,HssbSet.AddReg
+DelReg=mmcncd.DelReg
+LogConfig=HSSB_PCI.LogConfig
+
+[HSSB_PCI_CH2.Install.NT]
+CopyFiles=Driver.CopyList,System.CopyList
+AddReg=mmcncd_ch2.AddReg,ncboot32.AddReg,HssbSet.AddReg
+DelReg=mmcncd.DelReg
+LogConfig=HSSB_PCI.LogConfig
+
+[HSSBSX_PCI_CH1.Install.NT]
+CopyFiles=Driver.CopyList,System.CopyList
+AddReg=mmcncdsx_ch1.AddReg,ncboot32.AddReg,HssbSet.AddReg
+DelReg=mmcncd.DelReg
+LogConfig=HSSB_PCI.LogConfig
+
+[HSSBSX_PCI_CH2.Install.NT]
+CopyFiles=Driver.CopyList,System.CopyList
+AddReg=mmcncdsx_ch2.AddReg,ncboot32.AddReg,HssbSet.AddReg
+DelReg=mmcncd.DelReg
+LogConfig=HSSB_PCI.LogConfig
+
+[HSSB_PCI_CH1.Install.NT.Services]
+AddService = mmcncd,2,mmcncd_Service_Inst,mmcncd_EventLog_Inst
+
+[HSSB_PCI_CH2.Install.NT.Services]
+AddService = mmcncd,2,mmcncd_Service_Inst,mmcncd_EventLog_Inst
+
+[HSSBSX_PCI_CH1.Install.NT.Services]
+AddService = mmcncd,2,mmcncd_Service_Inst,mmcncd_EventLog_Inst
+
+[HSSBSX_PCI_CH2.Install.NT.Services]
+AddService = mmcncd,2,mmcncd_Service_Inst,mmcncd_EventLog_Inst
+
+;****************************************************************************
+
+[mmcncd_Service_Inst]
+DisplayName    = MMCNCD
+ServiceType    = 1  ; SERVICE_KERNEL_DRIVER
+StartType      = 1  ; SERVICE_SYSTEM_START
+ErrorControl   = 1  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\mmcncd.sys
+LoadOrderGroup = Extended Base
+
+[HSSB_PCI.LogConfig]
+ConfigPriority=NORMAL
+
+[mmcncd_ch1.AddReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType0,%REG_DWORD%,1
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName0,%REG_SZ_EXT%,"CNC-1"
+
+[mmcncd_ch2.AddReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType0,%REG_DWORD%,1
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType1,%REG_DWORD%,1
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName0,%REG_SZ_EXT%,"CNC-1"
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName1,%REG_SZ_EXT%,"CNC-2"
+
+[mmcncdsx_ch1.AddReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType0,%REG_DWORD%,9
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName0,%REG_SZ_EXT%,"CNC-1"
+
+[mmcncdsx_ch2.AddReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType0,%REG_DWORD%,9
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,CncType1,%REG_DWORD%,9
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName0,%REG_SZ_EXT%,"CNC-1"
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,NodeName1,%REG_SZ_EXT%,"CNC-2"
+
+[mmcncd.DelReg]
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress0
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress1
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress2
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress3
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress4
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress5
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress6
+HKLM,System\CurrentControlSet\Services\mmcncd\Parameters,IoPortAddress7
+
+[ncboot32.AddReg]
+HKLM,Software\Microsoft\Windows\CurrentVersion\Run,Ncboot32,%REG_NEWSZ%,"Ncboot32.exe"
+
+[HssbSet.AddReg]
+HKLM,Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel\NameSpace\%CuidNum%,,%REG_SZ%,"HSSB"
+HKCR,CLSID\%CuidNum%,,%REG_SZ%,"HSSB"
+HKCR,CLSID\%CuidNum%,System.Application,%REG_SZ%,"FANUC.HSSB"
+HKCR,CLSID\%CuidNum%,System.ControlPanel.Category,%REG_SZ%,"2"
+HKCR,CLSID\%CuidNum%,LocalizedString,%REG_EXPAND_SZ%,"@%%SystemRoot%%\System32\HssbSet.exe,-4"
+HKCR,CLSID\%CuidNum%,InfoTip,%REG_EXPAND_SZ%,"@%%SystemRoot%%\System32\HssbSet.exe,-33"
+HKCR,CLSID\%CuidNum%\DefaultIcon,,%REG_EXPAND_SZ%,"%%SystemRoot%%\System32\HssbSet.exe,-130"
+HKCR,CLSID\%CuidNum%\Shell\Open\Command,,%REG_EXPAND_SZ%,"""%%SystemRoot%%\System32\HssbSet.exe"""
+
+;****************************************************************************
+
+[mmcncd_EventLog_Inst]
+AddReg = mmcncd_EventLog_AddReg
+
+[mmcncd_EventLog_AddReg]
+HKR,,EventMessageFile,REG_EXPAND_SZ,"%%SystemRoot%%\System32\IoLogMsg.dll;%%SystemRoot%%\System32\drivers\mmcncd.sys"
+HKR,,TypesSupported,REG_NEWDW,7
+
+;****************************************************************************
+
+[Strings]
+String0="FANUC"
+String1="FANUC CORPORATION"
+String2="FANUC HSSB Type 2 (PCI 1 Channel)"
+String3="FANUC HSSB Type 2 (PCI 2 Channel)"
+String4="FANUC HSSB3 (PCI 1 Channel)"
+String5="FANUC HSSB3 (PCI 2 Channel)"
+String6="FANUC HSSB3 (PCI Express 1 Channel)"
+String7="FANUC Open CNC"
+DiskName1="FANUC OPEN CNC Drivers Disk"
+CuidNum="{DBED883A-7BBE-11D3-A9EE-00C04FB6D18E}"
+
+REG_SZ        = 0x00000000
+REG_SZ_EXT    = 0x00000002
+REG_DWORD     = 0x00010003
+REG_NEWSZ     = 0x00000000
+REG_NEWDW     = 0x00010001
+REG_EXPAND_SZ = 0x00020000

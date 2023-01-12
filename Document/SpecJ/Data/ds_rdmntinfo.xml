@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_rdmntinfo</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI ds_rdmntinfo(unsigned short FlibHndl, short ch_no, DSMNTINFO *mnt_info);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                データサーバとCNC間におけるファイルの転送において、障害調査用のデータを保守情報として取得します。
+            </p>
+            <p>
+               なお、データサーバとCNC間のファイル転送には、最大8つのチャンネルが用意されており、CNCの各系統に対してどのチャンネルを使用させるかについては、パラメータNo.941～948に設定することが出来ます。
+            </p>
+               本関数では、チャンネル番号を指定し、以下に示す保守情報を取得することが出来ます。<br/>
+                <span class="dd">データ遅延回数</span><br/>
+                <span class="dd">転送総バイト数</span><br/>
+                <span class="dd">リードポインタ</span><br/>
+                <span class="dd">ライトポインタ</span>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>ch_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                           取得する保守情報のチャンネル番号を指定します。<br/>
+                            チャンネル番号には、1～チャンネル数の値を指定して下さい。<br/>
+                            チャンネル数については、関数 <a href="data/etb_rdparam.htm" target="_parent">etb_rdparam</a> により取得することが出来ます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mnt_info</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                          取得した保守情報を格納するためのDSMNTINFO構造体へのポインタを指定します。DSMNTINFO構造体を以下に示します。
+
+<pre>
+typedef struct _dsmntinfo {
+    unsigned short  empty_cnt;
+    unsigned long   total_size;
+    unsigned short  ReadPtr;
+    unsigned short  WritePtr;
+} DSMNTINFO;
+</pre>
+                            <dl>
+                            <dt>
+                                mnt_info.empty_cnt
+                            </dt>
+                                <dd>
+                                    データ遅延回数<br/>
+                                    データサーバからCNCへのデータ供給が間に合わなかった回数がセットされます。この値は、電源投入時に0に初期化され、以降条件を満たした場合にカウントされます。
+                                </dd>
+                            <dt>
+                                mnt_info.total_size
+                            </dt>
+                                <dd>
+                                    転送したファイルの総バイト数<br/>
+                                    データサーバからCNCへ1つのNCプログラムを転送した場合の総バイト数がセットされます。
+                                </dd>
+                            <dt>
+                                mnt_info.ReadPtr
+                            </dt>
+                                <dd>
+                                    リードポインタ<br/>
+                                    データサーバとCNC間の転送で使用される内部バッファを管理するためのリードポインタがセットされます。
+                                </dd>
+                            <dt>
+                                mnt_info.WritePtr
+                            </dt>
+                                <dd>
+                                    ライトポインタ<br/>
+                                    データサーバとCNC間の転送で使用される内部バッファを管理するためのライトポインタがセットされます。
+                                </dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>チャンネル番号（ch_no）に不正な値が指定されました。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>現在データサーバが処理中です。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

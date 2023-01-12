@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_upstart3</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_upstart3(unsigned short FlibHndl, short type, long s_number, long e_number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側にNCデータ(NCプログラム,工具オフセット,パラメータ等)のリード(アップロード)開始を要求します。（アップロードを行う前に必ず実行する必要があります）</p>
+            <p>なお、本関数を実行せずに<a href="Program/cnc_upload3.htm" target="_parent">cnc_upload3</a>、<a href="Program/cnc_upend3.htm" target="_parent">cnc_upend3</a>関数を実行すると、戻り値がEW_FUNC となります。</p>
+            <p>アップロードを行う基本的な手順を以下に示します。</p>
+            <p><img src="Program/upload.gif"/></p>
+            <p>NC指令プログラムのアップロードでは、アップロード開始プログラム番号をs_numberに、終了プログラム番号をe_numberに指定することができます。
+1個のプログラムをアップロードする場合は、s_number = e_numberとしてください。s_number = -9999, e_number = 0で全プログラムを指定できます。</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードするCNCデータの種類を指定します。</p>
+                        <table class="dd">
+                            <tr><td> 0</td><td>:</td><td>NC指令プログラム         </td></tr>
+                            <tr><td> 1</td><td>:</td><td>工具オフセット量         </td></tr>
+                            <tr><td> 2</td><td>:</td><td>パラメータ               </td></tr>
+                            <tr><td> 3</td><td>:</td><td>ピッチ誤差補正量         </td></tr>
+                            <tr><td> 4</td><td>:</td><td>カスタムマクロ変数       </td></tr>
+                            <tr><td> 5</td><td>:</td><td>ワーク原点オフセット量   </td></tr>
+                            <tr><td> 7</td><td>:</td><td>操作履歴データ(15iを除く)</td></tr>
+                            <tr><td>18</td><td>:</td><td>ロータリテーブルダイナミックフィクスチャオフセット(30iシリーズ)</td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                        リード開始プログラム番号を指定します。type = 0のときのみ有効です。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リード終了プログラム番号を指定します。type = 0のときのみ有効です。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/><br/>
+                Series 15i
+                <ul style="margin-top:0">
+                    <li>cnc_upstart3関数を実行済みです。</li>
+                        <a href="Program/cnc_upend3.htm" target="_parent">cnc_upend3</a>関数にて前回の出力を終了させて下さい。<br/>
+                    <br/>
+                    <li>CNCがバックグラウンド編集中</li>
+                        CNC側のバックグランド編集を終了させてください。<br/>
+                    <br/>
+                </ul>
+                Series 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A
+                <ul style="margin-top:0">
+                    <li>cnc_upstart3関数を実行済みです。</li>
+                        <a href="Program/cnc_upend3.htm" target="_parent">cnc_upend3</a>関数にて前回の出力を終了させて下さい。<br/>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。
+                ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td><td>:</td><td>プログラム番号指定の誤り。</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>データの種類(type)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/><br/>
+                Series 15i
+                <ul style="margin-top:0">
+                    <li>カスタムマクロ変数,ピッチ誤差の登録の場合は、オプションが必要です。</li>
+                </ul>
+                Series 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A
+                <ul style="margin-top:0">
+                    <li>カスタムマクロ変数,ワーク原点オフセット,ピッチ誤差の登録の場合は、オプションが必要です。</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNCパラメータの誤り<br/><br/>
+                Series 15i
+                <ul style="margin-top:0">
+                    <li>パラメータ(No.21,23:出力機器)の設定が正しく行われていません。</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCモードの誤り (Series 16i/18i/21i, 0i-A/B/C, Power Mate iのNC指令プログラムの場合)<br/><br/>
+                <ul style="margin-top:0">
+                    <li>CNCがMDI編集中</li>
+                    CNCのモードをMDI以外に設定してください。<br/>
+                    <br/>
+                    <li>CNCがバックグラウンド編集中</li>
+                    CNC側のバックグランド編集を終了させてください。
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否 (Series 16i/18i/21i, 0i-A/B/C, Power Mate i)
+                <ul>
+                    <li>CNCが運転中</li>
+                    NC指令プログラムを除き、自動運転中は出力できません。
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                アラーム状態 (Series 16i/18i/21i, 0i-A/B/C, Power Mate i)
+                <ul>
+                    <li>CNCがアラーム(PS000、PS101)状態</li>
+                    CNC側のアラームを解除してください。
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_PASSWD</name>
+            <content>指定されたCNCデータは保護されているため書き込めません。(Series 16i/18i/21i, 0i-A/B/C)</content>
+        </item>
+
+
+        <is>
+            <item>
+                <name>EW_BUSY</name>
+                <content>
+                    ビジィ
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>cnc_upstart3関数を実行済みです。</li>
+                        <a href="Program/cnc_upend3.htm" target="_parent">cnc_upend3</a>関数にて前回の出力を終了させて下さい。
+                    </ul>
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    データの誤り<br/>
+                    この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。
+                    ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>1</td><td>:</td><td>プログラム番号指定の誤り。</td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り<br/>データの種類(type)が不正です。</content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    オプションなし<br/>
+                    カスタムマクロ変数,ワーク原点オフセット,ピッチ誤差の登録の場合は、オプションが必要です。
+                </content>
+            </item>
+<!--
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    CNC側の処理実行拒否
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>CNCが運転中</li>
+                        NC指令プログラムを除き、運転中は登録できません。
+                    </ul>
+                </content>
+            </item>
+            <item>
+                <name>EW_ALARM</name>
+                <content>
+                    アラーム状態
+                    <ul style="margin-top:0;margin-bottom:0">
+                        <li>CNCがアラーム(PW000)状態</li>
+                        CNC側のアラームを解除してください。
+                    </ul>
+                </content>
+            </item>
+-->
+        </is>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+
+        <type>
+                <li>Series 15i</li>
+                <p>
+                    ピッチ誤差補正<br/>
+                    カスタムマクロ
+                </p>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                <p>
+                    ピッチ誤差補正<br/>
+                    カスタムマクロ<br/>
+                    ワーク原点オフセット
+                </p>
+        </type>
+        
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <type>
+                ピッチ誤差補正<br/>
+                カスタムマクロ<br/>
+                ワーク原点オフセット
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i</li>
+                <p>
+                    0021=16(HSSBの場合)、7(Ethetnetの場合) (※) (必ず設定して下さい)<br/>
+                    0023=16(HSSBの場合)、7(Ethetnetの場合) (※) (必ず設定して下さい)<br/>
+                    0000#3<br/>
+                    0011#0,#1,2201#0,#1<br/>
+                    2210,2211,2212,2213<br/>
+                    <table>
+                        <tr><td rowspan="3" valign="top">※ </td><td colspan="3">NC指令プログラムの場合</td></tr>
+                        <tr><td>EDITモード                  </td><td>:</td><td>0021を使用</td></tr>
+                        <tr><td>EDITモード以外              </td><td>:</td><td>0023を使用</td></tr>
+                        <tr><td rowspan="3" valign="top">※ </td><td colspan="3">NC指令プログラム以外の場合</td></tr>
+                        <tr><td>バックグランド編集終了時    </td><td>:</td><td>0021を使用</td></tr>
+                        <tr><td>バックグランド編集中        </td><td>:</td><td>0023を使用</td></tr>
+                    </table>
+                </p>
+            </ul>
+            <ul>
+                <li>Series 16i/18i/21i, 0i-A/B/C<br/>
+                    3107#4
+                </li>
+            </ul>
+            <ul>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+                <p>
+                    0100#3<br/>
+                    3202#0,#4,#6<br/>
+                    3204#3,#4<br/>
+                    3210,3211
+                </p>
+            </ul>
+            <ul>
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A<br/>
+                    6019#0
+                </li>
+            </ul>
+            <ul>
+                <li>Power Mate i</li>
+                <p>
+                    0100#3<br/>
+                    3202#0,#4,#6<br/>
+                    3204#3,#4<br/>
+                </p>
+            </ul>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0100#3<br/>
+                3202#0,#4,#6<br/>
+                3204#3,#4<br/>
+                3210,3211
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+        すべてのモードで使用できます。(各登録データに応じたモードの設定を行う必要があります。)
+        </cmn>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_upload3</name>
+            <file>Program/cnc_upload3.htm</file>
+        </item>
+        <item>
+            <name>cnc_upend3</name>
+            <file>Program/cnc_upend3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <common>
+            <a href="Program/cnc_upload3.htm#sample" target="_parent">cnc_upload3</a>の使用例を参照してください。
+        </common>
+    </example>
+
+
+
+  </func>
+</root>

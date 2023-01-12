@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrpdf_attr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpdf_attr(unsigned short FlibHndl, char *file_path,IDBPDFTDIR *pdf_tdir);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                指定のフォルダ上のフォルダまたはファイルの属性を変更します。<br/>
+                CNC側が編集中(バックグラウンド編集状態を含む)の場合は、実行が待たされます。<br/>
+                指定されたフォルダが、カレントフォルダとして選択中の場合は変更できません。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>file_path</name>
+                    <type>in</type>
+                    <content>
+                        ドライブ名＋フォルダ文字列＋ファイル名を設定します。<br/>
+                        最大242文字が有効です。終端はNULLを設定します。<br/>
+                        フォルダ名の場合には、文字列の最後に"/"を置いてください｡
+                        "/"がない場合はファイル名とみなされます｡<br/>
+                        フォルダ名の指定方法の詳細については、「<a href="./general.htm#DriveName" target="_parent">ライブラリ全般 &quot;FS30i, 0i-D/F, PMi-Aのフォルダ名/ファイル名の指定方法について&quot;</a>」を参照してください。
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_tdir</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            変更するフォルダ／ファイルの情報を渡すIDBPDFTDIR構造体へのポインタです。<br/>
+                            IDBPDFTDIR構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct idbpdftdir {
+    unsigned long slct;         /* 選択 */
+    unsigned long attr;         /* 設定データ */
+} IDBPDFTDIR;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>変更を行うビットのみ１を設定します。</dd>
+                                <dd>記述のあるビット以外のビットは０にして下さい。</dd>
+
+                            <dt>attr</dt>
+                                <dd>変更後の属性データを設定します。</dd>
+                                <dd>slctが１のビットが、attr にて設定されたデータに変更されます。</dd>
+                            <br/>
+                            <br/>
+                            <dt>フォルダの属性</dt>
+                                <table class="dd">
+                                    <tr><td>#0</td><td>:</td><td>編集禁止属性</td><td>0:許可</td><td>1:禁止</td></tr>
+                                    <tr><td>#1</td><td>:</td><td>編集／表示禁止属性</td><td>0:許可</td><td>1:禁止</td></tr>
+                                </table>
+                             <br/>
+                             <dt>ファイルの属性</dt>
+                                <table class="dd">
+                                    <tr><td>#0</td><td>:</td><td>編集禁止属性</td><td>0:許可</td><td>1:禁止</td></tr>
+                                    <tr><td>#1</td><td>:</td><td>編集／表示禁止属性</td><td>0:許可</td><td>1:禁止</td></tr>
+                                    <tr><td>#2</td><td>:</td><td>暗号化属性</td><td>0:OFF</td><td>1:ON</td></tr>
+                                </table>
+                                <table class="dd">
+                                    <tr><td>#8 ～#10</td><td>:</td><td>変更保護レベル</td></tr>
+                                        <tr><td></td><td></td><td>#10-MSB, #8-LSBとした0～7の数値</td></tr>
+                                        <tr><td>#12～#14</td><td>:</td><td>出力保護レベル</td></tr>
+                                        <tr><td></td><td></td><td>#14-MSB,#12-LSBとした0～7の数値</td></tr>
+                                    </table>
+                                    変更保護レベル／出力保護レベルを変更する場合は、slct には、各3ビットを全て1にして下さい。
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                8レベルデータ保護のオプションが無効 の場合に、引数slctに8レベルデータ保護用のアトリビュートを指定した(slct#8～31のいずれかに1が設定されていた。)
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table>
+                    <colgroup valign="top">
+                    <tr><td>1</td><td>:</td><td>ファイル/フォルダ名のフォーマットの誤り。</td></tr>
+                    <tr><td>2</td><td>:</td><td>指定したファイル/フォルダ名が見つからない。</td></tr>
+                    <tr><td>5</td><td>:</td><td>指定したファイル/フォルダがNC側で選択されている。</td></tr>
+                    <tr><td>7</td><td>:</td><td>指定されたファイルの属性変更は、ひな型プログラム機能により禁止されている。</td></tr>
+                    <tr><td>8</td><td>:</td><td>指定されたフォルダの属性変更は、ひな型プログラム機能により禁止されている。</td></tr>
+                    </colgroup>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                指定したファイル/フォルダが書き込み禁止の設定になっています。<br/>
+                もしくは、保護レベルによりプロテクトされています。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                NCが運転中です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference></reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

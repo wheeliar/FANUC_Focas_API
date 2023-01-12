@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_prfrdallcadr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfrdallcadr(unsigned short FlibHndl, short slave_no, IODBPRFADR *odb) ; </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定されたスレーブ番号のアドレス割り付け状態をリードします。</p>
+            <p>この関数は、PROFIBUS-DP管理ソフト(6557系列)の01～07版と09版以降で使用できます。
+               08版の管理ソフトでは、戻り値が EW_VERSION となります。<br/>
+               この関数は、6558系列では使用できません。
+            </p>
+            <p>※PROFIBUS-DP機能の詳細については「PROFIBUS-DP機能取扱説明書」を参照して下さい。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slave_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リードするスレーブ番号を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>odb</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            アドレス割り付け状態を返すIODBPRFADR構造体へのポインタです。
+                            IODBPRFADR構造体は次の通りです。
+<pre>
+typedef struct {
+    unsigned char  di_size ;
+    char           di_type ;
+    unsigned short di_addr ;
+    short          reserve1;
+    unsigned char  do_size ;
+    char           do_type ;
+    unsigned short do_addr ;
+    short          reserve2;
+    unsigned char  dgn_size;
+    char           dgn_type;
+    unsigned short dgn_addr;
+} IODBPRFADR ;
+</pre>
+                            <dl>
+                                <dt>di_size</dt>
+                                    <dd>DIデータのバッファとして使用する領域のサイズが返ります。</dd>
+                                <dt>di_type</dt>
+                                    <dd>DIデータのバッファとして使用するPMCアドレスの種類がASCII CODEで返ります。</dd>
+                                <dt>di_addr</dt>
+                                    <dd>DIデータのバッファとして使用するPMCアドレスの先頭番号が返ります。</dd>
+                                <dt>reserve1</dt>
+                                    <dd>未使用</dd>
+                                <dt>do_size</dt>
+                                    <dd>DOデータのバッファとして使用する領域のサイズが返ります。</dd>
+                                <dt>do_type</dt>
+                                    <dd>DOデータのバッファとして使用するPMCアドレスの種類がASCII CODEで返ります。</dd>
+                                <dt>do_addr</dt>
+                                    <dd>DOデータのバッファとして使用するPMCアドレスの先頭番号が返ります。</dd>
+                                <dt>reserve2</dt>
+                                    <dd>未使用</dd>
+                                <dt>dgn_size</dt>
+                                    <dd>診断データを格納する領域のサイズが返ります。</dd>
+                                <dt>dgn_type</dt>
+                                    <dd>診断データを格納する領域として使用するPMCアドレスの種類がASCII CODEで返ります。</dd>
+                                <dt>dgn_addr</dt>
+                                    <dd>診断データを格納する領域として使用するPMCアドレスの先頭番号が返ります。</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>データ番号の誤り<br/>
+                    スレーブ番号(slave_no)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                    <li>PROFIBUS-DPボード(ハード)が必要です。</li>
+                    <li>PROFIBUS-DPの管理ソフトが必要です。</li>
+                    <li>PROFIBUS-DPマスタ機能が必要です。</li>
+                    <li>拡張ドライバ/ライブラリ機能が必要です。</li>
+            </content>
+        </item>
+        <item>
+            <name>EW_VERSION</name>
+            <content>PROFIBUS-DPの管理ソフトの版数の誤り<br/>
+                    08版の管理ソフトで本関数が使用されました。
+                    管理ソフトを08版以外に交換して下さい。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>PROFIBUS-DPマスタ機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>pmc_prfwrallcadr</name>
+            <file>Profibus/pmc_prfwrallcadr.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

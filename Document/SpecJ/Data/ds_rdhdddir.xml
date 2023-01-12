@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_rdhdddir</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_rdhdddir(unsigned short FlibHndl, char *nc_file, long offset, short *number, ODBHDDDIR *hdddir);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+            データサーバのハードディスク内のファイル情報を取得します。
+            </p>
+            ファイル毎に取得されるファイル情報を以下に示します。<br/>
+                <dd>ファイル名</dd>
+                <dd>ファイルのコメント</dd>
+                <dd>ファイル属性</dd>
+                <dd>ファイルサイズ</dd>
+               <dd>ファイルの更新日時</dd>
+            <br/>
+            本関数は、Fast Ethernetでも使用可能です。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>nc_file</name>
+                    <type>in</type>
+                    <content>
+                    基準ファイル名が格納されているアスキー文字列へのポインタを指定します。<br/>
+                    先頭から63文字がファイル名として識別されますが、データサーバ内のファイル名は8.3形式（ファイル名8文字以内＋'．'＋拡張子3文字以内＋NULL）で管理されています。<br/>
+                    空文字列（先頭の文字が "0"）が指定された場合は、作業ディレクトリ内の先頭のファイルが指定されたものとして処理されます。<br/>
+                    </content>
+                </item>
+                <item>
+                    <name>offset</name>
+                    <type>in</type>
+                    <content>
+                    基準ファイル名nc_fileで指定したファイルからのオフセットファイル数を指定します。<br/>
+                    ここで指定したファイル数分読み飛ばしたところからファイル情報を取得します。<br/>
+                    基準ファイル名にファイル名、または空文字列が指定された場合で、データサーバ内に実際に存在しないオフセット数を与えた場合、作業ディレクトリ内の最後のファイル情報が１つ取得されます。<br/>
+                    また、基準ファイル名(nc_file)に NULL を指定した場合で、データサーバ内に実際に存在しないオフセット数を与えた場合、EW_NUMBERのエラーとなります。
+                    </content>
+                </item>
+
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                    取得するファイル情報の個数がセットされているshort型変数へのポインタを指定します。1～32の値を指定して下さい。<br/>
+                    関数が正常終了した場合、実際に取得したファイル情報の個数が*numberセットされます。
+                    </content>
+                </item>
+
+                <item>
+                    <name>hdddir</name>
+                    <type>out</type>
+                    <content>
+                    取得したファイル情報を格納するためのODBHDDDIR構造体の配列へのポインタを指定します。<br/>
+                    ODBHDDDIR構造体を以下に示します。
+<pre>
+typedef struct _odbhdddir {
+    char    file_name[64];
+    char    comment[80];
+    short   attribute;
+    short   reserved;
+    long    size;
+    char    date[16];
+} ODBHDDDIR;
+</pre>
+
+<dt>hdddir[n].file_name[64]</dt>
+    <dd>ファイル名</dd>
+    <dd>NULLを含めて64文字以内のアスキー文字列がセットされます。</dd>
+
+<dt>hdddir[n].comment[80]</dt>
+    <dd>ファイルのコメント</dd>
+    <dd>NULLを含めて80文字以内のアスキー文字列がセットされます。</dd>
+
+<dt>hdddir[n].attribute</dt>
+    <dd>ファイル属性</dd>
+    <dd>バイナリ値が返され、ビット4以外は現在無効です。</dd>
+<dd><table class="dd">
+       <tr> <td>bit 4 = </td> <td>0</td> <td>:</td> <td>ファイル</td>     </tr>
+       <tr> <td>        </td> <td>1</td> <td>:</td> <td>ディレクトリ</td> </tr>
+</table></dd>
+
+
+<dt>hdddir[n].reserved</dt>
+    <dd>リザーブ（未使用）</dd>
+
+<dt>hdddir[n].size</dt>
+    <dd>ファイルサイズ</dd>
+
+
+<dt>hdddir[n].date[16]</dt>
+    <dd>ファイルの更新日時</dd>
+    <dd>NULLで終端された"yy-mm-dd hh:mm"形式のアスキー文字列がセットされます。</dd>
+
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データ長の誤り<br/>取得するファイル情報の個数（*number）に不正な値が指定されました。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>基準ファイル名がNULLで、データサーバ内に実際に存在しないオフセットファイル数(offset)が指定されました。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>現在データサーバが処理中です。</content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>データサーバエラー<br/>データサーバでエラーが発生しました。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 追加情報 -->
+        <add><b></b></add>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference></reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

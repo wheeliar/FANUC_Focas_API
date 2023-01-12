@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdunsolicprm2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdunsolicprm2( unsigned short FlibHndl, short number, IODBUNSOLIC *data );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+CNC主導メッセージ用パラメータの読込みを行います。 本関数は、Series 30i/31i/32i, 0i-D/F, PMi-A でのみ有効です。 Visual Basic では、使用できません。本関数を使用する場合は、Visual C++ をご使用下さい。 <br/>
+本機能の詳細については、<a href="./Unsolic.htm" target="_parent">CNC主導メッセージ通知機能</a>を参照下さい。
+</p>
+<p>
+この関数で読み込めるパラメータは、
+<a href="UnSolic/cnc_wrunsolicprm2.htm" target="_parent">cnc_wrunsolicprm2</a>関数を呼出した後に有効となっているパラメータです。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージ用パラメータ番号です。現在未使用(必ず"1"を設定して下さい)。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data2</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージ用パラメータを取得するIODBUNSOLIC2構造体へのポインタです。IODBUNSOLIC2構造体は以下の通りです。
+                        </p>
+<pre>
+typedef struct iodbunsolic2 {
+    char                ipaddr[64];
+    unsigned long       port;
+    unsigned short      retry;
+    unsigned short      timeout;
+    unsigned short      alivetime;
+    char                dummy1[8];
+    UNSOLICMSG_TYPE_PRM cntrl;
+    unsigned short      transnum;
+    char                dummy2[14];
+    UNSOLICMSG_TYPE_PRM trans[3];
+} IODBUNSOLIC2;
+
+typedef struct unsolicmsg_type_prm {
+    unsigned short      type;
+    char                dummy1[2];
+    union {
+        typedef {
+            unsigned short  path;
+            short           addr;
+            unsigned long   no;
+            unsigned long   size;
+        } pmc;
+        typedef {
+            unsigned short  path;
+            char            dummy2[2];
+            unsigned long   no; 
+            unsigned long   num;
+        } macro;
+    } prm
+} UNSOLICMSG_TYPE_PRM;
+</pre>
+                        <dl>
+                            <dt>ipaddr</dt>
+                                <dd>通信相手のホスト名、またはＩＰアドレス</dd>
+                                <dd>例) "192.168.0.1"</dd>
+
+                            <dt>port</dt>
+                                <dd>通信先パソコンのTCP/UDPポート番号</dd>
+                                <dd>範囲）5001 ～ 65535</dd>
+
+                            <dt>retry</dt>
+                                <dd>リトライ回数</dd>
+                                <dd>通信ボードがメッセージ送信時、メッセージ送信に対する返答が無い場合にリトライする回数です。</dd>
+                                <dd>範囲）1 ～ 32767</dd>
+
+                            <dt>timeout</dt>
+                                <dd>タイムアウト時間(秒)</dd>
+                                <dd>通信ボードがメッセージ送信時、メッセージ送信に対する返答までのタイムアウト時間です。</dd>
+                                <dd>範囲）1 ～ 32767</dd>
+
+                            <dt>alivetime</dt>
+                                <dd>生存信号間隔(秒)</dd>
+                                <dd>通信ボードが正常動作している間送信する生存信号の時間間隔です。</dd>
+                                <dd>範囲）1 ～ 32767</dd>
+
+                            <dt>cntrl.prm.type</dt>
+                                <dd>制御用パラメータ種類</dd>
+                                <dd>ラダープログラム、またはＮＣプログラムがメッセージ送信を要求するための制御用パラメータ種類です。</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0</td>  <td>:</td> <td>制御用パラメータ無効        </td></tr>
+                                        <tr><td>1</td>  <td>:</td> <td>ＰＭＣアドレス(応答通知方式)</td></tr>
+                                        <tr><td>2</td>  <td>:</td> <td>ＰＭＣアドレス(簡易方式)    </td></tr>
+                                        <tr><td>3</td>  <td>:</td> <td>カスタムマクロ変数(簡易方式)</td></tr>
+                                        <tr><td>4</td>  <td>:</td> <td>非保持型ＲＴＭ変数(簡易方式)(0i-F,30i/31i/32iのみ)</td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>cntrl.prm.pmc.path</dt>
+                                <dd>制御用パラメータのＰＭＣ系統番号</dd>
+                                <dd>ラダープログラムがメッセージ送信を要求するための制御用パラメータのＰＭＣ系統番号です。</dd>
+                                <dd>この値は、"制御用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 3（有効なＰＭＣ系統番号に依存します。）65535 の場合、制御用パラメータは無効を意味します。</dd>
+
+                            <dt>cntrl.prm.pmc.addr</dt>
+                                <dd>制御用パラメータのＰＭＣアドレス</dd>
+                                <dd>ラダープログラムがメッセージ送信を要求するための制御用パラメータのＰＭＣアドレスです。</dd>
+                                <dd>この値は、"制御用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>5</td>  <td>:</td> <td>R(内部リレー)</td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>E(拡張リレー)</td></tr>
+                                    </table>
+                                </dd>
+                                <dd>例）5、または"R" (識別コード、またはアスキー文字)</dd>
+
+                            <dt>cntrl.prm.pmc.no</dt>
+                                <dd>制御用パラメータのＰＭＣアドレス番号</dd>
+                                <dd>ラダープログラムがメッセージ送信を要求するための制御用パラメータのＰＭＣアドレス番号です。</dd>
+                                <dd>この値は、"制御用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なＰＭＣ領域に依存します。）</dd>
+
+                            <dt>cntrl.prm.pmc.size</dt>
+                                <dd>未使用です。</dd>
+
+                            <dt>cntrl.prm.macro.path</dt>
+                                <dd>制御用パラメータのＣＮＣ系統番号</dd>
+                                <dd>ＮＣプログラムがメッセージ送信を要求するための制御用パラメータのＣＮＣ系統番号です。</dd>
+                                <dd>この値は、"制御用パラメータ種類"が"3"、または"4"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 10（有効なＣＮＣ系統数に依存します。）65535 の場合、制御用パラメータは無効を意味します。</dd>
+
+                            <dt>cntrl.prm.macro.no</dt>
+                                <dd>制御用パラメータのマクロ変数番号</dd>
+                                <dd>ＮＣプログラムがメッセージ送信を要求するための制御用パラメータのマクロ変数番号です。</dd>
+                                <dd>この値は、"制御用パラメータ種類"が"3"、または"4"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なマクロ変数番号に依存します。）</dd>
+
+                            <dt>cntrl.prm.macro.num</dt>
+                                <dd>未使用です。</dd>
+
+                            <dt>transnum</dt>
+                                <dd>送信数</dd>
+                                <dd>送信するメッセージの個数です。</dd>
+                                <dd>範囲）1 ～ 3</dd>
+
+                            <dt>trans[n].prm.type</dt>
+                                <dd>送信用パラメータ種類 nの範囲(0 ～ 2)</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0</td>  <td>:</td> <td>送信用パラメータ無効</td></tr>
+                                        <tr><td>1</td>  <td>:</td> <td>ＰＭＣアドレス      </td></tr>
+                                        <tr><td>3</td>  <td>:</td> <td>カスタムマクロ変数  </td></tr>
+                                        <tr><td>4</td>  <td>:</td> <td>非保持型ＲＴＭ変数  </td></tr>
+                                        <tr><td>5</td>  <td>:</td> <td>保持型ＲＴＭ変数(0i-F,30i/31i/32iのみ)</td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>trans[n].prm.pmc.path</dt>
+                                <dd>送信用パラメータのＰＭＣ系統番号  n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 3（有効なＰＭＣ系統番号に依存します。）65535 の場合、送信用パラメータは無効を意味します。</dd>
+
+                            <dt>trans[n].prm.pmc.addr</dt>
+                                <dd>送信用パラメータのＰＭＣアドレス n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>
+                                    <table class="dd">
+                                        <tr><td>0 </td> <td>:</td> <td>G (PMC→CNCへの信号)        </td></tr>
+                                        <tr><td>1 </td> <td>:</td> <td>F (CNC→PMCへの信号)        </td></tr>
+                                        <tr><td>2 </td> <td>:</td> <td>Y (PMC→機械への信号)       </td></tr>
+                                        <tr><td>3 </td> <td>:</td> <td>X (機械→PMCへの信号)       </td></tr>
+                                        <tr><td>4 </td> <td>:</td> <td>A (メッセージ要求)          </td></tr>
+                                        <tr><td>5 </td> <td>:</td> <td>R (内部リレー)              </td></tr>
+                                        <tr><td>6 </td> <td>:</td> <td>T (可変タイマ)              </td></tr>
+                                        <tr><td>7 </td> <td>:</td> <td>K (キープリレー)            </td></tr>
+                                        <tr><td>8 </td> <td>:</td> <td>C (カウンタ)                </td></tr>
+                                        <tr><td>9 </td> <td>:</td> <td>D (データテーブル)          </td></tr>
+                                        <tr><td>10</td> <td>:</td> <td>M (他デバイスからの入力信号)(0i-F,30i/31i/32iのみ)</td></tr>
+                                        <tr><td>11</td> <td>:</td> <td>N (他デバイスへの出力信号)(0i-F,30i/31i/32iのみ)  </td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>E (拡張リレー)              </td></tr>
+                                        <tr><td>13</td> <td>:</td> <td>Z (システムリレー)(0i-F,30i/31i/32iのみ)          </td></tr>
+                                    </table>
+                                </dd>
+
+                            <dt>trans[n].prm.pmc.no</dt>
+                                <dd>送信用パラメータのＰＭＣアドレス番号 n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なＰＭＣ領域に依存します。）</dd>
+
+                            <dt>trans[n].prm.pmc.size</dt>
+                                <dd>送信用パラメータのＰＭＣサイズ(バイト) n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"1"、または"2"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なＰＭＣ領域、及び"送信数"に依存します。）</dd>
+
+                            <dt>trans[n].prm.macro.path</dt>
+                                <dd>送信用パラメータのＣＮＣ系統番号 n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 10（有効なＣＮＣ系統数に依存します。）65535 の場合、送信用パラメータは無効を意味します。</dd>
+
+                            <dt>trans[n].prm.macro.no</dt>
+                                <dd>マクロ変数番号 n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なマクロ変数領域に依存します。）</dd>
+
+                            <dt>trans[n].prm.macro.num</dt>
+                                <dd>送信用パラメータのマクロ変数個数 n の範囲(0 ～ 2)</dd>
+                                <dd>この値は、"送信用パラメータ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なマクロ変数領域、及び"送信数"に依存します。）</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>本関数は使用できません。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>CNC主導メッセージ用パラメータ番号(number)の値が不正です。</content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>CNC主導メッセージ用パラメータが設定されていません。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <dd>上記２つの機能は必要ありません。</dd>
+              <p>イーサネットボードを使用のとき、</p>
+              <dd>イーサネット機能のみ必要です。</dd>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <fast>
+          <ul>
+              No.904#4=1   :ＣＮＣ主導メッセージ通知機能<br/>
+              No.904#5     :（DNSクライアント機能を利用する場合、1に設定して下さい）<br/>
+              No.14880#4=1 :ＣＮＣ主導メッセージ通知機能(組込みEthernet(内蔵ポート))<br/>
+              No.14880#5   :(DNSクライアント機能を利用する場合、1に設定して下さい)(組込みEthernet(内蔵ポート))<br/>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrunsolicprm2</name>
+            <file>Unsolic/cnc_wrunsolicprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg</name>
+            <file>Unsolic/cnc_rdunsolicmsg.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicmsg2</name>
+            <file>Unsolic/cnc_rdunsolicmsg2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

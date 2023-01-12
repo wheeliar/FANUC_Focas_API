@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_download3</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_download3(unsigned short FlibHndl, long *length, char *data); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>登録用NCデータの出力（ダウンロード）を行います。</p>
+            <p>本関数は*length で指定された文字数を出力しますが、その時にCNCへのデータ転送用バッファの空きサイズが指定された文字数より少ないと、空きサイズ分のデータを出力し、その文字数を*length にセットします。 </p>
+            <p>データは256バイトのバッファを使って転送されます。転送速度を上げるためにも、*lengthの値はできるだけ256の倍数になるようにしてください。</p>
+            <p>(Ethernet接続の場合は、最大1460バイトを1回で送信できるので、*lengthの値はできるだけ1024バイト～1400バイト程度のサイズになるようにしてください。少ないサイズで細かく転送を行った場合、転送効率が非常に悪くなり、通信エラーが発生する場合があります。)</p>
+            <p>1文字も出力できない場合は、戻り値としてEW_BUFFERを返します。この戻り値の場合は、再度この関数を呼び出します。</p>
+            <p>CNCへのデータ転送の速度を重視しているため、エラー(EW_DATA, EW_OVRFLOW等)は一般的には遅れて返ります。すなわち、ある時のエラーは実際には数回前に出力されたデータに対するものになります。また、終了前の数回分のデータに対するエラーは<a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>で返されます。</p>
+            <br/>
+            <b>出力データのフォーマット</b>
+            <p>CNC側に登録するNCデータは以下のようなフォーマットのASCIIコードの文字列
+です。</p>
+
+<p class="dd">
+    LF ブロック1 LF ブロック2 LF ... LF ブロックn LF %<br/>
+    ただし LF = 0x0A ('\n')
+</p>
+            <p>データ全体の先頭にはLFを、末尾には'%'を付加してください。先頭のLFよりも前にあるデータは無視されます。</p>
+            <p>出力するデータがNC指令プログラムの場合は、登録するプログラムの先頭には必ずアドレス'O'に続けてプログラム番号を指定してください。
+            例えば、</p>
+
+<pre>
+        O1234 ;
+        G1 F0.3 W10. ;
+        M30 ;
+        %
+</pre>
+
+            <p>というプログラムを登録する時は、</p>
+
+<pre>
+        "\nO1234\nG1F0.3W10.\nM30\n%"
+</pre>
+
+            <p>をcnc_download3関数で転送します。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>出力するNCデータの文字数がセットされているlong型の変数のポインタを指定して下さい。本関数から戻る時に、実際に出力された文字数がセットされます。</p>
+                        <p>出力する文字数に0以下の値を指定すると、戻り値が EW_LENGTHとなります。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data </name>
+                    <type>in</type>
+                    <content>
+                        <p>出力するNCデータがセットされている領域の先頭アドレスを指定します。</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                リセット、停止要求<br/>
+                CNCからダウンロードの停止が要求されました。<br/>
+                『RESET or STOP』が押されました。(Series 15i)<br/>
+                <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>関数をコールして下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dwnstart3.htm" target="_parent">cnc_dwnstart3</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                出力文字数に負の値が指定されています。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>1</td><td>:</td><td>NCデータ内の構文の誤り。</td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>:</td><td>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>:</td><td>NC指令プログラムの登録本数がオーバーしている。</td>
+                    </tr>
+                    <tr>
+                        <td>4</td><td>:</td><td>同一のプログラム番号が既に登録されている。</td>
+                    </tr>
+                    <tr>
+                        <td>5</td><td>:</td><td>同一のプログラム番号がNC側で選択されている。</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                CNCのパラメータ（8000番台/9000番台プロテクト、暗号化）が書き込み禁止の設定になっています。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                メモリオーバーフロー<br/>
+                NC側の空き容量が足りませんので、容量を確保してください。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                バッファフル<br/>
+                バッファがフル状態ですのでリトライしてください。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否 (Series 15i)<br/>
+                CNCが登録できる状態ではありません。(運転中、モード変更中、リセット中)<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+        <item>
+            <name>EW_ALARM</name>
+            <content>
+                アラーム状態 (Series 15i)<br/>
+                ダウンロード中にアラームが発生しました。<br/>
+                発生タイミングについては<a href="#disc">解説</a>を参照してください。
+            </content>
+        </item>
+
+        <is>
+            <item>
+                <name>EW_RESET</name>
+                <content>
+                    リセット、停止要求<br/>
+                    CNCからダウンロードの停止が要求されました。<br/>
+                    <a href="Program/cnc_dwnend3.htm" target="_parent">cnc_dwnend3</a>関数をコールして下さい。
+                </content>
+            </item>
+            <item>
+                <name>EW_FUNC</name>
+                <content>
+                    <a href="Program/cnc_dwnstart3.htm" target="_parent">cnc_dwnstart3</a>関数が実行されていません。
+                </content>
+            </item>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    出力文字数に負の値が指定されています。
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                <content>
+                    データの誤り<br/>
+                    この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。<br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>1</td><td>:</td><td>NCデータ内の構文の誤り。</td>
+                        </tr>
+                        <tr>
+                            <td>2</td><td>:</td><td>TVチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された。</td>
+                        </tr>
+                        <tr>
+                            <td>3</td><td>:</td><td>NC指令プログラムの登録本数がオーバーしている。</td>
+                        </tr>
+                        <tr>
+                            <td>4</td><td>:</td><td>同一のプログラム番号が既に登録されている。</td>
+                        </tr>
+                        <tr>
+                            <td>5</td><td>:</td><td>同一のプログラム番号がNC側で選択されている。</td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_PROT</name>
+                <content>
+                    ライトプロテクト<br/>
+                    CNCのパラメータ（8000番台/9000番台プロテクト、暗号化）が書き込み禁止の設定になっています。<br/>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_OVRFLOW</name>
+                <content>
+                    メモリオーバーフロー<br/>
+                    NC側の空き容量が足りませんので、容量を確保してください。<br/>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_BUFFER</name>
+                <content>
+                    バッファフル<br/>
+                    バッファがフル状態ですのでリトライしてください。<br/>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    CNC側の処理実行拒否<br/>
+                    CNCが登録できる状態ではありません。(運転中、モード変更中、リセット中)<br/>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_ALARM</name>
+                <content>
+                    アラーム状態<br/>
+                    ダウンロード中にアラームが発生しました。<br/>
+                    発生タイミングについては<a href="#disc">解説</a>を参照してください。
+                </content>
+            </item>
+        </is>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <type>
+                <li>Series 15i<br/>
+                    ピッチ誤差補正<br/>
+                    カスタムマクロ
+                </li>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A<br/>
+                    ピッチ誤差補正<br/>
+                    カスタムマクロ<br/>
+                    ワーク原点オフセット
+                </li>
+        </type>
+
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <type>
+                ピッチ誤差補正<br/>
+                カスタムマクロ<br/>
+                ワーク原点オフセット
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i<br/>
+                    0020=16(HSSBの場合)、7(Ethetnetの場合) (※) (必ず設定して下さい)<br/>
+                    0022=16(HSSBの場合)、7(Ethetnetの場合) (※) (必ず設定して下さい)<br/>
+                    0000#0<br/>
+                    2200#1,#3,#4<br/>
+                    0011#0,2201#0<br/>
+                    2210,2211,2212,2213
+                    8000#0
+                </li>
+                <li>Series 16i/18i/21i, 0i, 30i, PMi-A<br/>
+                    0000#0<br/>
+                    3201#2,#5,#6<br/>
+                    3202#0,#4<br/>
+                    3204#3,#4<br/>
+                    3210,3211
+                    8900#0
+                </li>
+                <li>Power Mate i<br/>
+                    0000#0<br/>
+                    3201#2,#5,#6<br/>
+                    3202#0,#4<br/>
+                    3204#3,#4<br/>
+                    8900#0
+                </li>
+            </ul>
+            <blockquote>
+            <table>
+                <tr><td rowspan="3" valign="top">※ </td><td colspan="3">NC指令プログラムの場合</td></tr>
+                <tr><td>EDITモード              </td><td>:</td><td>0020を使用</td></tr>
+                <tr><td>EDITモード以外          </td><td>:</td><td>0022を使用</td></tr>
+                <tr><td rowspan="3" valign="top">※ </td><td colspan="3">NC指令プログラム以外の場合</td></tr>
+                <tr><td>バックグランド編集終了時</td><td>:</td><td>0020を使用</td></tr>
+                <tr><td>バックグランド編集中    </td><td>:</td><td>使用不可</td></tr>
+            </table>
+            </blockquote>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <ul>
+                0000#0<br/>
+                3201#2,#5,#6<br/>
+                3202#0,#4<br/>
+                3204#3,#4<br/>
+                3210,3211<br/>
+                8900#0
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+    <is_mode>
+    </is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dwnstart3</name>
+            <file>Program/cnc_dwnstart3.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend3</name>
+            <file>Program/cnc_dwnend3.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+<vc>
+以下のプログラムは次のNCプログラムをCNC側に登録します。
+
+        O1234 ;
+        M3 S1200 ;
+        G0 Z0 ;
+        G0 X0 Y0 ;
+        G1 F500 X120. Y-30. ;
+        M30 ;
+
+#include "fwlib32.h"
+
+short example( void )
+{
+        char* prg =
+                "\n
+                 O1234\n
+                 M3 S1200\n
+                 G0 Z0\n
+                 G0 X0 Y0\n
+                 G1 F500 X120. Y-30.\n
+                 M30\n
+                 %";
+
+        long len, n;
+        short ret;
+
+        ret = cnc_dwnstart3( h, 0 ) ;
+        if ( ret ) return ( ret ) ;
+
+        len = strlen( prg ) ;
+        while ( len > 0 ) {
+                n = len ;
+                ret = cnc_download3( h, &#38;n, prg ) ;
+                if ( ret == EW_BUFFER ) {
+                        continue ;
+                }
+                if ( ret == EW_OK ) {
+                        prg += n ;
+                        len -= n ;
+                }
+                if ( ret != EW_OK ) {
+                        break ;
+                }
+        }
+        ret = cnc_dwnend3( h ) ;
+        return ( ret ) ;
+}
+</vc>
+    </example>
+
+
+
+  </func>
+</root>

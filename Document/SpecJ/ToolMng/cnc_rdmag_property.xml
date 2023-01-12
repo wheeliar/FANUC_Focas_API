@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdmag_property</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmag_property( unsigned short FlibHndl, short *data_num, IODBMAGPRTY * magprty ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>
+             マガジンプロパティデータを取得します。
+             </p>
+        </cmn>
+    </doc>
+
+
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data_num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           取得する個数を指定します。（1～8)<br/>
+                           全マガジンデータを取得する場合 : -1
+                        </p>
+                        <p>
+                           マガジンプロパティデータの読出しを行う際の、読出しデータ数へのポインタを指定します。<br/>
+                           ポインタで指されるデータへは予め、読出しデータ数(１以上)を設定して下さい。<br/>
+                           関数実行終了時には、*data_numに実際に読出されたデータ数が返されます。<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>magprty</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            取得するマガジンプロパティデータを格納するIODBMAGPRTY構造体へのポインタです。<br/>
+                            IODBMAGPRTY構造体は次の通りです。<br/>
+                            data_numで 1～8 を指定した場合、あらかじめ、メンバmsgに取得したいマガジン番号を指定します。<br/>
+                        </p>
+<pre>
+typedef struct  iodbmagprty {
+    short           mag ;           /* マガジン番号 */
+    short           reserve ;       /* リザーブ */
+    unsigned char   mag_info ;      /* マガジン情報データ */
+    char            reserve[3] ;    /* リザーブ */
+    short           mt_line ;       /* マトリックス列数 */
+    short           mt_row ;        /* マトリックス行数 */
+    long            cstm[4] ;       /* カスタマイズ */
+} IODBMAGPRTY;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_BUSY</name>
+            <content>
+                他のユーザが同じデータウィンドウをアクセスしています。<br/>
+                再度実行してください。
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                取得個数(data_num)の指定が不適切です。
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                マガジン番号の指定が不適切です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                工具管理機能(64組、240組、1000組)および工具管理拡張B機能が必要です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            <p>
+            工具管理機能(64組、240組、1000組)および、工具管理拡張B機能が必要です。
+            </p>
+        </need>
+        <is>
+            <hssb>
+                <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+            </hssb>
+            <need>
+                <p>工具管理機能(64組、240組、1000組)と工具管理拡張B機能のオプションが必要です。</p>
+            </need>
+        </is>
+
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            工具管理機能マガジンプロパティ/ポットプロパティを使用する場合には、パラメータ番号13210#1の設定が必要です。<br/>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- is -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrmag_property</name>
+            <file>ToolMng/cnc_wrmag_property.htm</file>
+        </item>
+        <item>
+            <name>cnc_delmag_property</name>
+            <file>ToolMng/cnc_delmag_property.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

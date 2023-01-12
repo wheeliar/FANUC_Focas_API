@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_dsget_req</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dsget_req(unsigned short FlibHndl, char *net_file, char *nc_file, short binary); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            データサーバに対してホストコンピュータからファイルを GET するように指示します。<br/>
+            従って、本関数が正常終了したときは、ホストコンピュータからのファイルのGET が開始されたことを示します。<br/>
+            ファイルを GET した結果については、<a href="Data/cnc_dsftpstat.htm" target="_parent">cnc_dsftpstat()</a>で取得して下さい。<br/><br/>
+
+            本関数が正常終了してから<a href="Data/cnc_dsftpstat.htm" target="_parent">cnc_dsftpstat()</a>により完了ステータスのEW_OK 、または EW_DTSRVR を取得するまで、CNC側でデータサーバ機能(DNC運転を除く) を使用してはいけません。<br/><br/>
+
+            <img src="Data/cnc_dsget_req.gif"></img>
+
+            <dl>
+            <table border="0" class = "dd">
+            <tr> <td width = "40"> </td><td>*</td><td>"Req."は本関数によるファイルのGETの開始要求を表します。</td> </tr>
+            <tr> <td width = "40"> </td><td> </td><td>"ret="は<a href="Data/cnc_dsftpstat.htm" target="_parent">cnc_dsftpstat()</a>を実行したときの完了ステータスを表します。</td> </tr>
+            </table></dl>
+
+            本関数を実行し正常終了した場合は、必ず<a href="Data/cnc_dsftpstat.htm" target="_parent">cnc_dsftpstat()</a>により完了ステータスの EW_OK 、または EW_DTSRVR を取得する必要があります。<br/>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>ライブラリハンドルを指定します。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>net_file</name>
+                    <type>in</type>
+                    <content>
+                        ホストコンピュータ側のファイル名へのポインタを指定します。<br/>
+                        ホストコンピュータ側のファイル名指定について以下に示します。<br/>
+                        <ul><table border="0" class="dd">
+                        <tr> <td> <li>ASCII文字列を使用して下さい。</li> </td> </tr>
+                        <tr> <td> <li>ファイル名の最後は NULLで終了して下さい。</li> </td> </tr>
+                        <tr> <td> <li>ファイル名の長さは NULLを含め最長128文字までです。</li> </td> </tr>
+                        <tr> <td> <li>パスを含めた指定は行えません。</li> </td> </tr>
+                        <tr> <td> <li>小文字を使用できます。</li> </td> </tr>
+                        <tr> <td> <li>ワイルドカード('*','?')は使用できません。</li> </td> </tr>
+                        </table></ul>
+                    </content>
+                </item>
+                <item>
+                    <name>nc_file</name>
+                    <type>in</type>
+                    <content>
+                        データサーバ側のファイル名へのポインタを指定します。<br/>
+                        データサーバ側のファイル名指定について以下に示します。<br/>
+                        <ul><table border="0" class="dd">
+                        <tr> <td> <li>ASCII文字列を使用して下さい。</li> </td> </tr>
+                        <tr> <td> <li>ファイル名の最後は NULLで終了して下さい。</li> </td> </tr>
+                        <tr> <td> <li>ファイル名の長さは NULLを含め最長33文字までです。
+</li> </td> </tr>
+                        </table></ul>
+                    </content>
+                </item>
+                <item>
+                    <name>binary</name>
+                    <type>in</type>
+                    <content>
+                        バイナリデータ転送を行うかを指定します。<br/>
+<!--                    データサーバ機能のATAカードがCNCファイル管理形式の場合に有効となります。<br/> -->
+                        <table border="0" class="dd">
+                        <tr> <td>0</td> <td>:</td> <td>バイナリデータ転送としません </td> </tr>
+                        <tr> <td>1</td> <td>:</td> <td>バイナリデータ転送とします </td> </tr>
+                        </table>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます<br/>
+                    <table class = "dd">
+                        <tr> <td>22</td><td>:</td><td>オプションボードがない</td> </tr>
+                        <tr> <td>24</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>26</td><td>:</td><td>ATAカードがない</td> </tr>
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>データサーバが使用中です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                     binaryの指定が不正です。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dsput_req</name>
+            <file>Data/cnc_dsput_req.htm</file>
+        </item>
+        <item>
+            <name>cnc_dsmget_req</name>
+            <file>Data/cnc_dsmget_req.htm</file>
+        </item>
+        <item>
+            <name>cnc_dsmput_req</name>
+            <file>Data/cnc_dsmput_req.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

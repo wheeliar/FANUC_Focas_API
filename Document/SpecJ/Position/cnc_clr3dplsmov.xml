@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_clr3dplsmov</title>
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_clr3dplsmov(unsigned short FlibHndl, short type);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>手動割り込みパルス量と手動割り込み移動量をクリアします。</p>
+            <p>モード指定を行えるのは手動割り込みパルス量のみです。(手動割り込み移動量は常に全軸クリアされます)</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>手動割り込みパルス量をクリアする特殊ハンドル送りモード番号を指定します。</p>
+                        <table class="dd">
+                        <tr>
+                            <td>1</td>
+                            <td>:</td>
+                            <td>工具軸直角方向モードX軸方向</td>
+                            <td>(通常用、並列軸1組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>:</td>
+                            <td>工具軸直角方向モードY軸方向</td>
+                            <td>(通常用、並列軸1組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>:</td>
+                            <td>工具軸方向モード</td>
+                            <td>(通常用、並列軸1組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>:</td>
+                            <td>工具先端中心回転A, B軸</td>
+                            <td>(通常用、並列軸1組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>:</td>
+                            <td>工具先端中心回転モードC軸</td>
+                            <td>(通常用、並列軸1組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>:</td>
+                            <td>工具軸直角方向モードX軸方向</td>
+                            <td>(並列軸2組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>:</td>
+                            <td>工具軸直角方向モードY軸方向</td>
+                            <td>(並列軸2組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td>:</td>
+                            <td>工具軸方向モード</td>
+                            <td>(並列軸2組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td>:</td>
+                            <td>工具先端中心回転A, B軸</td>
+                            <td>(並列軸2組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>:</td>
+                            <td>工具先端中心回転モードC軸</td>
+                            <td>(並列軸2組目用)</td>
+                        </tr>
+                        <tr>
+                            <td>-1</td>
+                            <td>:</td>
+                            <td>全モード指定</td>
+                            <td/>
+                        </tr>
+                        </table>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>特殊ハンドル送りモード番号(type)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>3次元ハンドル送り機能、拡張ドライバ/ライブラリ機能が必要です。<br/>さらに手動ハンドル送り機能、または手動ハンドル割り込み機能のいずれかが必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+        </ethr>
+        <need>
+                3次元ハンドル送り機能が必要です。<br/>
+                手動ハンドル送り機能、または手動ハンドル割り込み機能のいずれかが必要です。
+        </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15/15i</li>
+                3次元ハンドル送り関係のパラメータ<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rd3dtooltip</name>
+            <file>position/cnc_rd3dtooltip.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dpulse</name>
+            <file>position/cnc_rd3dpulse.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dmovrlap</name>
+            <file>position/cnc_rd3dmovrlap.htm</file>
+        </item>
+        <item>
+            <name>cnc_rd3dofschg</name>
+            <file>position/cnc_rd3dofschg.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

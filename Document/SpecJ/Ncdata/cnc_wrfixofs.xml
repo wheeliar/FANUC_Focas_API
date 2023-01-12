@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrfixofs</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrfixofs(unsigned short FlibHndl, short length, IODBZOR *fixofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>datano_s, datano_eで指定された範囲の、typeで指定された軸のフィクスチャオフセット量を書き換えます。オフセット量は符号付のバイナリ形式でIODBZOR内のdata配列に格納されます。</p>
+
+            <p>typeにALL_AXESを指定することにより全軸の書き換えを一度に行うことができます。</p>
+
+            <p>オフセット量の単位は<a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a>と同じです。同関数の解説を参照して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長(IODBZOR構造体のサイズ)を指定します。</p>
+
+                        <p class="dd">(8+4×(書き込む軸数)×(書き込むオフセットの個数))</p>
+                        <p><b>IODBZOR</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>1軸指定</th>
+                                <th>全軸指定</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="ncdata/naxis.gif" /></td>
+                                <td valign="top"><img src="ncdata/naxisa.gif" /></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <p>n = 最大制御軸数(有効データは制御軸数分)<br/>
+                           K = 書き換えるオフセットの個数</p>
+                    </content>
+                </item>
+                <item>
+                    <name>fixofsr</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き換えるフィクスチャオフセット番号量を指定するIODBZOR構造体へのポインタです。IODBZOR構造体は次の通りです。</p>
+
+<pre>
+typedef struct  iodbzor {
+        short   datano_s;        /* 開始オフセット番号 */
+        short   type;            /* 軸番号 */
+        short   datano_e;        /* 終了オフセット番号 */
+        long    data[MAX_AXIS*K];/* オフセットデータ */
+} IODBZOR ;       /* MAX_AXIS : 最大制御軸数 */
+                  /* K : 書き換えるオフセットの個数 */
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>ライトを開始するフィクスチャオフセット番号を指定します。指定可能範囲は1～8です。</dd>
+                            <br/>
+                            <dt>datano_e</dt>
+                            <dd>ライトを終了するフィクスチャオフセット番号を指定します。指定可能範囲は1～8です。</dd>
+                            <br/>
+                            <dt>type</dt>
+                            <dd>ライトする軸番号を指定します。
+                                <ul>
+                                    <table>
+                                        <colgroup align="left" valign="top">
+                                        <colgroup align="left" valign="top">
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>全軸指定(ALL_AXES : -1)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1～m</td>
+                                            <td>:</td>
+                                            <td>1軸指定(m :現在の制御軸数)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                </ul>
+                            </dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>T系では使用できません。</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>IODBZOR構造体のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>フィクスチャオフセット番号datano_s, datano_eの指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>軸番号typeの指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>ロータリーテーブルダイナミックフィクスチャオフセット機能、及び拡張ドライバ/ライブラリ機能が必要です。<br/>
+                     <span class="xis">カスタムマクロBが必要です(16i/18i/21iのみ)</span></content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+        </ethr>
+
+        <need>
+            ロータリーテーブルダイナミックフィクスチャオフセット機能<br/>
+            <span class="xis">
+            <li>Series 16i/18i/21i</li>
+                <div class="dd">カスタムマクロＢが必要です。 </div><br/>
+            </span>
+        </need>
+        <add></add>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <span class="xis">
+        <type>
+            <ul>
+                <li>Series 15</li>
+                <div class="dd">1004#0,#1,#5, 1009#1 </div><br/>
+            </ul>
+            <ul>
+                <li>Series 15i</li>
+                <div class="dd">1012#0,#1,#2,#3 </div><br/> 
+            </ul>
+        </type>
+        <add></add>
+        </span>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdactfixofs</name>
+            <file>ncdata/cnc_rdactfixofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdfixofs</name>
+            <file>ncdata/cnc_rdfixofs.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

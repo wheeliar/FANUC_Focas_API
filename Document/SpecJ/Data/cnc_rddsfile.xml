@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rddsfile</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddsfile(unsigned short FlibHndl, char *dev_name, IN_DSFILE *ds_file_in, OUT_DSINFO *ds_info_out, OUT_DSFILE *ds_file_out); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <ul class="dd">
+                <li>データサーバ</li>
+                    データサーバ機能のカレントフォルダ内のファイル(サブフォルダを含む)の一覧を取得します<br/><br/>
+                <li>データサーバホスト</li>
+                    データサーバ機能の現在の接続ホストのカレントフォルダ内のファイル(サブフォルダを含む)の一覧を取得します<br/><br/>
+                <li>組込みイーサネット</li>
+                    組込みイーサネット機能の接続ホストのカレントフォルダ内のファイル(サブフォルダを含む)の一覧を取得します。<br/>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>ライブラリハンドルを指定します。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>dev_name</name>
+                    <type>in</type>
+                    <content>
+                        指定するデバイス名が格納されている変数領域のポインタを指定します。<br/>
+                        指定するデバイス名は以下のものを指定します。<br/>
+                        <table border="0" class="dd">
+                        <tr> <td>データサーバ      </td><td>:</td><td>"DATA_SV"   </td> </tr>
+                        <tr> <td>データサーバホスト</td><td>:</td><td>"DTSVR_HOST"</td> </tr>
+                        <tr> <td>組込みイーサネット</td><td>:</td><td>"EMB_ETHER" </td> </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>ds_file_in</name>
+                    <type>in</type>
+                    <content>
+                        ファイル情報取得の設定値を渡すIN_DSFILE構造体へのポインタです。<br/>
+                        IN_DSFILE構造体は、以下の通りです。<br/>
+<pre>
+typedef struct in_dsfile {
+    char    path[256];  /* 基準ファイル名   */
+    long    fnum;       /* 基準ファイル番号 */
+    long    offset;     /* オフセット       */
+    short   req_num;    /* 要求ファイル数   */
+    short   size_type;  /* サイズタイプ     */
+    short   detail;     /* ファイル情報     */
+    short   dummy;
+} IN_DSFILE;
+</pre>
+                <ul class="dd">
+                    <li>データサーバ</li>
+                    <dl>
+                    <dt>path</dt>
+                        <dd>基準となるデータサーバのATAカード内のファイル名を設定します。</dd>
+                        <dd>アスキー文字列で、終端にはNULLを設定します。</dd>
+                        <dd>fnumを設定する場合は、NULLを設定します。</dd>
+                    <dt>fnum</dt>
+                        <dd>基準となるデータサーバのATAカード内のファイル通し番号を設定します。</dd>
+                        <dd>pathを設定する場合は、0を設定します。</dd>
+                    <dt>offset</dt>
+                        <dd>実際に取得するファイル情報の先頭ファイルとpathおよびfnumで指定された基準となるファイルの差分を設定します。</dd>
+                    <dt>req_num</dt>
+                        <dd>取得したいファイル情報のファイル数を設定します。</dd>
+                        <dd>最大３２まで設定できます。</dd>
+                    <dt>size_type</dt>
+                        <dd>取得するファイル情報のサイズのデータ単位を設定します。</dd>
+<!--                    <dd>データサーバのATAカードが従来ファイル管理形式の場合は、0を指定しても1と同じに扱われます。</dd> -->
+                            <dd><table border="0" class="dd">
+                            <tr> <td>0</td><td>:</td><td>ページ</td> </tr>
+                            <tr> <td>1</td><td>:</td><td>Byte</td> </tr>
+                            <tr> <td>2</td><td>:</td><td>KByte (1KByte = 1024Byte)</td> </tr>
+                            <tr> <td>3</td><td>:</td><td>MByte (1MByte = 1024KByte)</td> </tr>
+                            </table></dd>
+                    <dt>detail</dt>
+                        <dd>取得するファイル情報でコメント情報を一緒に読み出すかを設定します。</dd>
+                            <dd><table border="0" class="dd">
+                            <tr> <td>0</td><td>:</td><td>コメント情報を読み出さない</td> </tr>
+                            <tr> <td>1</td><td>:</td><td>コメント情報を読み出す</td> </tr>
+                            </table></dd>
+                    </dl><br/>
+
+                    <li>データサーバホスト、組込みイーサネット</li>
+                    <dl>
+                    <dt>offset</dt>
+                        <dd>取得するファイル情報の先頭ファイルからのオフセット値を設定します。</dd>
+                    <dt>req_num</dt>
+                        <dd>取得したいファイル情報のファイル数を設定します。</dd>
+                        <dd>最大32まで設定できます。</dd>
+                    <dt>detail</dt>
+                        <dd>取得するファイル情報でファイル名のみかファイル情報を一緒に読み出すかを設定します。</dd>
+                        <dd><table border="0" class="dd">
+                        <tr> <td>0</td><td>:</td><td>ファイル名のみ読み出す</td> </tr>
+                        <tr> <td>1</td><td>:</td><td>ファイル情報も含めて読み出す</td> </tr>
+                        </table></dd>
+                    </dl>
+                    </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>ds_info_out</name>
+                    <type>out</type>
+                 　 <content>
+                        ＡＴＡカード全体の情報を格納するOUT_DSINFO構造体へのポインタです。<br/>
+                        接続ホストのファイル情報を格納するOUT_DSINFO構造体へのポインタです。<br/>
+                        OUT_DSINFO構造体は、以下の通りです。<br/>
+<pre>
+typedef struct out_dsinfo {
+    short           type;       /* タイプ         */
+    short           dummy;
+    long            fnum;       /* 通し番号       */
+    long            total;      /* 総ファイル数   */
+    unsigned long   remain_h;   /* 残り容量(上位) */
+    unsigned long   remain_l;   /* 残り容量(下位) */
+    char            dir[256];   /* カレントフォルダ   */
+} OUT_DSINFO
+</pre>
+                <ul class="dd">
+                    <li>データサーバ</li>
+                    <dl>
+                    <dt>type</dt>
+                        <dd>データサーバのＡＴＡカードのファイル管理形式を返します。</dd>
+                        <dd><table class="dd">
+                            <tr><td>0</td><td>:</td><td>ＣＮＣファイル管理形式</td></tr>
+<!--                        <tr><td>1</td><td>:</td><td>従来ファイル管理形式</td></tr> -->
+                        </table></dd>
+                    <dt>fnum</dt>
+                        <dd>ds_file_outの先頭に格納したファイルの先頭ファイルからの通し番号を返します。</dd>
+                        <dd>先頭ファイルの場合は、1を返します。</dd>
+                    <dt>total</dt>
+                        <dd>現在のカレントフォルダ内に登録されているフォルダ数/ファイル数を返します。</dd>
+                    <dt>remain_h</dt>
+                    <dt>remain_l</dt>
+                        <dd>データサーバのＡＴＡカードの残り容量をバイト単位で返します。</dd>
+                        <dd>4Gbyte以下の場合は、remain_hは、0となります。</dd>
+                    <dt>dir</dt>
+                        <dd>データサーバのＡＴＡカード内の現在のカレントフォルダをフルパスで返します。</dd>
+                        <dd>アスキー文字列で、終端はNULLとなります。</dd>
+                    </dl><br/>
+
+                    <li>データサーバホスト、組込みイーサネット</li>
+                    <dl>
+                    <dt>fnum</dt>
+                        <dd>ds_file_outの先頭に格納したファイルの先頭ファイルからの通し番号を返します。</dd>
+                        <dd>先頭ファイルの場合は、1を返します。</dd>
+                    <dt>total</dt>
+                        <dd>接続ホストのカレントフォルダ内に登録されているフォルダ数/ファイル数を返します。</dd>
+                    </dl>
+                </ul>
+                </content>
+                </item>
+                <item>
+                    <name>ds_file_out</name>
+                    <type>out</type>
+                    <content>
+                        取得したファイル情報を格納するOUT_DSFILE構造体へのポインタです。<br/>
+                        引数 ds_file_in の req_num で指定した個数分のデータが格納できる領域が必要となります。<br/>
+                        OUT_DSFIL構造体は、以下の通りです。<br/>
+<pre>
+typedef struct out_dsfile {
+    /* opuput */
+    short           year;       /* 最終編集日時 */
+    short           mon;        /* 最終編集日時 */
+    short           day;        /* 最終編集日時 */
+    short           hour;       /* 最終編集日時 */
+    short           min;        /* 最終編集日時 */
+    short           sec;        /* 最終編集日時 */
+    long            size;       /* サイズ       */
+    unsigned long   attr;       /* 属性         */
+    char            file[36];   /* ファイル名   */
+    char            info[128];  /* 情報         */
+} OUT_DSFILE
+</pre>
+                <ul class="dd">
+                    <li>データサーバ</li>
+                    <dl>
+                    <dt>year</dt>
+                        <dd>最終編集日時(年)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>mon</dt>
+                        <dd>最終編集日時(月)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>day</dt>
+                        <dd>最終編集日時(日)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>hour</dt>
+                        <dd>最終編集日時(時)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>min</dt>
+                        <dd>最終編集日時(分)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>sec</dt>
+                        <dd>最終編集日時(秒)です。</dd>
+                        <dd>フォルダの場合は、無効です。</dd>
+                    <dt>size</dt>
+                        <dd>ファイルサイズです。</dd>
+                        <dd>ファイルの場合のみ有効です。</dd>
+                        <dd>size_typeで指定したデータ単位の値が返ります。</dd>
+                    <dt>attr</dt>
+                        <dd>ファイル/フォルダを示す属性です。</dd>
+                        <table class="dd">
+                        <tr> <td>31ビット目:常に1</td> </tr>
+                        <tr> <td>30ビット目:ファイル/フォルダ </td><td>0:フォルダ </td><td>1:ファイル</td> </tr>
+            <tr> <td>03ビット目:バイナリ </td>         <td>0:テキスト </td><td>1:バイナリ</td> </tr>
+            <tr> <td>00ビット目:編集禁止 </td>         <td>0:編集可 </td>  <td>1:編集禁止</td> </tr>
+                        </table>
+                        <dd>なお、上記以外のビットについては、不定です。</dd>
+                    <dt>file</dt>
+                        <dd>ファイル/フォルダ名です。</dd>
+                        <dd>NULLを含めて最長33文字のアスキー文字列で、終端はNULLとなります。</dd>
+                    <dt>info</dt>
+                        <dd>プログラム番号の直後にあるコメント文の内容が格納されます。</dd>
+                        <dd>最長78文字のアスキー文字列で、終端はNULLとなります。</dd>
+                        <dd>コメント文が存在しない場合は、データ本体の先頭から78文字分の文字列を返します。</dd>
+                        <dd>detailが1で、かつ、ファイルの場合のみ有効です。</dd>
+                        <dd>ただし、メインプログラムとして選択されているファイルにつきましては、本情報は返りません。</dd>
+                    </dl><br/>
+
+                    <li>データサーバホスト、組込みイーサネット</li>
+                    <dl>
+                    <dt>file</dt>
+                        <dd>操作のためのファイル名を返します。</dd>
+                        <dd>終端はNULLとし、NULLを含めて最大33文字のアスキー文字列です。</dd>
+                        <dd>引数 ds_file_in の detail変数に1を指定した場合にのみ有効となります。</dd>
+                    <dt>info</dt>
+                        <dd>表示用のファイル名またはファイル情報の文字列を返します。</dd>
+                        <dd>終端はNULLとし、NULLを含めて最大128文字のアスキー文字列です。</dd>
+                        <dd>引数 ds_file_in の detail変数に0を指定した場合は、ファイル名のみが返ります。</dd>
+                        <dd>引数 ds_file_in の detail変数に1を指定した場合は、ファイル情報が返ります。</dd>
+                    </dl></ul>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>22</td><td>:</td><td>オプションボードがない</td> </tr>
+                        <tr> <td>24</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>26</td><td>:</td><td>ＡＴＡカードがない</td> </tr>
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>データサーバまたは組込みイーサネットが使用中です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>
+                     req_numの指定が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                     size_type, detailの指定が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>
+                     dev_nameの指定が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>データサーバでエラーが発生しました。<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに詳細ステータスがセットされます。<br/>
+                    <li>データサーバ</li>
+                    <table class="dd">
+                        <tr> <td>464</td><td>:</td><td>ATAカードがフォーマットされていない</td> </tr>
+                    </table>
+                    <li>データサーバホスト</li>
+                    <table class="dd">
+                        <tr> <td>468</td><td>:</td><td>接続ホストが見つからない</td> </tr>
+                        <tr> <td>501</td><td>:</td><td>ホストコンピュータからファイル情報の取得に失敗した</td> </tr>
+                        <tr> <td>507</td><td>:</td><td>ディレクトリの変更に失敗した</td> </tr>
+                        <tr> <td>508</td><td>:</td><td>接続ホストへのログインに失敗した</td> </tr>
+                        <tr> <td>509</td><td>:</td><td>接続ホストへの接続に失敗した</td> </tr>
+                        <tr> <td>511</td><td>:</td><td>接続ホストのパラメータに誤りがある</td> </tr>
+                    </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rddsdir</name>
+            <file>Data/cnc_rddsdir.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

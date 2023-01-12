@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rddynamic</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddynamic( unsigned short FlibHndl, short axis, short length, ODBDY *rddynamic );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCの運転に伴い変化する各種データを一度に読み出します。読み取れるデータは次の通りです。</p>
+
+            <table border="1">
+                <tr>
+                    <th>データ</th>
+                    <th>個別に読み出す時に使用する関数</th>
+                </tr>
+                <tr>
+                    <td>アラームステータス</td>
+                    <td><a href="misc/cnc_alarm.htm" target="_parent">cnc_alarm</a></td>
+                </tr>
+                <tr>
+                    <td>実行中のプログラム番号</td>
+                    <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                </tr>
+                <tr>
+                    <td>メインプログラム番号</td>
+                    <td><a href="program/cnc_rdprgnum.htm" target="_parent">cnc_rdprgnum</a></td>
+                </tr>
+                <tr>
+                    <td>シーケンス番号</td>
+                    <td><a href="program/cnc_rdseqnum.htm" target="_parent">cnc_rdseqnum</a></td>
+                </tr>
+                <tr>
+                    <td>実速度</td>
+                    <td><a href="position/cnc_actf.htm" target="_parent">cnc_actf</a></td>
+                </tr>
+                <tr>
+                    <td>実主軸回転数</td>
+                    <td><a href="position/cnc_acts.htm" target="_parent">cnc_acts</a></td>
+                </tr>
+                <tr>
+                    <td>制御軸の絶対位置(2)(軸指定に従う)</td>
+                    <td><a href="position/cnc_absolute2.htm" target="_parent">cnc_absolute2</a></td>
+                </tr>
+                <tr>
+                    <td>制御軸の機械位置(軸指定に従う)</td>
+                    <td><a href="position/cnc_machine.htm" target="_parent">cnc_machine</a></td>
+                </tr>
+                <tr>
+                    <td>制御軸の相対位置(2)(軸指定に従う)</td>
+                    <td><a href="position/cnc_relative2.htm" target="_parent">cnc_relative2</a></td>
+                </tr>
+                <tr>
+                    <td>制御軸の残移動量(軸指定に従う)</td>
+                    <td><a href="position/cnc_distance.htm" target="_parent">cnc_distance</a></td>
+                </tr>
+            </table>
+
+            <p>各データの内容は上の「個別に読み出す時に使用する関数」のものと同一です。データの形式などに関しては各関数の解説を参照して下さい。</p>
+
+            <p>軸に関するデータはaxisで指定された軸データを読み出します。各データはODBDY内のoaxis構造体に格納されます。</p>
+
+            <p>axisに ALL_AXES を指定することにより全軸の読み取りを一度に行うことができます。その際、軸に関する各種データはODBDY内のfaxis構造体内の各配列に格納されます。</p>
+
+            <p>軸に関するデータの小数点位置は、<a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。</p>
+
+            <span class="xis">
+            <p>
+                <li>Series 15i</li>
+                <ul>全てのアラームステータスを読み出すことはできません。<br/>全てのアラームステータスを読み出すには、<a href="position/cnc_rddynamic2.htm" target="_parent">cnc_rddynamic2</a>関数を使用して下さい。</ul>
+                <ul>必ず
+            APIを8桁対応に切り替えて下さい。(詳しくは<a href="general.htm#O8">『プログラム番号8桁対応』</a>を参照して下さい)</ul>
+            </p>
+
+            <p>
+                <li>Series 16/18/16i/18i, Power Mate i</li>
+                <ul>プログラム番号O8桁の場合も使用出来ますが、API を8桁対応に切り替える必要があります。(詳しくは<a href="general.htm#O8">『プログラム番号8桁対応』</a>を参照して下さい)</ul>
+            </p>
+
+            <p>
+                <li>Series 16i/18i-W</li>
+                <ul>「実主軸回転数」、「制御軸の残移動量」のデータの取得はありません。</ul>
+            </p>
+            </span>
+
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードする軸番号を指定します。
+                            <table class="dd">
+                                <tr>
+                                    <td>ALL_AXES</td>
+                                    <td>:</td>
+                                    <td>全軸指定(ALL_AXES : -1)</td>
+                                </tr>
+                                <tr>
+                                    <td>1～m</td>
+                                    <td>:</td>
+                                    <td>1軸指定(m :現在の制御軸数)</td>
+                                </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長(ODBDY構造体のサイズ)を指定します。</p>
+                        <p><b>ODBDY</b>
+                            <table>
+                            <colgroup align="left" valign="top"/>
+                            <colgroup align="left" valign="top"/>
+                                <tr>
+                                    <th>1軸指定</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td><b>プログラム番号4桁</b></td>
+                                    <td><b>プログラム番号8桁</b></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/dyn.gif"/></td>
+                                    <td valign="top"><img src="position/dyn8.gif"/></td>
+                                </tr>
+                                <tr>
+                                    <th>全軸指定</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td><b>プログラム番号4桁</b></td>
+                                    <td><b>プログラム番号8桁</b></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="position/dyna.gif"/></td>
+                                    <td valign="top"><img src="position/dyna8.gif"/></td>
+                                </tr>
+                            </table>
+                        </p>
+                        <p>n = 最大制御軸数(有効データは制御軸数分)</p>
+                    </content>
+                </item>
+                <item>
+                    <name>rddynamic</name>
+                    <type>out</type>
+                    <content>
+                        <p>各種データを獲得するODBDY構造体へのポインタです。 ODBDY構造体は次の通りです。</p>
+<pre>
+・プログラム番号4桁
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        short  prgnum ;    /* current program number  */
+        short  prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;                       /* MAX_AXIS : 最大制御軸数 */
+
+・プログラム番号8桁
+typedef struct odbdy {
+        short  dummy ;     /* not used                */
+        short  axis ;      /* axis number             */
+        short  alarm ;     /* alarm status            */
+        long   prgnum ;    /* current program number  */
+        long   prgmnum ;   /* main program number     */
+        long   seqnum ;    /* current sequence number */
+        long   actf ;      /* actual feedrate         */
+        long   acts ;      /* actual spindle speed    */
+        union {
+            struct {
+                long  absolute[MAX_AXIS] ; /* absolute */
+                long  machine[MAX_AXIS] ;  /* machine  */
+                long  relative[MAX_AXIS] ; /* relative */
+                long  distance[MAX_AXIS] ; /* distance to go */
+            } faxis ; /* In case of all axes */
+            struct {
+                long  absolute ; /* absolute */
+                long  machine ;  /* machine  */
+                long  relative ; /* relative */
+                long  distance ; /* distance to go */
+            } oaxis ; /* In case of 1 axis */
+        } pos ;
+} ODBDY ;                       /* MAX_AXIS : 最大制御軸数 */
+</pre>
+                        <ul>
+                            <dl>
+                                <dt>dummy</dt>
+                                <dd>未使用</dd>
+                                <dt>axis</dt>
+                                <dd>軸番号<br/>リードした軸番号を返します。</dd>
+                                <dt>alarm</dt>
+                                <dd>アラームステータス<br/>各ビットの意味は次の通りです。
+                                <span class="xis">
+                                    <ul><br/><li>Series 15/15i</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>バックグラウンド用P/S</td></tr>
+                                            <tr><td>#01</td><td>:</td><td>フォアグラウンド用P/S</td></tr>
+                                            <tr><td>#02</td><td>:</td><td>オーバーヒート</td></tr>
+                                            <tr><td>#03</td><td>:</td><td>サブCPUエラー</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>同期誤差過大エラー</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>パラメータ書込みスイッチオン</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>オーバトラベル/外部データ入力エラー</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>PMCエラー</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>外部アラームメッセージ (1)</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>重症のP/S</td></tr>
+                                            <tr><td>#11</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>サーボアラーム</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>I/Oエラー</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>電源断が必要なパラメータの入力</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>システムアラーム</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    <ul><li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C, Power Mate i</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>P/S100 </td></tr>
+                                            <tr><td>#01</td><td>:</td><td>P/S000 </td></tr>
+                                            <tr><td>#02</td><td>:</td><td>P/S101 </td></tr>
+                                            <tr><td>#03</td><td>:</td><td>P/Sその他</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>オーバトラベルアラーム</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>オーバヒートアラーム</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>サーボアラーム</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>システムアラーム</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>APCアラーム</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>スピンドルアラーム</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>P/S5000番台、パンチプレスアラーム </td></tr>
+                                            <tr><td>#11</td><td>:</td><td>レーザアラーム</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>リジッドタップアラーム</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>外部アラームメッセージ</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    <ul><li>Series 16i/18i-W</li>
+                                        <table>
+                                            <tr><td>#00</td><td>:</td><td>P/Sアラーム</td></tr>
+                                            <tr><td>#01</td><td>:</td><td>オーバトラベルアラーム</td></tr>
+                                            <tr><td>#02</td><td>:</td><td>サーボアラーム</td></tr>
+                                            <tr><td>#03</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#04</td><td>:</td><td>オーバヒートアラーム</td></tr>
+                                            <tr><td>#05</td><td>:</td><td>ストロークリミット１</td></tr>
+                                            <tr><td>#06</td><td>:</td><td>ストロークリミット２</td></tr>
+                                            <tr><td>#07</td><td>:</td><td>編集アラーム</td></tr>
+                                            <tr><td>#08</td><td>:</td><td>APCアラーム</td></tr>
+                                            <tr><td>#09</td><td>:</td><td>システムアラーム</td></tr>
+                                            <tr><td>#10</td><td>:</td><td>P/S 5000番台アラーム</td></tr>
+                                            <tr><td>#11</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#12</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#13</td><td>:</td><td>(未使用)</td></tr>
+                                            <tr><td>#14</td><td>:</td><td>外部アラームメッセージ</td></tr>
+                                            <tr><td>#15</td><td>:</td><td>後退アラーム</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                    </span>
+                                    <ul><span class="xis"><li>Series 30i, 0i-D/F, PMi-A</li></span>
+                                        <table>
+                                            <tr><td>#00</td> <td>:</td> <td>パラメータ書込みスイッチオン</td>        <td>(SW)</td></tr>
+                                            <tr><td>#01</td> <td>:</td> <td>電源断が必要なパラメータの入力</td>      <td>(PW)</td></tr>
+                                            <tr><td>#02</td> <td>:</td> <td>I/Oエラー</td>                           <td>(IO)</td></tr>
+                                            <tr><td>#03</td> <td>:</td> <td>フォアグラウンド用P/S</td>               <td>(PS)</td></tr>
+                                            <tr><td>#04</td> <td>:</td> <td>オーバトラベル/外部データ入力エラー</td> <td>(OT)</td></tr>
+                                            <tr><td>#05</td> <td>:</td> <td>オーバーヒート</td>                      <td>(OH)</td></tr>
+                                            <tr><td>#06</td> <td>:</td> <td>サーボアラーム</td>                      <td>(SV)</td></tr>
+                                            <tr><td>#07</td> <td>:</td> <td>データ入出力のエラー</td>                <td>(SR)</td></tr>
+                                            <tr><td>#08</td> <td>:</td> <td>マクロアラーム</td>                      <td>(MC)</td></tr>
+                                            <tr><td>#09</td> <td>:</td> <td>スピンドルアラーム</td>                  <td>(SP)</td></tr>
+                                            <tr><td>#10</td> <td>:</td> <td>その他のアラーム(DS)</td>                <td>(DS)</td></tr>
+                                            <tr><td>#11</td> <td>:</td> <td>誤動作防止機能に関するアラーム</td>      <td>(IE)</td></tr>
+                                            <tr><td>#12</td> <td>:</td> <td>バックグラウンド用P/S</td>               <td>(BG)</td></tr>
+                                            <tr><td>#13</td> <td>:</td> <td>同期誤差過大エラー</td>                  <td>(SN)</td></tr>
+                                            <tr><td>#14</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                            <tr><td>#15</td> <td>:</td> <td>外部アラームメッセージ</td>              <td>(EX)</td></tr>
+                                        </table>
+                                    </ul><br/>
+                                </dd>
+                                <dt>prgnum</dt>
+                                <dd>実行中のプログラム番号<br/>
+                                    (自動運転停止中は選択中の番号です)</dd>
+                                <dt>prgmnum</dt>
+                                <dd>メインプログラム番号</dd>
+                                <dt>seqnum</dt>
+                                <dd>実行中のシーケンス番号</dd>
+                                <dt>actf</dt>
+                                <dd>制御軸の実速度</dd>
+                                <dt>acts</dt>
+                                <dd>実主軸回転数 <span class="xis">(Series 16i/18i-W, Power Mate i-Hでは無効です)</span></dd>
+                                <dt>absolute</dt>
+                                <dd>制御軸の絶対位置</dd>
+                                <dt>machine</dt>
+                                <dd>制御軸の機械位置</dd>
+                                <dt>relative</dt>
+                                <dd>制御軸の相対位置</dd>
+                                <dt>distance</dt>
+                                <dd>制御軸の残移動量 <span class="xis">(Series 16i/18i-Wでは無効です)</span></dd>
+                            </dl>
+                        </ul>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <span class="xis">
+        <item>
+            <name>EW_FUNC<br/>(Series 15i, 16/18, 16i/18i)</name>
+            <content>
+                使用不可<br/>プログラム番号8桁用として作成されていません。<br/>
+                <a href="general.htm#O8">『プログラム番号8桁対応』</a>を参照して下さい。
+            </content>
+        </item>
+        </span>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                ODBDY構造体のサイズ(length)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>軸番号(axis)の指定が不適切です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <span class="xis">
+        <type>
+            <li>Series 15</li>
+            <ul>
+                2204#1, 7613#0,#1,#2 （必ず設定して下さい）<br/>
+                2202#2,#3,#4,#5,#6,#7（設定の影響を受けます）
+            </ul>
+            <li>Series 15i</li>
+            <ul>
+                2202#2,#3,#4,#5,#6,#7 （設定の影響を受けます）
+            </ul>
+        </type>
+        </span>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rddynamic2</name>
+            <file>position/cnc_rddynamic2.htm</file>
+        </item>
+        <item>
+            <name>cnc_alarm</name>
+            <file>misc/cnc_alarm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprgnum</name>
+            <file>program/cnc_rdprgnum.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdseqnum</name>
+            <file>program/cnc_rdseqnum.htm</file>
+        </item>
+        <item>
+            <name>cnc_actf</name>
+            <file>position/cnc_actf.htm</file>
+        </item>
+        <item>
+            <name>cnc_acts</name>
+            <file>position/cnc_acts.htm</file>
+        </item>
+        <item>
+            <name>cnc_absolute</name>
+            <file>position/cnc_absolute.htm</file>
+        </item>
+        <item>
+            <name>cnc_machine</name>
+            <file>position/cnc_machine.htm</file>
+        </item>
+        <item>
+            <name>cnc_relative</name>
+            <file>position/cnc_relative.htm</file>
+        </item>
+        <item>
+            <name>cnc_distance</name>
+            <file>position/cnc_distance.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+以下のプログラムは全軸分(軸数=MAX)のダイナミックデータを読みだして画面に表示します。
+
+#include "fwlib32.h"
+
+void example( void )
+{
+    struct odbdy buf ;
+    unsigned int idx ;
+    cnc_rddynamic( h, -1, sizeof(buf), &#38;buf ) ;
+    printf( "Current program = %d   Main program = %d\n",
+                    buf.prgnum, buf.prgmnum ) ;
+    printf( "Sequence number = %ld\n", buf.seqnum ) ;
+    printf( "actf = %ld   acts = %ld\n", buf.actf, buf.acts ) ;
+    printf( "Alarm status = %d\n", buf.alarm ) ;
+    printf( "AXIS Absolute  Relative  Machine   Distance\n" ) ;
+    printf( "----+---------+---------+---------+--------\n" ) ;
+    for ( idx = 0 ; idx &#60; MAX ; idx++ )
+        printf( "  %u  %8ld  %8ld  %8ld  %8ld\n", idx,
+            buf.pos.faxis.absolute[idx],
+            buf.pos.faxis.relative[idx],
+            buf.pos.faxis.machine[idx],
+            buf.pos.faxis.distance[idx] ) ;
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

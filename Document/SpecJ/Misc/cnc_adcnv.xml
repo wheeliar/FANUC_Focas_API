@@ -1,0 +1,775 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_adcnv</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_adcnv(unsigned short FlibHndl, short inp_type, short av_type, ODBAD *adcnv);</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    A/D変換データを読み出します。A/D変換データはODBAD内のdataに格納されます。
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>inp_type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                アナログ電圧入力の種類を指定します。
+                            </p>
+                            <div class="dd">
+                                <li>Series 15/15i</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0, 1</td>
+                                            <td>:</td>
+                                            <td>汎用アナログ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>100, 101</td>
+                                            <td>:</td>
+                                            <td>アナログスピンドルの負荷情報</td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>:</td>
+                                            <td>CNC制御軸の負荷情報</td>
+                                        </tr>
+                                    </table>
+                                <p/>
+                                <li>Series 16/18, 16i/18i, 0i, 30i, Power Mate i, PMi-A</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>汎用アナログ(4チャネル) -- 16/18 MODEL B/Cのみ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>CNC制御軸の負荷情報</td>
+                                        </tr>
+                                    </table>
+                            </div>
+                        </content>
+                    </item>
+                    <item>
+                        <name>av_type</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                アナログ電圧の種類(コネクタ)を指定します。inp_type の設定により、指定する内容が異なります。
+                            </p>
+                            <li>Series 15/15i</li>
+                            <ol>
+                                <li>汎用アナログを指定した場合</li>
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>inp_type</th>
+                                            <th>av_type</th>
+                                            <th>入力チャネル</th>
+                                            <th>信号</th>
+                                            <th>コネクタ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>チャネル1</td>
+                                            <td>AIN2</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>0</td>
+                                            <td>チャネル2</td>
+                                            <td>AIN3</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+
+                                <li>アナログスピンドルの負荷情報を指定した場合</li>
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>inp_type</th>
+                                            <th>av_type</th>
+                                            <th>アナログスピンドル</th>
+                                            <th>信号</th>
+                                            <th>コネクタ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>100</td>
+                                            <td>0</td>
+                                            <td>1台目</td>
+                                            <td>AIN0</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>101</td>
+                                            <td>0</td>
+                                            <td>2台目</td>
+                                            <td>AIN1</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+
+                                <li>CNC制御軸の負荷情報を指定した場合</li>
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>inp_type</th>
+                                            <th>av_type</th>
+                                            <th>サーボ軸番号</th>
+                                            <th>信号</th>
+                                            <th>コネクタ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>1</td>
+                                            <td>第1軸</td>
+                                            <td>AMP1</td>
+                                            <td>JV1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>2</td>
+                                            <td>第2軸</td>
+                                            <td>AMP2</td>
+                                            <td>JV2</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>&#160;&#160;&#160;:</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>10</td>
+                                            <td>第10軸</td>
+                                            <td>AMP10</td>
+                                            <td>JV10</td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>11</td>
+                                            <td>第11軸</td>
+                                            <td>AMP11</td>
+                                            <td>JV11</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>&#160;&#160;&#160;:</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>23</td>
+                                            <td>第23軸</td>
+                                            <td>AMP23</td>
+                                            <td>JV23</td>
+                                        </tr>
+                                        <tr>
+                                            <td>200</td>
+                                            <td>24</td>
+                                            <td>第24軸</td>
+                                            <td>AMP24</td>
+                                            <td>JV24</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <ul type="square">
+                                        <li>MAX_AXIS=15の時av_type=16～24は未使用です。</li>
+                                        <li>MAX_AXIS=10の時av_type=11～24は未使用です。</li>
+                                    </ul>
+                            </ol>
+
+                            <p>
+                            <li>Series 16/18, 16i/18i, 30i 0i, Power Mate i, PMi-A</li>
+                            </p>
+                            <ol>
+                                <li>汎用アナログを指定した場合(16/18 MODEL B/Cのみ)</li>
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>inp_type</th>
+                                            <th>av_type</th>
+                                            <th>サーボ軸番号</th>
+                                            <th>信号</th>
+                                            <th>コネクタ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>チャネル1</td>
+                                            <td>AIN0</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>1</td>
+                                            <td>チャネル2</td>
+                                            <td>AIN1</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>2</td>
+                                            <td>チャネル3</td>
+                                            <td>AIN2</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>3</td>
+                                            <td>チャネル4</td>
+                                            <td>AIN3</td>
+                                            <td>JA6</td>
+                                        </tr>
+                                        </tbody>
+                                    </table><p/>
+                                <li>CNC制御軸の負荷情報を指定した場合</li>
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>inp_type</th>
+                                            <th>av_type</th>
+                                            <th>サーボ軸番号</th>
+                                            <th>信号</th>
+                                            <th>コネクタ</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>1</td>
+                                            <td>第1軸</td>
+                                            <td>AMP1</td>
+                                            <td>JV1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>2</td>
+                                            <td>第2軸</td>
+                                            <td>AMP2</td>
+                                            <td>JV2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>3</td>
+                                            <td>第3軸</td>
+                                            <td>AMP3</td>
+                                            <td>JV3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>4</td>
+                                            <td>第4軸</td>
+                                            <td>AMP4</td>
+                                            <td>JV4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>5</td>
+                                            <td>第5軸</td>
+                                            <td>AMP5</td>
+                                            <td>JV5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>6</td>
+                                            <td>第6軸</td>
+                                            <td>AMP6</td>
+                                            <td>JV6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>7</td>
+                                            <td>第7軸</td>
+                                            <td>AMP7</td>
+                                            <td>JV7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>8</td>
+                                            <td>第8軸</td>
+                                            <td>AMP8</td>
+                                            <td>JV8</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>&#160;&#160;&#160;:</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>31</td>
+                                            <td>第31軸</td>
+                                            <td>AMP31</td>
+                                            <td>JV31</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>32</td>
+                                            <td>第32軸</td>
+                                            <td>AMP32</td>
+                                            <td>JV32</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <ul type="square">
+                                        <li>9軸～32軸は、Series 30i のみ有効です。</li>
+                                    </ul>
+                            </ol>
+                        </content>
+                    </item>
+                    <item>
+                        <name>adcnv</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                A/D変換データを返すODBAD構造体へのポインタです。ODBAD構造体は次の通りです。
+                            </p>
+<pre>
+<li>Series 15B</li>
+typedef struct odbad {
+     short  datano ;   /* アナログ電圧入力の種類 */
+     short  type ;     /* アナログ電圧の種類(コネクタの指定) */
+     char  data ;      /* デジタル電圧 */
+} ODBAD ;
+</pre>
+<p/>
+<pre>
+<li>Series 15i, 16/18, 16i/18i/21i, 30i, 0i, Power Mate i, PMi-A</li>
+typedef struct odbad {
+     short  datano ;   /* アナログ電圧入力の種類 */
+     short  type ;     /* アナログ電圧の種類(コネクタの指定) */
+     short  data ;     /* デジタル電圧 */
+} ODBAD ;
+</pre>
+                            <dl>
+                                <dt>datano</dt>
+                                    <dd>アナログ電圧入力の種類がセットされます。</dd>
+                                <dt>type</dt>
+                                    <dd>アナログ電圧の種類(コネクタの指定)がセットされます。</dd>
+                                <dt>data</dt>
+                                <dd>CNCのA/D変換器に入力されたアナログ電圧をディジタル電圧に変換したデータがセットされます。</dd>
+                                <dd>&#160;</dd>
+                                <dd><li>Series 15/15i</li></dd>
+                                <dd><div class="dd">
+                                入力電圧を線比例関係です。A/D変換した値(0～255)がバイナリ形式で格納されます。電圧とディジタル値は以下のような直線比例関係です。
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>入力電圧</th>
+                                            <th>data</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>-10V</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0V</td>
+                                            <td>128(四捨五入値)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10V</td>
+                                            <td>255</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <br/>
+                                </div></dd>
+                                <dd><li>Series 16/18, 16i/18i, 30i, 0i, Power Mate i, PMi-A</li></dd>
+                                <dd><div class="dd">
+                                <li type="square">汎用アナログを指定した場合(16/18 MODEL B/Cのみ)</li>
+                                    入力電圧をA/D変換した値( 0～255 )がバイナリ形式で格納されます。電圧とディジタル値は以下のような直線比例関係です。
+                                    <table border="1" frame="hsides" rules="groups">
+                                        <thead>
+                                        <tr>
+                                            <th>入力電圧</th>
+                                            <th>data</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>-10V</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0V</td>
+                                            <td>128(四捨五入値)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10V</td>
+                                            <td>255</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                <p/>
+                                <li type="square">CNC制御軸の負荷情報を指定した場合</li>
+                                    負荷電流値をディジタル値に換算した値がバイナリ形式で格納されます。この値から以下の計算式で負荷電流値(A)を求めることができます。
+                                    <blockquote>
+                                        <p/>負荷電流値(A) = adcnv.data × N / 6554
+                                        <p/>N = パラメータNo.2165の値<br/>
+                                        (ただしNが20以上の場合、1の位を切り捨てます。)
+                                    </blockquote>
+                                </div></dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+                </common>
+
+                <!-- 30i(WinCE) -->
+                <is>
+                    <hssb>
+                        <vc>
+                        <item>
+                            <name>FlibHndl</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    ライブラリハンドルです。
+                                    詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>inp_type</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    <p>
+                                    アナログ電圧入力の種類を指定します。
+                                    </p>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>CNC制御軸の負荷情報</td>
+                                        </tr>
+                                    </table>
+                                </p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>av_type</name>
+                            <type>in</type>
+                            <content>
+                                <p>
+                                    アナログ電圧の種類(コネクタ)を指定します。
+                                </p>
+                                <table border="1" frame="hsides" rules="groups">
+                                    <thead>
+                                    <tr>
+                                        <th>inp_type</th>
+                                        <th>av_type</th>
+                                        <th>サーボ軸番号</th>
+                                        <th>信号</th>
+                                        <th>コネクタ</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>1</td>
+                                        <td>第1軸</td>
+                                        <td>AMP1</td>
+                                        <td>JV1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>2</td>
+                                        <td>第2軸</td>
+                                        <td>AMP2</td>
+                                        <td>JV2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>3</td>
+                                        <td>第3軸</td>
+                                        <td>AMP3</td>
+                                        <td>JV3</td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td>&#160;&#160;&#160;:</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>31</td>
+                                        <td>第31軸</td>
+                                        <td>AMP31</td>
+                                        <td>JV31</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>32</td>
+                                        <td>第32軸</td>
+                                        <td>AMP32</td>
+                                        <td>JV32</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>adcnv</name>
+                            <type>out</type>
+                            <content>
+                                <p>
+                                    A/D変換データを返すODBAD構造体へのポインタです。ODBAD構造体は次の通りです。
+                                </p>
+<pre>
+typedef struct odbad {
+     short  datano ;   /* アナログ電圧入力の種類 */
+     short  type ;     /* アナログ電圧の種類(コネクタの指定) */
+     char  data ;      /* デジタル電圧 */
+} ODBAD ;
+</pre>
+<p/>
+                                <dl>
+                                    <dt>datano</dt>
+                                        <dd>アナログ電圧入力の種類がセットされます。</dd>
+                                    <dt>type</dt>
+                                        <dd>アナログ電圧の種類(コネクタの指定)がセットされます。</dd>
+                                    <dt>data</dt>
+                                    <dd>CNCのA/D変換器に入力されたアナログ電圧をディジタル電圧に変換したデータがセットされます。</dd>
+                                    <dd><div class="dd">
+                                    <p/>
+                                    <li type="square">CNC制御軸の負荷情報を指定した場合</li>
+                                        負荷電流値をディジタル値に換算した値がバイナリ形式で格納されます。
+                                        この値から以下の計算式で負荷電流値(A)を求めることができます。
+                                        <blockquote>
+                                            <p/>負荷電流値(A) = adcnv.data × N / 6554
+                                            <p/>N = パラメータNo.2165の値<br/>
+                                            (ただしNが20以上の場合、1の位を切り捨てます。)
+                                        </blockquote>
+                                    </div></dd>
+                                </dl>
+                            </content>
+                        </item>
+                    </vc>
+                </hssb>
+            </is>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>データ番号の誤り<br/>アナログ電圧入力の種類(inp_type)が不適切です。</content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>データ属性の誤り<br/>アナログ電圧の種類(av_type)の指定が不適切です。</content>
+            </item>
+            <add></add>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i、PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                     <p class="dd">上記２つの機能は必要ありません。</p>
+                  <p>イーサネットボードを使用のとき、</p>
+                      <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>X</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>X</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>E</fs16i>
+                <fs18i>E</fs18i>
+                <fs30ia>E</fs30ia>
+                <fs30ib>E</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <!-- M（ミリング） -->
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <!-- T（旋盤） -->
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>X</fs30isa>
+                    <fs30isb>X</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+  </func>
+</root>

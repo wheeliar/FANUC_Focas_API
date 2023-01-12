@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_exaxisname2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_exaxisname2(unsigned short FlibHndl, short type, short absolute, short *num, char (*axname)[4]);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>本関数は <a href="misc/cnc_rdaxisname.htm" target="_parent">cnc_rdaxisname</a>、<a href="misc/cnc_rdspdlname.htm" target="_parent">cnc_rdspdlname</a>関数を軸名称拡張機能に対応したもので、1軸目から(*num)で指定した軸数の制御軸名称および主軸名称をリードします。</p>
+
+            <p>(*num)が現在の軸数より大きい場合、(*num)に実際にリードした現在有効な軸数がセットされます。 (*num)が有効な軸数より小さい場合、(*num)で指定した軸数分のデータをリードします。</p>
+
+            <p>この関数では情報の取得に、NCの現在の系統内に限るか、NC全体に及ぶかの指定が出来ます｡</p>
+            <p>引数 absolute において、現在の系統内(相対)、またはNC全体(絶対)の指定が出来ます｡</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードする軸名称の種類を指定します。</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr><td>0</td><td>:</td><td>制御軸名称</td></tr>
+                                <tr><td>1</td><td>:</td><td>主軸名称  </td></tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>absolute</name>
+                    <type>in</type>
+                    <content>
+                        <p>軸の指定方法を相対軸、絶対軸のどちらで指定するか設定します。</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr><td>0</td><td>:</td><td>相対軸指定</td></tr>
+                                <tr><td>1</td><td>:</td><td>絶対軸指定</td></tr>
+                            </colgroup>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>リードする軸数を格納した変数へのポインタを指定します。関数終了後、実際にリードした軸数が設定されます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>axname</name>
+                    <type>out</type>
+                    <content>
+                        <p>軸名称を返すchar[4]型の配列へのポインタです。軸名称として4バイトの領域が必要です。取得した軸名称は、ASCII文字列で、文字列の終端にはNULL文字('\0')が格納されています。このchar[4]型の配列は(*num)で指定した数分必要です。</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>軸数(*num)が0以下です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>データの種類(type)の指定が不適切です。</content>        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>
+            <p>主軸名称取得のときは主軸シリアル出力(SPS)機能が必要です。</p>
+            <p>また、マルチスピンドル(MSP)の機能が関係します。</p>
+        </need>
+
+        <is>
+            <hssb>
+                拡張ドライバ/ライブラリ機能が必要です。<br/>
+                主軸名称取得のときは主軸シリアル出力(SPS)機能が必要です。
+            </hssb>
+            <type>また、マルチスピンドル(MSP)の機能が関係します。</type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                1020,1025,1026 ( 設定の影響を受けます)<br/>
+                3131 ( 設定の影響を受けます)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

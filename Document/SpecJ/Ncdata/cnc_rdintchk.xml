@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdintchk</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdintchk(unsigned short FlibHndl, short s_number, short type, short e_number, short length, IODBINT *intchk);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>刃物台干渉チェック用の接触禁止領域について、s_number, e_number, typeで指定された座標値を読み出します。接触禁止領域の座標値は符号付のバイナリ形式でIODBINT内のdata配列に格納されます。</p>
+
+            <p>typeにALL_AXESを指定することにより全座標値の読み取りを一度に行うことができます。</p>
+
+            <p>小数点位置は、<a href="misc/cnc_getfigure.htm" target="_parent">cnc_getfigure</a>関数で取得できます。</p>
+
+            <p>接触禁止領域の座標値の単位は<a href="ncdata/cnc_rdzofs.htm" target="_parent">cnc_rdzofs</a>と同じです。同関数の解説を参照して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを開始する干渉チェック用データ番号を指定します。指定可能な干渉チェック用データの組数は、<a href="ncdata/cnc_rdintinfo.htm" target="_parent">cnc_rdintinfo</a>関数で取得できます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを終了する干渉チェック用データ番号を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードする座標の種類を指定します。</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <td>ALL_AXES</td>
+                                <td>:</td>
+                                <td>全座標指定(ALL_AXES : -1)</td>
+                            </tr>
+                            <tr>
+                                <td>1～m</td>
+                                <td>:</td>
+                                <td>1座標指定(T系:m=7, M系:m=5)</td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <p>1座標指定の場合の対応は以下の通りです。</p>
+                        <table class="dd" border="1">
+                            <tr>
+                                <th rowspan="9">T系</th>
+                                <th>type</th>
+                                <th>座標名称</th>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>X (領域 1)</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Z (領域 1)</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>I (領域 1)</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>K (領域 1)</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>X (領域 2)</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>Z (領域 2)</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>I (領域 2)</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>K (領域 2)</td>
+                            </tr>
+                        </table>
+
+                        <table class="dd" border="1">
+                            <tr>
+                                <th rowspan="7">M系</th>
+                                <th>type</th>
+                                <th>座標名称</th>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td>X</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Y</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Z</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>I</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>J</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>K</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長(IODBINT構造体のサイズ)を指定します。</p>
+
+                        <p class="dd">(8+4×(読み出す座標数)×(読み出すデータの個数))</p>
+
+                        <p><b>T系</b></p>
+                        <p><b>IODBINT</b>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>1座標指定</th>
+                                    <th>全座標指定</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/inft.gif"/></td>
+                                    <td valign="top"><img src="ncdata/ninft.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            Kは読み出すデータの個数です。
+                        </p>
+
+                        <p><b>M系</b></p>
+                        <p><b>IODBINT</b>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>1座標指定</th>
+                                    <th>全座標指定</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/infm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/ninfm.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                        </p>
+
+
+                    </content>
+                </item>
+                <item>
+                    <name>intchk</name>
+                    <type>out</type>
+                    <content>
+                        <p>接触禁止領域の座標値を返すIODBINT構造体へのポインタです。 IODBINT構造体は次の通りです。</p>
+
+<pre>
+typedef struct  iodbint {
+        short   datano_s;       /* 開始データ番号 */
+        short   type;           /* 座標の種類 */
+        short   datano_e;       /* 終了データ番号 */
+        long    data[8*K];      /* 接触禁止領域の座標値 */
+} IODBINT ;     /* K : 読み出す工具データの個数(T系) */
+</pre>
+                        <dl>(全座標指定の場合の格納順はlength, typeの説明を参照して下さい)</dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>2系統制御機能が必要です。</content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                IODBINT構造体のサイズ(length)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>開始番号( s_number, e_number )の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>座標の種類( type )の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+            <span class="xis">刃物台干渉チェック機能(T系)、または2系統間干渉チェック機能(M系)が必要です。</span>
+            <span class="ois">系統間干渉チェック機能が必要です。</span>
+                              さらに拡張ドライバ／ライブラリ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>
+            <p>刃物台干渉チェック機能(T系)、または2系統間干渉チェック機能(M系)が必要です。</p>
+        </need>
+        <type>
+            <li>Series 15</li>
+            T系 工具補正個数(系統毎) (16)/32/80組<br/>
+            <br/>
+            <li>Series 16/18, 16i/18i, 0i-F, 30i</li>
+            T系 工具補正個数(系統毎) (16)/32/64組<br/>
+            <br/>
+            ※()内はベイシック
+        </type>
+
+        <is>
+            <hssb>
+                拡張ドライバ/ライブラリ機能が必要です。<br/>
+                系統間干渉チェック機能が必要です。
+            </hssb>
+            <type>
+                T系 工具補正個数(系統毎) (16)/32/64組<br/>
+            <br/>
+            ※()内はベイシック
+        </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15</li>
+                7605#0,#1,#2,#3,#4,#7<br/>
+                7682,7683<br/>
+                1004#0,#1,#5, 1009#1<br/>
+                <br/>
+                <li>Series 16/18, 16i/18i, 0i-F, 30i</li>
+                8140#0,#1,#2,#3,#4,#5<br/>
+                8151,8152<br/>
+                8141～8149<br/>
+                0000#2, 1004#1<br/>
+                <br/>
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+            <ul>
+                8140#0,#1,#2,#3,#4,#5<br/>
+                8151,8152<br/>
+                8141～8149<br/>
+                0000#2, 1004#1<br/>
+            </ul>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+              <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrintchk</name>
+            <file>ncdata/cnc_wrintchk.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdintinfo</name>
+            <file>ncdata/cnc_rdintinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

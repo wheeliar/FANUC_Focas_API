@@ -1,0 +1,570 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>データウィンドウ関数の戻り値</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a>
+
+<hr>
+
+<h2>データウィンドウ関数の戻り値</h2>
+
+<ul>
+	<li><a href="#ErrCNC">CNCウィンドウの戻り値</a></li>
+	<li><a href="#ErrPMC">PMCウィンドウの戻り値</a></li>
+	<li><a href="#ErrETH">Ethernet版固有の戻り値</a></li>
+</ul>
+
+<p> 
+
+<h3><a name="ErrCNC">CNCウィンドウの戻り値</a></h3>
+
+<table border=1 width=100%>
+	<colgroup align=center width=10%>
+	<colgroup width=30%>
+	<colgroup width=60%>
+	<thead>
+	<tr>
+		<th>戻り値
+		<th>意味
+		<th>説明・対処方法
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>EW_PROTOCOL<br>(-17)
+		<td>プロトコルエラー<br>(Ethernet版のみ)
+		<td>イーサネットボートからのデータが不正です。通常は起こりません。<br>
+		サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SOCKET<br>(-16)
+		<td>ソケット通信エラー<br>(Ethernet版のみ)
+		<td>CNCの電源、イーサネットケーブル、またはI/Fボードを確認してください。
+	</tr>
+	<tr>
+		<td>EW_NODLL<br>(-15)
+		<td>DLLファイルエラー
+		<td>指定ノード用機種別DLLがありません。
+	</tr>
+	<tr>
+		<td>EW_BUS<br>(-11)
+		<td>バスエラー<br>(HSSB版のみ)
+		<td>ＣＮＣのバスエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SYSTEM2<br>(-10)
+		<td>システムエラー(2)<br>(HSSB版のみ)
+		<td>ＣＮＣのシステムエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_HSSB<br>(-9)
+		<td>ＨＳＳＢの通信エラー<br>(HSSB版のみ)
+		<td>ＨＳＳＢのシリアルケーブル、またはＩ／Ｆボードを確認して下さい。
+	</tr>
+	<tr>
+		<td>EW_HANDLE<br>(-8)
+		<td>ハンドル番号の誤り
+		<td>ハンドル番号を取得して下さい。
+	</tr>
+	<tr>
+		<td>EW_VERSION<br>(-7)
+		<td>CNC/PMCとライブラリの版数の不一致
+		<td>CNC/PMCとライブラリの版数が不適合です。<br>
+		ライブラリ、またはCNC/PMCの制御ソフトを交換して下さい。
+	</tr>
+	<tr>
+		<td>EW_UNEXP<br>(-6)
+		<td>ライブラリ内部状態の異常
+		<td>予期しないエラー/通常は起こりません。<br>
+		担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SYSTEM<br>(-5)
+		<td>システムエラー<br>(HSSB版のみ)
+		<td>ＣＮＣのシステムエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_PARITY<br>(-4)
+		<td>シェアードＲＡＭパリティエラー<br>(HSSB版のみ)
+		<td>ハードウェアのエラーです。サービスにお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_MMCSYS<br>(-3)
+		<td>FANUCドライバのインストール不備<br>(HSSB版のみ)
+		<td>実行に必要なドライバが組み込まれていません。
+	</tr>
+	<tr>
+		<td>EW_RESET<br>(-2)
+		<td>リセット、停止要求
+		<td>CNCから機能停止要求がありました。<br>
+		終了機能をコールして下さい。
+	</tr>
+	<tr>
+		<td>EW_BUSY<br>(-1)
+		<td>ビジィ
+		<td>CNCの処理が終了するまで待つか、リトライして下さい。
+		
+	</tr>
+	<tr>
+		<td>EW_OK<br>(0)
+		<td>正常終了
+		<td>
+	</tr>
+	<tr>
+		<td>EW_FUNC<br>(1)
+		<td>エラー(関数未実行、使用不可)
+		<td>関数の実行に必要な特定の関数が前もって実行されていません。<br>
+		または、その関数は使用できません。
+	</tr>
+	<tr>
+		<td>EW_LENGTH<br>(2)
+		<td>エラー(データブロック長、データ個数の誤り)
+		<td>データブロック長、データ個数を調査修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_NUMBER<br>(3)
+		<td>エラー(データ番号の誤り)
+		<td>データ番号を調査、修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_ATTRIB<br>(4)
+		<td>エラー(データ属性の誤り)
+		<td>データ属性を調査、修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_DATA<br>(5)
+		<td>エラー(データの誤り)
+		<td>データを調査、修正して下さい。<br>
+		指定プログラムの削除、指定プログラムのサーチ、ＮＣデータの入力の開始では、指定プログラムが見つからないという意味です。
+	</tr>
+	<tr>
+		<td>EW_NOOPT<br>(6)
+		<td>エラー(オプションなし)
+		<td>該当するCNCオプションがありません。
+	</tr>
+	<tr>
+		<td>EW_PROT<br>(7)
+		<td>エラー(ライトプロテクト)
+		<td>書き込み禁止です。
+	</tr>
+	<tr>
+		<td>EW_OVRFLOW<br>(8)
+		<td>エラー(メモリオーバーフロー)
+		<td>CNCのメモリがオーバーフローしました。
+	</tr>
+	<tr>
+		<td>EW_PARAM<br>(9)
+		<td>エラー(CNCパラメータの誤り)
+		<td>CNCパラメータの設定に誤りがあります。
+	</tr>
+	<tr>
+		<td>EW_BUFFER<br>(10)
+		<td>エラー(バッファ空/フル)
+		<td>バッファが空、またはフル状態です。<br>
+		CNCの処理が終了するまで待つか、リトライして下さい。
+	</tr>
+	<tr>
+		<td>EW_PATH<br>(11)
+		<td>エラー(系統番号の誤り)
+		<td>系統番号に誤りがあります。
+	</tr>
+	<tr>
+		<td>EW_MODE<br>(12)
+		<td>エラー(CNCのモードの誤り)
+		<td>CNCのモードが異なります。<br>
+		CNCのモードを変更して下さい。
+	</tr>
+	<tr>
+		<td>EW_REJECT<br>(13)
+		<td>エラー(CNC側処理の実行拒否)
+		<td>CNCにより処理の実行が拒否されました。<br>
+		実行条件を確認して下さい。
+	</tr>
+	<tr>
+		<td>EW_DTSRVR<br>(14)
+		<td>エラー(データサーバエラー)
+		<td>データサーバでエラーが起きました。
+	</tr>
+	<tr>
+		<td>EW_ALARM<br>(15)
+		<td>エラー(アラーム状態)
+		<td>CNCでアラームが起きているため、関数を実行できません。<br>
+		アラーム要因を取り除いてください。
+	</tr>
+	<tr>
+		<td>EW_STOP<br>(16)
+		<td>エラー(停止状態)
+		<td>CNCが停止状態、または非常停止状態です。
+	</tr>
+	<tr>
+		<td>EW_PASSWD<br>(17)
+		<td>エラー(データ保護状態)
+		<td>CNCデータ保護機能によりデータが保護されています。
+	</tr>
+</tbody></table>
+
+<h3><a name="ErrPMC">PMCウィンドウの戻り値</a></h3>
+
+<table border=1 width=100%>
+	<colgroup align=center width=10%>
+	<colgroup width=30%>
+	<colgroup width=60%>
+	<thead>
+	<tr>
+		<th>戻り値
+		<th>意味
+		<th>説明・対処方法
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td align=center>EW_PROTOCOL<br>(-17)
+		<td>プロトコルエラー<br>(Ethernet版のみ)
+		<td>イーサネットボートからのデータが不正です。通常は起こりません。<br>
+		サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SOCKET<br>(-16)
+		<td>ソケット通信エラー<br>(Ethernet版のみ)
+		<td>CNCの電源、イーサネットケーブル、またはI/Fボードを確認してください。
+	</tr>
+	<tr>
+		<td>EW_NODLL<br>(-15)
+		<td>DLLファイルエラー
+		<td>指定ノード用機種別DLLがありません。
+	</tr>
+	<tr>
+		<td>EW_BUS<br>(-11)
+		<td>バスエラー<br>(HSSB版のみ)
+		<td>ＣＮＣのバスエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SYSTEM2<br>(-10)
+		<td>システムエラー(2)<br>(HSSB版のみ)
+		<td>ＣＮＣのシステムエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_HSSB<br>(-9)
+		<td>ＨＳＳＢの通信エラー<br>(HSSB版のみ)
+		<td>ＨＳＳＢのシリアルケーブル、またはＩ／Ｆボードを確認して下さい。
+	</tr>
+	<tr>
+		<td>EW_HANDLE<br>(-8)
+		<td>ハンドル番号の誤り
+		<td>ハンドル番号を取得して下さい。
+	</tr>
+	<tr>
+		<td>EW_VERSION<br>(-7)
+		<td>CNC/PMCとライブラリの版数の不一致
+		<td>CNC/PMCとライブラリの版数が不適合です。<br>
+		ライブラリ、またはCNC/PMCの制御ソフトを交換して下さい。
+	</tr>
+	<tr>
+		<td>EW_UNEXP<br>(-6)
+		<td>ライブラリ内部状態の異常
+		<td>予期しないエラー/通常は起こりません。<br>
+		担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_SYSTEM<br>(-5)
+		<td>システムエラー<br>(HSSB版のみ)
+		<td>ＣＮＣのシステムエラーです。サービス/担当部署にお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_PARITY<br>(-4)
+		<td>シェアードＲＡＭパリティエラー<br>(HSSB版のみ)
+		<td>ハードウェアのエラーです。サービスにお問合せ下さい。
+	</tr>
+	<tr>
+		<td>EW_MMCSYS<br>(-3)
+		<td>FANUCドライバのインストール不備<br>(HSSB版のみ)
+		<td>実行に必要なドライバが組み込まれていません。
+	</tr>
+	<tr>
+		<td>EW_OK<br>(0)
+		<td>正常終了
+		<td>
+	</tr>
+	<tr>
+		<td>EW_NOPMC<br>(1)
+		<td>エラー(PMCなし)
+		<td>PMCが存在しません。
+	</tr>
+	<tr>
+		<td>EW_LENGTH<br>(2)
+		<td>エラー(データブロック長、データ個数の誤り)
+		<td>データブロック長を調査修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_RANGE<br>(3)
+		<td>エラー(アドレス範囲の誤り)
+		<td>アドレスの範囲を調査、修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_TYPE<br>(4)
+		<td>エラー(アドレスの種類、データの型の誤り)
+		<td>アドレスの種類、データの型を調査、修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_DATA<br>(5)
+		<td>エラー(データの誤り)
+		<td>データを調査、修正して下さい。
+	</tr>
+	<tr>
+		<td>EW_NOOPT<br>
+		(6)
+		<td>エラー(オプションなし)
+		<td>該当するCNCオプションがありません。
+	</tr>
+	<tr>
+		<td>EW_BUFFER<br>
+		(10)
+		<td>エラー(バッファ空/フル)
+		<td>バッファが空、またはフル状態です。<br>
+		PMCの処理が終了するまで待つか、リトライして下さい。<br>
+		または、PMC側に対応する処理を追加して下さい。
+	</tr>
+	<tr>
+		<td>EW_PASSWD<br>(17)
+		<td>エラー(データ保護状態)
+		<td>CNCデータ保護機能によりデータが保護されています。
+	</tr>
+</tbody></table>
+
+<p>
+
+<h3><a name="ErrETH">Ethernet版固有の戻り値</a></h3>
+
+<ul>
+	<li>EW_SOCKET (=－16)
+		<blockquote>
+			<p>ソケットAPI関連のエラー。以下の詳細エラーコードが、<a href="./misc/cnc_getdtailerr.htm">cnc_getdtailerr</a>関数および<a href="./pmc/pmc_getdtailerr.htm">pmc_getdtailerr</a>関数により取得できます。
+			<table border=1 width=80%>
+				<colgroup align=center width=7%>
+				<colgroup width=40%>
+				 <tr>
+					<th>err_no
+					<th>意味
+					<th>err_dtno
+				</tr>
+				<tr>
+					<td>1
+					<td>socket関数のエラー
+					<td rowspan="7">Windows API WSAGetLastError関数の戻り値。
+				</tr>
+				<tr>
+					<td>2
+					<td>connet関数のエラー
+				</tr>
+				<tr>
+					<td>3
+					<td>send関数のエラー
+				</tr>
+				<tr>
+					<td>4
+					<td>recv関数のエラー
+				</tr>
+				<tr>
+					<td>5
+					<td>select関数のエラー
+				</tr>
+				<tr>
+					<td>6
+					<td>setsockopt関数のエラー
+				</tr>
+				<tr>
+					<td>7
+					<td>gethostbyname関数のエラー
+				</tr>
+				<tr>
+					<td>8
+					<td>send関数のタイムアウトエラー
+					<td>エラーの発生場所を示します。<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>リクエスト送信時
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>ダウンロードデータ送信時
+						</tr>
+					</table>
+					
+				</tr>
+				<tr>
+					<td>9
+					<td>recv関数のタイムアウトエラー
+					<td>エラーの発生場所を示します。<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>リクエストヘッダ受信時
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>リクエストデータ受信時
+						</tr>
+						<tr>
+							<td>3
+							<td>:
+							<td>アップロードデータキャンセル時
+						</tr>
+						<tr>
+							<td>4
+							<td>:
+							<td>アップロードデータ受信時
+						</tr>
+						<tr>
+							<td>5
+							<td>:
+							<td>通信開始/終了時
+						</tr>
+					</table>
+					
+				</tr>
+				<tr>
+					<td>10
+					<td>他のプロセスでソケットエラーが発生
+					<td>常に0。
+				</tr>
+				<tr>
+					<td>11
+					<td>EOF(end of file)が検出された
+					<td>エラーの発生場所を示します。<br>
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>send関数
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>recv関数
+						</tr>
+					</table>
+				</tr>
+			</table>
+		</blockquote>
+	</li>
+	<li>EW_PROTOCOL (=－17)
+		<blockquote>
+			<p>プロトコル違反。以下の詳細エラーコードが、<a href="./misc/cnc_getdtailerr.htm">cnc_getdtailerr</a>関数および<a href="./pmc/pmc_getdtailerr.htm">pmc_getdtailerr</a>関数により取得できます。
+			<table border=1 width=80% windth=80%>
+				<colgroup align=center width="7%">
+				<colgroup width="40%">
+				<tr>
+					<th>err_no
+					<th>意味
+					<th>err_dtno
+				</tr>
+				<tr>
+					<td>1
+					<td>送信データが最大転送ユニットより大きい
+					<td rowspan="6">常に0。
+				</tr>
+				<tr>
+					<td>2
+					<td>送信データサイズが不正
+				</tr>
+				<tr>
+					<td>3
+					<td>受信パケットの個数が0
+				</tr>
+				<tr>
+					<td>4
+					<td>受信パケットヘッダ部のプロトコルマークが不正
+				</tr>
+				<tr>
+					<td>5
+					<td>受信パケットヘッダ部のパケットタイプフラグが不正
+				</tr>
+				<tr>
+					<td>6
+					<td>受信パケットヘッダ部の方向フラグが不正
+				</tr>
+				<tr>
+					<td>7
+					<td>受信データサイズの誤り
+					<td>エラーの発生内容を示します。
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>1
+							<td>:
+							<td>受信データが最大転送ユニットより大きい。
+						</tr>
+						<tr>
+							<td>2
+							<td>:
+							<td>通信確立時の受信データサイズが不正。
+						</tr>
+						<tr>
+							<td>3
+							<td>:
+							<td>受信パケットのデータサイズが2未満。
+						</tr>
+						<tr>
+							<td>4
+							<td>:
+							<td>受信パケットのデータブロックの和がパケット全体より大きい。
+						</tr>
+						<tr>
+							<td>5
+							<td>:
+							<td>受信パケットのデータブロックの和がパケット全体より小さい。
+						</tr>
+					</table>
+					
+				</tr>
+				<tr>
+					<td>8
+					<td>イーサネットボード側の通信エラー
+					<td>イーサネットボードのエラーコード。<br>
+					このエラーが発生したら、NCのイーサネットボードのログ画面に詳細メッセージが残っていますので、そちらを参照してください。<br>
+					主なエラーは以下の通り。
+					<table border=0>
+						<colgroup align=center valign=top>
+						<colgroup align=center valign=top>
+						<colgroup valign=top>
+						<tr>
+							<td>2
+							<td>:
+							<td>パソコン側が最大同時接続数以上の接続を行おうとした。詳しくは、「<a href="dnc1.htm#limit">イーサネットボードとの通信</a>」をご覧下さい。
+						</tr>
+					</table>
+				</tr>
+			</table>
+		</blockquote>
+	</li>
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a>
+</body>
+</html>

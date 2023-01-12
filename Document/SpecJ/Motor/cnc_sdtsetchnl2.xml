@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_sdtsetchnl2</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_sdtsetchnl2(unsigned short FlibHndl,
+                                short num, long datanum, IDBSDTCHAN2 *channel); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>各種データサンプリング用のチャンネルデータを設定します。</p>
+                <p>本関数では、サーボ、スピンドル情報に加え、PMC信号を取得するための設定が可能です。</p>
+                <p>サーボ、スピンドル関係の取得条件は、"<a href="motor/cnc_sdtsetchnl.htm" target="_parent">cnc_sdtsetchnl()</a>"と同じです。</p><br/>
+
+                <p>取得可能なデータは以下の通りです。</p>
+                <ul type="disc">
+                    <li>サーボデータ</li>
+                    <li>スピンドルデータ</li>
+                    <li>PMC信号(ワード、バイト、ビット)</li>
+                    <br/>
+                </ul>
+                <p>※1 設定するチャンネルデータのうち、PMC信号(ビット)は1チャンネルのみ設定可能です。1チャンネルで最大16信号分のデータを設定できます。<br/>
+                ただし他のチャンネルでバイト、ワード型を設定する場合には、設定できるビット型の信号は最大で8信号分となります。</p>
+                <p>※2 バイト、ワード型のPMC信号は、1チャンネルにつき1信号のデータを設定できます。</p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>num</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                設定するチャンネルデータの数です。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>datanum</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                読み出す測定データ(1ch当り)の総点数(測定ワードデータの総WORD数)です。<br/>
+                                8以上を指定して下さい。測定データの読出し関数(cnc_sdtreadsmpl2)で、順次データを取得して下さい。
+                            </p>
+                        </content>
+                    </item>
+
+
+                    <item>
+                        <name>channel</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                設定するチャンネルデータ配列のポインタです。<br/>
+                                設定したい数のチャンネルデータを配列として用意し、その先頭ポインタを本引数channelに設定してください。
+                            </p>
+                            <p>
+                                IDBSFBCHAN2構造体は次の通りです。
+                            </p>
+<pre>
+typedef struct idbsdtchan {
+    short           type;       /* データタイプ */
+    char            chno;       /* 測定チャンネル番号 */
+    char            axis;       /* 測定軸番号 */
+    unsigned short  shift;      /*上位バイト：サンプリング周期
+                                                  下位バイト：右シフト量 */
+    typedef struct pmc_data{    /* PMC信号                      */
+        short unittype;         /* 対象信号のPMC系統(ﾕﾆｯﾄﾀｲﾌﾟ)  */
+        char adr;               /* PMCアドレスの種類            */
+        unsigned char bit;      /* ビット番号                   */
+        unsigned short no;      /* PMCアドレスの番号            */
+    } io[16]; 
+} IDBSDTCHAN2;
+</pre>
+                            <dl>
+                                <dt>type</dt>
+                                <dd>サンプリングデータの種類です。</dd>
+                                <dd>※ 測定を行う軸番号がPMC信号(-125,-126,-127)の場合、type は無効となります。</dd>
+                            </dl>
+                            <dl>
+                                <dt>chno</dt>
+                                <dd>測定チャンネル番号(1～8)です。</dd>
+                            </dl>
+                            <dl>
+                                <dt>axis</dt>
+                                <dd>測定を行う軸番号です。</dd>
+                                <dd>PMC信号を指定する場合は、以下の値を指定します。</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>-125</td><td>：</td><td> PMC信号(ワード) (30i-B以降で有効) </td></tr>
+                                    <tr><td>-126</td><td>：</td><td> PMC信号(バイト) (30i-B以降で有効) </td></tr>
+                                    <tr><td>-127</td><td>：</td><td> PMC信号(ビット) </td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                            <dl>
+                                <dt>shift</dt>
+                                <dd>上位バイトにサンプリング周期、下位バイトに測定データの右シフト量を指定します。</dd>
+                                <dd>※ 測定を行う軸番号がPMC信号(-125,-126,-127)の場合、右シフト量は無効になります。</dd>
+                            </dl>
+                            <p>
+                                PMC信号の構造体は、以下の通りです。
+                            </p>
+                            <dl>
+                                <dt>unittype</dt>
+                                <dd>対象信号のPMC系統(ユニットタイプ)</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>(このビット位置では)測定しない </td></tr>
+                                    <tr><td>1</td><td>：</td><td>第1PMC(PMC-Lの場合も含む)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>第2PMC(オプション)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>第3PMC(オプション)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>第4PMC(オプション)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>第5PMC(オプション)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>デュアルチェックセーフティPMC(オプション) </td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                            <dl>
+                                <dt>adr</dt>
+                                <dd>PMCアドレスの種類</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>G信号(PMC →CNC への信号)</td></tr>
+                                    <tr><td>1</td><td>：</td><td>F信号(CNC →PMC への信号)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>Y信号(PMC →機械への信号)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>X信号(機械→PMC への信号)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>A信号(メッセージ表示)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>R信号(内部リレー)</td></tr>
+                                    <tr><td>6</td><td>：</td><td>T信号(タイマ)</td></tr>
+                                    <tr><td>7</td><td>：</td><td>K信号(キープリレー)</td></tr>
+                                    <tr><td>8</td><td>：</td><td>C信号(カウンタ)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>D信号(データテーブル)</td></tr>
+                                    <tr><td>10</td><td>：</td><td>M信号(他PMC系統からの入力信号)</td></tr>
+                                    <tr><td>11</td><td>：</td><td>N信号(他PMC系統からへの出力信号)</td></tr>
+                                    <tr><td>12</td><td>：</td><td>E信号(拡張リレー)</td></tr>
+                                    <tr><td>13</td><td>：</td><td>Z信号(内部リレー)</td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dd>※ Z信号はPMCメモリタイプがCまたはDの場合に使用できます。</dd>
+                            </dl>
+                            <dl>
+                                <dt>bit</dt>
+                                <dd>PMCアドレスのビット番号</dd>
+                            </dl>
+                            <dl>
+                                <dt>no</dt>
+                                <dd>PMCアドレスの番号</dd>
+                            </dl>
+                            <p>※ PMC信号データは、PMC信号の構造体io[0]から順に詰めて入力します。unittypeに0が入力された場合、それ以降のPMCの信号は、無効になります。</p>
+                            <p>※ PMC信号がワード、またはバイト型のとき、bitには0を設定します。</p>
+                            <p>※ PMC信号がワード、またはバイト型のとき、構造体io[1]～io[15]の各メンバには0を指定します。</p>
+                            <p>※ 測定を行う軸番号がPMC信号(-125,-126,-127)以外の時には、PMC信号の構造体ioは無効になります。</p>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>
+                    データ番号の誤り<br/>
+                    設定するチャンネルデータの数(num)の指定が不適切です。
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                    <content>
+                    データの誤り<br/>
+                    この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr><td> 3</td><td>:</td><td>読み出す測定データの総点数から計算したCNCにおける繰り返し回数が設定チャンネル間で不整合(datanumが８以上でない)です。</td></tr>
+                        <tr><td> 4</td><td>:</td><td>測定するチャンネルのサーボモータ・主軸または、PMC信号が使用可能でありません。</td></tr>
+                        <tr><td>20</td><td>:</td><td>サンプリングデータの種類(channel.type)の指定が不適切です。</td></tr>
+                        <tr><td>21</td><td>:</td><td>測定チャンネル番号(channel.chno)の指定が不適切です。</td></tr>
+                        <tr><td>22</td><td>:</td><td>測定を行う軸番号(channel.axis)の指定が不適切です。</td></tr>
+                        <tr><td>23</td><td>:</td><td>測定データの右シフト量(channel.shift)の指定が不適切です。</td></tr>
+                        <tr><td>24</td><td>:</td><td>サンプリング周期の指定が不適切、またはチャンネル間で不整合です。</td></tr>
+                        <tr><td>50</td><td>:</td><td>PMC信号の設定(ユニットタイプ)に誤りがあります。</td></tr>
+                        <tr><td>51</td><td>:</td><td>PMC信号の設定(アドレスの種類)に誤りがあります。</td></tr>
+                        <tr><td>52</td><td>:</td><td>PMC信号の設定(アドレスの番号)に誤りがあります。</td></tr>
+                        <tr><td>53</td><td>:</td><td>PMC信号の設定(アドレスのビット)に誤りがあります。</td></tr>
+                        <tr><td>54</td><td>:</td><td>ビット型の信号数が指定可能な制限を超えました。</td></tr>
+                        <tr><td>56</td><td>:</td><td>ビット型のPMC信号が2CH以上指定されました。</td></tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </content>
+            </item>
+            <item>
+                <name>EW_PATH</name>
+                <content>
+                    系統番号の誤り<br/>
+                    指定された測定軸番号(axis)に対応する系統は存在しません。
+                </content>
+            </item>
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    CNCの実行拒否<br/>
+                    測定データのサンプリング開始が指示されています。<br/>
+                    cnc_sdtcancelsmpl()、またはcnc_sdtendsmpl()を実行してから再度実行してください。
+                </content>
+            </item>
+            <item>
+                <name>EW_VERSION</name>
+                <content>
+                    指定されたデータ種類(axis)に対応していません。
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </hssb>
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                    <p class="dd">上記２つの機能は必要ありません。</p>
+                <p>イーサネットボードを使用のとき、</p>
+                    <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    以下の機能が必要です。
+                    <ul type="disc">
+                        <li>拡張ドライバ/ライブラリ機能</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_sdtclrchnl</name>
+            <file>motor/cnc_sdtclrchnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtstartsmpl2</name>
+            <file>motor/cnc_sdtstartsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtcancelsmpl</name>
+            <file>motor/cnc_sdtcancelsmpl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtreadsmpl2</name>
+            <file>motor/cnc_sdtreadsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtendsmpl2</name>
+            <file>motor/cnc_sdtendsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtread1shot</name>
+            <file>motor/cnc_sdtread1shot.htm</file>
+        </item>
+    </reference>
+
+
+
+    </func>
+</root>

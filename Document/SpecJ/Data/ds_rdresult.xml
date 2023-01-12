@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_rdresult</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_rdresult(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            以下に示すデータサーバ機能用関数の実行結果を取得します。<br/>
+            <br/>
+            <table class="dd">
+                <tr><td><a href="Data/ds_delhddfile.htm" target="_parent">ds_delhddfile</a></td><td>ハードディスクファイルの削除</td></tr>
+                <tr><td><a href="Data/ds_copyhddfile.htm" target="_parent">ds_copyhddfile</a></td><td>ハードディスクファイルの複写</td></tr>
+                <tr><td><a href="Data/ds_puthddfile.htm" target="_parent">ds_puthddfile</a></td><td>ハードディスクファイルのPUT</td></tr>
+                <tr><td><a href="Data/ds_mputhddfile.htm" target="_parent">ds_mputhddfile</a></td><td>ハードディスクファイルのMPUT</td></tr>
+                <tr><td><a href="Data/ds_lputhddfile.htm" target="_parent">ds_lputhddfile</a></td><td>ハードディスクファイルのLIST-PUT</td></tr>
+                <tr><td><a href="Data/ds_ldelhddfile.htm" target="_parent">ds_ldelhddfile</a></td><td>ハードディスクファイルのLIST-DELETE</td></tr>
+                <tr><td><a href="Data/ds_gethostfile.htm" target="_parent">ds_gethostfile</a></td><td>ホストファイルのGET</td></tr>
+                <tr><td><a href="Data/ds_mgethostfile.htm" target="_parent">ds_mgethostfile</a></td><td>ホストファイルのMGET</td></tr>
+                <tr><td><a href="Data/ds_lgethostfile.htm" target="_parent">ds_lgethostfile</a></td><td>ホストファイルのLIST-GET</td></tr>
+            </table>
+            <br/>
+            上記の関数を実行した場合、本関数により関数の実行結果（正常終了または
+            EW_BUSY以外のエラー）を取得するか、実行中止関数 <a href="Data/ds_cancel.htm" target="_parent">ds_cancel</a> により関数の実行を中止するまでデータサーバが占有状態となります。<br/>
+            <br/>
+            データサーバが占有状態となっている場合、データサーバ機能用の各関数はEW_REJECTのエラーとなります。<br/>
+            <br/>
+
+            本関数がEW_DTSRVRエラーを返した時、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。
+            <br/>
+            <table border="1">
+                <colgroup>
+                <colgroup>
+                <colgroup>
+                <tr><th>関数名                     </th> <th>詳細番号</th> <th>意味                               </th> </tr>
+                <tr><td rowspan="1">ds_delhddfile  </td> <td>0xfe07  </td> <td>削除失敗                           </td> </tr>
+                <tr><td rowspan="2">ds_copyhddfile </td> <td>0xfe0f  </td> <td>同じファイルが見つかった           </td> </tr>
+                <tr>                                     <td>0xfe15  </td> <td>コピーに失敗した                   </td> </tr>
+                <tr><td rowspan="10">ds_puthddfile </td> <td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe0a  </td> <td>ファイルのPUTに失敗した            </td> </tr>
+                <tr>                                     <td>0xfe12  </td> <td>指定ファイルが存在しない           </td> </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                <tr><td rowspan="10">ds_mputhddfile</td> <td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe0a  </td> <td rowspan="2">MPUTに失敗した         </td> </tr>
+                <tr>                                     <td>0xfe23  </td>                                              </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                <tr><td rowspan="10">ds_gethostfile </td><td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe09  </td> <td>ファイルのGETに失敗した            </td> </tr>
+                <tr>                                     <td>0xfe0f  </td> <td>同じファイルが見つかった           </td> </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                <tr><td rowspan="10">ds_mgethostfile</td><td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe09  </td> <td rowspan="2">MGETに失敗した         </td> </tr>
+                <tr>                                     <td>0xfe22  </td>                                              </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                <tr><td rowspan="14">ds_lputhddfile </td><td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe0a  </td> <td rowspan="3">List-Putに失敗した     </td> </tr>
+                <tr>                                     <td>0xfe10  </td>                                              </tr>
+                <tr>                                     <td>0xfe24  </td>                                              </tr>
+                <tr>                                     <td>0xfe0c  </td> <td>ファイルのオープンに失敗した       </td> </tr>
+                <tr>                                     <td>0xfe12  </td> <td>指定ファイルが存在しない           </td> </tr>
+                <tr>                                     <td>0xfe28  </td> <td>リストフォーマット異常             </td> </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                <tr><td rowspan="5">ds_ldelhddfile  </td><td>0xfe0c  </td> <td>ファイルのオープンに失敗した       </td> </tr>
+                <tr>                                     <td>0xfe10  </td> <td rowspan="3">List-Deleteに失敗した  </td> </tr>
+                <tr>                                     <td>0xfe24  </td>                                              </tr>
+                <tr>                                     <td>0xfe27  </td>                                              </tr>
+                <tr>                                     <td>0xfe28  </td> <td>リストフォーマット異常             </td> </tr>
+                <tr><td rowspan="15">ds_lgethostfile</td><td>0xfe01  </td> <td>接続ホスト用パラメータの誤り       </td> </tr>
+                <tr>                                     <td>0xfe04  </td> <td>ユーザ名/パスワード不正            </td> </tr>
+                <tr>                                     <td>0xfe09  </td> <td rowspan="4">List-Getに失敗した     </td> </tr>
+                <tr>                                     <td>0xfe10  </td>                                              </tr>
+                <tr>                                     <td>0xfe24  </td>                                              </tr>
+                <tr>                                     <td>0xfe25  </td>                                              </tr>
+                <tr>                                     <td>0xfe0c  </td> <td>ファイルのオープンに失敗した       </td> </tr>
+                <tr>                                     <td>0xfe0f  </td> <td>同じファイルが見つかった           </td> </tr>
+                <tr>                                     <td>0xfe28  </td> <td>リストフォーマット異常             </td> </tr>
+                <tr>                                     <td>0xfe2b  </td> <td>FTP準備不足                        </td> </tr>
+                <tr>                                     <td>0xfe03  </td> <td rowspan="4">FTPサーバへの接続エラー</td> </tr>
+                <tr>                                     <td>0xfe05  </td>                                              </tr>
+                <tr>                                     <td>0xfe06  </td>                                              </tr>
+                <tr>                                     <td>0xfe2c  </td>                                              </tr>
+                <tr>                                     <td>0xfe2d  </td> <td>サーバまたは、ルータが存在しない   </td> </tr>
+                </colgroup>
+                </colgroup>
+                </colgroup>
+            </table>
+        <br/>
+            本関数は、Fast Ethernetでも使用可能です。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ・エラー<br/>
+                本関数の対象となるデータサーバ機能用関数が実行です。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                データサーバ機能用関数未実行<br/>
+                本関数の対象となるデータサーバ機能用関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                データサーバエラー<br/>
+                データサーバでエラーが発生しました。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+  </func>
+</root>

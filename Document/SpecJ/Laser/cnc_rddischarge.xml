@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rddischarge</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rddischarge(unsigned short FlibHndl, ODBDISCHRG *data); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> パワー補正終了時の放電関連データの取得を行います。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            パワー補正終了時の放電関連データを返すODBDISCHRG構造体へのポインタです。
+                            ODBDISCHRG構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbdischrg {
+    unsigned short   aps;    /* 電源選択フラグ */
+    unsigned short   year;   /* パワー補正終了年 */
+    unsigned short   month;  /* パワー補正終了月 */
+    unsigned short   day;    /* パワー補正終了日 */
+    unsigned short   hour;   /* パワー補正終了時 */
+    unsigned short   minute; /* パワー補正終了分 */
+    unsigned short   second; /* パワー補正終了秒 */
+    short            hpc;    /* 指令ピークパワー */
+    short            hfq;    /* 指令パルス周波数 */
+    short            hdt;    /* 指令パルスデューティ */
+    short            hpa;    /* 実出力 */
+    long             hce;    /* パワー補正係数 */
+    long             rfi[8]; /* RF電流(RFI) */
+    long             rfv[8]; /* RF電圧(RFV) */
+    long             dci[8]; /* DC電流(DCI) */
+    long             dcv[8]; /* DC電圧(DCV) */
+    long             dcw[8]; /* DC電力(DCW) */
+} ODBDISCHRG;
+</pre>
+
+                        <dl>
+                            <dt>aps</dt>
+                                <dd>電源選択フラグ</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>#0</td><td>:</td><td>PSU1  (電源1)</td> </tr>
+                                    <tr> <td>#1</td><td>:</td><td>PSU2  (電源2)</td> </tr>
+                                    <tr> <td>: </td><td> </td><td> :           </td> </tr>
+                                    <tr> <td>#7</td><td>:</td><td>PSU8  (電源8)</td> </tr>
+                                </table></dd>
+                            <dt>year  </dt> <dd>パワー補正終了年(西暦4桁)</dd>
+                            <dt>month </dt> <dd>パワー補正終了月(1 ～ 12)</dd>
+                            <dt>day   </dt> <dd>パワー補正終了日(1 ～ 31)</dd>
+                            <dt>hour  </dt> <dd>パワー補正終了時(0 ～ 23)</dd>
+                            <dt>minute</dt> <dd>パワー補正終了分(0 ～ 59)</dd>
+                            <dt>second</dt> <dd>パワー補正終了秒(0 ～ 59)</dd>
+                            <dt>hpc   </dt> <dd>指令ピークパワー (0～7000)</dd>
+                            <dt>hfq   </dt> <dd>指令パルス周波数 (0～2000)</dd>
+                            <dt>hdt   </dt> <dd>指令パルスデューティ(0～100)</dd>
+                            <dt>hpa   </dt> <dd>実出力 (0～7000)</dd>
+                            <dt>hce   </dt> <dd>パワー補正係数 (0～65535)</dd>
+                            <dt>rfi[8]</dt> <dd>RF電流(RFI) (0～65535) 電源別に8個</dd>
+                            <dt>rfv[8]</dt> <dd>RF電圧(RFV) (0～65535) 電源別に8個</dd>
+                            <dt>dci[8]</dt> <dd>DC電流(DCI) (0～65535) 電源別に8個</dd>
+                            <dt>dcv[8]</dt> <dd>DC電圧(DCV) (0～65535) 電源別に8個</dd>
+                            <dt>dcw[8]</dt> <dd>DC電力(DCW) (0～65535) 電源別に8個</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                16i/18i-L、30i/31i-LB以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り(Series 30i/31i-LBのみ)<br/>
+                レーザ発振器(パラメータNo.15030)の誤り
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

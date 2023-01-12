@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_allclibhndl3</title>
+
+
+    <!-- 関数宣言 -->
+    <declare>
+
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_allclibhndl3(const char *ipaddr, unsigned short port, long timeout, unsigned short *FlibHndl);</prottype>
+      </vc>
+
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>ライブラリハンドルを取得し、指定されたIPアドレス、またはホスト名が示すCNCに接続します。</p>
+             <p>本関数を実行する前に、CNC側のIPアドレスおよびFOCAS1/Ethernet(TCP)、FOCAS2/Ethernet(TCP)機能のポート番号を正しく設定しておいてください。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>ipaddr</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            接続するCNCのIPアドレス、またはホスト名を示す文字列を指定します。(例 "192.168.0.1"、または"CNC-1.FACTORY" )
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>port</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            FOCAS1/Ethernet(TCP)、FOCAS2/Ethernet(TCP)機能のポート番号を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>timeout</name>
+                    <type>in</type>
+                    <content>
+                        タイムアウトの秒数を指定します。 0を指定すると、タイムアウト処理が無効化され、無限に待つようになります。<br/>
+                        <br/>
+                        タイムアウトの最適値はシステムによって異なります。例えば、高速ネットワークシステムの場合は、10秒も指定すれば十分でしょうが、低速な電話回線を中継する場合は、60秒以上指定した方が良いでしょう。よって、通信時間を計測した上で、タイムアウト値を設定してください。 
+                    </content>
+                </item>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルを格納する変数へのポインタです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。 
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_SOCKET</name>
+            <content>
+                ソケット通信エラー<br/>
+                CNCの電源、イーサネットボード、イーサネットのケーブルを確認して下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_NODLL</name>
+            <content>機種別DLL が存在しません。</content>
+        </item>
+        <item>
+            <name>EW_HANDLE</name>
+            <content>ハンドルの取得に失敗しました。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <cmn>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+            但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-Aに関しては次のようになります。<br/><br/>
+            組込みイーサネットを使用のとき、<br/>
+            <p class="dd">上記２つの機能は必要ありません。</p>
+            イーサネットボードを使用のとき、<br/>
+            <p class="dd">イーサネット機能のみ必要です。</p>
+        </cmn>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>E</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>freelibhndl</name>
+            <file>Handle/cnc_freelibhndl.htm</file>
+        </item>
+        <item>
+            <name>cnc_settimeout</name>
+            <file>Handle/cnc_settimeout.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+以下のプログラムを実行すると、IPアドレス=190.190.11.11、Ethernet(TCP)<br/>
+機能ポート番号=8193 のCNCに接続し、ステータス情報をリードします。<br/>
+タイムアウトは10秒です。<br/>
+<br/>
+#include "fwlib32.h"<br/>
+void example( void )<br/>
+{<br/>
+    unsigned short h;<br/>
+    short ret;<br/>
+    ODBST buf;<br/>
+    ret = cnc_allclibhndl3( "190.190.11.11", 8193, 10, &#38;h ) ;<br/>
+    if ( !ret ) {<br/>
+            cnc_statinfo( h, &#38;buf ) ;<br/>
+            cnc_freelibhndl( h ) ;<br/>
+    } else {<br/>
+            printf( "ERROR!(%d)\n", ret ) ;<br/>
+    }<br/>
+}<br/>
+        <br/>
+        </vc>
+    </example>
+
+
+
+
+
+  </func>
+</root>

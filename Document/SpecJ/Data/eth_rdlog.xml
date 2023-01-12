@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>eth_rdlog</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI eth_rdlog(unsigned short FlibHndl, short type, short startMsgNumber short msgCount, OUT_ETHLOG *log); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            イーサネット機能（組込みイーサネット[内蔵ポート、PCMCIAカード]、ファストイーサネットボード、ファストデータサーバボード、Windows CE 組込みイーサネット[内蔵ポート、PCMCIAカード]）の最大15メッセージのログを取得します。<br/>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>ライブラリハンドルを指定します。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        取得するログの種類を指定します。<br/>
+                        取得可能なログの種類は、以下の通りです。<br/>
+                        <dl>
+                        <dd>組込みイーサネット[内蔵ポート]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>0   </td><td>:</td><td>全て</td> </tr>
+                        <tr> <td>1   </td><td>:</td><td>共通ログ</td> </tr>
+                        <tr> <td>2   </td><td>:</td><td>FOCAS2/Ethernet機能用ログ</td> </tr>
+                        <tr> <td>3   </td><td>:</td><td>FTP転送機能用ログ</td> </tr>
+                        <tr> <td>5   </td><td>:</td><td>機械リモート診断機能用ログ</td> </tr>
+                        <tr> <td>6   </td><td>:</td><td>FACTOLINK機能用ログ</td> </tr>
+                        </table></dd>
+
+                        <dd>組込みイーサネット[PCMCIAカード]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>20   </td><td>:</td><td>全て</td> </tr>
+                        <tr> <td>21   </td><td>:</td><td>共通ログ</td> </tr>
+                        <tr> <td>22   </td><td>:</td><td>FOCAS2/Ethernet機能用ログ</td> </tr>
+                        <tr> <td>23   </td><td>:</td><td>FTP転送機能用ログ</td> </tr>
+                        <tr> <td>25   </td><td>:</td><td>機械リモート診断機能用ログ</td> </tr>
+                        <tr> <td>26   </td><td>:</td><td>FACTOLINK機能用ログ</td> </tr>
+                        </table></dd>
+
+                        <dd>ファストイーサネットボードまたはファストデータサーバボード</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>40   </td><td>:</td><td>全て</td> </tr>
+                        <tr> <td>41   </td><td>:</td><td>共通ログ</td> </tr>
+                        <tr> <td>42   </td><td>:</td><td>FOCAS2/Ethernet機能用ログ</td> </tr>
+                        <tr> <td>43   </td><td>:</td><td>FTP転送機能用ログ</td> </tr>
+                        <tr> <td>45   </td><td>:</td><td>機械リモート診断機能用ログ</td> </tr>
+                        <tr> <td>46   </td><td>:</td><td>FACTOLINK機能用ログ</td> </tr>
+                        </table></dd>
+
+                        <dd>組込みイーサネット(WinCE)[内蔵ポート]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>60   </td><td>:</td><td>全て</td> </tr>
+                        <tr> <td>61   </td><td>:</td><td>共通ログ</td> </tr>
+                        <tr> <td>62   </td><td>:</td><td>FOCAS2/Ethernet機能用ログ</td> </tr>
+                        <tr> <td>63   </td><td>:</td><td>FTP転送機能用ログ</td> </tr>
+                        <tr> <td>65   </td><td>:</td><td>機械リモート診断機能用ログ</td> </tr>
+                        <tr> <td>66   </td><td>:</td><td>FACTOLINK機能用ログ</td> </tr>
+                        </table></dd>
+
+                        <dd>組込みイーサネット(WinCE)[PCMCIA LANカード]</dd>
+                        <dd><table border="0" class = "dd">
+                        <tr> <td>80   </td><td>:</td><td>全て</td> </tr>
+                        <tr> <td>81   </td><td>:</td><td>共通ログ</td> </tr>
+                        <tr> <td>82   </td><td>:</td><td>FOCAS2/Ethernet機能用ログ</td> </tr>
+                        <tr> <td>83   </td><td>:</td><td>FTP転送機能用ログ</td> </tr>
+                        <tr> <td>85   </td><td>:</td><td>機械リモート診断機能用ログ</td> </tr>
+                        <tr> <td>86   </td><td>:</td><td>FACTOLINK機能用ログ</td> </tr>
+                        </table></dd>
+                    </content>
+                </item>
+                <item>
+                    <name>startMsgNumber</name>
+                    <type>in</type>
+                    <content>
+                        <p>取得したいログメッセージの最初の番号</p>
+                        <p>全部で300メッセージのデータをイーサネット機能が確保しています。</p>
+                        <p>最新のログメッセージは、0です。最古のログメッセージは、299です。</p>
+                        <p>範囲）0 ～ 299</p>
+                    </content>
+                </item>
+                <item>
+                    <name>msgCount</name>
+                    <type>in</type>
+                    <content>
+                        <p>取得したいログメッセージの数</p>
+                        <p>範囲) 1 ～ 15</p>
+                    </content>
+                </item>
+                <item>
+                    <name>log</name>
+                    <type>out</type>
+                    <content>
+                        <p>取得したログを格納するためのOUT_ETHLOG構造体へのポインタを指定します。</p>
+                        <p>OUT_ETHLOG構造体は以下の通りです。</p>
+<pre>
+typedef struct _out_ethlog {
+    short               Count;
+    char                reserve[14];
+    OUT_ETHLOG1SHOT     logData[15];
+} OUT_ETHLOG;
+
+typedef struct _out_ethlog1shot {
+    short           Type;
+    unsigned short  MsgId;
+    unsigned char   Year;
+    unsigned char   Month;
+    unsigned char   Day;
+    unsigned char   Hour;
+    unsigned char   Minute
+    unsigned char   Second;
+    char            reserve[2];
+    char            Text[84];
+} OUT_ETHLOG1SHOT;
+</pre>
+                        <dl>
+                            <dt>log.Count</dt>
+                            <dd>取得したログメッセージの数</dd>
+                            <dd>範囲）0 ～ 20</dd>
+
+                            <dt>log.logData[n].Type</dt>
+                            <dd>取得したログの種類</dd>
+
+                            <dt>log.logData[n].MsgId</dt>
+                            <dd>固定ログメッセージＩＤ</dd>
+                            <dd>範囲）0 ～ 65535</dd>
+                            <dd>      0 の場合、固定ログメッセージが存在しないものとします</dd>
+
+                            <dt>log.logData[n].Year</dt>
+                            <dd>ログが発生した西暦の下３桁</dd>
+                            <dd>範囲）2000年 ～ 2255年: 0 ～ 255</dd>
+                            <dd>例）2003年  : 3</dd>
+
+                            <dt>log.logData[n].Month</dt>
+                            <dd>ログが発生した月</dd>
+                            <dd>範囲）1月 ～ 12月: 1 ～ 12</dd>
+                            <dd>例）1月     : 1</dd>
+
+                            <dt>log.logData[n].Day</dt>
+                            <dd>ログが発生した日</dd>
+                            <dd>範囲）1日 ～ 31日: 1 ～ 31</dd>
+                            <dd>例）30日    :30</dd>
+
+                            <dt>log.logData[n].Day</dt>
+                            <dd>ログが発生した時（２４時間制）</dd>
+                            <dd>範囲）0時 ～ 23時</dd>
+                            <dd>例）21時    :21</dd>
+
+                            <dt>log.logData[n].Day</dt>
+                            <dd>ログが発生した分</dd>
+                            <dd>範囲）0分 ～ 59分</dd>
+                            <dd>例）3分     :3</dd>
+
+                            <dt>log.logData[n].Day</dt>
+                            <dd>ログが発生した秒</dd>
+                            <dd>範囲）0秒 ～ 59秒</dd>
+                            <dd>例）20秒    :20</dd>
+
+                            <dt>log.logData[n].Text</dt>
+                            <dd>ログメッセージ</dd>
+                            <dd>有効な文字列が存在しない場合には、先頭バイト（log.logData[n].Text[0]）がNULLが入っています。</dd>
+                        </dl>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_no<br/>
+                    <table class="dd">
+                        <tr> <td>20</td><td>:</td><td>組込みイーサネットがない</td> </tr>
+                        <tr> <td>21</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>22</td><td>:</td><td>オプションボードがない</td> </tr>
+                        <tr> <td>23</td><td>:</td><td>イーサネット機能がない</td> </tr>
+                        <tr> <td>24</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>27</td><td>:</td><td>FACTOLINK機能がない</td> </tr>
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>2</td><td>:</td><td>データ範囲外</td> </tr>
+                    </table>
+                     ODBERR構造体のメンバ err_dtnoに下記詳細ステータスがセットされます。<br/>
+                    <table class="dd">
+                        <tr> <td>4</td><td>:</td><td>ログの種類指定の誤り</td> </tr>
+                        <tr> <td>5</td><td>:</td><td>ログ番号の指定範囲誤り</td> </tr>
+                        <tr> <td>6</td><td>:</td><td>取得ログデータ数の指定範囲誤り</td> </tr>
+                    </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,900 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>FOCAS1/Ethernet 更新履歴</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<ul>
+	<li><a href="#UpDateFocas2">FOCAS1/2ライブラリ更新履歴</a></li>
+	<li><a href="#UpDateHssb">FOCAS1/HSSBライブラリ更新履歴(旧仕様番号 A02B-0207-K730)</a></li>
+	<li><a href="#UpDateEther">FOCAS1/Ethernetライブラリ更新履歴(旧仕様番号 A02B-0207-K732)</a></li>
+</ul>
+
+<h2><a name="UpDateFocas2">FOCAS1/2ライブラリ更新履歴</a></h2>
+
+<h2>4.7版 (2015.10.09)</h2>
+<ul>
+<li>多軸システム系列(G3G1,G3H1)に対応しました。
+</ul>
+
+<h2>4.6版 (2015.07.10)</h2>
+<ul>
+<li>Fwlibe1.dll : 以下の関数に対応しました。
+	<ul>
+	<li><a href="./Program\cnc_setpdf_pglock.htm">    cnc_setpdf_pglock    </a>プログラムの運転／編集禁止の設定
+	<li><a href="./Program\cnc_resetpdf_pglock.htm">  cnc_resetpdf_pglock  </a>プログラムの運転／編集禁止の解除
+	<li><a href="./Program\cnc_rdpdf_pglockstat.htm"> cnc_rdpdf_pglockstat </a>プログラムの運転／編集禁止状態の取得
+	<li><a href="./History\cnc_wrkeyhistry.htm">      cnc_wrkeyhistry      </a>キー履歴の記録
+	<li><a href="./Data\eth_rddsmode.htm">            eth_rddsmode         </a>データサーバ機能のモードの取得
+	<li><a href="./Data\eth_rddsm198host.htm">        eth_rddsm198host     </a>データサーバ機能のM198運転用ホストの取得
+	<li><a href="./Data\eth_wrdsm198host.htm">        eth_wrdsm198host     </a>データサーバ機能のM198運転用ホストの設定
+	<li><a href="./Data\cnc_rddsdevinfo.htm">         cnc_rddsdevinfo      </a>データサーバ機能記憶デバイス情報の取得
+	<li><a href="./Data\cnc_dsmget_req.htm">          cnc_dsmget_req       </a>データサーバ機能MGETの実行開始
+	<li><a href="./Data\cnc_dsmput_req.htm">          cnc_dsmput_req       </a>データサーバ機能MPUTの実行開始
+	<li><a href="./Data\cnc_dslistget_req.htm">       cnc_dslistget_req    </a>データサーバ機能List-GETの実行開始
+	<li><a href="./Data\cnc_dslistput_req.htm">       cnc_dslistput_req    </a>データサーバ機能List-PUTの実行開始
+	<li><a href="./Data\cnc_dslistdel_req.htm">       cnc_dslistdel_req    </a>データサーバ機能List-削除の実行開始
+	<li><a href="./Misc\cnc_reset2.htm">              cnc_reset2           </a>CNCのリセット２
+	<li><a href="./Misc\cnc_rdrepeatval.htm">         cnc_rdrepeatval      </a>繰り返し回数のリード
+	</ul>
+</ul>
+
+<h2>4.5版 (2015.01.09)</h2>
+<ul>
+<li>大容量メモリからのプログラム運転機能に対応しました。
+<li>Fwlibe1.dll : 以下の関数に対応しました。
+	<ul>
+	<li><a href="./Data\eth_rdhost.htm"> eth_rdhost </a>イーサネット機能の接続ホスト番号の取得 
+	<li><a href="./Data\eth_wrhost.htm"> eth_wrhost </a>イーサネット機能の接続ホスト番号の設定 
+	<li><a href="./Data\eth_rddsm198dir.htm"> eth_rddsm198dir </a>データサーバ機能のM198運転用フォルダの取得 
+	<li><a href="./Data\eth_wrdsm198dir.htm"> eth_wrdsm198dir </a>データサーバ機能のM198運転用フォルダの設定
+	<li><a href="./Data\cnc_rddsdncfile.htm"> cnc_rddsdncfile </a>ＤＮＣ運転用ファイルの取得 
+	<li><a href="./Data\cnc_rddsdir.htm"> cnc_rddsdir </a>カレントフォルダの取得 
+	<li><a href="./Data\cnc_rddsfile.htm"> cnc_rddsfile </a>ファイル一覧情報の取得 
+	<li><a href="./Data\cnc_dsmkdir.htm"> cnc_dsmkdir </a>フォルダの作成 
+	<li><a href="./Data\cnc_dsrmdir.htm"> cnc_dsrmdir </a>フォルダの削除 
+	<li><a href="./Data\cnc_dschdir.htm"> cnc_dschdir </a>カレントフォルダの変更 
+	<li><a href="./Data\cnc_dsrename.htm"> cnc_dsrename </a>フォルダ/ファイル名の変更 
+	<li><a href="./Data\cnc_dsput_req.htm"> cnc_dsput_req </a>データサーバ機能PUTの実行開始 
+	<li><a href="./Data\cnc_dsftpcancel.htm"> cnc_dsftpcancel </a>データサーバ機能ファイル転送の中止 
+	<li><a href="./Program\cnc_rdmdiprgstat.htm"> cnc_rdmdiprgstat </a>MDIプログラム状態の取得 
+	</ul>
+<li>FOCAS2/EthernetライブラリをARM CPUのLinuxに対応しました。
+</ul>
+
+<h2>4.4版 (2014.10.24)</h2>
+<ul>
+<li>1系統に2つ以上主軸が存在するとき、まれに、主軸データ取得用FOCAS2関数から処理が戻らない場合があった。
+</ul>
+
+<h2>4.3版 (2014.9.30)</h2>
+<ul>
+<li>FANUC Series 0i-MODEL Fに対応しました。
+</ul>
+
+<h2>4.2版 (2013.10.18)</h2>
+<ul>
+<li>PCI express対応HSSBインタフェースボードに対応しました。
+</ul>
+
+<h2>4.1版 (2013.03.29)</h2>
+<ul>
+<li>FOCAS2/EthernetライブラリをLinuxに対応しました。
+</ul>
+
+<h2>4.0版 (2012.07.13)</h2>
+<ul>
+<li>Fwlibe1.dll : 以下の関数に対応しました。
+	<ul>
+	<li><a href="./Pmc\pmc_rdprmstart.htm"> pmc_rdprmstart </a>PMCパラメータの読込みの開始 
+	<li><a href="./Pmc\pmc_rdpmcparam.htm"> pmc_rdpmcparam </a>PMCパラメータの読込み 
+	<li><a href="./Pmc\pmc_rdprmend.htm">   pmc_rdprmend   </a>PMCパラメータの読込みの終了 
+	<li><a href="./Pmc\pmc_wrprmstart.htm"> pmc_wrprmstart </a>PMCパラメータの書込みの開始 
+	<li><a href="./Pmc\pmc_wrpmcparam.htm"> pmc_wrpmcparam </a>PMCパラメータの書込み 
+	<li><a href="./Pmc\pmc_wrprmend.htm">   pmc_wrprmend   </a>PMCパラメータの書込みの終了 
+	</ul>
+<li>NCBoot32.exe : マクロエグゼキュータのMEM形式ファイルのパスワード機能に対応しました。
+</ul>
+
+<h2>3.9版 (2011.07.29)</h2>
+<ul>
+<li>FANUC Power Motion i-MODEL Aに対応しました。
+<li>FANUC Series 0i Mate-MODEL Dに対応しました。
+</ul>
+
+<h2>3.8版 (2011.02.24)</h2>
+<ul>
+<li>Windows 7の64ビット版に対応しました。
+<li>Fwlibe1.dll : 以下の関数に対応しました。
+	<ul>
+	<li><a href="./Profibus\pbm_rd_param.htm"> pbm_rd_param  </a>PROFIBUSマスタ機能用パラメータの取得
+	<li><a href="./Profibus\pbm_wr_param.htm"> pbm_wr_param  </a>PROFIBUSマスタ機能用パラメータの設定
+	<li><a href="./Profibus\pbm_chg_mode.htm"> pbm_chg_mode  </a>PROFIBUSマスタ機能のオペレーションモード変更
+	<li><a href="./Ncdata\cnc_rdmacror3.htm">  cnc_rdmacror3 </a>カスタムマクロ変数と名称のリード(範囲指定)
+	</ul>
+</ul>
+
+<h2>3.7版 (2010.09.01)</h2>
+<ul>
+<li>FS30i/31i/32i/35i-Bに対応しました。
+<li>関数仕様書の見直しと誤記訂正を行いました。
+</ul>
+
+<h2>3.6版 (2009.06.15)</h2>
+<ul>
+<li>表示器分離形FS0i-Dに対応しました。
+<li>Fwlibe1.dll : 複合加工機用 工具オフセットに対応しました。
+</ul>
+
+<h2>3.5版 (2008.07.01)</h2>
+<ul>
+<li>Fwlibe1.dll : データサーバ関係の以下の関数を追加しました。
+	<ul>
+	<li><a href="./Data\cnc_wrdsdncfile.htm"> cnc_wrdsdncfile </a>ＤＮＣ運転用ファイルの設定
+	<li><a href="./Data\cnc_dsremove.htm">    cnc_dsremove    </a>ファイルの削除
+	<li><a href="./Data\cnc_dsget_req.htm">   cnc_dsget_req   </a>データサーバ機能GETの実行開始
+	<li><a href="./Data\cnc_dsftpstat.htm">   cnc_dsftpstat   </a>データサーバ機能ファイル転送結果のリード
+	</ul>
+<li>Fwlibe1.dll : 工具管理機能関係の以下の関数を追加しました。
+	<ul>
+	<li><a href="./ToolMng\cnc_rdmag_property.htm">  cnc_rdmag_property </a>マガジンプロパティデータのリード
+	<li><a href="./ToolMng\cnc_wrmag_property.htm">  cnc_wrmag_property </a>マガジンプロパティデータのライト
+	<li><a href="./ToolMng\cnc_delmag_property.htm"> cnc_delmag_property</a>マガジンプロパティデータの削除
+	<li><a href="./ToolMng\cnc_rdpot_property.htm">  cnc_rdpot_property </a>ポットプロパティデータのリード
+	<li><a href="./ToolMng\cnc_wrpot_property.htm">  cnc_wrpot_property </a>ポットプロパティデータのライト
+	<li><a href="./ToolMng\cnc_delpot_property.htm"> cnc_delpot_property</a>ポットプロパティデータの削除
+	</ul>
+<li>Fwlibe1.dll : NC用データファイル関係の以下の関数を追加しました。
+	<ul>
+	<li><a href="./Ncdata\cnc_rdparainfo3.htm"> cnc_rdparainfo3 </a>パラメータ情報のリード(3)
+	</ul>
+<li>NCBoot32.exeをCNCのBOOTシステムの以下の版数に対応しました。
+	<ul>
+	<li>60M9/03版以降
+	<li>60MA/03版以降
+	<li>60MB/02版以降
+	<li>60WA/03版以降
+	<li>60WB/03版以降
+	</ul>
+</ul>
+
+<h2>3.4版 (2008.05.13)</h2>
+<ul>
+<li>NCBoot32.exe : Windowsの言語が日本語でない場合に、[SAVE]、[LOAD]および、[DELETE]操作ができませんでした。この問題を修正しました。
+<li>NCBoot32.exe : CNCのブートシステムが60W1,60W2系列の場合にCNCソフトウェアのベイシック組み付けB1からB4がロードできませんでした。この問題を修正しました。
+</ul>
+
+<h2>3.3版 (2008.04.25)</h2>
+<ul>
+<li>FS0i-Dに対応しました。
+<li>NCBoot32.exeをCNCのBOOTシステム60M9、60MA、60MB、60WAおよび、60WB系列に対応しました。
+</ul>
+
+<h2>3.2版 (2007.12.27)</h2>
+<ul>
+<li>FOCAS2機能をNCガイド･プロに対応しました。
+<li>Fwlib30i.dll : ロータリテーブルダイナミックフィクスチャオフセットのアップロード/ダウンロードを可能にしました。
+<li>Fwlib30i.dll, Fwlibe1.dll : FS30iシリーズのcnc_clearophis関数で、操作履歴、外部オペレータメッセージ履歴とアラーム履歴を別々にクリアできるようにしました。
+<li>Fwlib30i.dll, Fwlibe1.dll : <a href="./Program\cnc_exeprgname2.htm">cnc_exeprgname2</a>を追加しました。
+<li>Fwlib160.dll, Fwlib0iB.dll : PMCの設定で拡張リレーデータ（アドレス E）のパンチアウトが無効になっていても、pmc_rdpmcparam関数で拡張リレーが出力されていました。この問題を修正しました。
+</ul>
+
+<h2>3.1版 (2007.05.29)</h2>
+<ul>
+<li>Fwlib30i.dll : 韓国語、ロシア語 および、トルコ語のアラームメッセージとオペレータメッセージを取得できるようにしました。
+<li>Fwlib160.dll : P/Sアラーム No.5500～5542 を取得できるようにしました。
+<li>Fwlib160.dll : サーボアラーム No.648～655 を取得できるようにしました。
+<li>FwlibPMi.dll : サーボアラーム No.608～655 を取得できるようにしました。
+<li>Internet Explorer 5.0以降がインストールされていないWindows95/98/NT4.0で、FOCAS1/2ライブラリが正しく動作しませんでした。この問題を修正しました。
+</ul>
+
+<h2>3.0版 (2007.04.24)</h2>
+<ul>
+<li>Windows Vista Businessに対応しました。
+<li>Fwlib150.dll : 工具寿命管理組数1024組に対応しました。
+<li>Fwlib30i.dll : Profibus-DP関係の関数を追加しました。
+<li>FwlibPMi.dll : cnc_reset2を追加しました。
+<li>Fwlib160.dll, Fwlibe1.dll : 工具管理機能用に以下の関数を追加しました。
+	<ul>
+	<li><a href="./ToolMng\cnc_wrtoolgeom_tlm.htm">  cnc_wrtoolgeom_tlm  </a>工具形状データのライト
+	<li><a href="./ToolMng\cnc_rdtoolgeom_tlm.htm">  cnc_rdtoolgeom_tlm  </a>工具形状データのリード
+	</ul>
+<li>Fwlib160.dll, FwlibPMi.dll : No.2436－2999のパラメータを読み込めるようにしました。
+<li>NCBoot32.exe : F-ROMファイルのロード中に、別のF-ROMファイルのロード操作を行えないようにしました。
+<li>Fwlib160.dll : cnc_rdopmsg3で、空のマクロメッセージが取得できませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdomhistry, cnc_rdomhistry2が正しく動作しない場合がありました。この問題を修正しました。
+<li>Fwlibe1.dll : Series 30i/31i/32iの工具管理機能の関数が正しく動作しませんでした。この問題を修正しました。
+<li>Fwlib30i.dll : 第2PMCまたは、第3PMCがない場合、pmc_wrpmcparamで、デュアルチェックセーフティ用のパラメータを書き込むことができませんでした。この問題を修正しました。
+<li>Fwlib160.dll : マルチCエグゼキュータ機能を使用した場合、cnc_cexesramがEW_NOOPTを返しました。この問題を修正しました。
+<li>Fwlibe1.dll : Series 30i/31i/32iのcnc_acts2で、主軸番号に-1を指定した場合、関数の戻り値がEW_NUMBERになりました。この問題を修正しました。
+</ul>
+
+<h2>2.6版</h2>
+<ul>
+<li>Fwlib0i.dll, Fwlib0iB.dll, Fwlib160.dll, Fwlib16W.dll, FwlibPMi.dll：cnc_rdpmacro、cnc_rdpmacrorで間欠的に値が正しく読み込めない場合がありました。この問題を修正しました。
+</ul>
+
+<h2>2.5版</h2>
+<ul>
+<li>Fwlib160.dll : サーボアラーム 624-631、632-639、640-647 を取得できるようにしました。
+<li>Fwlib160.dll : cnc_upload3関数で、MDI運転中にNCプログラムをアップロードできるようにしました。
+<li>Fwlibe1.dll : cnc_pdf_delallを追加しました。
+<li>Fwlibe1.dll : CNC主導メッセージ機能をSeries 30i/31i/32iに対応しました。
+<li>Fwlibe1.dll : cnc_rdpmacroinfo2関数を追加しました。
+<li>Fwlib30i.dll : サーボ学習データ関連関数をFS30i/31i/32iに対応しました。
+<li>Fwlib160.dll : cnc_rd5axovrlapで取得した機械軸移動量が、NCで表示されている値の2倍になることがありました。この問題を修正しました。
+<li>Fwlib160.dll, Fwlibe1.dll : cnc_getfrominfo関数において、slotnoに -1 を指定した場合、正しくデータが取得できない場合がありました。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdgcodeで全モーダルGコードを取得する時、読み出すGコードの個数(num_gcd)が実際のグループ総数より小さいと、関数の戻り値がEW_LENGTHになりました。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdgrpinfo4, cnc_rdtlgrpで取得した値が正しくない場合がありました。この問題を修正しました。
+<li>Fwlib30i.dll : pmc_rdpmcrngおよびpmc_wrpmcrng関数の開始PMCアドレスに負の値を指定しても、エラーEW_RANGEにならない。この問題を修正しました。
+<li>Fwlib30i.dll : アラームメッセージ文字列に欧州文字が含まれている場合、正しくメッセージが取得できませんでした。この問題を修正しました。
+<li>Fwlib30i.dll : cnc_wrpmacror、cnc_wrmacror関数において、仮数部に0、小数点以下桁数に1を指定しマクロ変数を書き込むと、変数の値が「空」となりました。この問題を修正しました。
+<li>Fwlib30i.dll : カスタムマクロ機能のオプションがない時に、cnc_opmsg3でマクロメッセージを取得すると、戻り値がEW_NOOPTでなくEW_ATTRIBになる。この問題を修正しました。
+</ul>
+
+<h2>2.4版</h2>
+<ul>
+<li>Fwlib30i.dll : 総繰り返し回数と残り回数を取得するための関数 <a href="./misc/cnc_rdrepeatval_ext.htm">cnc_rdrepeatval_ext</a>を追加しました。
+<li>Fwlib160.dll : 工具管理機能のカスタマイズデータ拡張機能に対応しました。
+<li>Fwlib160.dll : NCの表示言語を取得する関数 <a href="./misc/cnc_getlanguage.htm">cnc_getlanguage</a>を追加しました。
+<li>Fwlib160.dll : NCの表示言語が、中国語簡体字の場合に、アラームメッセージ、アラーム履歴、CNC関連項目名称をGB2312コードで取得できるようにしました。
+<li>Fwlibe1.dll : <a href="./misc/cnc_statinfo2.htm">cnc_statinfo2</a>を追加しました。
+<li>Fwlib16w.dll : パラメータ番号16000－16999を読み込めるようにしました。
+<li>Fwlib16w.dll : サーボアラーム 456-459、468、469 を取得できるようにしました。
+<li>Fwlib16w.dll : ダイアグノーズデータの No.620-669、700-709を読み込めるようにしました。
+<li>Fwlib30i.dll : 制御軸数が系統番号より少ない時、診断データが正しく取得できませんでした。この問題を修正しました。
+<li>Fwlib30i.dll : 指令値の個別読み出しを行なった時、cnc_rdcommandがEW_NUMBERを返しました。この問題を修正しました。
+<li>Fwlib30i.dll : cnc_rdexchgtgrpで、要工具交換グループの任意グループ番号が正しく取得できませんでした。この問題を修正しました。
+<li>Fwlib30i.dll : cnc_exaxisname関数が正しく動作しませんでした。この問題を修正しました。
+<li>Fwlib160.dll : 定期保守情報の項目取得関数(cnc_rdpm_item)で、残り時間が負の場合に正しい値が取得できませんでした。また、複数個指定で未設定の項目が取得できませんでした。この問題を修正しました。
+<li>Fwlib160.dll : 1CPU2系統の時にcnc_rdsyssoft2を実行するとSRAM ECC ERRORが発生しました。この問題を修正しました。
+<li>Fwlib160.dll : パラメータNo.8700#3=0で、DNC運転時にcnc_seqsrchを呼ぶとEW_REJECTとなりました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_seqsrch2は、指定したシーケンス番号が存在しないプログラムの最終ブロックにEOBがなかった時、関数から戻って来ませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdalmhistry5で、モーダル情報や座標値が正しく取得できませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdophistry4の付加情報付きアラームの取得で、ODBOPHIS4構造体のg_modal以降のデータが正しく取得できませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : FS30iで、工具管理機能Bの任意グループ番号を使用しない場合にcnc_rdtlusegrpがEW_PARAMを返しました。この問題を修正しました。
+<li>Fwlibe1.dll : FS30iのcnc_rdtlinfoで登録可能最大工具グループ番号が正しく取得できませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : FS16iのcnc_rdpmacrorで高速サイクル用Pコードマクロ変数の500,000番以降が取得できませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : cnc_rdomhistry2で一度に11個以上の履歴データを読み込むと、EW_PROTOCOLが発生しました。この問題を修正しました。
+<li>NCBoot32.exe : 電源投入時にメッセージ「Reset request is not accepted by CNC/PMC」が表示されて、起動できないことがありました。この問題を修正しました。
+</ul>
+
+
+<h2>2.3版</h2>
+<ul>
+<li>FOCAS1とFOCAS2の区別を明確に記述しました。
+<li>Fwlibe1.dll : データサーバにデータをダウンロードするために必要な関数を追加しました。
+	<ul>
+	<li><a href="./data/ds_dwnstart.htm">  ds_dwnstart  </a>データサーバへの出力の開始
+	<li><a href="./data/ds_download.htm">  ds_download  </a>データサーバへのデータ出力
+	<li><a href="./data/ds_dwnend.htm">    ds_dwnend    </a>データサーバへの出力終了
+	<li><a href="./data/ds_rdhdddir.htm">  ds_rdhdddir  </a>データサーバ機能用ハードディスクファイル一覧の取得
+	<li><a href="./data/ds_delhddfile.htm">ds_delhddfile</a>データサーバ機能用ハードディスクファイルの削除
+	<li><a href="./data/ds_chghdddir.htm"> ds_chghdddir </a>データサーバ機能用ハードディスクのディレクトリの変更
+	<li><a href="./data/ds_rdresult.htm">  ds_rdresult  </a>データサーバ機能用関数の実行結果の取得
+	<li><a href="./data/ds_cancel.htm">    ds_cancel    </a>データサーバ機能用関数の実行中止
+	</ul>
+<li>Fwlibe1.dll : CNC主導メッセージの受信停止(cnc_unsolicstop)をCNC主導メッセージサーバが起動している他のPCからも行なえるようにしました。
+<li>Fwlib160.dll : Profibus関係の関数を6559系列に対応しました。
+<li>Fwlib160.dll, Fwlibe1.dll：レーザの加工条件ファイルデータの項目追加に対応しました。
+<li>Fwlib160.dll : 両方向ピッチ誤差補正に対応しました。
+<li>Fwlib160.dll : 総繰り返し回数と残り回数を取得するための関数(cnc_rdrepeatval_ext)を追加しました。
+
+<li>Fwlib160.dll : NCパラメータNo.5006#0=1の場合にフィクスチャオフセット量が正しく読めませんでした。この問題を修正しました。
+<li>Fwlib160.dll : 直径/半径ダイナミック切り替え機能を使用した時、cnc_rddynamic、cnc_rddynamic2で正しい値を取得できませんでした。この問題を修正しました。
+<li>Fwlib160.dll, Fwlib0i.dll Fwlib0iB.dll, FwlibPMi.dll : cnc_dnc, cnc_cdncで、高速DNC運転を行なった時にブロック抜けが発生する場合がありました。この問題を修正しました。
+<li>Fwlib160.dll, Fwlib0iB.dll, FwlibPMi.dll : cnc_dwnstart3を実行中に別のプロセスやスレッドから書込み系の関数が実行された場合にハングアップする場合がありました。この問題を修正しました。
+<li>Fwlib30i.dll : CNCの電源がOFFの状態で cnc_allclibhndl または、cnc_allclibhndl2 が実行された場合、関数がエラーを返しませんでした。この問題を修正しました。
+
+<li>NCBoot32.exe : 英語Windowsにおいてファイルのタイムスタンプが全桁見えていなかったため、BOOT画面、Load画面、AutoBackup画面のサイズを調整しました。
+<li>NCBoot32.exe : BOOT画面にCNCのブート機能の系列と版数を表示するようにしました。
+<li>NCBoot32.exe : FS30i/31i/32iと接続するとき、PCが完全に起動する前にPCの電源だけを入れ直すとSYSTEM ALARM が発生しました。この問題を修正しました。
+<li>NCBoot32.exe : FS30i/31i/32iと接続中にPCを再起動すると、CNC画面表示機能を実行した際にSYSTEM ALARM が発生しました。この問題を修正しました。  CNCのブート機能は60W1-07版以降が必要です。
+<li>NCBoot32.exe : FS30i/31i/32i用のAutoBackup画面において、NO DATA の項目をリストアするとBOOT画面が不正に終了していました。この問題を修正しました。
+</ul>
+
+
+<h2>2.2版</h2>
+<ul>
+<li>Fwlib160.dll : ダイアグノーズデータの No.670-672を取得できるようにしました。
+<li>Fwlibe1.dll : 30i用の工具寿命管理機能に対応しました。
+<li>Fwlibe1.dll : 30i用の工具管理機能に対応しました。
+<li>Fwlib30i.dll : データサーバ関係の機能に対応しました。
+<li>Fwlib150.dll, Fwlib15i.dll : cnc_rdproginfo関数の引数のデータブロック長(length)と構造体の形式を16iと同じになるように変更しました。
+<li>FwlibPMi.dll : サーボアラーム 406、407、409、454-459、468、469、および 600-607 を取得できるようにしました。
+<li>Fwlib0i.dll : ワーク原点オフセットの読み書きが正しく行なえませんでした。この問題を修正しました。
+<li>FOCAS2ライブラリ用ヘッダファイルの内容に一部誤りがありました。この問題を修正しました。
+</ul>
+
+
+<h2>2.1版</h2>
+<ul>
+<li>関数仕様書の誤記訂正を行いました。
+<li>Fwlib160.dll : cnc_rdprgdirtimeで一度に指定できる個数の範囲が963に制限されていたのを解除しました。
+<li>Fwlib160.dll : データサーバのアップロード/ダウンロード関数(<a href="./Data/ds_rdfile.htm">ds_rdfile</a>/<a href="./Data/ds_wrfile.htm">ds_wrfile</a>)を追加しました。
+<li>Fwlib160.dll : Pコードマクロ変数の対話マクロ変数(2万番台)と高速サイクル加工(20万番台)変数の共存に対応しました。
+<li>Fwlib160.dll : 編集/表示禁止のプログラムがcnc_rdexecprogで、取得できない場合がありました。この問題を修正しました。
+<li>Fwlib160.dll : シーケンス番号の高速サーチ関数(<a href="./program/cnc_seqsrch2.htm">cnc_seqsrch2</a>)を追加しました。
+<li>Fwlib160.dll : 範囲を指定してプログラムを削除できる関数(<a href="./program/cnc_delrange.htm">cnc_delrange</a>)を追加しました。
+<li>Fwlib160.dll : 定期保守画面関係の関数(<a href="./Misc/cnc_rdpm_mcnitem.htm">cnc_rdpm_mcnitem</a>,  <a href="./Misc/cnc_wrpm_mcnitem.htm">cnc_wrpm_mcnitem</a>, <a href="./Misc/cnc_rdpm_cncitem.htm">cnc_rdpm_cncitem</a>, <a href="./Misc/cnc_rdpm_item.htm">cnc_rdpm_item</a>,  <a href="./Misc/cnc_wrpm_item.htm">cnc_wrpm_item</a>)を追加しました。
+<li>Fwlib160.dll : プログラムマージ関数(<a href="./program/cnc_mergeprog.htm">cnc_mergeprog</a>)を追加しました。
+<li>Fwlib160.dll : データサーバ内のプログラムの任意文字列を検索する機能(<a href="./Data/ds_searchword.htm">ds_searchword</a>, <a href="./Data/ds_searchresult.htm">ds_searchresult</a>)を追加しました。
+<li>Fwlib160.dll : パラメータ番号19900－19929を読み込めるように修正しました。
+<li>Fwlib160.dll : ロータリテーブルダイナミックフィクスチャオフセット用の関数(<a href="./Ncdata/cnc_rdactfixofs.htm">cnc_rdactfixofs</a>, <a href="./Ncdata/cnc_rdfixofs.htm">cnc_rdfixofs</a>, <a href="./Ncdata/cnc_wrfixofs.htm">cnc_wrfixofs</a>)に対応しました。
+<li>Fwlib160.dll : 操作履歴データの拡張に対応しました。
+<li>Fwlib160.dll : cnc_rdprogdir2、cnc_rdprogdir3 および、cnc_rdprogdir4を高速化しました。
+<li>Fwlib160.dll : cnc_rdactptを高速化しました。
+<li>Fwlib160.dll : 座標値取得関係の関数を直径/半径ダイナミック切り換え機能に対応しました。
+<li>Fwlib160.dll : cnc_searchwordでコメント文、マクロ文のサーチを可能にしました。
+<li>Fwlib160.dll : プログラムサーチ(cnc_search)を、NCがSTOP状態でもサーチできるようにしました。
+<li>Fwlib160.dll : cnc_wractptで、ネスト中のプログラムでも実行ポインタの設定ができるようにしました。
+<li>Fwlib160.dll : <a href="./Program/cnc_rdprogline2.htm">cnc_rdprogline2</a>関数を追加しました。
+<li>Fwlib160.dll : cnc_rdexecprogで、MEM,MDI運転時に与えられた文字数‐1が返る事がありました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdexecprogでメモリ内プログラムをRISC運転中にG05P10000～G05P0までの範囲しか読めませんでした。この問題を修正しました。
+<li>Fwlib160.dll : CNCがリセット状態の時に、cnc_rdexecptでEW_REJECTを返さないようにしました。
+<li>Fwlib160.dll : cnc_seqsrchでDMMC運転中、MEM運転中、非常停止中の場合に EW_REJECT となるようにしました。
+<li>Fwlib160.dll : ds_rdhdddir、ds_rdhostdirでoffsetに、登録個数より大きい番号が指定された場合、EW_NUMBERとなるようにしました。
+<li>Fwlib160.dll : cnc_rdprgnumで、MEMモードからEDITモードにした場合に取得できるプログラム番号をNCの表示と同じになるように修正しました。
+<li>Fwlib160.dll : cnc_wrmdiprogで、書込むプログラムの先頭にLFがなくN6桁以上が指定された場合にEW_DATAが発生しました。この問題を修正しました。
+<li>Fwlib160.dll : DNC運転でシーケンス番号をサーチ後にMEMモードに切替えた場合、cnc_rdexecprogで、プログラムが取得できませんでした。この問題を修正しました。
+<li>Fwlib160.dll : 外部アラームメッセージおよびオペレータメッセージ内の '!' が 'a' に化けていました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdspeedで、少数点以下の桁数や単位が誤って取得される事がありました。この問題を修正しました。
+<li>Fwlib160.dll : 互換データサーバ機能(10BASE-Tで、10BASE-5の機能をサポートした機能)を使用した場合に関数がハングアップしました。この問題を修正しました。
+<li>Fwlib160.dll : 波形診断パラメータの読込み関数cnc_rdwaveprmで取得される軸情報がビット位置ではなく軸番号で取得されていました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_upstart3で、O8桁の場合に O16777216 以上のプログラムをアップロードできませんでした。この問題を修正しました。
+<li>Fwlib160.dll : pmc_prfwrslvidで、個別にデータを書込めませんでした。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdaxisnameで、T系のアドレス'E'を取得できるようにしました。
+<li>Fwlib160.dll : cnc_rdprogline と cnc_rdprogline2で、指定行数以上の行数を返す場合がありました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_delproglineで最終行まで削除されてしまうことがありました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdparainfoでパラメータNo.12051-12199を指定すると正しい情報が読めませんでした。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdactptを実行した場合にEW_BUS が発生する場合がありました。この問題を修正しました。
+<li>Fwlib160.dll : 文字列取得関係の関数で 記号、ギリシャ文字、および全角英字も取得できるようにしました。
+<li>Fwlib160.dll : cnc_getfigureで、PMC制御軸の少数点位置が、インチの場合に正しくありませんでした。この問題を修正しました。
+<li>Fwlib160.dll : cnc_allclibhndl2を電源断時に呼び出す場合に、ログ出力処理でハングアップする場合がありました。この問題を修正しました。
+<li>Fwlib160.dll : cnc_rdexecprogで先読みブロックの値が正しくありませんでした。この問題を修正しました。
+
+<li>Fwlib160.dll, Fwlibe1.dll : Profibusのマスタ機能のオペレーション・モードの読書き関数(<a href="./Profibus/pmc_prfrdopmode.htm">pmc_prfrdopmode</a>, <a href="./Profibus/pmc_prfwropmode.htm">pmc_prfwropmode</a>)を追加しました。
+<li>Fwlib160.dll, Fwlibe1.dll : 5軸加工手動送り関係(<a href="./Position/cnc_rd5axmandt.htm">cnc_rd5axmandt</a>, <a href="./Position/cnc_rd5axovrlap.htm">cnc_rd5axovrlap</a>, <a href="./Position/cnc_clr5axpls.htm">cnc_clr5axpls</a>)の関数を追加しました。
+<li>Fwlib160.dll, Fwlibe1.dll : cnc_settimerで設定直後にcnc_gettimerで時間を取得すると設定前の時間が取得される場合がありました。この問題を修正しました。
+
+<li>Fwlibe1.dll : 15iのPコード変数の読み書きに対応しました。
+<li>Fwlibe1.dll : FS16iの場合、cnc_rdparamで、スピンドルパラメータを読んだ場合に関数がエラーになる場合がありました。この問題を修正しました。
+<li>Fwlibe1.dll : 30i用のcnc_acts2で、２番目以降の主軸情報が読めませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : 30i用のcnc_rdalminfo, cnc_rdalmmsg2が正しく動作しませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : 外部オペレータメッセージ取得関数(cnc_rdopmsg3)を全メッセージ指定で実行した場合、メッセージの個数が正しくセットされませんでした。この問題を修正しました。
+<li>Fwlibe1.dll : CNC主導メッセージを停止する場合、cnc_unsolicstop関数がEW_NUMBERを返す場合がありました。この問題を修正しました。
+<li>Fwlibe1.dll : ケーブルの抜き差しの情報を受け取ったアプリケーションで、CNC主導メッセージの開始関数(cnc_unsolictstart)を実行した場合、EW_BUSYが発生しました。この問題を修正しました。
+<li>Fwlibe1.dll : 30iのPMCのユニット番号に対応しました。
+
+<li>Fwlib30i.dll : ＰＭＣパラメ－タの読書き関数をサポートしました。
+<li>Fwlib30i.dll, Fwlibe1.dll : PMCタイマの取得/設定関数(<a href="./Pmc/pmc_set_timer_type.htm">pmc_set_timer_type</a>, <a href="./Pmc/pmc_get_timer_type.htm">pmc_get_timer_type</a>)を追加しました。
+
+<li>Fwlib0i.dll : ログ出力機能を追加しました。
+
+<!--<li>Fwlib0iB.dll : Profibis関係の関数を0i-Cに対応しました。-->
+
+<li>FwlibPMi.dll : ログ出力機能を追加しました。
+<li>FwlibPMi.dll : <a href="./Misc/cnc_rdopmsg2.htm">cnc_rdopmsg2</a>、および <a href="./Misc/cnc_rdopmsg3.htm">cnc_rdopmsg3</a>を追加しました。
+<li>FwlibPMi.dll : <a href="./Misc/cnc_rdcexesram.htm">cnc_rdcexesram</a>、<a href="./Misc/cnc_wrcexesram.htm">cnc_wrcexesram</a>、および <a href="./Misc/cnc_cexesramsize.htm">cnc_cexesramsize</a>関数に対応しました。
+<li>FwlibPMi.dll : ダイアグノーズデータの No.447-449、No.550-553、No.620-649、および No.800-899を取得できるようにしました。
+<li>FwlibPMi.dll : pmc_rdalmmsgで、ER32を正しく取得できるようにしました。
+
+<li>Fwlib16W.dll : FROM/SRAM関係の関数に対応しました。
+<li>Fwlib16W.dll : Pコード変数関係の関数に対応しました。
+
+<li>Fwlib15i.dll : Pコード変数の読み書きに対応しました。
+<li>Fwlib15i.dll : アラームメッセージが32文字を超えていると、cnc_rdalmhistry2で、バッファオーバーフローが発生しました。この問題を修正しました。
+
+<li>FS30i/31i/32iのFROM/SRAM管理機能に対応した HSSBドライバを含めました。
+<li>オプション設定ユーティリティ(OptSet.exe)で、CNCのパラメータ番号19900-19929を設定できるようにしました。
+<li>NCBOOT32のIPL画面で、ファナックフォントコードでの日本語表示を可能にしました。
+<li>CNCの電源がONされた時に、CNC主導メッセージサーバがCNCの電源ONの情報を正しく認識できない場合がありました。この問題を修正しました。
+<li>CNC主導メッセージサーバから、CNCの電源ON情報を受け取ったアプリケーションが、コールバック関数の中でCNC主導メッセージの開始を行った場合に正常に動作しませんでした。この問題を修正しました。
+</ul>
+
+<h2>2.0版</h2>
+<ul>
+<li>FS30iに対応しました。
+<li>Fwlib160.dllのcnc_rdexecptで、実行中のプログラム番号が取得できなかったのを修正しました。
+<li>Flib160.dllで編集禁止のプログラムを実行している場合にcnc_rdexecprog関数を実行するとアプリケーションエラーが発生する場合があったのを修正しました。
+<li>FWLIB160.dllでcnc_rdexecprogを実行した場合、システムアラームが発生する場合があったのを修正しました。
+<li>NCのプログラムメモリが壊れている時に15/15i以外のライブラリでNCプログラムを読み出すとアップロード関連の関数が例外を起こす場合があったのを修正しました。
+<li>Ncboot32でC-EXEのファイルをバックアップした時、ファイル名がNCのBootでバックアップしたものと同じになるようにしました。
+</ul>
+
+
+<h2><a name="UpDateHssb">FOCAS1/HSSBライブラリ更新履歴(旧仕様番号 A02B-0207-K730)</a></h2>
+
+<h2>1.15版</h2>
+<ul>
+<li>Fwlib160.dllに以下の関数を追加しました。
+	<ul>
+	<li><a href="./position/cnc_rdspdlspeed.htm">cnc_rdspdlspeed</a>(シリアルスピンドル主軸回転数の取得)
+	<li><a href="./program/cnc_renameprog.htm">cnc_renameprog</a>	(NC指令プログラムのリネーム)
+	<li><a href="./program/cnc_rdprogline.htm">cnc_rdprogline</a>	(行単位のプログラムのリード)
+	<li><a href="./program/cnc_wrprogline.htm">cnc_wrprogline</a>	(行単位のプログラムのライト)
+	<li><a href="./program/cnc_delprogline.htm">cnc_delprogline</a>	(行単位のプログラムの削除)
+	<li><a href="./program/cnc_searchword.htm">cnc_searchword</a>	(プログラム中文字列の検索)
+	<li><a href="./program/cnc_searchresult.htm">cnc_searchresult</a>(プログラム中文字列の検索結果の取得)
+	<li><a href="./program/cnc_copyprog.htm">cnc_copyprog</a>	(NC指令プログラムのコピー)
+	<li><a href="./program/cnc_condense.htm">cnc_condense</a>	(プログラムのコンデンス)
+	<li><a href="./program/cnc_setpglock.htm">cnc_setpglock</a>	(プログラムの運転／編集禁止の設定)
+	<li><a href="./program/cnc_resetpglock.htm">cnc_resetpglock</a>	(プログラムの運転／編集禁止の解除)
+	<li><a href="./program/cnc_rdpglockstat.htm">cnc_rdpglockstat</a>(プログラムの運転／編集禁止状態の取得)
+	<li><a href="./program/cnc_rdmdiprgstat.htm">cnc_rdmdiprgstat</a>(MDIプログラム状態の取得)
+	<li><a href="./ncdata/cnc_rdhsprminfo.htm">cnc_rdhsprminfo</a>	(パラメータの高速リード用パラメータ情報の取得)
+	<li><a href="./ncdata/cnc_rdhsparam.htm">cnc_rdhsparam</a>	(パラメータの高速リード)
+	<li><a href="./toollife/cnc_rdexchgtgrp.htm">cnc_rdexchgtgrp</a>(工具寿命管理データ(要交換工具グループ番号)のリード)
+	<li><a href="./toollife/cnc_rdgrpinfo4.htm">cnc_rdgrpinfo4</a>	(工具寿命管理データ(工具グループ情報)のリード)
+	<li><a href="./history/cnc_rdalmhistry3.htm">cnc_rdalmhistry3</a>(アラーム履歴データのリード３)
+	<li><a href="./history/cnc_wrkeyhistry.htm">cnc_wrkeyhistry</a>	(キー履歴の記録)
+	<li><a href="./data/etb_rdparam.htm">etb_rdparam</a>		(イーサネットボードのパラメータの取得)
+	<li><a href="./data/etb_wrparam.htm">etb_wrparam</a>		(イーサネットボードのパラメータの設定)
+	<li><a href="./data/etb_rderrmsg.htm">etb_rderrmsg</a>		(イーサネットボードのエラーメッセージの取得)
+	<li><a href="./data/ds_rdmode.htm">ds_rdmode</a>		(データサーバ機能用モードの取得)
+	<li><a href="./data/ds_wrmode.htm">ds_wrmode</a>		(データサーバ機能用モードの設定)
+	<li><a href="./data/ds_rdhddinfo.htm">ds_rdhddinfo</a>		(データサーバ機能用ハードディスク情報の取得)
+	<li><a href="./data/ds_rdhdddir.htm">ds_rdhdddir</a>		(データサーバ機能用ハードディスクファイル一覧の取得)
+	<li><a href="./data/ds_delhddfile.htm">ds_delhddfile</a>	(データサーバ機能用ハードディスクファイルの削除)
+	<li><a href="./data/ds_copyhddfile.htm">ds_copyhddfile</a>	(データサーバ機能用ハードディスクファイルの複写)
+	<li><a href="./data/ds_renhddfile.htm">ds_renhddfile</a>	(データサーバ機能用ハードディスクファイルの名称変更)
+	<li><a href="./data/ds_puthddfile.htm">ds_puthddfile</a>	(データサーバ機能用ハードディスクファイルのPUT)
+	<li><a href="./data/ds_mputhddfile.htm">ds_mputhddfile</a>	(データサーバ機能用ハードディスクファイルのMPUT)
+	<li><a href="./data/ds_lputhddfile.htm">ds_lputhddfile</a>	(データサーバ機能用ハードディスクファイルのLIST-PUT)
+	<li><a href="./data/ds_ldelhddfile.htm">ds_ldelhddfile</a>	(データサーバ機能用ハードディスクファイルのLIST-DELETE)
+	<li><a href="./data/ds_makehdddir.htm">ds_makehdddir</a>	(データサーバ機能用ハードディスクのディレクトリの作成)
+	<li><a href="./data/ds_delhdddir.htm">ds_delhdddir</a>		(データサーバ機能用ハードディスクのディレクトリの削除)
+	<li><a href="./data/ds_chghdddir.htm">ds_chghdddir</a>		(データサーバ機能用ハードディスクのディレクトリの変更)
+	<li><a href="./data/ds_rdhostinfo.htm">ds_rdhostinfo</a>	(データサーバ機能用ホストログインディレクトリ情報の取得)
+	<li><a href="./data/ds_rdhostdir.htm">ds_rdhostdir</a>		(データサーバ機能用ホストファイル一覧の取得)
+	<li><a href="./data/ds_rdhostdir2.htm">ds_rdhostdir2</a>	(データサーバ機能用ホストファイル一覧の取得２)
+	<li><a href="./data/ds_delhostfile.htm">ds_delhostfile</a>	(データサーバ機能用ホストファイルの削除)
+	<li><a href="./data/ds_gethostfile.htm">ds_gethostfile</a>	(データサーバ機能用ホストファイルのGET)
+	<li><a href="./data/ds_mgethostfile.htm">ds_mgethostfile</a>	(データサーバ機能用ホストファイルのMGET)
+	<li><a href="./data/ds_lgethostfile.htm">ds_lgethostfile</a>	(データサーバ機能用ホストファイルのLIST-GET)
+	<li><a href="./data/ds_rdresult.htm">ds_rdresult</a>		(データサーバ機能用関数の実行結果の取得)
+	<li><a href="./data/ds_cancel.htm">ds_cancel</a>		(データサーバ機能用関数の実行中止)
+	<li><a href="./data/ds_rdncfile.htm">ds_rdncfile</a>		(データサーバ機能用NCファイルの入力)
+	<li><a href="./data/ds_rdncfile2.htm">ds_rdncfile2</a>		(データサーバ機能用NCファイルの入力(2))
+	<li><a href="./data/ds_wrncfile.htm">ds_wrncfile</a>		(データサーバ機能用NCファイルの出力)
+	<li><a href="./data/ds_rddnchddfile.htm">ds_rddnchddfile</a>	(データサーバ機能用DNC運転ハードディスクファイル名の取得)
+	<li><a href="./data/ds_wrdnchddfile.htm">ds_wrdnchddfile</a>	(データサーバ機能用DNC運転ハードディスクファイル名の設定)
+	<li><a href="./data/ds_rddnchostfile.htm">ds_rddnchostfile</a>	(データサーバ機能用DNC運転ホストファイル名の取得)
+	<li><a href="./data/ds_wrdnchostfile.htm">ds_wrdnchostfile</a>	(データサーバ機能用DNC運転ホストファイル名の設定)
+	<li><a href="./data/ds_rdm198hdddir.htm">ds_rdm198hdddir</a>	(データサーバ機能用M198運転ディレクトリの取得)
+	<li><a href="./data/ds_wrm198hdddir.htm">ds_wrm198hdddir</a>	(データサーバ機能用M198運転ディレクトリの設定)
+	<li><a href="./data/ds_rdm198host.htm">ds_rdm198host</a>	(データサーバ機能用M198運転接続ホストの取得)
+	<li><a href="./data/ds_wrm198host.htm">ds_wrm198host</a>	(データサーバ機能用M198運転接続ホストの設定)
+	<li><a href="./data/ds_rdhostno.htm">ds_rdhostno</a>		(データサーバ機能用接続ホスト番号の取得)
+	<li><a href="./data/ds_wrhostno.htm">ds_wrhostno</a>		(データサーバ機能用接続ホストの設定)
+	<li><a href="./data/ds_rdmntinfo.htm">ds_rdmntinfo</a>		(データサーバ機能用保守情報の取得)
+	<li><a href="./data/ds_checkhdd.htm">ds_checkhdd</a>		(データサーバ機能用ハードディスクのチェック)
+	<li><a href="./data/ds_formathdd.htm">ds_formathdd</a>		(データサーバ機能用ハードディスクのフォーマット)
+	<li><a href="./misc/cnc_rdrepeatval.htm">cnc_rdrepeatval</a>	(繰り返し回数のリード)
+	<li><a href="./misc/cnc_reset2.htm">cnc_reset2</a>		(NCのリセット２)
+	<li><a href="./misc/cnc_rdexecpt.htm">cnc_rdexecpt</a>		(実行中ポインタの取得)
+	<li><a href="./pmc/pmc_rdprmstart.htm">pmc_rdprmstart</a>	(PMCパラメータの読込みの開始)
+	<li><a href="./pmc/pmc_rdpmcparam.htm">pmc_rdpmcparam</a>	(PMCパラメータの読込み)
+	<li><a href="./pmc/pmc_rdprmend.htm">pmc_rdprmend</a>		(PMCパラメータの読込みの終了)
+	<li><a href="./pmc/pmc_wrprmstart.htm">pmc_wrprmstart</a>	(PMCパラメータの書込みの開始)
+	<li><a href="./pmc/pmc_wrpmcparam.htm">pmc_wrpmcparam</a>	(PMCパラメータの書込み)
+	<li><a href="./pmc/pmc_wrprmend.htm">pmc_wrprmend</a>		(PMCパラメータの書込みの終了)
+	</ul>
+<li>Fwlib160.dllで回転領域干渉アラーム 514,515 を読み込めるように修正しました。
+<li>Fwlib160.dllでレーザのパラメータ(No.29000-29999)を読み込めるようにしました。
+<li>Fwlib160.dllで、ダイアグノーズ番号458-460,680-689を読み込めるように修正しました。
+<li>Fwlib160.dllのcnc_rdopmsg3で、外部メッセージ、および外部データ入力オプションがなくてもマクロメッセージを読めるようにしました。
+<li>Fwlib160.dllとFwlib0iB.dllにプログラムディレクトリのリード関数(<a href="./program/cnc_rdprogdir4.htm">cnc_rdprogdir4</a>)を追加しました。
+<li>Fwlib160.dllで、サーボアラーム 608－615、および616－623 を読み込めるように修正しました。
+<li>15iのPMC拡張保持型メモリに対応しました。
+<li>Fwlib160.dllの<a href="./misc/cnc_rdexecpt.htm">cnc_rdexecpt</a> と<a href="./program/cnc_rdexecprog.htm">cnc_rdexecprog</a>関数を高速化しました。
+<li>Fwlib160.dllで、CNC画面表示機能の終了処理を高速化しました。
+<li>FS15iでCNC画面表示機能実行中にマクロ変数の書き込みを行うと関数から制御が戻ってこない場合があったのを修正しました。
+<li>cnc_rdcoordnumを実行した場合に、システムエラーになる事があったのを修正しました。
+<li>入力単位がインチの時にFwlib160.dllのcnc_getfigure関数が正しい値を返さない場合があったのを修正しました。
+</ul>
+
+
+<h2>1.14版</h2>
+<ul>
+<li>FS0i-Model Bに対応しました。
+<li>Windows2000のイベントビューアに残る mmcncd.sys のエラーメッセージが正しくなかったのを修正しました。
+<li>HSSBドライバがインストールされている Windows XP のパソコンを、HSSBボードを抜いて起動した場合、ログオン直後にリブートされてしまったのを修正しました。
+</ul>
+
+
+<h2>1.13版</h2>
+<ul>
+<li>Windows XP Professionalに対応しました。
+<li>キーボードのNumLockの状態を操作するユーティリティ(NumLock.exe)を追加しました。
+<li>Fwlib160.dllとFwlibpmi.dllにプログラムディレクトリのリード関数(<a href="./program/cnc_rdprogdir3.htm">cnc_rdprogdir3</a>)を追加しました。
+<li>Fwlib160.dllの工具管理機能をT系に対応しました。
+<li>Fwlib16W.dllでパラメータ番号12200－14899を読み込めるように修正しました。
+<li>Fwlib160.dllで、ダイアグノーズ番号710－749を読み込めるように修正しました。
+<li>Fwlib160.dllで、サーボアラーム 600－607 を読み込めるように修正しました。
+<li>Fwlib160.dllに スピンドルロードメータのリード関数(<a href="./position/cnc_rdspmeter.htm">cnc_rdspmeter</a>)を追加しました。
+<li>Fwlib160.dllに実行ポインタの取得／設定用の関数(<a href="./misc/cnc_wractpt.htm">cnc_wractpt</a>, <a href="./misc/cnc_rdactpt.htm">cnc_rdactpt</a>)を追加しました。
+<li>Fwlib0i.dll と Fwlib150.dll に、O８桁機能用の関数を追加しました。
+<li>Fwlib160.dllのPROFIBUS機能を6557系列/09版に対応しました。
+<li>Fwlib160.dllで、スピンドルアラーム番号9000番台を読み込めるように修正しました。
+<li>Fwlib160.dllを使用してModel Cでデータサーバ関数を使った時、CNCでBus Errorが発生したのを修正しました。
+<li>cnc_modalで、F指令の小数点以下の桁数が誤っていたのを修正しました。
+<li>工具管理機能関係の関数で、"工具管理機能組数240組"、"工具管理機能組数1000組"の場合、EW_NOOPT が発生したのを修正しました。
+<li>Fwlib160.dllのcnc_rdprogdir2関数で組み込みマクロの情報を type=2 で読み込んだ場合、正しいサイズが得られないか、システムアラームとなったのを修正しました。
+<li>Ncboot32で対話マクロをロードしたとき、標準マクロライブラリが上書きされないことがあったのを修正しました。
+</ul>
+
+
+<h2>1.12版</h2>
+<ul>
+<li>CNCの外部リセット関数(<a href="./misc/cnc_reset.htm">cnc_reset</a>)を追加しました。
+<li>ワーク座標系の追加ワーク座標系番号の取得関数(<a href="./misc/cnc_rdcoordnum.htm">cnc_rdcoordnum</a>)を追加しました。
+<li>PMC-SB7のPMCタイトル情報読込み関数(<a href="./pmc/pmc_rdpmctitle.htm">pmc_rdpmctitle</a>)を追加しました。
+<li>ワイヤカットCNCで、cnc_rdexecprogで実行中のプログラムを読むと、プログラムエンドの'%'の前に、余計な文字が挿入されることがあったのを修正しました。
+<li>FS15iにおいて、cnc_diagnosrで読めないデータがあったのを修正しました。
+<li>FS15iにおいて、cnc_diagnosrで最後のデータを読むと、長時間関数から戻って来ず、EW_ATTRIBエラーが発生したのを修正しました。
+<li>FS15iにおいて、cnc_rddiaginfoで、読み込むデータが最後の番号を超えると、先頭に戻ってデータが読めてしまったのを修正しました。
+<li>FS15Bで、特定のアラームが発生したとき、アラームメッセージやアラーム履歴を読むと誤ったデータが読めたり、アプリケーションエラーになったのを修正しました。
+<li>２系統＋ローダのシステムでローダから２系統目にパスを切替えるためにFwlib160.dllのcnc_setpath関数を使用すると、EW_PATH(系統の誤り)のエラーとなったのを修正しました。
+<li>Fwlib160.dllのcnc_rdexecprogでは、DNC運転中のM98やM198で呼出されたプログラム内からサブプログラム呼出しを行った場合に呼出されたサブプログラムが取得できなかったのを修正しました。
+<li>Fwlib16W.dllでマクロ変数を読んだ時、２００番以降の変数を読むことができなかったのを修正しました。
+<li>Fwlib160.dllでマクロアラームをcnc_rdopmsg3関数で読む時, マクロアラーム以外にCNCプログラムのコメントメッセージも読めてしまったのを修正しました。
+<li>NCBoot32で、サイズが1024バイト未満のファイルをロードできないのを修正しました。
+<li>Fwlib160.dllのcnc_rdalminfo関数でマクロアラームを読込み中に[RESET]キーを押した場合、EW_BUSエラーが発生する場合があったのを修正した。
+<li>Fwlib160.dllで、回転軸の機械座標値を個別軸指定で読んだ時、入力単位系と出力単位系が異なっていると誤った値が読める場合があったのを修正しました。
+<li>150Bで、NCプログラムのダウンロードを行っている場合、他のプロセスで、マクロ変数の書込みなどの処理を行おうとするとNCがハングアップしたのを修正しました。
+</ul>
+
+
+<h2>1.11版</h2>
+<ul>
+<li>工具管理機能に対応しました。
+<li>Fwlib160.dllでマクロメッセージを読めるようにしました。
+<li>Fwlib160.dllで周速一定制御機能データ(SRPM/SSPM/SMAX)に対応しました。
+<li>Fwlib160.dllでダイアグノーズデータを読んだ場合、EW_BUS が返る場合があったのを修正しました。
+<li>Fwlib160.dllにおいて16i-LAの15000番以降のパラメータ情報が読めなかったのを修正しました。
+<li>Fwlib160.dllで、パラメータ12000番台、19000番台を読込もうとすると、NCがハングアップする場合があったのを修正しました。
+<li>Fwlib160.dllで、パラメータ番号1860を読込むとNCに表示されている値とは異なる値が読み取れる場合があったのを修正しました。
+<li>16i-M ２系統において工具補正量メモリ B を使用したとき、系統２側の工具オフセットデータを読込んだ際に、CNC で NMI が発生していたのを修正しました。
+</ul>
+
+
+<h2>1.10版</h2>
+<ul>
+<li>FS16i/18i/21i-Model Bに対応しました。
+<li>PMC-SB7(ただし、PMC-SB7 2系統を除く)に対応しました。
+<li>Fwlib160.dllにF-ROMバックアップ/リストア、S-RAMバックアップ機能を追加しました。
+<li>Fwlib160.dllでＴ系の工具補正組数400,999組とした場合、工具寿命管理の工具番号関係の情報を正しく読めるように修正しました。
+<li>Fwlibpmi.dllにおいて、ダイアグノーズ番号8000-8099,8100－8199,8200-8209 を読めるように修正しました。
+<li>Fwlibpmi.dllにおいて、パラメータ番号28000-28835,30000-30099,30100-30499,30500-30509 を読めるように修正しました。
+<li>Fwlib160.dllにおいてスピンドルアラームの751,761,771,781が発生した場合、詳細アラーム7nxx を読めるように修正しました。
+<li>CNC側で詳細表示に仕様変更された以下のアラームが発生した場合、Fwlib160.dllにおいて旧番号も読み込めてしまったのを修正しました。
+	<ul>
+	    No.350,351,400,414,416
+	</ul>
+<li>Fwlib160.dllで以下のサーボアラームを読み込めるように修正しました。
+	<ul>
+	    No.330,331,387,406,407,409,422,423,450-459,468-484,486-492,494-498
+	</ul>
+<li>Fwlib160.dllで、PSアラーム番号5400番台を読み込めるように修正しました。
+<li>Fwlib160.dllで、ダイアグノーズ番号690－699、700以降を読み込めるように修正しました。
+<li>Fwlib160.dllでパラメータ番号14900－14999、19500－19999 を読み込めるように修正しました。
+<li>Fwlib160.dll,Fwlib0i.dll,Fwlibpmi.dllにおいて、NCプログラムをアップロードする時、NCパラメータ3205#0(COL)を１にしてもNCプログラムの'：'を'Ｏ'に変換してしまうのを修正しました。
+<li>NCBOOT32.EXEのVersion 2.12で行った修正により、パソコン再起動時の「登録アプリケーションの起動」が不能になっていたのを修正しました。 (修正版はVersion 2.14)
+<li>Fwlib160.dllとFwlib0i.dllで操作履歴データを読み込む時、G信号とF信号の128、1128、2128番以降のデータが正しく読めなかったのを修正しました。</ul>
+
+
+<h2>1.9版</h2>
+<ul>
+<li>FS0iに対応しました。
+<li>PMCのアラームメッセージの一括リード関数(<a href="./pmc/pmc_rdalmmsg.htm">pmc_rdalmmsg</a>)を以下のライブラリに追加しました。
+<table class=dd>
+	<tr><td>FWLIB150.DLL <td> : <td>機種別ライブラリ(15-B用)		</tr>
+	<tr><td>FWLIB15i.DLL <td> : <td>機種別ライブラリ(15i用)		</tr>
+	<tr><td>FWLIB160.DLL <td> : <td>機種別ライブラリ(16/18/21用)		</tr>
+	<tr><td>FWLIB16W.DLL <td> : <td>機種別ライブラリ(16i/18i-W用)		</tr>
+	<tr><td>FWLIBPMi.DLL <td> : <td>機種別ライブラリ(Power Mate i-D/H用)	</tr>
+</table>
+<li>MDIキーボードドライバで、FS16i/18i/21i/15i用65キー、FS16i/18i-W用キーに対応しました。
+<li>FS15iにおいて、cnc_rdgcode関数で、Gコードグループ27番をリードすると、EW_NUMBER(3)が返るのを修正しました。
+<li>Windows95でMDIキーでCtrl+Alt+Delを押すと、ポインティングデバイスの接続を確認する画面を表示するように修正しました。
+<li>FS15iのcnc_rdprogdir2関数において、100個程度のNCプログラム番号を名称(コメント)付きで読み取ると、30秒以上かかってしまうのを修正しました。
+<li>FS15iにおいて、cnc_allclibhandlを呼び出し中にNC側の電源をOFFにすると、呼び出したアプリケーションが異常終了するのを修正しました。
+<li>FS15iにおいて、NCパラメータの入出力機器番号が不正な場合、ダウンロード／アップロード関数がハングアップするのを修正しました。
+<li>FS15iにおいて、ダウンロード／アップロード時に、他のデータウィンドウ関数を呼び出すと、ダウンロード／アップロード関数が終了しないのを修正しました。
+<li>FS15iの電源投入時に、データウィンドウ関数を呼び出すと、HSSB共有RAMのパリティエラーが発生する(NCの画面ではシステムアラームを表示)のを修正しました。
+<li>FS15iにおいて、キー信号２が０の時、cnc_wrmacroがエラー(EW_PROT(=7))となり、マクロ変数をライトできないのを修正しました。
+<li>16/18/21のcnc_wavestat関数において、ワンショット型波形診断の実行依頼後、CNC側の実際のサンプリング前にサンプリング中を示すステータスが１とならないのを修正しました。
+<li>FS15i側にたくさんのプログラムがある時、cnc_rdprogdirを実行すると access violation が発生するのを修正しました。
+</ul>
+
+
+<h2>1.8版</h2>
+<ul>
+<li>HSSBドライバ、MDIキードライバをWindows 2000 professionalに対応しました。
+<li>FS16i/18i-Wに対応しました。
+<li>FS15i用ライブラリに以下の関数を追加しました。
+	<ul>
+	<li>内部位置補正データ関係の関数
+	<li>高速高精度加工関係の関数
+	<li>フィクスチャオフセット関係の関数
+	<li>サーボ／スピンドル／波形診断関係の関数
+	<li>履歴データ関係の関数
+	<li>タイマデータ関係の関数
+	</ul>
+<li>Fwlib160.dllで、4500番以上のレーザアラームの詳細情報を正しく取得できなかったのを修正しました。
+<li>Fwlib160.dllで、パラメータの個数が正しく読めない場合があったのを修正しました。
+<li>Fwlib160.dllで、16/18/21のパラメータ1403#0(MIF:毎分送り時のF指令の最小単位)が1である時、モーダルデータの読み出し(cnc_modal)で実速度を取得すると小数点位置が３桁分大きく得られたのを修正しました。
+<li>Fwlib160.dllで、cnc_rdprcprc関数がｉシリーズの場合、正常に動作しなかったのを修正しました。
+<li>Fwlib160.dllで、PMC-SEの場合に、cnc_allclibhndlでEW_VERSIONが発生する場合があったのを修正しました。
+<li>Fwlib160.dllで、整数型Ｐコード変数へのアクセスを高速化しました。
+<li>Fwlib15i.dllのcnc_rdsyssoftで論理スロットと物理スロットが逆に読めてしまったのを修正しました。
+<li>NCBOOT32.exeで、ハードディスクの温度エラーが発生しても、アラームにならなかったのを修正しました。
+</ul>
+
+
+<h2>1.7版</h2>
+<ul>
+<li>Fwlib160.dllの操作履歴データの読込み関数の高速化を行いました。
+	<ul>
+  (cnc_rdophisno, cnc_rdophistry)
+	</ul>
+<li>Fwlib160.dllのアラーム履歴を読込む関数(cnc_rdalmhistry)において、外部／マクロアラームの文字列が"外部アラーム", "マクロアラーム"としか読取れなかったのを修正しました。
+<li>NCのメモリに登録されているNCプログラムの特定の位置に特定の文字(')がある場合、Fwlib150.dllのプログラムディレクトリのリード(cnc_rdprogdir)を行うと、エラーコードEW_DATAが返ったのを修正しました。
+<li>Fwlib15i.dllがカレントディレクトリをWindowsの下のFwlibディレクトリに変更してしまうのを修正しました。
+<li>MDIキーボードドライバで、新設キーボード(56キータイプ/61キータイプ)の選択が行えるように改良しました。
+<li>Fwlib15i.dllのcnc_rdparam()で基準軸の設定単位の影響を受ける実数形パラメータを読むと、最小単位が正しくないのを修正しました。
+<li>Fwlib15i.dllのcnc_rdopmsg()でマクロメッセージが読めないのを修正しました。
+<li>Fwlib160.dllで、cnc_rdmacrorを使用してマクロ変数を読み込む時、正しい値が読み込めない場合があったのを修正しました。
+<li>FANUCイーサネットボードを取り付けたFS15iにおいて、NCBOOT32.EXEが起動すると、CNC部がシステムアラームになるのを修正しました。
+<li>Fwlib160.dllのMDI運転用プログラムの出力関数(cnc_wrmdiprog)において、関数から戻って来ない場合があったのを修正しました。
+<li>Fwlibpmi.dllのアラーム情報のリード関数(cnc_rdalminfo)において、アラーム番号309に対する情報が取得できなかったのを修正しました。
+<li>Fwlib150.dllに「CNCのカレンダタイマの取得/設定」関数 <a href="./misc/cnc_gettimer.htm">cnc_gettimer()</a>, <a href="./misc/cnc_settimer.htm">cnc_settimer()</a>を追加しました。
+</ul>
+
+
+<h2>1.6版</h2>
+<ul>
+<li>FS15iに対応しました。
+<li>PCI HSSB インタフェースボードに対応しました。
+<li>データウィンドウライブラリ関数仕様書にPower Mate i用の説明記述を含めました。従来あったPower Mate i用のライブラリ関数仕様書は廃止します。
+<li>NCBOOT32.EXEがHSSBドライバの初期化完了前にWindowsによって起動されると終了してしまうのを修正しました。
+<li>FS150-Bの多軸のシステムにおいて、cnc_rdalminfo()でサーボアラームが正しく読み込めないのを修正しました。
+<li>FS150-BのシステムにおいてDNC運転を行うとき、NC側のみを起動、リセットした後、アプリケーションでDNC運転用プログラムを送り込もうとすると、cnc_dnc()/
+  cnc_cdnc()において「リセット、停止要求」を返してしまうのを修正しました。
+<li>FS16/18のローダ付きシステムにおいて、系統間共通マクロ変数の設定をパラメータ6036,6037で行った場合、cnc_rdmacro()/cnc_wrmacro()がローダ側でのマクロ変数値を正しく扱えないのを修正しました。
+<li>16i-LAにおいて、15000番以降のパラメータ読み出しが出来なかったのを修正しました。
+<li>Windows NT4 Service Pack 4を適用するとデータウィンドウライブラリが動作しなくなるのを修正しました。
+</ul>
+
+
+<h2>1.5版</h2>
+<ul>
+<li>Power Mate i-D, Power Mate i-Hに対応しました。
+<li>ncboot32.exe: アプリケーションプログラムへのHSSB通信エラー通知機能を追加しました。（詳細はncboot32j.docを参照してください。)
+<li>MDIキードライバ: Resetキーを押すと0が入力される不具合を修正しました。
+<li>fwlib32j.txt: 変数cnc_macro_typeについての誤記を訂正しました。
+<li>FS160: cnc_rdgrpid2, cnc_rd1tlifedat2, cnc_wr1tlifedat2 関数を追加しました。
+<li>FS160: 工具寿命管理Ｔコード８桁へ対応しました。
+<li>FS160: パラメータ 5006#0 = 1 のとき、工具オフセットのリードで仮想刃先位置および負の値のオフセットデータが正しくリードできない不具合を修正しました。
+<li>FS160: ２系統のｉシリーズのサブ側で、Ｐコードマクロ変数が正しくリードできない不具合を修正しました。
+<li>FS160: 追加されたサーボアラーム、APC アラーム、OT アラームへ対応しました。
+<li>FS160: CNC の電源 OFF への対応しました。ライブラリ処理中に CNC 側の電源をOFF しても問題ないように改良しました。
+<li>FS160: 実行中プログラムリード関数 cnc_rdexecprog を実行した時、ＮＣデータのポインタが正しくなかったのを修正しました。
+<li>FS160: 実行中プログラムリード関数 cnc_rdexecprog を実行した時、読込み禁止のプログラムをリードしてもプログラムが読込めてしまったのを修正しました。
+<li>FS160: O8桁の場合、パラメータ番号 3204#3,4 を 1 にしても読込み禁止のプログラムが読めてしまったのを修正しました。
+<li>FS160: 取得できないアラーム番号やダイアグノーズデータがあったのを修正しました。
+	<ul>
+	  パラメータ番号 309,508,509,764,771-774,781-784
+	</ul>
+	<ul>
+	  ダイアグノーズデータ番号 430-444, 445-449, 550-553, 560, 570-580。
+	</ul>
+<li>FS160: パラメータ１２０００番台が読込めなかったのを修正しました。
+<li>FS160: インチ系の機械において出力単位の小数点以下桁数のデータが正しく読み出せなかったのを修正しました。
+<li>FS160: ＤＮＣ運転を行う時、cnc_cdnc 関数が「リセット、停止要求」を返す場合があったのを修正しました。
+<li>FS150: cnc_dncstart2, cnc_dnc2, cnc_dncend2, cnc_rddncdgndt 関数を追加しました。
+<li>FS150: cnc_rdprgdir2関数の不具合を修正しました。
+<li>FS150: CNC の電源 OFF への対応しました。ライブラリ処理中に CNC 側の電源をOFF しても問題ないように改良しました。
+<li>FS150: マルチ接続用の関数を追加しました。
+<li>PM: Model Dで、ロータリスイッチを1にして起動すると、関数が-8を返す不具合を修正しました。
+<li>PM: VB用ヘッダファイルの間違いを修正しました。
+<li>PM: cnc_rddynamic関数の不具合を修正しました。
+<li>PM: cnc_rddiaginfo関数の不具合を修正しました。
+<li>PM: fwlibpmj.txtのマクロ関係の関数説明を修正しました。
+<li>PM: fwlibpmj.txtの工具オフセット関係の説明を追加しました。
+<p>追記) 関数仕様中の「グローバル変数」についての誤記を訂正しました。
+</ul>
+
+
+<h2>1.4版</h2>
+<ul>
+<li>Power Mate-H, Power Mate-Dに対応しました。
+<li>MDIキードライバが追加されました。
+<li>iシリーズ用16ビットドライバは削除されました。
+<li>CNCのメモリを表示するユーティリティが追加されました。
+<li>オプション設定ユーティリティが追加されました。
+</ul>
+
+
+<h2>1.3版</h2>
+<ul>
+<li>Windows NTに対応しました。
+<li>16ビット版の保守画面は廃止されました。
+<li>pmc_wrcntldata()に、正しい引数を与えても、エラー5となることがある障害を修正しました。
+<li>FS160: プログラム番号8桁化に対応しました。
+<li>FS160: Pコードマクロの20000番台が浮動小数点型の場合、リード／ライトを行うとプログラムが異常終了する障害を修正しました。
+<li>FS160: cnc_rdmacror(), cnc_wrmacror(), cnc_rdpmacror(), cnc_wrpmacror()で、引数で与えたデータ長が、必要なデータ長より短くてもエラーとならない障害を修正しました。
+<li>FS160: cnc_rdprogdir2()において、読み取り個数の指定に負の値を与えてもエラーとならない障害を修正しました。
+<li>FS160: DNC 運転およびRISC運転中のプログラムをリードできるように、cnc_rdexecprog()を改良しました。
+<li>FS150: cnc_rdtofsr()が時々エラー1を返す障害を修正しました。
+</ul>
+
+
+<h2>1.2版</h2>
+<ul>
+<li>HSSBのマルチ接続に対応しました。
+<li>16ビットドライバ(HSSBSYS.EXE, ITSYS.EXE, NCBOOT.EXE)が不要になりました。
+<li>FWLIB32.DLLは、FS160シリーズとFS150シリーズで同名の別ファイルでしたが、機種別のDLL(FWLIB150.DLL, FWLIB160.DLL)を呼び出す、統轄DLLに変更されました。
+<li>FS16i/18i/21iに対応しました。ただし、これらの機種ではマルチ接続はサポートされません。また、16ビットドライバが必要です。
+<li>FS150: 24軸に対応しました。
+<li>FS150: ピッチ誤差補正データのリードの不具合を修正しました。
+<li>FS160: cnc_rdmdlconfig2()関数を追加しました。
+<li>FS160: パンチプレス用新規関数を追加しました。
+<li>FS160: 高速DNC運転で、誤ったデータを送ってしまう障害を修正しました。
+</ul>
+
+
+<h2>1.1版</h2>
+<ul>
+<li>FS150に対応しました。
+</ul>
+
+
+<h2>1.0版</h2>
+<ul>
+<li>新規作成。
+</ul>
+
+
+<!---------------------------------------------------------------------------->
+<h2><a name="UpDateEther">FOCAS1/Ethernetライブラリ更新履歴(旧仕様番号 A02B-0207-K732)</a></h2>
+
+<h2>1.9版</h2>
+<ul>
+<li>FS16i/18i-Wに対応しました。
+<li>Microsoft の Visual C# .NET と Visual Basic .NET が利用可能であることを確認しました。
+<li>Fast Ethernet版のFOCAS1でNCプログラムのダウンロードを行う時、同一の番号のプログラムが既に登録されている場合にcnc_dwnend3から戻ってこない場合があったのを修正しました。
+</ul>
+
+<h2>1.8版</h2>
+<ul>
+<li>FS0i-Bに対応しました。
+</ul>
+
+<h2>1.7版</h2>
+<ul>
+<li>Windows XP Professionalに対応しました。
+<li>CNC主導メッセージ通知機能を追加しました。
+<li>FS16i/18i用の工具管理機能をT系に対応しました。
+<li>FS16i/18i/21i用に実行ポインタの取得／設定用の関数(<a href="./misc/cnc_wractpt.htm">cnc_wractpt</a>, <a href="./misc/cnc_rdactpt.htm">cnc_rdactpt</a>)を追加しました。
+<li>工具管理機能関係の関数で、"工具管理機能組数240組"、"工具管理機能組数1000組"の場合、EW_NOOPT が発生したのを修正しました。
+</ul>
+
+<h2>1.6版</h2>
+<ul>
+<li>以下の関数を追加しました。
+	<ul>
+	<li><a href="./misc/cnc_rdcoordnum.htm">cnc_rdcoordnum</a>
+	<li><a href="./misc/cnc_rdetherinfo.htm">cnc_rdetherinfo</a>
+	<li><a href="./position/cnc_rdspcss.htm">cnc_rdspcss</a>
+	<li><a href="./pmc/pmc_rdpmctitle.htm">pmc_rdpmctitle</a>
+	</ul>
+</ul>
+
+<h2>1.5版</h2>
+<ul>
+<li>工具管理機能に対応しました。
+	<ul>
+	<li><a href="./toolmng/cnc_regtool.htm">cnc_regtool</a>
+	<li><a href="./toolmng/cnc_deltool.htm">cnc_deltool</a>
+	<li><a href="./toolmng/cnc_rdtool.htm">cnc_rdtool</a>
+	<li><a href="./toolmng/cnc_wrtool.htm">cnc_wrtool</a>
+	<li><a href="./toolmng/cnc_wrtool2.htm">cnc_wrtool2</a>
+	<li><a href="./toolmng/cnc_regmagazine.htm">cnc_regmagazine</a>
+	<li><a href="./toolmng/cnc_delmagazine.htm">cnc_delmagazine</a>
+	<li><a href="./toolmng/cnc_rdmagazine.htm">cnc_rdmagazine</a>
+	<li><a href="./toolmng/cnc_wrmagazine.htm">cnc_wrmagazine</a>
+	</ul>
+<li>NCデータ保護機能に対応しました。
+	<ul>
+	<li><a href="./misc/cnc_getlockstat.htm">cnc_getlockstat</a>
+	<li><a href="./misc/cnc_chgprotbit.htm">cnc_chgprotbit</a>
+	</ul>
+<li>NCのFROMデータのバックアップ/リストア、SRAMデータのバックアップ機能を追加しました。
+	<ul>
+	<li><a href="./misc/cnc_getfrominfo.htm">cnc_getfrominfo</a>
+	<li><a href="./misc/cnc_fromgetstart.htm">cnc_fromgetstart</a>
+	<li><a href="./misc/cnc_fromget.htm">cnc_fromget</a>
+	<li><a href="./misc/cnc_fromgetend.htm">cnc_fromgetend</a>
+	<li><a href="./misc/cnc_fromputstart.htm">cnc_fromputstart</a>
+	<li><a href="./misc/cnc_fromput.htm">cnc_fromput</a>
+	<li><a href="./misc/cnc_fromputend.htm">cnc_fromputend</a>
+	<li><a href="./misc/cnc_fromremove.htm">cnc_fromremove</a>
+	<li><a href="./misc/cnc_getsraminfo.htm">cnc_getsraminfo</a>
+	<li><a href="./misc/cnc_sramgetstart.htm">cnc_sramgetstart</a>
+	<li><a href="./misc/cnc_sramget.htm">cnc_sramget</a>
+	<li><a href="./misc/cnc_sramgetend.htm">cnc_sramgetend</a>
+	</ul>
+<li>C言語エグゼキュータ用のSRAM変数領域のリード/ライト関数を追加しました。
+	<ul>
+	<li><a href="./misc/cnc_rdcexesram.htm">cnc_rdcexesram</a>
+	<li><a href="./misc/cnc_wrcexesram.htm">cnc_wrcexesram</a>
+	<li><a href="./misc/cnc_cexesramsize.htm">cnc_cexesramsize</a>
+	</ul>
+<li>ログデータの記録中に、間欠的にハングアップするのを修正しました。
+</ul>
+
+<h2>1.4版</h2>
+<ul>
+<li>PMCのアラームメッセージの一括リード関数を追加しました。
+	<ul>
+	<li><a href="./pmc/pmc_rdalmmsg.htm">pmc_rdalmmsg</a>
+	</ul>
+<li>cnc_rdpmacro、cnc_rdpmacror関数において、2進形式浮動小数点型でPコードマクロ変数を正しくリードできないのを修正しました。
+<li>FS15iのcnc_rdparam_ext関数において、読み込むパラメータの数に10以上を指定すると、EW_PROTCOL(-17)が返るのを修正しました。
+</ul>
+
+<h2>1.3版</h2>
+<ul>
+<li>FS15iに対応しました。
+<li>FS16i/18iの複合加工機能に対応しました。
+<li>Windows 2000 Professionalに対応しました。
+<li>FOCAS1/Ethernetの関数実行中に、Ethernet上での通信エラーが起きると、不正メモリアクセスが発生したのを修正しました。
+<li>あるスレッドにおいてcnc_allclibhndl3を実行し、ソケットの接続待ちになっている状態で、別のスレッドからcnc_allclibhndl3を呼び出すと、後者でのソケット接続ができなかったのを修正しました。
+</ul>
+
+<h2>1.2版</h2>
+<ul>
+<li>パンチプレス/レーザ関連関数を追加しました。
+<li>cnc_wrmacro関数で「-0.001」をマクロ変数として書きこむと、「0.0009531」とCNC側にセットされるのを修正しました。
+</ul>
+
+<h2>1.1版</h2>
+<ul>
+<li>以下の関数を追加しました。
+	<ul>
+	<li><a href="./position/cnc_rdhndintrpt.htm">cnc_rdhndintrpt</a>
+	<li><a href="./ncdata/cnc_rdparam_ext.htm">cnc_rdparam_ext</a>
+	<li><a href="./toollife/cnc_rdtlinfo.htm">cnc_rdtlinfo</a>
+	<li><a href="./toollife/cnc_rdtlusegrp.htm">cnc_rdtlusegrp</a>
+	<li><a href="./toollife/cnc_rdtlgrp.htm">cnc_rdtlgrp</a>
+	<li><a href="./toollife/cnc_rdtltool.htm">cnc_rdtltool</a>
+	<li><a href="./misc/cnc_rdalmmsg.htm">cnc_rdalmmsg</a>
+	<li><a href="./misc/cnc_rddiag_ext.htm">cnc_rddiag_ext</a>
+	<li><a href="./misc/cnc_rdspdlname.htm">cnc_rdspdlname</a>
+	</ul>
+<li>cnc_rdsyssoft関数において、存在しないソフトの系列／版数の領域が0クリアされていないのを修正しました。
+<li>cnc_rdmacroinfo関数において、マクロ変数の組数のタイプが常に0となっていたのを修正しました。
+</ul>
+
+<h2>1.0版</h2>
+<ul>
+<li>新規作成。
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

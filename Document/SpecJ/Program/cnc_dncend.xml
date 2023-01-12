@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_dncend</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dncend(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側にDNC運転の終了を通知します。</p>
+            <p>この終了指令は、CNC 側の運転が終了しリセット状態になった時に指令してください。</p>
+            <p>もし、CNC 側が運転中に終了指令を行うと、運転が終了しリセット状態になるまで待たされます。</p>
+            <p>CNC 側がリセット状態になったかどうかは、OP信号(Series 15/15i:F0#5, Series16/18/21, 16i/18i/21i,0i, Power Mate i:F0#7) を読み取って判断して下さい。OP信号が "0" ならリセット状態です。</p>
+            <br/>
+            <p><a href="Program/cnc_dnc.htm" target="_parent">cnc_dnc</a>(<a href="Program/cnc_cdnc.htm" target="_parent">cnc_cdnc</a>)でのエラー(EW_DATA)が本関数で返されることがあります。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dncstart.htm" target="_parent">cnc_dncstart</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                <li>出力結果として指定した値が不正です。</li>
+                <li>Vチェック有効の時、ブロック内の文字数(ブロック末尾のLFを含む)が奇数のブロックが検出された</li>
+                発生タイミングについては解説を参照して下さい。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15</li>
+                    0020 = 15 (必ず設定します)<br/>
+                    0000#0(設定の影響を受けます)<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                    0000#0 (設定の影響を受けます)<br/>
+                    8706#0 (設定の影響を受けます)(このパラメータは第１系統でのみ有効です。第１系統以外では、0を設定して下さい。)<br/>
+            <br/>
+            <li>Poewr Mate i</li>
+                    0000#0 (設定の影響を受けます)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <ul>
+                <li>Series 15</li>
+                        TAPEモードにする必要があります。<br/>
+                <br/>
+                <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i</li>
+                        MEMモードで DI:DMMC&#60;G042#7&#62;=1 にする必要があります。<br/>
+            </ul>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーSザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dncstart</name>
+            <file>Program/cnc_dncstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_dnc</name>
+            <file>Program/cnc_dnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdnc</name>
+            <file>Program/cnc_cdnc.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

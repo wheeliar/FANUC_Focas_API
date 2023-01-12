@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_dsftpstat</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dsftpstat(unsigned short FlibHndl); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <a href="Data/cnc_dsget_req.htm" target="_parent">cnc_dsget_req()</a>,
+            <a href="Data/cnc_dsput_req.htm" target="_parent">cnc_dsput_req()</a>,
+            <a href="Data/cnc_dsmget_req.htm" target="_parent">cnc_dsmget_req()</a>,
+            <a href="Data/cnc_dsmput_req.htm" target="_parent">cnc_dsmput_req()</a>,
+            <a href="Data/cnc_dslistget_req.htm" target="_parent">cnc_dslistget_req()</a>,
+            <a href="Data/cnc_dslistput_req.htm" target="_parent">cnc_dslistput_req()</a>,
+            <a href="Data/cnc_dslistdel_req.htm" target="_parent">cnc_dslistdel_req()</a>,
+            の実行結果(EW_OK/EW_DTSRVR)を一度だけ取得できます。<br/>
+            なお、本関数実行時の状態により、完了ステータスは以下のようになります。<br/><br/>
+
+            <img src="Data/cnc_dsftpstat.gif"></img>
+
+            <dl>
+            <table border="0" class = "dd">
+            <tr> <td width = "40"> </td><td>*</td><td>"Req."は各FTPのファイル操作の開始要求を表します。</td> </tr>
+            <tr> <td width = "40"> </td><td> </td><td>"ret="は本関数を実行したときの完了ステータスを表します。</td> </tr>
+            </table></dl>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルを指定します。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行してください。<br/>
+                     ODBERR構造体のメンバ err_noに下記詳細ステータスがセットされます。<br/>
+                    <table class = "dd">
+                        <tr> <td>22</td><td>:</td><td>オプションボードがない</td> </tr>
+                        <tr> <td>24</td><td>:</td><td>データサーバ機能がない</td> </tr>
+                        <tr> <td>26</td><td>:</td><td>ATAカードがない</td> </tr>
+                    </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUSY</name>
+            <content>ビジィ<br/>
+                     データサーバが処理中ですのでリトライして下さい。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>関数未実行<br/>
+                     FTP関係の関数を前もって実行して下さい。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>キャンセル終了<br/>
+                     FTP関係の処理がキャンセルされました。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>データサーバでエラーが発生しました。<br/>
+                     この戻り値に対して、より詳細な情報を得るには、<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a>関数を実行して下さい。<br/>
+                     ODBERR構造体のメンバ err_no に詳細ステータスがセットされます。<br/>
+                    <table class = "dd">
+                        <tr> <td>464</td><td>:</td><td>ATAカードがフォーマットされていない</td> </tr>
+                        <tr> <td>468</td><td>:</td><td>接続ホストが見つからない</td> </tr>
+                        <tr> <td>472</td><td>:</td><td>リストファイルの書式に誤りがある</td> </tr>
+                        <tr> <td>473</td><td>:</td><td>List-削除に失敗した</td> </tr>
+                        <tr> <td>474</td><td>:</td><td>List-PUTで指定したファイルが存在しない</td> </tr>
+                        <tr> <td>475</td><td>:</td><td>List-GETに失敗した</td> </tr>
+                        <tr> <td>476</td><td>:</td><td>リストファイルの作業用一時ファイルの作成に失敗した</td> </tr>
+                        <tr> <td>477</td><td>:</td><td>MPUTで該当するファイルが存在しない</td> </tr>
+                        <tr> <td>478</td><td>:</td><td>MGETで該当するファイル数が多過ぎる</td> </tr>
+                        <tr> <td>494</td><td>:</td><td>指定されたリストファイルが存在しない</td> </tr>
+                        <tr> <td>497</td><td>:</td><td>指定されたファイルが既にATAカード内に存在する</td> </tr>
+                        <tr> <td>500</td><td>:</td><td>リストファイルのオープンに失敗した</td> </tr>
+                        <tr> <td>501</td><td>:</td><td>ホストコンピュータからファイル情報の取得に失敗した</td> </tr>
+                        <tr> <td>502</td><td>:</td><td>PUTに失敗した</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- FTPサーバからファイル転送が拒絶された（フォルダに対するアクセス権がない、同名のフォルダが存在した、等)</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- PUT中、FTPサーバとの通信エラーが発生した</td> </tr>
+                        <tr> <td>503</td><td>:</td><td>GETに失敗した</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- GETしようとしたファイルが存在しなかった</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- FTPサーバからファイル転送が拒絶された(GETしようとしたファイルのアクセス権がなかった等)</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- TVチェックエラーを検出した</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- GET時にATAカードへの書き込みでエラーが発生した(最大登録可能ファイル数を超えた、最大ファイルサイズを越えた、ATAカードの容量を越えた、ATAカードの不良)</td> </tr>
+                        <tr> <td>   </td><td> </td><td>- GET中、FTPサーバとの通信エラーが発生した</td> </tr>
+                        <tr> <td>507</td><td>:</td><td>ディレクトリの変更に失敗した</td> </tr>
+                        <tr> <td>508</td><td>:</td><td>接続ホストへのログインに失敗した</td> </tr>
+                        <tr> <td>509</td><td>:</td><td>接続ホストへの接続に失敗した</td> </tr>
+                        <tr> <td>511</td><td>:</td><td>接続ホストのパラメータに誤りがある</td> </tr>
+                    </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p> 
+                データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。
+            </p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+    <!-- 30i(WinCE) -->
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

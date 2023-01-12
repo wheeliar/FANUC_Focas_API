@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_searchword</title>
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_searchword(unsigned short FlibHndl, char *prog_data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+              CNCのモードがMEMモード/RMTモードで、M198/DNC運転時に呼び出されるデータサーバ内のプログラムに対し、指定された文字列をサーチします。<br/>
+              検索結果は、ds_searchresultで確認する事ができます。<br/>
+              指定文字列が見つかった場合、ポインタは文字列が見つかった行に移動します。<br/><br/>
+            </p>
+            <p>文字列の検索を行う基本的な手順を以下に示します。</p>
+
+            <p><img src="Data/dssrchword.gif"/></p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            検索する文字列を格納したバッファを指すポインタを指定します。<br/>
+                            検索文字列は、NULL文字を含んだASCIIコード16文字以内で指定して下さい。16文字以上指定するとエラー(EW_DATA)になります。
+                        </p>
+                        <p>
+                            検索文字列は以下の文字から始まらなくてはなりません。<br/>
+                            以下の文字以外から始まる文字列は検索不可とし、EW_DATAエラーとなります。<br/>
+                            <ul>
+                                <li>A～Z(Oは除く)  "("   "/"  "#"  ";"(EOB)</li>
+                            </ul>
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                CNCがアラーム中、または検索処理実行中です。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> 関数を実行して下さい。<br/>
+                ODBERR構造体のメンバerr_noに下記詳細ステータスがセットされます。
+                <table>
+                    <tr><td>0</td><td>:</td><td>EW_DATA以外のエラー</td></tr>
+                    <tr><td>1</td><td>:</td><td>検索文字数の誤り。 </td></tr>
+                    <tr><td>2</td><td>:</td><td>検索文字列の誤り。 </td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                CNCパラメータの誤り<br/>
+                パラメータ(No.900#2)がONになっていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能、およびデータサーバ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCのモードの誤り<br/>
+                CNCがMEMモード/RMTモードではありません。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                ・データサーバが実装されていません。<br/>
+                ・データサーバのプログラムではありません。<br/>
+                ・CNCが運転中です。
+            </content>
+        </item>
+        <item>
+            <name>EW_STOP</name>
+            <content>
+                停止状態<br/>
+                非常停止またはフィードホールドＯＮです。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>データサーバ機能、および拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul type="disc">
+                    No.0020 = 5(必ず設定して下さい)<br/>
+                    No.900#2 :データサーバ内プログラムの高速文字列検索3113#0=1(必ず設定して下さい)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            本機能は、MEM/RMTモードで使用する必要があります。
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>ds_searchresult</name>
+            <file>Data/ds_searchresult.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

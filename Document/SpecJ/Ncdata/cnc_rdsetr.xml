@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdsetr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdsetr(unsigned short FlibHndl, short *s_number, short axis, short *e_number, short *length, void *set);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>s_number,e_numberで指定された範囲の axisで指定された軸(軸型のセッティングデータのみ)のセッティングデータを読み出します。データ形式は各セッティングデータによりますが、バイト/ワード/2ワード形のセッティングデータは一般に符号付のバイナリ形式です。</p>
+
+            <p>axisに ALL_AXES を指定することにより、指定された範囲の軸型セッティングデータは全軸の読み取りが行われます。</p>
+
+            <p>セッティングデータには型と軸の属性により以下のような種類があり、セッティングデータ番号ごとに異なります。<a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a>関数により、これらの属性情報をリードできます。</p>
+
+            <table class="dd" border="1">
+                <colgroup valign="top"/>
+                <colgroup valign="top"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <th>セッティングデータの種類</th>
+                    <th>目的</th>
+                    <th>バイトサイズ</th>
+                </tr>
+                <tr>
+                    <td>ビット型セッティングデータ</td>
+                    <td>1ビットごとに意味を持つ</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>ビット型セッティングデータ</td>
+                    <td>1ビットごとに意味を持つ(軸毎)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>バイト型セッティングデータ</td>
+                    <td>1バイト長のデータを記憶</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>バイト軸型セッティングデータ</td>
+                    <td>1バイト長のデータを記憶(軸毎)</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td>ワード型セッティングデータ</td>
+                    <td>2バイト長のデータを記憶</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>ワード軸型セッティングデータ</td>
+                    <td>2バイト長のデータを記憶(軸毎)</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>2ワード型セッティングデータ</td>
+                    <td>4バイト長のデータを記憶</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>2ワード軸型セッティングデータ</td>
+                    <td>4バイト長のデータを記憶(軸毎)</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td>実数型セッティングデータ<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                    <td>4バイト長のデータ部+4バイト長の小数点以下桁数部を記憶</td>
+                    <td>8</td>
+                </tr>
+                <tr>
+                    <td>実数軸型セッティングデータ<span class="xis"><br/>(Series 15i, 30i, 0i-D/F, PMi-A)</span></td>
+                    <td>4バイト長のデータ部+4バイト長の小数点以下桁数部を記憶(軸毎)</td>
+                    <td>8</td>
+                </tr>
+            </table>
+
+            <p>ただし、ビット型セッティングデータを 1ビット単位で読み出すことはできません。同一のセッティングデータ番号に属する8ビット(つまり1バイト)単位で一度に読み出すことになります。</p>
+
+            <p>セッティング入力が不可のパラメータを読み出すことができない点を除いては
+            『パラメータのリード(範囲指定)( <a href="ncdata/cnc_rdparar.htm" target="_parent">cnc_rdparar</a> )』と同じです。</p>
+
+            <p>各パラメータの詳細については CNCのパラメータ説明書を参照して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>リードを開始するセッティングデータ番号を指定します。関数からは、実際にリードされた最初のセッティングデータ番号が返ります。</p>
+
+                        <p>指定可能なセッティングデータ番号は CNCのパラメータ説明書を参照してください。
+                            また、<a href="ncdata/cnc_rdsetnum.htm" target="_parent">cnc_rdsetnum</a>関数、及び<a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a>関数でも取得できます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>リードを終了するセッティングデータ番号を指定します。<br/>
+                            関数からは、実際にリードされた最後のセッティングデータ番号が返ります。</p>
+
+                        <p>なお、CNC 側ソフトの機能追加などに伴い、セッティングデータも追加されることがあります。読み出す範囲内にセッティングデータが追加された場合、エラーになったり(戻り値:EW_LENGTH)、アプリケーションプログラムの処理が正しく実行できなくなる可能性があります。このようなことを避けるために、セッティングデータ番号が連続している部分のみをまとめて読み出し範囲に指定するようにして下さい。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>axis</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードする軸番号を指定します。</p>
+                        <table class="dd">
+                            <colgroup align="left" valign="top">
+                                <tr>
+                                    <td>0</td>
+                                    <td>:</td>
+                                    <td>軸型でないセッティングデータ</td>
+                                </tr>
+                                <tr>
+                                    <td>1～m</td>
+                                    <td>:</td>
+                                    <td>軸型セッティングデータの1軸指定(m : 最大制御軸数)</td>
+                                </tr>
+                                <tr>
+                                    <td>ALL_AXES</td>
+                                    <td>:</td>
+                                    <td>全軸指定(ALL_AXES : -1)</td>
+                                </tr>
+                            </colgroup>
+                        </table>
+                        <p>なお、axisに何を指定しても軸形でないセッティングデータは読み出されますが、指定範囲内に軸形のセッティングデータが存在する時、axis=0を指定するとエラーとなります(戻り値:EW_ATTRIB)。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>指定した範囲のセッティングデータを格納するのに必要なデータブロック長を指定します。</p>
+                        <p>セッティングデータ１個あたりは下図のようになり、それがセッティングデータ番号順(昇順)に指定された個数分並びますので、指定するlengthはそれらの合計になります。</p>
+
+                        <p class="dd">4+(セッティングデータのバイトサイズ)×(読み出す軸数)</p>
+
+                        <p>関数からは、実際にリードしたサイズが返りますので長めに指定することができます。</p>
+                        <p>下図はセッティングデータのサイズが 2バイトの場合です。セッティングデータのサイズが 1, 2バイトで 1個あたりのlengthが4の倍数にならない場合は、最後にダミー領域が必要です。セッティングデータのサイズが 4バイト、または8バイトの場合は、1個(1軸)あたりのサイズがそれぞれ 4バイト、8バイトになりますのでダミー領域は不要です。</p>
+                        <p><b>IODBPSD</b></p>
+                        <table>
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <colgroup align="left" valign="top">
+                            <tr>
+                                <th>軸なし/1軸指定</th>
+                                <th>全軸指定</th>
+                            </tr>
+                            <tr>
+                                <td valign="top"><img src="ncdata/nprm.gif"/></td>
+                                <td valign="top"><img src="ncdata/nprma.gif"/></td>
+                            </tr>
+                            </colgroup>
+                            </colgroup>
+                            </colgroup>
+                        </table>
+                        <ul>
+                            <p>
+                                n = 最大制御軸数(有効データは制御軸数分)
+                            </p>
+                        </ul>
+
+                        <p class="info">
+                        なお、Series 15i, 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A の場合、スピンドル関係セッティングデータは軸形として扱われますが、有効データはスピンドルの個数分となります。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>set</name>
+                    <type>out</type>
+                    <content>
+                        <p>セッティングデータを返す領域へのポインタです。<br/>個々のセッティングデータの参照は、IODBPSD構造体を使用します。</p>
+<pre>
+・Series 15, 16/18/21, 16i/18i/21i, 0i-A/B, Power Mate i の場合
+
+typedef struct  iodbpsd {
+    short datano;              /* セッティングデータ番号 */
+    short type;                /* 上位バイト:型属性 */
+                               /* 下位バイト:軸番号 */
+    union {
+        char  cdata;            /* ビット/バイト型セッティングデータ */
+        short idata;            /* ワード型セッティングデータ */
+        long  ldata;            /* 2ワード型セッティングデータ */
+        char  cdatas[MAX_AXIS]; /* ビット/バイト軸型セッティングデータ */
+        short idatas[MAX_AXIS]; /* ワード軸型セッティングデータ */
+        long  ldatas[MAX_AXIS]; /* 2ワード軸型セッティングデータ */
+    } u ;
+} IODBPSD ;                   /* MAX_AXIS : 最大制御軸数 */
+</pre>
+
+<pre>
+・Series 15i, 30i, 0i-D/F, PMi-A, Ethernet接続 の場合
+
+typedef struct realprm {       /* 実数型セッティングデータ */
+   long prm_val;               /* データ部 */
+   long dec_val;               /* 小数点以下桁数部 */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* セッティングデータ番号 */
+   short type;                 /* 上位バイト:型属性 */
+                               /* 下位バイト:軸番号 */
+   union {
+      char    cdata;           /* ビット/バイト型セッティングデータ */
+      short   idata;           /* ワード型セッティングデータ */
+      long    ldata;           /* 2ワード型セッティングデータ */
+      REALPRM rdata;           /* 実数型セッティングデータ */
+      char    cdatas[MAX_AXIS];/* ビット/バイト軸型セッティングデータ*/
+      short   idatas[MAX_AXIS];/* ワード軸型セッティングデータ */
+      long    ldatas[MAX_AXIS];/* 2ワード軸型セッティングデータ */
+      REALPRM rdatas[MAX_AXIS];/* 実数軸型セッティングデータ */
+   } u;
+} IODBPSD ;                    /* MAX_AXIS : 最大制御軸数 */
+</pre>
+
+                        <dl>
+                            <dt>datano</dt>
+                            <dd>リードしたセッティングデータ番号が格納されます。</dd>
+                            <dt>type</dt>
+                            <dd>リードしたセッティングデータの属性が格納されます。</dd>
+                            <dd>上位バイト : 型属性
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>ビット型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>バイト型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>ワード型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>2ワード型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>実数型 (Series 15i, 30i, 0i-D/F, PMi-A のみ)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dd>下位バイト : 軸番号
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>軸型でないセッティングデータ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1～m</td>
+                                        <td>:</td>
+                                        <td>軸型セッティングデータの1軸指定(m : 最大制御軸数)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>軸型セッティングデータの全軸指定(ALL_AXES : -1)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dt>rdata, rdatas ( Series 15i, 30i, 0i-D/F, PMi-A )</dt>
+                            <dd>実数型セッティングデータが格納されます。prm_valにデータが、dec_valに小数点以下桁数が格納されます。</dd>
+                            <dd>
+                                <div class="dd">
+                                    <p>実数型セッティングデータ = prm_val * 10 ** (-dec_val)<br/>
+                                    (例) prm_val = 12345, dec_val = 3の場合、実数型セッティングデータが12.345であることを表します。</p>
+                                </div>
+                            </dd>
+                        </dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>s_number</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>リードを開始するセッティングデータ番号を指定します。関数からは、実際にリードされた最初のセッティングデータ番号が返ります。</p>
+
+                            <p>
+                                指定可能なセッティングデータ番号は CNCのパラメータ説明書を参照してください。
+                                また、<a href="ncdata/cnc_rdsetnum.htm" target="_parent">cnc_rdsetnum</a>関数、
+                                及び<a href="ncdata/cnc_rdsetinfo.htm" target="_parent">cnc_rdsetinfo</a>関数でも取得できます。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>e_number</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>
+                                リードを終了するセッティングデータ番号を指定します。<br/>
+                                関数からは、実際にリードされた最後のセッティングデータ番号が返ります。
+                            </p>
+
+                            <p>
+                                なお、CNC 側ソフトの機能追加などに伴い、セッティングデータも追加されることがあります。
+                                読み出す範囲内にセッティングデータが追加された場合、エラーになったり(戻り値:EW_LENGTH)、アプリケーションプログラムの処理が正しく実行できなくなる可能性があります。このようなことを避けるために、セッティングデータ番号が連続している部分のみをまとめて読み出し範囲に指定するようにして下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードする軸番号を指定します。</p>
+                            <table class="dd">
+                                <colgroup align="left" valign="top">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>軸型でないセッティングデータ</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1～m</td>
+                                        <td>:</td>
+                                        <td>軸型セッティングデータの1軸指定(m : 最大制御軸数)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ALL_AXES</td>
+                                        <td>:</td>
+                                        <td>全軸指定(ALL_AXES : -1)</td>
+                                    </tr>
+                                </colgroup>
+                            </table>
+                            <p>なお、axisに何を指定しても軸形でないセッティングデータは読み出されますが、指定範囲内に軸形のセッティングデータが存在する時、axis=0を指定するとエラーとなります(戻り値:EW_ATTRIB)。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in/out</type>
+                        <content>
+                            <p>指定した範囲のセッティングデータを格納するのに必要なデータブロック長を指定します。</p>
+                            <p>セッティングデータ１個あたりは下図のようになり、それがセッティングデータ番号順(昇順)に指定された個数分並びますので、指定するlengthはそれらの合計になります。</p>
+
+                            <p class="dd">4+(セッティングデータのバイトサイズ)×(読み出す軸数)</p>
+
+                            <p>関数からは、実際にリードしたサイズが返りますので長めに指定することができます。</p>
+                            <p>
+                                下図はセッティングデータのサイズが 2バイトの場合です。
+                                セッティングデータのサイズが 1, 2バイトで 1個あたりのlengthが4の倍数にならない場合は、
+                                最後にダミー領域が必要です。セッティングデータのサイズが 4バイト、または8バイトの場合は、
+                                1個(1軸)あたりのサイズがそれぞれ 4バイト、8バイトになりますのでダミー領域は不要です。
+                            </p>
+                            <p><b>IODBPSD</b></p>
+                            <table>
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <colgroup align="left" valign="top">
+                                <tr>
+                                    <th>軸なし/1軸指定</th>
+                                    <th>全軸指定</th>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><img src="ncdata/nprm.gif"/></td>
+                                    <td valign="top"><img src="ncdata/nprma.gif"/></td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                                <tr>
+                                    <td></td>
+                                    <td>n = 最大制御軸数(有効データは制御軸数分)</td>
+                                </tr>
+                            </table>
+                            <p class="info">
+                                スピンドル関係セッティングデータは軸形として扱われますが、有効データはスピンドルの個数分となります。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>set</name>
+                        <type>out</type>
+                        <content>
+                            <p>セッティングデータを返す領域へのポインタです。<br/>個々のセッティングデータの参照は、IODBPSD構造体を使用します。</p>
+<pre>
+typedef struct realprm {       /* 実数型セッティングデータ */
+   long prm_val;               /* データ部 */
+   long dec_val;               /* 小数点以下桁数部 */
+} REALPRM;
+
+typedef struct  iodbpsd {
+   short datano;               /* セッティングデータ番号 */
+   short type;                 /* 上位バイト:型属性 */
+                               /* 下位バイト:軸番号 */
+   union {
+      char    cdata;           /* ビット/バイト型セッティングデータ */
+      short   idata;           /* ワード型セッティングデータ */
+      long    ldata;           /* 2ワード型セッティングデータ */
+      REALPRM rdata;           /* 実数型セッティングデータ */
+      char    cdatas[MAX_AXIS];/* ビット/バイト軸型セッティングデータ*/
+      short   idatas[MAX_AXIS];/* ワード軸型セッティングデータ */
+      long    ldatas[MAX_AXIS];/* 2ワード軸型セッティングデータ */
+      REALPRM rdatas[MAX_AXIS];/* 実数軸型セッティングデータ */
+   } u;
+} IODBPSD ;                    /* MAX_AXIS : 最大制御軸数 */
+</pre>
+
+                            <dl>
+                                <dt>datano</dt>
+                                <dd>リードしたセッティングデータ番号が格納されます。</dd>
+                                <dt>type</dt>
+                                <dd>リードしたセッティングデータの属性が格納されます。</dd>
+                                <dd>上位バイト : 型属性
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>ビット型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>バイト型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>ワード型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>2ワード型</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>:</td>
+                                            <td>実数型</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <dd>下位バイト : 軸番号
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>軸型でないセッティングデータ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1～m</td>
+                                            <td>:</td>
+                                            <td>軸型セッティングデータの1軸指定(m : 最大制御軸数)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ALL_AXES</td>
+                                            <td>:</td>
+                                            <td>軸型セッティングデータの全軸指定(ALL_AXES : -1)</td>
+                                        </tr>
+                                    </table>
+                                </dd>
+                                <dt>rdata, rdatas</dt>
+                                <dd>実数型セッティングデータが格納されます。prm_valにデータが、dec_valに小数点以下桁数が格納されます。</dd>
+                                <dd>
+                                    <div class="dd">
+                                        <p>実数型セッティングデータ = prm_val * 10 ** (-dec_val)<br/>
+                                        (例) prm_val = 12345, dec_val = 3の場合、実数型セッティングデータが12.345であることを表します。</p>
+                                    </div>
+                                </dd>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>セッティングデータ格納領域のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>セッティングデータ番号( s_number, e_number )の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>軸番号(axis)の指定が不適切です。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdset</name>
+            <file>ncdata/cnc_rdset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrset</name>
+            <file>ncdata/cnc_wrset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrsets</name>
+            <file>ncdata/cnc_wrsets.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetinfo</name>
+            <file>ncdata/cnc_rdsetinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdsetnum</name>
+            <file>ncdata/cnc_rdsetnum.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

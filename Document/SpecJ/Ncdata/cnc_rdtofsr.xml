@@ -1,0 +1,1618 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdtofsr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdtofsr(unsigned short FlibHndl, short s_number, short type, short e_number, short length, IODBTO *tofsr);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>s_number,e_number,typeで指定された範囲の工具オフセット量を読み出します。オフセット量は符号付のバイナリ形式でIODBTO内に格納されます。</p>
+
+            <p>オフセット量の単位は<a href="ncdata/cnc_rdtofs.htm" target="_parent">cnc_rdtofs</a>と同じです。同関数の解説を参照して下さい。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを開始するオフセット番号を指定します。<br/>
+                            リード可能なオフセットの組数は、<a href="ncdata/cnc_rdtofsinfo.htm" target="_parent">cnc_rdtofsinfo</a>関数で取得できます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_number</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードを終了するオフセット番号を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>リードするオフセットのタイプを指定します(以下参照)。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長を指定します(以下参照)。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>tofsr</name>
+                    <type>out</type>
+                    <content>
+                        <p>工具オフセット量を返すIODBTO構造体へのポインタです。<br/>
+                            IODBTO構造体は次の通りです。</p>
+<pre>
+typedef struct  iodbto {
+    short datano_s;             /* 開始オフセット番号 */
+    short type;                 /* オフセットのタイプ */
+    short datano_e;             /* 終了オフセット番号 */
+    union {
+        long    m_ofs[N];       /* M系個別 */
+        long    m_ofs_a[N];     /* M系メモリA全体 */
+        long    m_ofs_b[2*N];   /* M系メモリB全体 */
+        long    m_ofs_c[4*N];   /* M系メモリC全体 */
+        struct  {
+            short   tip ;
+            long    data[1] ;
+        } m_ofs_at[N] ;         /* M系メモリA全体 + 仮想刃先方向 */
+        struct  {
+            short   tip ;
+            long    data[2] ;
+        } m_ofs_bt[N] ;         /* M系メモリB全体 + 仮想刃先方向 */
+        struct  {
+            short   tip ;
+            long    data[4] ;
+        } m_ofs_ct[N] ;         /* M系メモリC全体 + 仮想刃先方向 */
+        short   t_tip[N];       /* T系個別仮想刃先方向 */
+        long    t_ofs[N];       /* T系個別 */
+        struct  {
+            short   tip;
+            long    data[4];
+        } t_ofs_a[N];           /* T系メモリA全体 */
+        struct {
+            short   tip;
+            long    data[8];
+        } t_ofs_b[N];           /* T系メモリB全体 */
+        long    t_ofs_2g[3*N];  /* T系第2形状全体 */
+    } u ;
+} IODBTO ;      /* N は読み出すオフセット量の個数 */
+</pre>
+                        <p>typeに指定する値、及びデータブロック長(length)の指定、読み出される補正量の種類と格納される場所は以下の通りです。</p>
+
+                        <ul>
+                            <div class="xis"> <!-- attention -->
+                            <li>マシニングセンタ系(Power Mate i, PMi-A を含む)/工具補正量メモリA</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>-1</td>
+                                    <td>8+4*N</td>
+                                    <td>全体</td>
+                                    <td>工具補正量</td>
+                                    <td>tofsr.u.m_ofs_a[i]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>マシニングセンタ系<span class="xis">(Series 30i)</span>/工具補正量メモリA</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>個別</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>-1</td>
+                                    <td>8+4*N</td>
+                                    <td>全体</td>
+                                    <td>工具補正量</td>
+                                    <td>tofsr.u.m_ofs_a[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-4</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.m_ofs_at[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具補正量</td>
+                                    <td>tofsr.u.m_ofs_at[i].data[0]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <div class="xis"> <!-- attention -->
+                            <li>マシニングセンタ系(Power Mate i を含む)/工具補正量メモリB</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具形状補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具摩耗補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-2</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>工具形状補正量</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具摩耗補正量</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+1]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>マシニングセンタ系<span class="xis">(Series 30i)</span>/工具補正量メモリB</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具形状補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具摩耗補正量</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>個別</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="2">-2</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>工具形状補正量</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具摩耗補正量</td>
+                                    <td>tofsr.u.m_ofs_b[2*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="3">-5</td>
+                                    <td rowspan="3">8+12*N</td>
+                                    <td rowspan="3">全体</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.m_ofs_bt[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具形状補正量</td>
+                                    <td>tofsr.u.m_ofs_bt[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具摩耗補正量</td>
+                                    <td>tofsr.u.m_ofs_bt[i].data[1]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <div class="xis"> <!-- attention -->
+                            <li>マシニングセンタ系(Power Mate i を含む)/工具補正量メモリC</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具長&#183;形状</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具長&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具径&#183;形状</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具径&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="4">-3</td>
+                                    <td rowspan="4">8+16*N</td>
+                                    <td rowspan="4">全体</td>
+                                    <td>工具長&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具長&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+                            </div> <!-- attention class="xis" -->
+
+                            <li>マシニングセンタ系<span class="xis">(Series 30i)</span>/工具補正量メモリC</li>
+                            ○複合加工用工具オフセットのオプションが無効の場合
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具長&#183;形状</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具長&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具径&#183;形状</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>工具径&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>9</td>
+                                    <td>8+2*N</td>
+                                    <td>個別</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="4">-3</td>
+                                    <td rowspan="4">8+16*N</td>
+                                    <td rowspan="4">全体</td>
+                                    <td>工具長&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具長&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_c[4*i+3]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="5">-6</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">全体</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.m_ofs_ct[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具長&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具長&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;形状</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>工具径&#183;摩耗</td>
+                                    <td>tofsr.u.m_ofs_ct[i].data[3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            ○複合加工用工具オフセットのオプションが有効の場合
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr><td>0</td><td>8+2*N</td><td>個別</td><td>仮想刃先方向    </td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>1</td><td>8+4*N</td><td>個別</td><td>X軸形状補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>2</td><td>8+4*N</td><td>個別</td><td>Y軸形状補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>3</td><td>8+4*N</td><td>個別</td><td>工具長&#183;形状</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>4</td><td>8+4*N</td><td>個別</td><td>工具径&#183;形状</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>5</td><td>8+4*N</td><td>個別</td><td>X軸摩耗補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>6</td><td>8+4*N</td><td>個別</td><td>Y軸摩耗補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>7</td><td>8+4*N</td><td>個別</td><td>工具長&#183;摩耗</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>8</td><td>8+4*N</td><td>個別</td><td>工具径&#183;摩耗</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="9">-2</td>
+                                    <td rowspan="9">8+36*N </td>
+                                    <td rowspan="9">全体</td>
+                                    <td>仮想刃先方向</td><td>tofsr.u.t_ofs_b[i].tip</td>
+                                </tr>
+                                <tr><td>X軸形状補正量   </td><td>tofsr.u.t_ofs_b[i].data[0]</td></tr>
+                                <tr><td>Y軸形状補正量   </td><td>tofsr.u.t_ofs_b[i].data[1]</td></tr>
+                                <tr><td>工具長&#183;形状</td><td>tofsr.u.t_ofs_b[i].data[2]</td></tr>
+                                <tr><td>工具径&#183;形状</td><td>tofsr.u.t_ofs_b[i].data[3]</td></tr>
+                                <tr><td>X軸摩耗補正量   </td><td>tofsr.u.t_ofs_b[i].data[4]</td></tr>
+                                <tr><td>Y軸摩耗補正量   </td><td>tofsr.u.t_ofs_b[i].data[5]</td></tr>
+                                <tr><td>工具長&#183;摩耗</td><td>tofsr.u.t_ofs_b[i].data[6]</td></tr>
+                                <tr><td>工具径&#183;摩耗</td><td>tofsr.u.t_ofs_b[i].data[7]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系/工具補正量メモリA</li>
+                            <table border="1" valign="top">
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+2*N</td>
+                                    <td>個別</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>X軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Y軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Z軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>4</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>刃先R補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="5">-1</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">全体</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_ofs_a[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X軸補正量</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y軸補正量</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z軸補正量</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>刃先R補正量</td>
+                                    <td>tofsr.u.t_ofs_a[i].data[3]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系/工具補正量メモリB</li>
+                            <table border="1" valign="top">
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>0</td>
+                                    <td>8+2*N</td>
+                                    <td>個別</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_tip[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>1</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>X軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>2</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Y軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>3</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Z軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>4</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>刃先R形状補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>5</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>X軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>6</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Y軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>7</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Z軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>8</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>刃先R摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="9">-2</td>
+                                    <td rowspan="9">8+36*N</td>
+                                    <td rowspan="9">全体</td>
+                                    <td>仮想刃先方向</td>
+                                    <td>tofsr.u.t_ofs_b[i].tip</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z軸形状補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[2]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>刃先R形状補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[3]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>X軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[4]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[5]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z軸摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[6]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>刃先R摩耗補正量</td>
+                                    <td>tofsr.u.t_ofs_b[i].data[7]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系/第2形状<span class="xis">(Series 30i)</span></li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr>
+                                    <td>100</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>X軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>101</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Y軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>102</td>
+                                    <td>8+4*N</td>
+                                    <td>個別</td>
+                                    <td>Z軸補正量</td>
+                                    <td>tofsr.u.t_ofs[i]</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan="3">-100</td>
+                                    <td rowspan="3">8+12*N</td>
+                                    <td rowspan="3">全体</td>
+                                    <td>X軸補正量</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+0]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Y軸補正量</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+1]</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Z軸補正量</td>
+                                    <td>tofsr.u.t_ofs_2g[3*i+2]</td>
+                                </tr>
+                            </table>
+                            <br/>
+
+                            <li>マシニングセンタ系<span class="xis">(Series 30i)</span>/コーナR</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr><td>10</td><td>8+4*N</td><td>個別</td><td>コーナR&#183;形状</td><td>tofsr.u.m_ofs[i]</td></tr>
+                                <tr><td>11</td><td>8+4*N</td><td>個別</td><td>コーナR&#183;磨耗</td><td>tofsr.u.m_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-10</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>コーナR&#183;形状</td><td>tofsr.u.m_ofs_cnr[2*i+0]</td>
+                                </tr>
+                                <tr><td>コーナR&#183;磨耗</td><td>tofsr.u.m_ofs_cnr[2*i+1]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系<span class="xis">(Series 30i)</span>/工具形状&#183;摩耗補正なし(座標2)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr><td>20</td><td>8+2*N</td><td>個別</td><td>仮想刃先方向</td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>21</td><td>8+4*N</td><td>個別</td><td>X軸補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>22</td><td>8+4*N</td><td>個別</td><td>Y軸補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>23</td><td>8+4*N</td><td>個別</td><td>Z軸補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>24</td><td>8+4*N</td><td>個別</td><td>刃先R補正量 </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="5">-21</td>
+                                    <td rowspan="5">8+20*N</td>
+                                    <td rowspan="5">全体</td>
+                                    <td>仮想刃先方向</td><td>tofsr.u.t_ofs_a2[i].tip</td>
+                                </tr>
+                                <tr><td>X軸補正量  </td><td>tofsr.u.t_ofs_a2[i].data[0]</td></tr>
+                                <tr><td>Y軸補正量  </td><td>tofsr.u.t_ofs_a2[i].data[1]</td></tr>
+                                <tr><td>Z軸補正量  </td><td>tofsr.u.t_ofs_a2[i].data[2]</td></tr>
+                                <tr><td>刃先R補正量</td><td>tofsr.u.t_ofs_a2[i].data[3]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系<span class="xis">(Series 30i)</span>/工具形状&#183;摩耗補正あり(座標2)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr><td>20</td><td>8+2*N</td><td>個別</td><td>仮想刃先方向   </td><td>tofsr.u.t_tip[i]</td></tr>
+                                <tr><td>21</td><td>8+4*N</td><td>個別</td><td>X軸形状補正量  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>22</td><td>8+4*N</td><td>個別</td><td>Y軸形状補正量   </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>23</td><td>8+4*N</td><td>個別</td><td>Z軸形状補正量  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>24</td><td>8+4*N</td><td>個別</td><td>刃先R形状補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>25</td><td>8+4*N</td><td>個別</td><td>X軸摩耗補正量  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>26</td><td>8+4*N</td><td>個別</td><td>Y軸摩耗補正量  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>27</td><td>8+4*N</td><td>個別</td><td>Z軸摩耗補正量  </td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>28</td><td>8+4*N</td><td>個別</td><td>刃先R摩耗補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="9">-22</td>
+                                    <td rowspan="9">8+36*N</td>
+                                    <td rowspan="9">全体</td>
+                                    <td>仮想刃先方向</td><td>tofsr.u.t_ofs_b2[i].tip</td>
+                                </tr>
+                                <tr><td>X軸形状補正量  </td><td>tofsr.u.t_ofs_b2[i].data[0]</td></tr>
+                                <tr><td>Y軸形状補正量  </td><td>tofsr.u.t_ofs_b2[i].data[1]</td></tr>
+                                <tr><td>Z軸形状補正量  </td><td>tofsr.u.t_ofs_b2[i].data[2]</td></tr>
+                                <tr><td>刃先R形状補正量</td><td>tofsr.u.t_ofs_b2[i].data[3]</td></tr>
+                                <tr><td>X軸摩耗補正量  </td><td>tofsr.u.t_ofs_b2[i].data[4]</td></tr>
+                                <tr><td>Y軸摩耗補正量  </td><td>tofsr.u.t_ofs_b2[i].data[5]</td></tr>
+                                <tr><td>Z軸摩耗補正量  </td><td>tofsr.u.t_ofs_b2[i].data[6]</td></tr>
+                                <tr><td>刃先R摩耗補正量</td><td>tofsr.u.t_ofs_b2[i].data[7]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系<span class="xis">(Series 30i)</span>/第2形状(座標2)</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+
+                                <tr><td>120</td><td>8+4*N</td><td>個別</td><td>X軸補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>121</td><td>8+4*N</td><td>個別</td><td>Y軸補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>122</td><td>8+4*N</td><td>個別</td><td>Z軸補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="5">-120</td>
+                                    <td rowspan="5">8+12*N</td>
+                                    <td rowspan="5">全体</td>
+                                    <td>X軸補正量</td><td>tofsr.u.t_ofs_2g2[3*i+0]</td>
+                                </tr>
+                                <tr><td>Y軸補正量</td><td>tofsr.u.t_ofs_2g2[3*i+1]</td></tr>
+                                <tr><td>Z軸補正量</td><td>tofsr.u.t_ofs_2g2[3*i+2]</td></tr>
+                            </table>
+                            <br/>
+
+                            <li>旋盤系<span class="xis">(Series 30i)</span>/第4軸/第5軸オフセット機能・工具形状・摩耗補正なし</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+                                <tr><td>12</td><td>8+4*N</td><td>個別</td><td>第4軸補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>14</td><td>8+4*N</td><td>個別</td><td>第5軸補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>-12</td><td>8+4*N</td><td>全体</td><td>第4軸補正</td><td>tofsr.u.t_ofs_ex[i].data[0]</td></tr>
+                                <tr><td>-14</td><td>8+4*N</td><td>全体</td><td>第5軸補正量</td><td>tofsr.u.t_ofs_ex[i].data[0]</td></tr>
+
+                            </table>
+                            <br/>
+
+                            <li>旋盤系<span class="xis">(Series 30i)</span>/第4軸/第5軸オフセット機能・工具形状・摩耗補正あり</li>
+                            <table border="1" valign="top">
+                                <colgroup width="10%"/>
+                                <colgroup width="15%"/>
+                                <colgroup width="10%"/>
+                                <colgroup width="30%"/>
+                                <colgroup width="35%"/>
+                                <tr>
+                                    <th>type</th>
+                                    <th>length</th>
+                                    <th>属性</th>
+                                    <th>補正量の種類</th>
+                                    <th>格納される場所</th>
+                                </tr>
+                                <tr><td>12</td><td>8+4*N</td><td>個別</td><td>第4軸形状補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>13</td><td>8+4*N</td><td>個別</td><td>第4軸摩耗補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>14</td><td>8+4*N</td><td>個別</td><td>第5軸形状補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr><td>15</td><td>8+4*N</td><td>個別</td><td>第5軸摩耗補正量</td><td>tofsr.u.t_ofs[i]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-13</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>第4軸形状補正量</td><td>tofsr.u.t_ofs_ex[i].data[0]</td>
+                                </tr>
+                                <tr><td>第4軸摩耗補正量</td><td>tofsr.u.t_ofs_ex[i].data[1]</td></tr>
+                                <tr>
+                                    <td rowspan="2">-15</td>
+                                    <td rowspan="2">8+8*N</td>
+                                    <td rowspan="2">全体</td>
+                                    <td>第5軸形状補正量</td><td>tofsr.u.t_ofs_ex[i].data[0]</td>
+                                </tr>
+                                <tr><td>第5軸摩耗補正量</td><td>tofsr.u.t_ofs_ex[i].data[1]</td></tr>
+                            </table>
+                            <br/>
+
+                        </ul>
+                        <p>Nは読み出すオフセットの個数、i=0～(N-1) です。</p>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>ODBTOFS構造体のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>オフセット番号(s_number, e_number)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>オフセットのタイプ(type)の指定が不適切です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <type>
+            <li>Series 15</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200/499/999組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">工具補正量拡張(補正個数は上記の半分になります)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/160組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先Ｒ補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td colspan="2">工具補正量拡張(補正個数は上記の半分になります)</td>
+                </tr>
+                <tr>
+                    <td>TT</td>
+                    <td>工具補正個数(系統毎)</td>
+                    <td>(16)/32/80組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先Ｒ補正</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 15i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200/499/999組</td>
+                </tr>
+
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+            </table>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(16)/32/64/99組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-A/B/C</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>32/(400)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>32/(64)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 0i-D/F</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>32/(400)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>A/(C)</td>
+                </tr>
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>32/(99)組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状補正と摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+
+            <li>Series 30i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td>M</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999/2000組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具補正メモリ</td>
+                    <td>(A)/B/C</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具径・刃先Ｒ補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>複合加工用工具オフセット機能</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td>T</td>
+                    <td>工具補正個数</td>
+                    <td>(32)/64/99/200/400/499/999/2000組</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具形状・摩耗補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>工具径・刃先R補正</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>Y軸オフセット</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>第2形状工具オフセット</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>第4軸/第5軸オフセット機能</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>アクティブオフセット変更機能</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>複合加工用工具オフセット機能</td>
+                    <td></td>
+                </tr>
+            </table>
+            <br/>
+            <li>Power Motion i</li>
+            <table>
+                <colgroup valign="top" width="30"/>
+                <colgroup valign="top" width="200"/>
+                <colgroup valign="top"/>
+                <tr>
+                    <td> </td>
+                    <td>工具補正個数</td>
+                    <td>(32)/99/200組</td>
+                </tr>
+            </table>
+            <br/>
+            <p>※()内はベイシック</p>
+        </type>
+
+        <is>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            <type>
+                <table>
+                    <colgroup valign="top" width="30"/>
+                    <colgroup valign="top" width="150"/>
+                    <colgroup valign="top"/>
+                    <tr>
+                        <td>M</td>
+                        <td>工具補正個数</td>
+                        <td>(32)/64/99/200/400/499/999/2000組</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具補正メモリ</td>
+                        <td>(A)/B/C</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具径・刃先R補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>複合加工用工具オフセット機能</td>
+                        <td></td>
+                    </tr>
+
+                    <tr>
+                        <td>T</td>
+                        <td>工具補正個数</td>
+                        <td>(32)/64/99/200/400/499/999/2000組</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具形状・摩耗補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>工具径・刃先R補正</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Y軸オフセット</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>第2形状工具オフセット</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>アクティブオフセット変更機能</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>複合加工用工具オフセット機能</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br/>
+                <dd><p>※()内はベイシック</p></dd>
+            </type>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <div class="dd">6002#0,#1, 6004#0, 6007#0</div><br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i-A/B/C</li>
+            <div class="dd">1004#0,#1</div><br/>
+            <li>Series 0i-D, PMi-A</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div><br/>
+            <li>Series 0i-F</li>
+            <div class="dd">5042#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024<br/>
+                            8132#1=1 (必ず設定して下さい)</div><br/>
+            <li>Series 30i</li>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div><br/>
+            <li>Power Mate i</li>
+            <div class="dd">1004#0(Power Mate i-H の場合)<br/>
+                            1004#1(Power Mate i-D の場合)</div><br/>
+        </type>
+    </parameter>
+
+    <is_parameter>
+        <type>
+            <div class="dd">5042#3,#2,#1,#0<br/>
+                            5009#5(M系のみ)<br/>
+                            5024</div>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdtofs</name>
+            <file>ncdata/cnc_rdtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofs</name>
+            <file>ncdata/cnc_wrtofs.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrtofsr</name>
+            <file>ncdata/cnc_wrtofsr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdtofsinfo</name>
+            <file>ncdata/cnc_rdtofsinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+以下のプログラムは旋盤系(メモリB/64組)の全工具補正量を読みだして表示します。
+
+#include "fwlib32.h"
+#define MAXTOOL 64
+
+short example( void )
+{
+    IODBTO *tofsr ;
+    short ret, idx ;
+    tofsr = (IODBTO *)malloc( 8+36*MAXTOOL ) ;
+    ret = cnc_rdtofsr( h, 1, -2, MAXTOOL, 8+36*MAXTOOL, tofsr ) ;
+    if ( !ret ) {
+        printf( "No  X:wear  Z:wear  Y:wear  X:geom  "
+                "Z:geom  Y:geom  R:wear  R:geom T\n" ) ;
+        printf( "---+-------+-------+-------+-------+"
+                "-------+-------+-------+------+-\n" ) ;
+        for ( idx = 0 ; idx &#60; MAXTOOL ; idx++ ) {
+            printf( "%02d%8ld%8ld%8ld%8ld%8ld%8ld%8ld%8ld%2d\n",
+                    idx, tofsr->u.t_ofs_b[idx].data[4],
+                    tofsr->u.t_ofs_b[idx].data[5],
+                    tofsr->u.t_ofs_b[idx].data[6],
+                    tofsr->u.t_ofs_b[idx].data[0],
+                    tofsr->u.t_ofs_b[idx].data[1],
+                    tofsr->u.t_ofs_b[idx].data[2],
+                    tofsr->u.t_ofs_b[idx].data[7],
+                    tofsr->u.t_ofs_b[idx].data[3],
+                    tofsr->u.t_ofs_b[idx].tip ) ;
+        }
+    }
+    free( tofsr ) ;
+    return ( ret ) ;
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

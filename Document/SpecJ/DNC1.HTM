@@ -1,0 +1,143 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>イーサネットボードとの通信</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>イーサネットボードとの通信</h2>
+
+
+<p>Ethernet版は、FANUCイーサネットボード、FANUCファストイーサネットボードとのソケット通信(TCP/IP通信)により実現しています。また、Series 16i/18i/21i-MODEL B, Series 30i/31i/32i-MODEL A, Series 30i/31i/32i/35i-MODEL B, Series 0i-MODEL D, Series 0i-MODEL F, Power Motion i-A においては、「組込みイーサネット機能」によってもCNC側と通信できます。
+<p>ご使用になる前に、それぞれ必要な説明書を参照し、以下の項目を確認してください。
+
+<ul>
+<li>パソコン側のTCP/IPの設定
+<li>CNC側のイーサネットボード、または組込みイーサネットの設定
+<li>パソコンとCNCとのネットワーク接続の確認
+</ul>
+
+<ul>
+<li>Series 16i/18i/21i/Power Mate i、0i-B、0i-C、Series 15i用
+<ul>「FANUC イーサネットボード／データサーバボード 取扱説明書 (B-63354JA)」</ul>
+<ul>「FANUC ファストイーサネットボード／データサーバ 取扱説明書 (B-63644JA)」</ul>
+<ul>「FANUC Series 16i/160i/160is/18i/180i/180is/21i/210i/210is/20i-MODEL B 結合説明書 (機能編) (B-63523-1JA)」</ul>
+</ul>
+
+<ul>
+<li>Series 30i/31i/32i-MODEL A, Series 30i/31i/32i/35i-MODEL B用
+<ul>「FANUC ファストイーサネット／ファストデータサーバ FANUC Series 30i-MODEL A/B, Series 31i-MODEL A/B, Series 32i-MODEL A/B, Series 35i-MODEL B 用取扱説明書 (B-64014JA)」</ul>
+<ul>「FANUC Series 30i-MODEL A, Series 31i-MODEL A, Series 32i-MODEL A 結合説明書 (ハードウェア編) (B-63943JA)」</ul>
+<ul>「FANUC Series 30i-MODEL A, Series 31i-MODEL A, Series 32i-MODEL A 保守説明書 (B-63945JA)」</ul>
+<ul>「FANUC Series 30i-MODEL B, Series 31i-MODEL B, Series 32i-MODEL B 結合説明書 (ハードウェア編) (B-64483JA)」</ul>
+<ul>「FANUC Series 30i-MODEL B, Series 31i-MODEL B, Series 32i-MODEL B 保守説明書 (B-64485JA)」</ul>
+<ul>「FANUC Series 35i-MODEL B 保守説明書 (B-64525JA)」</ul>
+</ul>
+
+<ul>
+<li>Series 0i-MODEL D用
+<ul>「FANUC ファストイーサネット／ファストデータサーバ取扱説明書 (B-64414JA)」</ul>
+<ul>「FANUC Series 0i-MODEL D, Series 0i Mate-MODEL D 結合説明書 (機能編) (B-64303JA-1)」</ul>
+</ul>
+</br>
+<p>Ethernet版の通信の仕組みは、以下の図のようになっています。
+
+<p><img src="focas1.gif"></p>
+
+<!--- DNC1の説明を削除('07.04.19)
+<p>DNC1/Ethernetは、FOCAS1/Ethernetをベースとして作成されたシステムです。DNC1/Ethernetのアプリケーションに、FOCAS1/Ethernetで追加機能を作成することも可能です。</p>
+
+<p>以下の図では、FOCAS1/EthernetとDNC1/Ethernetの関係を示しています。
+
+<p><img src="dnc1.gif"></p>
+
+<table border="1">
+    <tr>
+        <th>インタフェース</th>
+        <th>機能</th>
+        <th>プログラミング</th>
+        <th>用途</th>
+        <th>通信断線後の再接続</th>
+    </tr>
+    <tr>
+        <td>FOCAS1/Ethernet</td>
+        <td>広範囲な機能<br>
+        システムコール的な関数</td>
+        <td>手順や条件を細かく指定する必要あり</td>
+        <td>セルコントローラで行うような制御、及び操作画面作成</td>
+        <td>手動(ライブラリハンドルの再取得)</td>
+    </tr>
+    <tr>
+        <td>DNC1/Ethernet</td>
+        <td>使用頻度の高い機能のみ<br>
+        マクロ的な関数</td>
+        <td>容易</td>
+        <td>セルコントローラで行うような制御</td>
+        <td>自動</td>
+    </tr>
+</table>
+--->
+
+<p></p>
+
+<div class="caution"><a name="limit">&lt;制限事項&gt;</a><br>
+<br>
+1台のCNCに同時に接続できるアプリケーションソフトウェア(クライアント)の数は、各イーサネットインタフェースについて以下の通りです。
+
+<table border=1>
+    <tr>
+        <th></th>
+        <th>ファストイーサネットボード</th>
+        <th>イーサネットボード<br>注１)</th>
+        <th>組込みイーサネット</th>
+    </tr>
+    <tr>
+        <td><b>同時に接続できる<br>クライアント数</b></td>
+        <td align="center"><b>最大２０個</b></td>
+        <td align="center"><b>最大１０個</b></td>
+        <td align="center"><b>最大５個</b></td>
+    </tr>
+    <tr>
+        <td><b>同時に接続できる<br>パソコン台数</b></td>
+        <td align="center"><b>最大２０台</b></td>
+        <td align="center"><b>最大１０台</b></td>
+        <td align="center"><b>１台(推奨)</b></td>
+    </tr>
+</table>
+
+<blockquote>注１) 6561/03、または6561/04(Series 16i/18i/21i, Power Mate i用)の場合は、最大3個です。Series 30i/31i/32i-A, Series 30i/31i/32i/35i-B, Series 0i-D, Series 0i-MODEL F, Power Motion i-A には、イーサネットボードはありません。
+</blockquote>
+詳しくは、「FANUC イーサネットボード／データサーバボード 取扱説明書 (B-63354JA)」、「FANUC ファストイーサネットボード／データサーバ 取扱説明書 (B-63644JA)」の「付録D 制限事項」を参照してください。
+
+
+<p>&lt;組込みイーサネットでの注意事項&gt;</p>
+<ol>
+<li>組込みイーサネットを使用した通信は、CNCのCPUにて処理されています。これは、CNCの動作状態が組込みイーサネットの通信パフォーマンスに影響を与えたり、逆に組込みイーサネットの通信がCNCの処理に影響を与えたりする可能性があることを意味します。<br>
+組込みイーサネット機能は、自動運転処理や手動運転等の軸毎に行う処理より低い優先度で動作します。従って、自動運転中や制御軸数が多い場合等には、通信速度が遅くなる場合があります。<br>
+逆に、組込みイーサネットは、CNCの画面表示処理、C言語エグゼキュータ（ハイレベルタスクを除く）、マクロエグゼキュータ（実行マクロを除く）より高い優先度で動作します。従って、組込みイーサネットによる通信を行うことによって、これらの処理のパフォーマンスを低下させる場合もあります。
+<p>
+<li>組込みイーサネットでは上記理由により、適切な実行パフォーマンスが得られないことから、下記 Ethernetアプリケーションはご利用になれません。
+<ul>
+<li>CNC画面表示機能
+<li>DNC運転を行うアプリケーション
+</ul>
+<p>
+<li>ブロードキャストデータを多く使用する社内ネットワーク等に組込みイーサネットを接続した場合、ブロードキャストデータの処理に時間がかかり、その結果、CNCの画面表示処理等のパフォーマンスに影響を与える可能性がありますので、注意してください。
+</ol>
+
+</div>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_sdtsetchnl2</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_sdtsetchnl2(unsigned short FlibHndl,
+                                short num, long datanum, IDBSDTCHAN2 *channel); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>The channel data for the sampling of various data are set.</p>
+                <p>The setting to acquire servo, spindle information and ,in addition, PMC signal can be set by this function. </p>
+                <p>The condition to acquire servo, spindle information is same the one of "<a href="motor/cnc_sdtsetchnl.htm" target="_parent">cnc_sdtsetchnl()</a>". </p><br/>
+
+                <p>The data which can be acquired is as follows. </p>
+                <ul type="disc">
+                    <li>Servo data</li>
+                    <li>Spindle data</li>
+                    <li>PMC data(word type, byte type, bit type)</li>
+                    <br/>
+                </ul>
+                <p>※1 PMC signal(bit type) in the channel data for the sampling can be set to only one channel. 16 signals data at most can be set to one channel.However, when PMC signal(byte type, word type) is set to other channel, the number of PMC signal(bit type) can be set is 8 signals at most.</p>
+                <p>※2 One signal of byte type and word type can be set per one channel.</p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the library handle. See "<a href="handle.htm" target="_parent">Library handle</a>" for details. 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>num</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the number of channels. 
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>datanum</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Specify the number of total points of the data which wants to be sampled. (Specify the value of eight or more.)<br/>
+                                Acquire data sequentially from the function which read sampling data(cnc_sdtreadsmpl2).
+                            </p>
+                        </content>
+                    </item>
+s
+
+                    <item>
+                        <name>channel</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                Pointer to the IDBSFBCHAN2 structure including the channel data.
+                            </p>
+                            <p>
+                                Prepare the number of the channel data which you want to set as an array, and specify the top pointer of the array for this argument(channel). 
+                            </p>
+                            <p>
+                                The structure of IDBSFBCHAN2 is as follows. 
+                            </p>
+<pre>
+typedef struct idbsdtchan {
+    short           type;       /* data type */
+    char            chno;       /* channel number */
+    char            axis;       /* axis number */
+    unsigned short  shift;      /* upper byte ：sampling period, 
+                                                 lower byte ：right shift value */
+    typedef struct pmc_data{    /* PMC signal */
+        short unittype;         /* PMC path (unit type)  */
+        char adr;               /* kind of PMC address */
+        unsigned char bit;      /* bit number */
+        unsigned short no;      /* PMC address number */
+    } io[16]; 
+} IDBSDTCHAN2;
+</pre>
+                            <dl>
+                                <dt>type</dt>
+                                <dd>Specify the sampling data type.</dd>
+                                <dd>※ When the sampling axis number is PMC signal(-125,-126,-127), type is invalid.</dd>
+                            </dl>
+                            <dl>
+                                <dt>chno</dt>
+                                <dd>Specify the channel number(1-8). </dd>
+                            </dl>
+                            <dl>
+                                <dt>axis</dt>
+                                <dd>Specify the sampling axis number. </dd>
+                                <dd>In case of PMC signal, specify as follows.</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>-125</td><td>：</td><td> PMC signal(word type) (enable in 30i-B or later) </td></tr>
+                                    <tr><td>-126</td><td>：</td><td> PMC signal(byte type) (enable in 30i-B or later) </td></tr>
+                                    <tr><td>-127</td><td>：</td><td> PMC signal(bit type) </td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                            <dl>
+                                <dt>shift</dt>
+                                <dd>Specify sampling period at upper byte and right shift value at lower byte.</dd>
+                                <dd>※ When the sampling axis number is PMC signal(-125,-126,-127), right shift value is invalid.</dd>
+                            </dl>
+                            <p>
+                                The member of the io structure is as follows.
+                            </p>
+                            <dl>
+                                <dt>unittype</dt>
+                                <dd>PMC path (unit type)</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>not sampled (at this bit position) </td></tr>
+                                    <tr><td>1</td><td>：</td><td>1st PMC(include PMC-L)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>2nd PMC(optional)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>3rd PMC(optional)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>4th PMC(optional)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>5th PMC(optional)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>Dual-check safety PMC(optional) </td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                            </dl>
+                            <dl>
+                                <dt>adr</dt>
+                                <dd>kind of PMC address</dd>
+                                <table border="0" class="dd">
+                                    <colgroup align="left" valign="top">
+                                    <colgroup valign="top">
+                                    <colgroup valign="top">
+                                    <tr><td>0</td><td>：</td><td>G(Signal to PMC->CNC)</td></tr>
+                                    <tr><td>1</td><td>：</td><td>F(Signal to CNC->PMC)</td></tr>
+                                    <tr><td>2</td><td>：</td><td>Y(Signal to PMC->machine)</td></tr>
+                                    <tr><td>3</td><td>：</td><td>X(Signal to machine->PMC)</td></tr>
+                                    <tr><td>4</td><td>：</td><td>A(Message display)</td></tr>
+                                    <tr><td>5</td><td>：</td><td>R(Internal relay)</td></tr>
+                                    <tr><td>6</td><td>：</td><td>T(Timer)</td></tr>
+                                    <tr><td>7</td><td>：</td><td>K(Keep relay)</td></tr>
+                                    <tr><td>8</td><td>：</td><td>C(Counter)</td></tr>
+                                    <tr><td>9</td><td>：</td><td>D(Data table)</td></tr>
+                                    <tr><td>10</td><td>：</td><td>M(Input signal from other PMC path)</td></tr>
+                                    <tr><td>11</td><td>：</td><td>N(Output signal to other PMC path)</td></tr>
+                                    <tr><td>12</td><td>：</td><td>E(Extra relay)</td></tr>
+                                    <tr><td>13</td><td>：</td><td>Z(Internal relay)</td></tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </colgroup>
+                                </table>
+                                <dd>※ Z address can be used when PMC mamory type is C or D.</dd>
+                            </dl>
+                            <dl>
+                                <dt>bit</dt>
+                                <dd>bit number of PMC address</dd>
+                            </dl>
+                            <dl>
+                                <dt>no</dt>
+                                <dd>PMC address number</dd>
+                            </dl>
+                            <p>※ Input PMC signal data in turn to an array of the io structure of PMC signal. When unittype is set to 0, subsequently PMC signal is invalid.</p>
+                            <p>※ When PMC signal is word type or byte type, set bit to 0.</p>
+                            <p>※ When PMC signal is word type or byte type, set each member of the io[1]～io[15] structure to 0.</p>
+                            <p>※ When the sampling axis number is NOT PMC signal(-125,-126,-127), the io structure of PMC signal is invalid.</p>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NUMBER</name>
+                <content>
+                    Data number error<br/>
+                    Channel number(num) data is wrong. 
+                </content>
+            </item>
+            <item>
+                <name>EW_DATA</name>
+                    <content>
+                    Data error<br/>
+                    In order to get more information for this err_no return value, execute <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> function. <br/>
+                    <table>
+                        <colgroup align="center" valign="top">
+                        <colgroup align="center" valign="top">
+                        <colgroup valign="top">
+                        <tr><td> 3</td><td>:</td><td>Total point number(datanum) is not 8 or more.</td></tr>
+                        <tr><td> 4</td><td>:</td><td>The servo motor, spindle or PMC signal of the specified channel cannot be used.</td></tr>
+                        <tr><td>20</td><td>:</td><td>Sampling data type(channel.type) is wrong.</td></tr>
+                        <tr><td>21</td><td>:</td><td>Channel number(channel.chno) is wrong.</td></tr>
+                        <tr><td>22</td><td>:</td><td>Axis number(channel.axis) is wrong.</td></tr>
+                        <tr><td>23</td><td>:</td><td>Right shift amount(channel.shift) is wrong.</td></tr>
+                        <tr><td>24</td><td>:</td><td>Sampling period(channel.shift) is wrong, or inconsistent between channels.</td></tr>
+                        <tr><td>50</td><td>:</td><td>PMC signal setting(unit type) is wrong.</td></tr>
+                        <tr><td>51</td><td>:</td><td>PMC signal setting(kind of PMC address) is wrong.</td></tr>
+                        <tr><td>52</td><td>:</td><td>PMC signal setting(PMC address number) is wrong.</td></tr>
+                        <tr><td>53</td><td>:</td><td>PMC signal setting(bit number) is wrong.</td></tr>
+                        <tr><td>54</td><td>:</td><td>The number of PMC signal(bit type) is over the limit.</td></tr>
+                        <tr><td>56</td><td>:</td><td>PMC signal(bit type) is specified more one channel.</td></tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </content>
+            </item>
+            <item>
+                <name>EW_PATH</name>
+                <content>
+                    Path number error<br/>
+                    Path which is corresponding to specified sampling axis number (axis) does not exist. 
+                </content>
+            </item>
+            <item>
+                <name>EW_REJECT</name>
+                <content>
+                    CNC execution denied<br/>
+                    Sampling is already starting.<br/>
+                    Execute this function again after executing of cnc_sdtcancelsmpl or cnc_sdtendsmpl. 
+                </content>
+            </item>
+            <item>
+                <name>EW_VERSION</name>
+                <content>
+                    Specified data type(axis) is not supported.
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>
+                The extended driver/library function is necessary. 
+            </hssb>
+            <ethr>
+                <p>The Ethernet function and the extended driver/library function are necessary.</p>
+                <p>However, in case of 0i-D/F, Series 30i and PMi-A, the required CNC option is as follows.</p>
+                <p>When Embedded Ethernet is used,</p>
+                    <p class="dd">above two optional functions are not required.</p>
+                <p>When Ethernet board is used,</p>
+                    <p class="dd">only Ethernet function is required.</p>
+            </ethr>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    The following functions are necessary for this function.
+                    <ul type="disc">
+                        <li>The extended driver/library function.</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>X</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+     </support>
+
+
+
+    <reference>
+        <item>
+            <name>cnc_sdtclrchnl</name>
+            <file>motor/cnc_sdtclrchnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtstartsmpl2</name>
+            <file>motor/cnc_sdtstartsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtcancelsmpl</name>
+            <file>motor/cnc_sdtcancelsmpl.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtreadsmpl2</name>
+            <file>motor/cnc_sdtreadsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtendsmpl2</name>
+            <file>motor/cnc_sdtendsmpl2.htm</file>
+        </item>
+        <item>
+            <name>cnc_sdtread1shot</name>
+            <file>motor/cnc_sdtread1shot.htm</file>
+        </item>
+    </reference>
+
+
+
+    </func>
+</root>

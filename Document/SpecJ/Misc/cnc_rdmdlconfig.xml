@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdmdlconfig</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmdlconfig(unsigned short FlibHndl, ODBMDLC *mdlconfig);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCのモジュール構成情報を読み出します。各情報はODBMDLC内の各メンバに格納されます。系統に依存したデータは、系統を切り換えて読み出して下さい。</p>
+            <p>本関数は、Series 16/18 MODEL Cでのみ有効です。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mdlconfig</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNCのモジュール構成情報を返すODBMDLC構造体へのポインタです。
+                        </p>
+<pre><![CDATA[
+typedef struct odbmdlc {
+     short   from;         /* FROMモジュールの容量                       */
+     short   dram;         /* DRAMモジュールの容量                       */
+     short   sram;         /* 追加SRAMモジュールの容量                   */
+     short   pmc;          /* PMCモジュールの種類                        */
+     short   crtc;         /* CRTCモジュールの種類                       */
+     short   servo12;      /* サーボモジュール(1,2軸)の有無              */
+     short   servo34;      /* サーボモジュール(3,4軸)の有無              */
+     short   servo56;      /* サーボモジュール(5,6軸)の有無              */
+     short   servo78;      /* (リザーブ)                                 */
+     short   sic;          /* SICの有無                                  */
+     short   pos_lsi;      /* POSITION LSIの有無                         */
+     short   hi_aio;       /* 高速スキップ&アナログI/Oの有無             */
+     short   reserve1[12]; /* (リザーブ)                                 */
+
+     /* 以上の項目は系統毎にあります。       */
+     /* 以下の項目は系統には関係ありません。 */
+
+     short   drmmrc;      /* 管理ソフト用拡張DRAMの容量(PMC-SC)          */
+     short   drmarc;      /* アプリケーション用DRAMの容量(PMC-SC)        */
+     short   pmcmrc;      /* PMCモジュールの種類(PMC-SC)                 */
+     short   dmaarc;      /* DMA用付加ボードの有無(PMC-SC)               */
+     short   iopt;        /* DI/DOの点数(I/Oカード)                      */
+     short   hdiio;       /* 高速スキップ用LSIの有無(I/Oカード)          */
+     short   gm2gr1;      /* グラフィックエンジン2の有無                 */
+     short   crtgr2;      /* CRTCモジュールの種類(OPT-1)                 */
+     short   gm1gr2;      /* グラフィックモジュール1の有無(OPT-1)        */
+     short   gm2gr2;      /*グラフィックモジュール2の有無(OPT-1)         */
+     short   cmmrb;       /* コミュニケーションモジュールの有無(OPT-1)   */
+     short   sv5axs;      /* サーボモジュール(5,6軸)の有無(軸カード)     */
+     short   sv7axs;      /* サーボモジュール(7,8軸)の有無(軸カード)     */
+     short   sicaxs;      /* SICの有無(軸カード)                         */
+     short   posaxs;      /* POSITION LSIの有無(軸カード)                */
+     short   hamaxs;      /* 高速スキップ&アナログI/Oの有無(軸カード)    */
+     short   romr64;      /* システムEPROMの容量(64bitRISC)              */
+     short   srmr64;      /* SRAMモジュールの容量(64bitRISC)             */
+     short   dr1r64;      /* DRAMモジュール1の容量(64bitRISC)            */
+     short   dr2r64;      /* DRAMモジュール2の容量(64bitRISC)            */
+     short   iopio2;      /* DI/DOの点数(I/Oカード#2)                    */
+     short   hdiio2;      /* 高速スキップ用LSIの有無(I/Oカード#2)        */
+     short   cmmrb2;      /* コミュニケーションモジュールの有無(OPT-1#2) */
+     short   romfap;      /* システムEPROMモジュールの容量(CAP2)         */
+     short   srmfap;      /* SRAMモジュールの容量(CAP2)                  */
+     short   drmfap;      /* DRAMモジュールの容量(CAP2)                  */
+     short   drmare;      /* アプリケーション用DRAMの容量(PMC-SE)        */
+     short   pmcmre;      /* PMCモジュールの種類(PMC-SE)                 */
+     short   dmaare;      /* DMA用付加ボードの有無(PMC-SE)               */
+     short   frmbgg;      /* FROMモジュールの容量(BG-GRPH)               */
+     short   drmbgg;      /* DRAMモジュールの容量(BG-GRPH)               */
+     short   asrbgg;      /* 追加SRAMモジュールの容量(BG-GRPH)           */
+     short   edtpsc;      /* モジュールの版数(PMC-SB5/SB6)               */
+     short   slcpsc;      /* SLCの有無(PMC-SB5/SB6)                      */
+     short   reserve2[34];/* (リザーブ)                                  */
+} ODBMDLC ;
+]]></pre>
+                    <dt>from</dt>
+                        <dd>FROMモジュールの容量</dd>
+                           <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装    </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)   </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)   </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>10 (MB)   </td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>12 (MB)   </td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+                               <tr> <td align="right"> 8</td> <td>:</td> <td> 3 (MB)   </td> </tr>
+                               <tr> <td align="right"> 9</td> <td>:</td> <td> 2 (MB)   </td> </tr>
+                               <tr> <td align="right">10</td> <td>:</td> <td> 6 (MB)   </td> </tr>
+                               <tr> <td align="right">11</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+                               <tr> <td align="right">12</td> <td>:</td> <td>10 (MB)   </td> </tr>
+                               <tr> <td align="right">13</td> <td>:</td> <td>12 (MB)   </td> </tr>
+                               <tr> <td align="right">14</td> <td>:</td> <td>14 (MB)   </td> </tr>
+                               <tr> <td align="right">15</td> <td>:</td> <td> 1 (MB)   </td> </tr>
+                               <tr> <td align="right">16</td> <td>:</td> <td> 1 (MB)   </td> </tr>
+                               <tr> <td align="right">17</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right">18</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+                               <tr> <td align="right">19</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+                           </table></dd>
+                    <dt>dram</dt>
+                        <dd>RAMモジュールの容量</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装 </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>16 (MB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td> 8 (MB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td> 4 (MB)</td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td>24 (MB)</td> </tr>
+                           </table></dd>
+                    <dt>sram</dt>
+                        <dd>追加SRAMモジュールの容量</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>  1 (MB)   </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>512 (KB)   </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>768 (KB)   </td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td>2.25(MB)   </td> </tr>
+                               <tr> <td align="right"> 8</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 9</td> <td>:</td> <td>256 (KB)   </td> </tr>
+                           </table></dd>
+                    <dt>pmc</dt>
+                        <dd>PMCモジュールの種類</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装  </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>BSI     </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>PMP2    </td> </tr>
+                           </table></dd>
+                    <dt>crtc</dt>
+                        <dd>CRTCモジュールの種類</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>14"CRT     </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>9"CRT      </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>VGA        </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>HSSB-VGA   </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>9"VGA      </td> </tr>
+                           </table></dd>
+                    <dt>servo12</dt>
+                        <dd>サーボモジュール(1,2軸)の有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>servo34</dt>
+                        <dd>サーボモジュール(3,4軸)の有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>servo56</dt>
+                        <dd>サーボモジュール(5,6軸)の有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>sic</dt>
+                        <dd>SICの有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>pos_lsi</dt>
+                        <dd>POSITION LSIの有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>hi_aio</dt>
+                        <dd>高速スキップ<![CDATA[&]]>アナログI/Oの有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>両方なし        </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>両方あり        </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>高速スキップのみ</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>アナログI/Oのみ </td> </tr>
+                           </table></dd>
+                    <dt>drmmrc</dt>
+                        <dd>管理ソフト用拡張DRAM(PMC-SC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>drmarc</dt>
+                        <dd>アプリケーション用DRAMの容量(PMC-SC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装    </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>2(MB)     </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>512(KB)   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>  1(MB)   </td> </tr>
+                           </table></dd>
+                    <dt>pmcmrc</dt>
+                        <dd>アプリケーション用DRAMの容量(PMC-SC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装  </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>BSI     </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>PMP2    </td> </tr>
+                           </table></dd>
+                    <dt>dmaarc</dt>
+                        <dd>DMA用付加ボードの有無(PMC-SC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>iopt</dt>
+                        <dd>DI/DOの点数(I/Oカード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装 </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>144/112</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 40/ 40</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 80/ 56</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>104/ 72</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>156/120</td> </tr>
+                           </table></dd>
+                    <dt>hdiio</dt>
+                        <dd>高速スキップ用LSIの有無(I/Oカード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>gm2gr1</dt>
+                        <dd>グラフィックエンジン2の有無</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>crtgr2</dt>
+                        <dd>CRTCモジュールの種類(OPT-1)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>14" CRT    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 9" CRT    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>VGA MAIN   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>14" CRT GRPH</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td> 9" CRT GRPH</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>VGA GRPH</td> </tr>
+                           </table></dd>
+                    <dt>gm1gr2</dt>
+                        <dd>グラフィックモジュール1の有無(OPT-1)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>gm2gr2</dt>
+                        <dd>グラフィックモジュール２の有無(OPT-1)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>cmmrb</dt>
+                        <dd>コミュニケーションモジュールの有無(OPT-1)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>sv5axs</dt>
+                        <dd>サーボモジュール(5,6軸)の有無(軸カード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>sv7axs</dt>
+                        <dd>サーボモジュール(7,8軸)の有無(軸カード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>sicaxs</dt>
+                        <dd>SICの有無(軸カード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>posaxs</dt>
+                        <dd>POSITION LSIの有無(軸カード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>hamaxs</dt>
+                        <dd>高速スキップ<![CDATA[&]]>アナログI/Oの有無(軸カード)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>両方なし   </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>両方あり   </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>高速スキップのみ</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>アナログI/Oのみ</td> </tr>
+                           </table></dd>
+                    <dt>romr64</dt>
+                        <dd>システムEPROMの容量(64bitRISC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)    </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+                           </table></dd>
+                    <dt>srmr64</dt>
+                        <dd>SRAMモジュールの容量(64bitRISC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>4 (MB)     </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>2 (MB)     </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>1 (MB)     </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+                           </table></dd>
+                    <dt>dr1r64</dt>
+                        <dd>DRAMモジュール１の容量(64bitRISC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>  4 (MB)</td> </tr>
+                           </table></dd>
+                    <dt>dr2r64</dt>
+                        <dd>DRAMモジュール2の容量(64bitRISC)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>  4 (MB)</td> </tr>
+                           </table></dd>
+                    <dt>iopio2</dt>
+                        <dd>DI/DOの点数(I/Oカード#2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>144/112    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 40/ 40    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 80/ 56</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>104/ 72</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>156/120</td> </tr>
+                           </table></dd>
+                    <dt>hdiio2</dt>
+                        <dd>高速スキップ用LSIの有無(I/Oカード#2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>cmmrb2</dt>
+                        <dd>コミュニケーションモジュールの有無(OPT-1#2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>romfap</dt>
+                        <dd>システムEPROMモジュールの容量(CAP2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>１ (MB)    </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+                           </table></dd>
+                    <dt>srmfap</dt>
+                        <dd>SRAMモジュールの容量(CAP2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>１ (MB)    </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>768 (KB)</td> </tr>
+                           </table></dd>
+                    <dt>drmfap</dt>
+                        <dd>DRAMモジュールの容量(CAP2)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>2  (MB)    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>1.5(MB)    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>1  (MB)    </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>512 (KB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>256 (KB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>128 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                           </table></dd>
+                    <dt>drmare</dt>
+                        <dd>アプリケーション用DRAMの容量(PMC-SE)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>2(MB)      </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>512(KB)</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>  1(MB)</td> </tr>
+                           </table></dd>
+                    <dt>pmcmre</dt>
+                        <dd>PMCモジュールの種類(PMC-SE)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>BOC2       </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>BSI+SLC    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>PMP2+SLC</td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>BSI</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>PMP2</td> </tr>
+                           </table></dd>
+                    <dt>dmaare</dt>
+                        <dd>DMA用付加ボードの有無(PMC-SE)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+                    <dt>frmbgg</dt>
+                        <dd>FROMモジュールの容量(BG-GRAPH)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装    </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)   </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)   </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td> 8 (MB)   </td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>10 (MB)   </td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>12 (MB)   </td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td> 4 (MB)   </td> </tr>
+                               <tr> <td align="right"> 8</td> <td>:</td> <td> 3 (MB)   </td> </tr>
+                               <tr> <td align="right"> 9</td> <td>:</td> <td>2 (MB)</td> </tr>
+                               <tr> <td align="right">10</td> <td>:</td> <td> 6 (MB)</td> </tr>
+                               <tr> <td align="right">11</td> <td>:</td> <td> 8 (MB)</td> </tr>
+                               <tr> <td align="right">12</td> <td>:</td> <td>10 (MB)</td> </tr>
+                               <tr> <td align="right">13</td> <td>:</td> <td>12 (MB)</td> </tr>
+                               <tr> <td align="right">14</td> <td>:</td> <td>14 (MB)</td> </tr>
+                               <tr> <td align="right">15</td> <td>:</td> <td> 1 (MB)</td> </tr>
+                               <tr> <td align="right">16</td> <td>:</td> <td> 1 (MB)</td> </tr>
+                               <tr> <td align="right">17</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right">18</td> <td>:</td> <td> 4 (MB)</td> </tr>
+                               <tr> <td align="right">19</td> <td>:</td> <td> 8 (MB)</td> </tr>
+                           </table></dd>
+                    <dt>drmbgg</dt>
+                        <dd>DRAMモジュールの容量(BG-GRAPH)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td> 4 (MB)    </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td> 2 (MB)    </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td> 1 (MB)    </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td> 6 (MB)</td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>16 (MB)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td> 8 (MB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td> 4 (MB)</td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td>24 (MB)</td> </tr>
+                           </table></dd>
+                    <dt>asrbgg</dt>
+                        <dd>追加SRAMモジュールの容量(BG-GRPH)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装     </td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>  1 (MB)   </td> </tr>
+                               <tr> <td align="right"> 1</td> <td>:</td> <td>512 (KB)   </td> </tr>
+                               <tr> <td align="right"> 2</td> <td>:</td> <td>  2 (MB)   </td> </tr>
+                               <tr> <td align="right"> 3</td> <td>:</td> <td>(リザーブ) </td> </tr>
+                               <tr> <td align="right"> 4</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 5</td> <td>:</td> <td>768 (KB)</td> </tr>
+                               <tr> <td align="right"> 6</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 7</td> <td>:</td> <td>2.25(MB)</td> </tr>
+                               <tr> <td align="right"> 8</td> <td>:</td> <td>(リザーブ)</td> </tr>
+                               <tr> <td align="right"> 9</td> <td>:</td> <td>256 (KB)</td> </tr>
+                           </table></dd>
+                    <dt>edtpsc</dt>
+                        <dd>モジュールの版数(PMC-SB5/SB6)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>未実装 </td> </tr>
+                               <tr> <td align="right"> 0～F</td> <td>:</td> <td>版数</td> </tr>
+                           </table></dd>
+                    <dt>slcpsc</dt>
+                        <dd>SLCの有無(PMC-SB5/SB6)</dd>
+                        <dd><table class="dd">
+                               <tr> <td align="right">-1</td> <td>:</td> <td>無</td> </tr>
+                               <tr> <td align="right"> 0</td> <td>:</td> <td>有</td> </tr>
+                           </table></dd>
+
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>拡張ドライバ/ライブラリ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference></reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_prfwrslvprm2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_prfwrslvprm2(unsigned short FlibHndl, short idx, IODBSLVPRM3 *idb);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定されたスレーブ番号のスレーブパラメータをライトします。ライトしたデータを有効にするためには、CNCの再立上げが必要です。<br/>
+               この関数は、6558系列専用です。<br/>
+            </p>
+            <p>※PROFIBUS-DP機能の詳細については「PROFIBUS-DP機能取扱説明書」を参照して下さい。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idx</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライトする通信スレーブ局のインデックス番号を指定します(0～47)。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>idb</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            スレーブパラメータを設定する構造体へのポインタです。<br/>
+                            IODBSLVPRM3構造体は次の通りです。
+<pre>
+typedef struct {
+    unsigned short ident_no ;
+    unsigned char  slv_flag ;
+    unsigned char  slv_type ;
+    char           reserve1[12] ;
+    unsigned char  slv_stat ;
+    unsigned char  wd_fact1 ;
+    unsigned char  wd_fact2 ;
+    unsigned char  min_tsdr ;
+    char           reserve2 ;
+    unsigned char  grp_ident ;
+    short          user_plen ;
+    char           user_pdata[206] ;
+    short          slv_ulen ;
+    char           slv_udata[30] ;
+} IODBSLVPRM3 ;
+</pre>
+                            <dl>
+                                <dt>ident_no</dt>
+                                    <dd>接続するスレーブ局の識別番号を設定します。</dd>
+
+                                <dt>slv_flag</dt>
+                                    <dd>スレーブフラグを設定します。各ビットの意味は次の通りです。</dd>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT7</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>スレーブ局と通信を行わない。</td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>スレーブ局と通信を行う。    </td> </tr>
+                                    </table>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT6</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>スレーブ局に新しいパラメータデータを送信しない。</td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>スレーブ局に新しいパラメータデータを送信する。  </td> </tr>
+                                    </table>
+                                    
+                                    <p><dd>※BIT0 ～BIT5 は、未使用です。</dd></p>
+
+                                <dt>slv_type</dt>
+                                    <dd>メーカー指定のスレーブタイプを設定します(0～255)。</dd>
+
+                                <dt>reserve1</dt>
+                                    <dd>未使用</dd>
+
+                                <dt>slv_stat</dt>
+                                    <dd>スレーブステータスを設定します。各ビットの意味は次の通りです。</dd>
+                                    <dl>
+                                        <dt>BIT7=ON、BIT6=OFF の場合</dt>
+                                            <dd>スレーブ局はマスタ局からパラメータを変更できないようにする。</dd>
+                                        <dt>BIT7=OFF、BIT6=ON の場合</dt>
+                                            <dd>スレーブ局はマスタ局からパラメータを変更できるようにする。</dd>
+                                    </dl>
+                                    <table border="0" class="dd">
+                                        <tr> <td>BIT5</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>OFF</td><td>Sync制御コマンドを使用できない。  </td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>ON </td><td>Sync制御コマンドを使用できる。    </td> </tr>
+                                        <tr> <td>BIT4</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>OFF</td><td>Freeze制御コマンドを使用できない。</td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>ON </td><td>Freeze制御コマンドを使用できる。  </td> </tr>
+                                        <tr> <td>BIT3</td> </tr>
+                                        <tr> <td></td><td>0</td><td>：</td><td>OFF</td><td>断線検出を行わない。              </td> </tr>
+                                        <tr> <td></td><td>1</td><td>：</td><td>ON </td><td>断線検出を行う。                  </td> </tr>
+                                    </table>
+                                    <p><dd>※BIT0 ～BIT2 は、未使用です。</dd></p>
+
+                                <dt>wd_fact1</dt>
+                                    <dd>断線検出の時間を決めるための係数を設定します(1～255)。</dd>
+
+                                <dt>wd_fact2</dt>
+                                    <dd>断線検出の時間を決めるための係数を設定します(1～255)。</dd>
+                                <p></p>
+
+                                <dd>※ 断線検出時間とwd_fact1、wd_fact2 関係は次の通りです。</dd>
+                                <dl>
+                                    <dd>断線検出時間(msec) = 10 * wd_fact1 * wd_fact2</dd>
+                                </dl>
+
+                                <dt>min_tsdr</dt>
+                                    <dd>マスタ局へのレスポンスを返すまでに待つ最小時間を設定します(1～255)。</dd>
+
+                                <dt>reserve2</dt>
+                                    <dd>未使用</dd>
+
+                                <dt>grp_ident</dt>
+                                    <dd>DDLM_Global_Control命令のためのグループを設定します。</dd>
+
+                                <dt>user_plen</dt>
+                                    <dd>スレーブパラメータに必要なメーカー側からの指定データのバイト数を設定します(0～206)。</dd>
+
+                                <dt>user_pdata</dt>
+                                    <dd>スレーブパラメータに必要なメーカー側からの指定データを設定します。</dd>
+                                    <dd>上記 user_plen に設定されるバイト数分のデータが有効です。</dd>
+
+                                <dt>slv_ulen</dt>
+                                    <dd>スレーブ局の特性を示すためのメーカー側からの指定データのバイト数を設定します(0～30)。</dd>
+
+                                <dt>slv_udata</dt>
+                                    <dd>スレーブ局の特性を示すためのメーカー側からの指定データを設定します。</dd>
+                                    <dd>上記 slv_ulen に設定されるバイト数分のデータが有効です。</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RANGE</name>
+            <content>データ番号の誤り<br/>
+                    インデックス番号(idx)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>
+                スレーブパラメータの指定が不適切です。
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBPMCERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>wd_fact1の誤り </td></tr>
+                    <tr><td>2</td><td>：</td><td>wd_fact2の誤り </td></tr>
+                    <tr><td>3</td><td>：</td><td>min_tsdrの誤り </td></tr>
+                    <tr><td>4</td><td>：</td><td>user_plenの誤り</td></tr>
+                    <tr><td>5</td><td>：</td><td>slv_ulenの誤り </td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>CNC側処理の実行拒否<br/>
+                スレーブ・インデックスデータが設定されていません。
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Pmc/pmc_getdtailerr.htm" target="_parent">pmc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBPMCERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>スレーブ・インデックスデータの通信スレーブ局番が設定されていません。                 </td></tr>
+                    <tr><td>2</td><td>：</td><td>スレーブ・インデックスデータのI/Oモジュールを配置するスロット数が設定されていません。</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                    <li>PROFIBUS-DPボード(ハード)が必要です。  </li>
+                    <li>PROFIBUS-DPの管理ソフトが必要です。    </li>
+                    <li>PROFIBUS-DPマスタ機能が必要です。      </li>
+                    <li>拡張ドライバ/ライブラリ機能が必要です。</li>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>PROFIBUS-DPマスタ機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>pmc_prfrdslvprm2</name>
+            <file>Profibus/pmc_prfrdslvprm2.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

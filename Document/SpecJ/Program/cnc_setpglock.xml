@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_setpglock</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_setpglock(unsigned short FlibHndl, long prog_no);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>登録されているプログラムに対して、サブプログラム呼出しによる運転禁止と、以下に示す操作および関数の実行禁止を設定します。</p>
+            CNCの操作
+                <ul>
+                    ①プログラムの編集、削除<br/>
+                    ②Ｏ番号サーチ<br/>
+                    ③入出力機器からのプログラムの入力及び出力<br/>
+                </ul>
+            
+            ライブラリ
+                <ul>
+                    <p>
+                        ①プログラムの編集、削除<br/>
+                        <ul>
+                            cnc_search、cnc_delete<br/>
+                            → EW_PROTのエラーとなります。<br/>
+                            cnc_delall<br/>
+                            → パラメータで保護されているプログラムおよび本関数で運転／編集禁止となっているプログラムは削除されませんが、それ以外のプログラムは削除されます。
+                        </ul>
+                    </p>
+                    <p>
+                        ②プログラムのダウンロード、照合<br/>
+                        <ul>
+                            cnc_download、cnc_cdownload、cnc_dwnend,cnc_verify、cnc_cverify、cnc_vrfend、cnc_download3、cnc_dwnend3<br/>
+                            → EW_PROTのエラーとなります。
+                        </ul>
+                    </p>
+                    <p> 
+                        ③プログラムのコピー、リネーム<br/>
+                        <ul>
+                            cnc_copyprog<br/>
+                            → コピー先のプログラム番号に運転／編集禁止を設定したプログラムを指定すると、EW_PROTのエラーとなります。<br/>
+                            cnc_renameprog<br/>
+                            → 変更前のプログラム番号に運転／編集禁止を設定したプログラムを指定すると、EW_PROTのエラーとなります。
+                        </ul>
+                    </p>
+                    <p>＜注＞  運転／編集禁止が設定されていても、行編集機能による編集は可能です。</p>
+                </ul>
+            運転／編集禁止の設定は、各系統毎に設定することができます。１つの系統に対して、４個までのプログラムに運転編集禁止の設定を行なうことができます。<br/>
+            本関数で設定された運転／編集禁止の設定は、関数cnc_resetpglockにより解除されるか、またはCNCの電源がOFFされるまで有効となります。<br/>
+            <br/>
+            アプリケーションで、既存のプログラムを編集する場合の手順を以下に示します。<br/>
+            <ul>
+                ① 関数cnc_setpglockにより、編集を行なうプログラムに対して運転／編集禁止を設定します。<br/>
+                ② 行編集機能により、プログラムの編集を行ないます。<br/>
+                ③ 関数cnc_resetpglockにより運転／編集禁止を解除し、編集を終了します。<br/>
+                <br/>
+                ※ 新規にプログラムを作成する場合は、上記の①を行なう前にプログラムを登録する必要があります。
+            </ul>
+            なお、以下に示すプログラムに対して運転／編集禁止を設定することはできません。<br/>
+            <ul>
+                O0000（プログラム番号８桁の場合はO00000000）<br/>
+                選択中のプログラムおよび運転中のプログラム（メイン、ネスト途中、実行中）<br/>
+                パラメータにより保護されているプログラム（O9000番台等）<br/>
+                MDIプログラム
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prog_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            プログラム番号<br/>
+                            運転／編集禁止を設定するプログラムの番号を指定します。<br/>
+                            プログラム番号には、CNCに登録されている１以上のプログラム番号を指定して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                CNC側が本関数に対応していません。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                プログラム番号の誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr()</a> 関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。<br/>
+                <table>
+                    <tr><td>1</td><td>:</td><td>プログラム番号（prog_no）に０以下、または10000(プログラム番号８桁の場合は100000000)以上の値が指定されました。</td></tr>
+                    <tr><td>2</td><td>:</td><td>プログラム番号（prog_no）で指定されたプログラムが存在しません。</td></tr>
+                    <tr><td>3</td><td>:</td><td>プログラム番号（prog_no）で指定されたプログラムは、既に運転／編集禁止が設定されています。</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                プロテクトエラー<br/>
+                プログラム番号（prog_no）にパラメータで保護されているプログラムが指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_OVRFLOW</name>
+            <content>
+                メモリオーバーフロー<br/>
+                既に４個のプログラムに対して運転／編集禁止が設定されています。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                実行拒否<br/>
+                プログラム番号（prog_no）に現在選択中または運転中のプログラム（メインプログラム、ネスト途中のプログラム、実行中のプログラム）が指定されました。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_resetpglock</name>
+            <file>Program/cnc_resetpglock.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpglockstat</name>
+            <file>Program/cnc_rdpglockstat.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

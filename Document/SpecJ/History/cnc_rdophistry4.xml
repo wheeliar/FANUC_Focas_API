@@ -1,0 +1,1130 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdophistry4</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdophistry4(unsigned short FlibHndl,unsigned short s_no, unsigned short *e_no, unsigned short *length, void *his); 
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>操作履歴データのリードを行います。<br/>
+               Series 30i, 0i-D/F, PMi-A で操作履歴データのリードを行う場合、<a href="History/cnc_rdophistry.htm" target="_parent">cnc_rdophistry</a> 関数ではなく本関数 を使用して下さい。<br/>
+            </p>
+            <p>操作履歴データの種類により、リードされる操作履歴データの構造が違います。</p>
+            <p>操作履歴データ、並びにアラーム履歴データ、並びに外部オペレータメッセージ履歴データはCNC側で自動的に記録されています。<br/>
+                これらのデータにアクセスするためには、CNC側のサンプリングを一時的に停止させる必要があります。<br/>
+                このため、本関数を使用する前に、『履歴データのサンプリングの停止』(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)を実行する必要があります。
+            </p>
+            <p>また、リードが済み次第、履歴データのサンプリング停止時間を最小限にするために『履歴データのサンプリングの再開』(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>)を実行して下さい。</p>
+            <p>開始／終了のレコード番号とは、リードする操作履歴データのレコード毎につけた番号のことです。このレコード番号は『履歴データのサンプリングの停止』を実行してから『履歴データのサンプリングの再開』が実行されるまで有効です。</p>
+        </cmn>
+        <!-- 30i(WinCE) -->
+        <is>
+            <cmn>
+                <p>操作履歴データのリードを行います。<br/>
+                   操作履歴データのリードを行う場合、<a href="History/cnc_rdophistry.htm" target="_parent">cnc_rdophistry</a> 関数ではなく本関数 を使用して下さい。<br/>
+                </p>
+                <p>操作履歴データの種類により、リードされる操作履歴データの構造が違います。</p>
+                <p>操作履歴データ、並びにアラーム履歴データ、並びに外部オペレータメッセージ履歴データはCNC側で自動的に記録されています。<br/>
+                    これらのデータにアクセスするためには、CNC側のサンプリングを一時的に停止させる必要があります。<br/>
+                    このため、本関数を使用する前に、『履歴データのサンプリングの停止』(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a>)を実行する必要があります。
+                </p>
+                <p>また、リードが済み次第、履歴データのサンプリング停止時間を最小限にするために『履歴データのサンプリングの再開』(<a href="History/cnc_startophis.htm" target="_parent">cnc_startophis</a>)を実行して下さい。</p>
+                <p>開始／終了のレコード番号とは、リードする操作履歴データのレコード毎につけた番号のことです。このレコード番号は『履歴データのサンプリングの停止』を実行してから『履歴データのサンプリングの再開』が実行されるまで有効です。</p>
+            </cmn>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            リードを開始する操作履歴データ番号を指定します。(1 以上を指定して下さい)<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>e_no</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            リードを終了する操作履歴データ番号へのポインタを指定します。(1 以上を指定して下さい)<br/>
+                            関数からは、実際にリードされた最後の操作履歴データ番号が返ります。<br/>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            指定した範囲の操作履歴データを格納するのに必要なデータブロック長へのポインタを指定します。<br/>
+                            <br/>
+                            操作履歴データ1個あたりは下図ODBOPHIS4構造体のようになり、構造体
+                            の大きさは rec_lenで表されます。この構造体が操作履歴データ番号
+                            順に指定された個数分並びますので、指定するlengthはそれら構造体
+                            の rec_lenの合計になります。<br/>
+                            <br/>
+
+                            複数のデータを取得する場合、下図のように、2個目以降のデータは、前のデータの直後に取得されます。(構造体の配列ではありません。)<br/>
+                            したがって、2個目以降を取得する場合には､前のデータの先頭ポインタにデータ長(rec_len)を足したポインタから読み出してください。<br/>
+                        <br/>
+                            <img src="History/His_reclen.gif"></img><br/>
+
+                            関数からは、実際にリードしたサイズが返りますので長めに指定することができます。<br/>
+
+                        </p>
+                            <img src="History/mdi_key.gif"></img><br/>
+                            <img src="History/signal.gif"></img><br/>
+                            <img src="History/alarm.gif"></img><br/>
+                            <img src="History/date_time.gif"></img><br/>
+                            <img src="History/ext_alarm.gif"></img><br/>
+                            <img src="History/ext_msg_alarm.gif"></img><br/>
+                            <img src="History/operator_msg.gif"></img><br/>
+                            <img src="History/tooloffset.gif"></img><br/>
+                            <img src="History/parameter.gif"></img><br/>
+                            <img src="History/workoffset.gif"></img><br/>
+                            <img src="History/custommacro.gif"></img><br/>
+                            <img src="History/custommacro2.gif"></img><br/>
+                            <img src="History/screennumber.gif"></img><br/>
+                            <img src="History/unsupport.gif"></img><br/>
+                    </content>
+                </item>
+                <item>
+                    <name>his</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            操作履歴データを返す領域へのポインタです。
+                            個々の操作履歴データの参照は、ODBOPHIS4構造体を使用します。
+                        </p>
+<pre>
+typedef struct odbophis4 {
+    short  rec_len;               /* レコードの有効長 */
+    short  rec_type;              /* レコードの種類 */
+    union {
+        struct {
+            char    key_code; /* キーコード */
+            char    pw_flag;  /* 電源投入フラグ */
+            short   pth_no;   /* 系統番号 */
+            short   ex_flag;  /* 外部ＭＤＩキーフラグ */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+        } rec_mdi;                /* MDIキー操作 */
+        struct {
+            short   sig_name; /* 信号の名称 */
+            short   sig_no;   /* 信号の番号 */
+            char    sig_old;  /* 変化前のビットパターン */
+            char    sig_new;  /* 変化後のビットパターン */
+            short   pmc_no;   /* PMC番号 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   dummy;    /* 未使用 */
+        } rec_sgn;                /* 信号 */
+        struct {
+            short   alm_grp;  /* アラームの種類 */
+            short   alm_no;   /* アラーム番号 */
+            short   axis_no;  /* 絶対軸番号 または 絶対主軸番号 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+        } rec_alm;                /* アラーム */
+        struct {
+            short   evnt_type;/* イベントの種類 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   dummy;    /* 未使用 */
+        } rec_date;               /* 日付・時刻 */
+        struct {
+            short   alm_grp;  /* アラームの種類 */
+            short   alm_no;   /* アラーム番号 */
+            short   axis_no;  /* 系統内相対軸番号 または 系統内相対主軸番号*/
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            short   sys_alm;  /* 未使用 */
+            short   dsp_flg;  /* メッセージ表示用のフラグ */
+            short   axis_num; /* 総軸数 */
+            long    g_modal[10];/* Gコードモーダル値 */
+            char    g_dp[10];   /* #7:1の時 指定ブロックにて指令されている*/
+                                /* #6～#0小数点以下桁数*/
+            long    a_modal[10];/* B,D,E,F,H,M,N,O,S,Tコードモーダル値 */
+            char    a_dp[10];   /* #7:1の時 指定ブロックにて指令されている*/
+                                /* #6～#0小数点以下桁数*/
+            long    abs_pos[32];/* アラーム発生時の絶対座標値 */
+            char    abs_dp[32]; /* アラーム発生時の絶対座標値の小数点以下桁数*/
+            long    mcn_pos[32];/* アラーム発生時の機械座標値 */
+            char    mcn_dp[32]; /* アラーム発生時の機械座標値の小数点以下桁数*/
+        } rec_ial;                /* 付加情報付きアラーム */
+        struct {
+            short   alm_grp;  /* アラームの種類 */
+            short   alm_no;   /* アラーム番号 */
+            short   axis_no;  /* 絶対軸番号 または 絶対主軸番号 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            short   sys_alm;  /* 未使用 */
+            short   dsp_flg;  /* メッセージ表示用のフラグ */
+            short   axis_num; /* 総軸数 */
+            char    alm_msg[64];/* アラームメッセージ */
+            long    g_modal[10];/* Gコードモーダル値 */
+            char    g_dp[10];   /* #7:1の時 指定ブロックにて指令されている。*/
+                                /* #6～#0小数点以下桁数*/
+            long    a_modal[10];/* B,D,E,F,H,M,N,O,S,Tコードモーダル値 */
+            char    a_dp[10];   /* #7:1の時 指定ブロックにて指令されている。*/
+                                /* #6～#0小数点以下桁数*/
+            long    abs_pos[32];/* アラーム発生時の絶対座標値 */
+            char    abs_dp[32]; /* アラーム発生時の絶対座標値の小数点以下桁数 */
+            long    mcn_pos[32];/* アラーム発生時の機械座標値 */
+            char    mcn_dp[32]; /* アラーム発生時の機械座標値の小数点以下桁数 */
+        } rec_mal;                /* 付加情報付きメッセージ付きアラーム */
+        struct {
+            short   dsp_flg;  /* メッセージ表示用のフラグ */
+            short   om_no;    /* メッセージ番号 */
+            short   year;     /* 年 */
+            short   month;    /* 月 */
+            short   day;      /* 日 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            char    ope_msg[256];/* メッセージ */
+        } rec_opm;                /* 外部オペレータメッセージ */
+        struct {
+            short   ofs_grp;  /* 工具補正データ種別 */
+            short   ofs_no;   /* 工具補正番号 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            long    ofs_old;  /* 変更前の工具補正データ */
+            long    ofs_new;  /* 変更後の工具補正データ */
+            short   old_dp;   /* 変更前の工具補正データの小数点以下桁数 */
+            short   new_dp;   /* 変更後の工具補正データの小数点以下桁数 */
+        } rec_ofs;                /* 工具補正量の変更 */
+        struct {
+            short   prm_grp;  /* パラメータデータ種別 */
+            short   prm_num;  /* 番号(パラメータデータ種別により異なります */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   prm_len;  /* パラメータデータ長 */
+            long    prm_no;   /* パラメータ番号 */
+            long    prm_old;  /* 変更前のパラメータデータ */
+            long    prm_new;  /* 変更後のパラメータデータ */
+            short   old_dp;   /* 変更前のパラメータデータの小数点以下桁数 */
+            short   new_dp;   /* 変更後のパラメータデータの小数点以下桁数 */
+        } rec_prm;                /* パラメータの変更 */
+        struct {
+            short   ofs_grp;  /* ワーク補正データ種別 */
+            short   ofs_no;   /* ワーク補正番号 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            short   axis_no;  /* 系統内相対 軸番号 */
+            short   dummy;    /* 未使用 */
+            long    ofs_old;  /* 変更前のワーク補正データ */
+            long    ofs_new;  /* 変更後のワーク補正データ */
+            short   old_dp;   /* 変更前のワーク補正データの小数点以下桁数 */
+            short   new_dp;   /* 変更後のワーク補正データの小数点以下桁数 */
+        } rec_wof;                /* ワーク補正量の変更 */
+        struct {
+            short   mac_no;   /* カスタムマクロコモン変数番号 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            long    mac_old;  /* 変更前のコモン変数データ */
+            long    mac_new;  /* 変更後のコモン変数データ */
+            short   old_dp;   /* 変更前のコモン変数データの小数点以下桁数 */
+            short   new_dp;   /* 変更後のコモン変数データの小数点以下桁数 */
+        } rec_mac;                /* カスタムマクロコモン変数の変更 */
+        struct {
+            long    mac_no;   /* カスタムマクロコモン変数番号(拡張) */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+            short   pth_no;   /* 系統番号 */
+            long    mac_old;  /* 変更前のコモン変数データ */
+            long    mac_new;  /* 変更後のコモン変数データ */
+            short   old_dp;   /* 変更前のコモン変数データの小数点以下桁数 */
+            short   new_dp;   /* 変更後のコモン変数データの小数点以下桁数 */
+        } rec_mac2;               /* カスタムマクロコモン変数の変更 */
+        struct {
+            short   scrn_old; /* 切り替え前画面番号 */
+            short   scrn_new; /* 切り替え後画面番号 */
+            short   hour;     /* 時 */
+            short   minute;   /* 分 */
+            short   second;   /* 秒 */
+        } rec_scrn;               /* 画面(番号)の変更 */
+    } u;
+} ODBOPHIS4 ;
+</pre>
+                        <dl>
+                            <dt>rec_len</dt>
+                                <dd>ODBOPHIS4構造体の長さがセットされます。</dd>
+                            <dt>rec_type</dt>
+                                <dd>レコードの種類がセットされます。</dd>
+                                <dd><table class="dd">
+                                    <tr><td>0</td><td>:</td><td>MDIキー</td></tr>
+                                    <tr><td>1</td><td>:</td><td>信号</td></tr>
+                                    <tr><td>2</td><td>:</td><td>アラーム</td></tr>
+                                    <tr><td>3</td><td>:</td><td>日付・時刻</td></tr>
+                                    <tr><td>4</td><td>:</td><td>カスタムマクロコモン変数の変更</td></tr>
+                                    <tr><td>5</td><td>:</td><td>パラメータの変更</td></tr>
+                                    <tr><td>6</td><td>:</td><td>外部オペレータメッセージ</td></tr>
+                                    <tr><td>7</td><td>:</td><td>工具補正量の変更</td></tr>
+                                    <tr><td>8</td><td>:</td><td>ワーク補正量の変更</td></tr>
+                                    <tr><td>9</td><td>:</td><td>付加情報付きアラーム</td></tr>
+                                    <tr><td>10</td><td>:</td><td>付加情報付きメッセージ付きアラーム</td></tr>
+                                    <tr><td>11</td><td>:</td><td>カスタムマクロコモン変数(拡張)の変更</td></tr>
+                                    <tr><td>12</td><td>:</td><td>画面(番号)の変更</td></tr>
+                                    <tr><td>-1</td><td>:</td><td>未対応の履歴データ</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>key_code</dt>
+                                <dd>キーコードがセットされます。</dd>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr><th>　</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                                    <tr><td><b>0</b></td><td>&#160;</td><td>&#160;</td><td>SP</td><td>0</td><td>@</td><td>P</td><td>`</td><td>&#160;</td></tr>
+                                    <tr><td><b>1</b></td><td>&#160;</td><td>&#160;</td><td>!</td><td>1</td><td>A</td><td>Q</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>2</b></td><td>&#160;</td><td>&#160;</td><td>"</td><td>2</td><td>B</td><td>R</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>3</b></td><td>&#160;</td><td>&#160;</td><td>#</td><td>3</td><td>C</td><td>S</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>4</b></td><td>&#160;</td><td>&#160;</td><td>$</td><td>4</td><td>D</td><td>T</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>5</b></td><td>&#160;</td><td>&#160;</td><td>%</td><td>5</td><td>E</td><td>U</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>6</b></td><td>&#160;</td><td>&#160;</td><td>&amp;</td><td>6</td><td>F</td><td>V</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>7</b></td><td>&#160;</td><td>&#160;</td><td>'</td><td>7</td><td>G</td><td>W</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>8</b></td><td>&#160;</td><td>&#160;</td><td>(</td><td>8</td><td>H</td><td>X</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>9</b></td><td>TAB</td><td>&#160;</td><td>)</td><td>9</td><td>I</td><td>Y</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>A</b></td><td>EOB</td><td>&#160;</td><td>*</td><td>:</td><td>J</td><td>Z</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>B</b></td><td>&#160;</td><td>&#160;</td><td>+</td><td>;</td><td>K</td><td>[</td><td>&#160;</td><td>{</td></tr>
+                                    <tr><td><b>C</b></td><td>&#160;</td><td>&#160;</td><td>,</td><td>&lt;</td><td>L</td><td>\</td><td>&#160;</td><td>|</td></tr>
+                                    <tr><td><b>D</b></td><td>&#160;</td><td>&#160;</td><td>-</td><td>=</td><td>M</td><td>]</td><td>&#160;</td><td>}</td></tr>
+                                    <tr><td><b>E</b></td><td>&#160;</td><td>&#160;</td><td>.</td><td>&gt;</td><td>N</td><td>&#160;</td><td>&#160;</td><td>~</td></tr>
+                                    <tr><td><b>F</b></td><td>&#160;</td><td>&#160;</td><td>/</td><td>?</td><td>O</td><td>_</td><td>&#160;</td><td>&#160;</td></tr>
+                                </table>
+                                <br/>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr>
+                                        <th>&#160;</th><th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>0</b></td><td>&#160;</td><td>RESET</td><td>[SKV9]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F1]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>1</b></td><td>&#160;</td><td>&#160;</td><td>[SKV8]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F2]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>2</b></td><td>&#160;</td><td>&#160;</td><td>[SKV7]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F3]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>3</b></td><td>&#160;</td><td>&#160;</td><td>[SKV6]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F4]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>4</b></td><td>SHIFT</td><td>INSERT</td><td>[SKV5]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>AUX</td><td>[F5]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>5</b></td><td>&#160;</td><td>DELETE</td><td>[SKV4]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F6]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>6</b></td><td>CAN</td><td>ALTER</td><td>[SKV3]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F7]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>7</b></td><td>&#160;</td><td>ALT</td><td>[SKV2]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>[F8]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>8</b></td><td>&#8594;</td><td>INPUT</td><td>[SKV1]</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>POS</td><td>[F9]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>9</b></td><td>&#8592;</td><td>CALC</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>PROG</td><td>[F10]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>A</b></td><td>&#8595;</td><td>HELP</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>OFFSET<br/>SETTING</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>B</b></td><td>&#8593;</td><td>CTRL</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>SYSTEM</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>C</b></td><td>&#160;</td><td>ABC/abc</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>MESSAGE</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>D</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>GRAPH</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>E</b></td><td>Page&#8595;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>CUSTOM</td><td>[FR]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>F</b></td><td>Page&#8593;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>CUSTOM2</td><td>[FL]</td>
+                                    </tr>
+                                </table>
+                            <dt>pw_flag</dt>
+                                <dd>電源投入フラグ</dd>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>電源投入時</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>その他</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>ex_flag</dt>
+                                <dd>外部MDIキーフラグ</dd>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>外部MDIキー</td>
+                                    </tr>
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>通常のMDIキー</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_name</dt>
+                                <dd>信号の名称</dd>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>X</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>G</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>:</td>
+                                        <td>Y</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>:</td>
+                                        <td>F</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_no</dt>
+                                <dd>信号の番号</dd>
+                                <dd><table class="dd">
+                                    <tr>
+                                        <td>X</td>
+                                        <td>:</td>
+                                        <td>0 ～ 127</td>
+                                    </tr>
+                                    <tr>
+                                        <td>G</td>
+                                        <td>:</td>
+                                        <td>0 ～ 767</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Y</td>
+                                        <td>:</td>
+                                        <td>0 ～ 127</td>
+                                    </tr>
+                                    <tr>
+                                        <td>F</td>
+                                        <td>:</td>
+                                        <td>0 ～ 767</td>
+                                    </tr>
+                                </table></dd>
+                            <dt>sig_old</dt>
+                                <dd>変化前のビットパターン</dd>
+                            <dt>sig_new</dt>
+                                <dd>変化後のビットパターン</dd>
+                            <dt>alm_grp</dt>
+                                <dd>アラームの種類がセットされます。</dd>
+                                <ul type="disc">
+                                </ul>
+                                    <dd><table class="dd">
+                                        <tr><td>0 </td> <td>:</td> <td>パラメータ書込みスイッチオン</td>        <td>(SW)</td></tr>
+                                        <tr><td>1 </td> <td>:</td> <td>電源断が必要なパラメータの入力</td>      <td>(PW)</td></tr>
+                                        <tr><td>2 </td> <td>:</td> <td>I/Oエラー</td>                           <td>(IO)</td></tr>
+                                        <tr><td>3 </td> <td>:</td> <td>フォアグラウンド用P/S</td>               <td>(PS)</td></tr>
+                                        <tr><td>4 </td> <td>:</td> <td>オーバトラベル/外部データ入力エラー</td> <td>(OT)</td></tr>
+                                        <tr><td>5 </td> <td>:</td> <td>オーバーヒート</td>                      <td>(OH)</td></tr>
+                                        <tr><td>6 </td> <td>:</td> <td>サーボアラーム</td>                      <td>(SV)</td></tr>
+                                        <tr><td>7 </td> <td>:</td> <td>データ入出力のエラー</td>                <td>(SR)</td></tr>
+                                        <tr><td>8 </td> <td>:</td> <td>マクロアラーム</td>                      <td>(MC)</td></tr>
+                                        <tr><td>9 </td> <td>:</td> <td>スピンドルアラーム</td>                  <td>(SP)</td></tr>
+                                        <tr><td>10</td> <td>:</td> <td>その他のアラーム</td>                    <td>(DS)</td></tr>
+                                        <tr><td>11</td> <td>:</td> <td>誤動作防止機能に関するアラーム</td>      <td>(IE)</td></tr>
+                                        <tr><td>12</td> <td>:</td> <td>バックグラウンド用P/S</td>               <td>(BG)</td></tr>
+                                        <tr><td>13</td> <td>:</td> <td>同期誤差過大エラー</td>                  <td>(SN)</td></tr>
+                                        <tr><td>14</td> <td>:</td> <td>予約</td>                                <td>    </td></tr>
+                                        <tr><td>15</td> <td>:</td> <td>外部アラームメッセージ</td>              <td>(EX)</td></tr>
+                                        <tr><td>19</td> <td>:</td> <td>PMCエラー</td>                           <td>(PC)</td></tr>
+                                    </table>
+                                    <table class="dd">
+                                        <tr><td>20～31</td> <td>:</td> <td>(未使用)</td> </tr>
+                                    </table></dd>
+                            <dt>alm_no</dt>
+                                <dd>アラーム番号がセットされます。</dd>
+                            <dt>axis_no</dt>
+<!--
+                                <dd>レコードの種別が、アラーム時と付加情報付きアラーム時と付加情報付きメッセージ付きアラーム時は、<br/>
+                                    絶対軸番号(1～最大制御軸数) または 絶対主軸番号(1～主軸数)がセットされます。<br/>
+                                    (軸や主軸に関係ないアラームの場合は 0 がセットされます)
+                                    レコードの種別が、ワーク補正量の変更時は、系統内相対軸(0～)となります。
+                                </dd>
+-->
+                                <dd>
+                                    <li>rec_type 2 :アラーム、rec_type 9 :付加情報付きアラームおよび、rec_type 10 :付加情報付きメッセージ付きアラームの場合</li>
+                                        <ul>系統内相対軸番号(1～最大制御軸数) または 系統内相対主軸番号(1～主軸数)がセットされます。</ul>
+                                        <ul>任意軸切換え機能有効時は、絶対軸番号+1000(1001～最大制御軸数+1000) または 系統内相対主軸番号(1～主軸数)がセットされます。</ul>
+                                        <ul>(軸や主軸に関係ないアラームの場合は 0 がセットされます)</ul>
+
+                                    <li>rec_type 8:ワーク補正量の変更の場合</li>
+                                        <ul>系統内相対軸番号(0～最大制御軸数-1)となります。</ul>
+                                        <ul>任意軸切換え機能有効時は、絶対軸番号+1000(1000～最大制御軸数-1+1000) となります。</ul>
+                                </dd>
+                            <dt>year</dt>
+                                <dd>年 (1995 ～ 2094)<br/></dd>
+                            <dt>month</dt>
+                                <dd>月 (1 ～ 12)<br/></dd>
+                            <dt>day</dt>
+                                <dd>日 (1 ～ 31)<br/></dd>
+                            <dt>hour</dt>
+                                <dd>時 (0 ～ 23)<br/></dd>
+                            <dt>minute</dt>
+                                <dd>分 (0 ～ 59)<br/></dd>
+                            <dt>second</dt>
+                                <dd>秒 (0 ～ 59)<br/></dd>
+                            <dt>evnt_type</dt>
+                                <dd>イベントの種類</dd>
+                                <ul type="disc">
+                                    <table class="dd">
+                                        <tr>
+                                            <td>0</td>
+                                            <td>:</td>
+                                            <td>電源断</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>:</td>
+                                            <td>電源投入</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>:</td>
+                                            <td>日付変更</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>:</td>
+                                            <td>タイムスタンプ</td>
+                                        </tr>
+                                        <tr>
+                                             <td>4</td>
+                                             <td>:</td>
+                                             <td>データ消去</td>
+                                             <td></td>
+                                         </tr>
+                                     </table>
+                                </ul>
+                            <dt>pth_no</dt>
+                                <dd>系統番号(1～10)</dd>
+                            <dt>pmc_no</dt>
+                                <dd>PMC番号(1～3)</dd>
+                            <dt>axis_num</dt>
+                            <dd>総軸数(1～32)</dd>
+                            <dt>g_modal</dt>
+                            <dd>アラーム発生時の指定されたGコードグループのモーダルGコード (存在しない場合 -1)</dd>
+                            <dd>モーダルGコードのグループの番号指定はパラメータ12990～12999で指定します。<br/></dd>
+                            <dt>g_dp</dt>
+                            <dd>モーダルGコード小数点以下桁数 （存在しない場合 -1)</dd>
+                            <dd>
+                                #7:1の時 指定ブロックにて指令されている。<br/>
+                                #6～#0小数点以下桁数
+                            </dd>
+                            <dt></dt>
+                            <dd>
+                                <img src="History/decimal.gif"></img><br/>
+                                #7:0:指定ブロックにて指令されていない。<br/>
+                                &#160;&#160;&#160;&#160;1:指定ブロックにて指令されている。
+                            </dd>
+                            <dt></dt>
+                            <dt>a_modal</dt>
+                            <dd>
+                                アラーム発生時の第2補助機能(prm3460),D,E,F,H,M,N,O,S,Tコードモーダル値(存在しない場合 -1)
+                            </dd>
+                            <dd>
+                                <table>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[0]</td><td>,a_dp[0]=第2補助機能コード</td><td>,a_modal[1]</td><td>,a_dp[1]=Dコード</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[2]</td><td>,a_dp[2]=Eコード</td><td>,a_modal[3]</td><td>,a_dp[3]=Fコード</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[4]</td><td>,a_dp[2]=Hコード</td><td>,a_modal[5]</td><td>,a_dp[3]=Mコード</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[6]</td><td>,a_dp[2]=シーケンス番号</td><td>,a_modal[7]</td><td>,a_dp[3]=プログラム番号または名称(注)</td></tr>
+                                    <tr><td>&#160;&#160;&#160;&#160;</td><td>a_modal[8]</td><td>,a_dp[2]=Sコード</td><td>,a_modal[9]</td><td>,a_dp[3]=Tコード</td></tr>
+                                </table>
+                            </dd>
+                            <dd>
+                                &#160;&#160;&#160;&#160;注) プログラム名称の場合は最初の5文字<br/>
+                                <img src="History/example.gif"></img><br/>
+                            </dd>
+                            <dt>a_dp</dt>
+                            <dd>
+                                #7:1の時 指定ブロックにて指令されている。(存在しない場合 -1)<br/>
+                                #6～#0小数点以下桁数
+                            </dd>
+                            <dt></dt>
+                            <dd>
+                                <img src="History/decimal.gif"></img><br/>
+                                #7:0:指定ブロックにて指令されていない。<br/>
+                                &#160;&#160;&#160;&#160;1:指定ブロックにて指令されている。
+                            </dd>
+                            <dt></dt>
+                            <dt></dt>
+                            <dt>abs_pos</dt>
+                            <dd>
+                                アラーム発生時の絶対座標値
+                            </dd>
+                            <dt>abs_dp</dt>
+                            <dd>
+                                アラーム発生時の絶対座標値の小数点以下桁数
+                            </dd>
+                            <dt>mcn_pos</dt>
+                            <dd>
+                                アラーム発生時の機械座標値
+                            </dd>
+                            <dt>mcn_dp</dt>
+                            <dd>
+                                アラーム発生時の機械座標値の小数点以下桁数<br/>
+                            </dd>
+                            *軸数以上は不定値
+                            <dt>alm_msg</dt>
+                            <dd>
+                                アラームメッセージ
+                            </dd>
+                            <dt>dsp_flg</dt>
+                            <dd>
+                                メッセージ表示方法選択フラグ
+                                <table class="dd">
+                                    <tr><td>マクロアラーム(alm_grp=8)の時、6008#1の状態が取得できます。</td></tr>
+                                    <tr><td>外部アラーム(alm_grp=15) の時、6301#0の状態が取得できます。</td></tr>
+                                    <tr><td>外部オペレータメッセージ の時、6301#1の状態が取得できます。</td></tr>
+                                    <tr><td>（※現在の設定ではなく、発生した時の設定が取得できます。）</td></tr>
+                                </table>
+                            </dd>
+                            <dt>om_no</dt>
+                            <dd>
+                                メッセージ番号
+                            </dd>
+                            <dt>ope_msg</dt>
+                            <dd>
+                                メッセージ(最後はnull(\0)です)
+                            </dd>
+                            <dt>ofs_grp</dt>
+                            <dd>
+                                補正データ種別
+                                <li>rec_type 7:工具補正量の変更の場合(工具補正の種類がセットされます。)</li>
+                            </dd>
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td><td>:</td><td>工具補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>&#160;</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟAﾒﾓﾘ：M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td><td>:</td><td>形状補正</td>
+                                        <td>&#160;</td>
+                                        <td>2</td><td>:</td><td>摩耗補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟBﾒﾓﾘ：M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td><td>:</td><td>工具長補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>4</td><td>:</td><td>工具長補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟCﾒﾓﾘ：M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td><td>:</td><td>工具径補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>6</td><td>:</td><td>工具径補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟCﾒﾓﾘ：M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7</td><td>:</td><td>X軸工具補正</td>
+                                        <td>&#160;</td>
+                                        <td>8</td><td>:</td><td>Z軸工具補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟAﾒﾓﾘ：T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9</td><td>:</td><td>X軸工具補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>10</td><td>:</td><td>X軸工具補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟBﾒﾓﾘ：T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11</td><td>:</td><td>Z軸工具補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>12</td><td>:</td><td>Z軸工具補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟBﾒﾓﾘ：T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>13</td><td>:</td><td>刃先R補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>&#160;</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟAﾒﾓﾘ：T系/M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14</td><td>:</td><td>刃先R補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>15</td><td>:</td><td>刃先R補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟBﾒﾓﾘ：T系/M系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>16</td><td>:</td><td>Y軸工具補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>&#160;</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟAﾒﾓﾘ：T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>17</td><td>:</td><td>Y軸工具補正(形状)</td>
+                                        <td>&#160;</td>
+                                        <td>18</td><td>:</td><td>Y軸工具補正(摩耗)</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(ﾀｲﾌﾟBﾒﾓﾘ：T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>19</td><td>:</td><td>刃先方向</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>&#160;</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(共通    ：T系/M系(M系はPRM5009#5=1時))</td>
+                                    </tr>
+                                    <tr>
+                                        <td>20</td><td>:</td><td>X軸第2形状補正</td>
+                                        <td>&#160;</td>
+                                        <td>21</td><td>:</td><td>Z軸第2形状補正</td>
+                                        <td>&#160;</td>
+                                        <td>&#160;</td><td>&#160;</td><td>(         :T系)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td><td>:</td><td>Y軸第2形状補正 </td>
+                                    </tr>
+                                 </table>
+                            </dd>
+                            <dd>
+                                <li>rec_type 8:ワーク補正量の変更の場合(ワーク補正の種類がセットされます。)</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td><td>:</td><td>ワークオフセット(EXT,G54～G59)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td><td>:</td><td>拡張ワークオフセット(G54.1P1～G54.1P300)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td><td>:</td><td>ワークシフト量(T系のみ)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dt>ofs_no</dt>
+                            <dd>
+                                補正番号
+                                <li>rec_type 7:工具補正量の変更の場合、工具補正番号(1～9999)</li>
+                                <li>rec_type 8:ワーク補正量の変更の場合、ワーク補正番号で</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>ofs_grp</td><td>=</td><td>0時</td><td>:</td><td>0=EXT,1=G54,2=G55,3=G56,4=G57,5=G58,6=G59</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#160;</td><td>=</td><td>1時</td><td>:</td><td>1～300</td>
+                                    </tr>
+                                    <tr>
+                                        <td>&#160;</td><td>=</td><td>2時</td><td>:</td><td>無効</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dt>ofs_old</dt>
+                            <dd>
+                                変更前の工具補正量または、ワーク補正量
+                            </dd>
+                            <dt>ofs_new</dt>
+                            <dd>
+                                変更後の工具補正量または、ワーク補正量
+                            </dd>
+                            <dt>old_dp</dt>
+                            <dd>
+                                変更前のデータの小数点以下桁数(*1) 
+                            </dd>
+                            <dt>new_dp</dt>
+                            <dd>
+                                変更後のデータの小数点以下桁数(*1)
+                            </dd>
+                            <dt></dt>
+                            <dd>
+                                (*1)データは、工具補正量、ワーク補正量､パラメータ､カスタムマクロコモン変数がありカスタムマクロコモン変数の場合、注)カスタムマクロコモン変数の場合を参照して下さい。
+                            </dd>
+                            <dt>mac_old</dt>
+                            <dd>
+                                変更前のカスタムマクロコモン変数データ
+                            </dd>
+                            <dt>mac_new</dt>
+                            <dd>
+                                変更後のカスタムマクロコモン変数データ
+                            </dd>
+                            注）カスタムマクロコモン変数の場合、M*(10**(-E))のデータ形式で表わします。
+                            <dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>mac_old,mac_new</td><td>:</td><td>変数値(=M)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>old_dp,new_dp</td><td>:</td><td>小数点以下桁数(=E) (-128(0x80)～127(0x7f))</td>
+                                    </tr>
+                                </table>
+                                &lt;例&gt;
+                                <li>変数値が 12.345 の場合、以下のように読み出されます。</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>tdmcr_val = 1234500000</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dec_val = 8</td>
+                                    </tr>
+                                    <tr>
+                                        <td>→ 1234500000*(10**(-8)) = 12.345</td>
+                                    </tr>
+                                </table>
+                                <li>変数値が 123456789012345 の場合、以下のように読み出されます。</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>mcr_val = 1234567890</td>
+                                    </tr>
+                                    <tr>
+                                        <td>dec_val = -5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>→ 1234567890*(10**5) = 123456789000000</td>
+                                    </tr>
+                                </table>
+                                * 特殊
+                                <li>『 空 』の場合： </li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>mac_old,mac_new =  0、old_dp,new_dp = -1(0xff)</td>
+                                    </tr>
+                                </table>
+                                <li>オーバーフローの場合：</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>mac_old,mac_new = -1、old_dp,new_dp = -1(0xff)</td>
+                                    </tr>
+                                </table>
+                            </dd>
+                            <dt>prm_grp</dt>
+                            <dd>
+                                パラメータデータ種別(パラメータデータの種類がセットされます。)<br/>
+                                1:軸型,2:主軸型,3:系統型,4:機械ｸﾞﾙｰﾌﾟ型,0:その他
+                            </dd>
+                            <dt>prm_num</dt>
+                            <dd>
+                                パラメータデータ種別により異なりprm_grp=1～4時のみ 有効<br/>
+                               prm_grp=1ならば、絶対軸番号(1～最大32）<br/>
+                               prm_grp=2ならば、絶対主軸番号(1～最大8)<br/>
+                               prm_grp=3ならば、系統番号(1～10)<br/>
+                               prm_grp=4ならば、機械ｸﾞﾙｰﾌﾟ番号(1～3)
+                            </dd>
+                            <dt>prm_len</dt>
+                            <dd>
+                                パラメータデータ長<br/>
+                                0: BIT型, 1:INT8, 2:INT16, 3:INT32, 4:REAL64
+                            </dd>
+                            <dt>prm_no</dt>
+                            <dd>
+                                パラメータ番号(0～99999)
+                            </dd>
+                            <dt>prm_old</dt>
+                            <dd>
+                                変更前のパラメータデータ
+                            </dd>
+                            <dt>prm_new</dt>
+                            <dd>
+                                変更後のパラメータデータ
+                            </dd>
+                         </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>履歴データのサンプリングの停止(<a href="History/cnc_stopophis.htm" target="_parent">cnc_stopophis</a> 関数)が行われていません。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                    データブロック長の誤り<br/>
+                    操作履歴データ格納領域のサイズ(length)が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                     開始レコード番号(s_no)、終了レコード番号(e_no)が不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>本機能には拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>
+                    3112#3,3195#5～#6,3196#0～#3,#6,#7,12990～12999,3460,6008#1,6301#0,6301#1 (設定の影響を受けます)<br/>
+                </li>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_stopophis</name>
+            <file>History/cnc_stopophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_startophis</name>
+            <file>History/cnc_startophis.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdophisno</name>
+            <file>History/cnc_rdophisno.htm</file>
+        </item>
+        <item>
+            <name>cnc_clearophis</name>
+            <file>History/cnc_clearophis.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

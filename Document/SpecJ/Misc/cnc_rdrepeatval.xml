@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdrepeatval</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdrepeatval(unsigned short FlibHndl, long *rep_val);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>サブプログラム呼び出しおよび固定サイクルにおける繰り返し回数を取得します。なお、サブプログラム呼び出しの場合は、残りの繰り返し回数が取得されます。</p></cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rep_val</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            取得した繰り返し回数を格納するためのlong型変数へのポインタを指定します。
+                        </p>
+                        <p>
+                            取得される値の仕様は以下の通りです。
+                        </p>
+                    <li>電源投入時</li>
+                    <dd>-1が返ります</dd><br/>
+
+                    <li>繰り返し回数が指定されているブロックが実行されていない時</li>
+                    <dd>-1が返ります</dd><br/>
+
+                    <li>サブプログラム呼び出しまたは固定サイクルが指定されているブロックが実行された時</li>
+                    <dd>指定された回数が返ります</dd>
+                    <dd>※ ただし回数が指定されていない場合は0が返ります</dd><br/>
+
+                    <li>指定された繰り返し回数実行中の時</li>
+                    <dd>残り回数が返ります</dd><br/>
+
+                    <li>サブプログラムの中でさらにサブプログラムを呼び出すブロックまたは固定サイクルが実行された時</li>
+                    <dd>そのブロックで指定された繰り返し回数が返ります</dd><br/>
+
+                    <li>サブプログラムの繰り返しが終了し呼び出し元のプログラムに戻った時</li>
+                    <dd>呼び出し元のプログラムの繰り返し回数が返ります</dd><br/>
+
+                    <li>繰り返し回数が指定されている最上位階層のプログラムが終了した時</li>
+                    <dd>-1が返ります</dd><br/>
+
+                    <li>繰り返し中にリセットした時</li>
+                    <dd>-1が返ります</dd><br/>
+
+                    <li>繰り返し中に自動運転を休止し任意のモードに変更した時</li>
+                    <dd>休止時の残り回数が返ります</dd>
+
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>CNC側が本関数に対応していません。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>H</fs16ia>
+           <fs18ia>H</fs18ia>
+           <fs21ia>H</fs21ia>
+           <fs16ib>H</fs16ib>
+           <fs18ib>H</fs18ib>
+           <fs21ib>H</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdrepeatval_ext</name>
+            <file>misc/cnc_rdrepeatval_ext.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

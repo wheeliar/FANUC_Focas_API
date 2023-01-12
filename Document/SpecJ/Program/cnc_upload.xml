@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_upload</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_upload(unsigned short FlibHndl,ODBUP *upld,unsigned short *number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNCのテープ記憶(プログラムメモリ)に登録されているＮＣ指令データのリード(アップロード)を行います。</p>
+            <p><img src="Program/upload_pro.gif"/></p>
+            <b>入力データのフォーマット</b>
+            <p>CNC側から読み込まれるNCデータは、以下のようなフォーマットのASCIIコードの文字列です。</p>
+
+            <p class="dd">
+                % LF Oxxxx LF ブロック1 LF ブロック2 LF ... LF Mxx LF %<br/>
+                <br/>
+                ただし
+                <table>
+                    <tr><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                    <tr><td>Oxxxx</td><td>プログラム番号</td></tr>
+                    <tr><td>Mxx</td><td>プログラム末尾のＭコード(M02,M30など)</td></tr>
+                </table>
+                <br/>
+                バッファに書き込まれた文字列の終端には NULL文字('\x00')が付加されません。<br/>
+                読み込まれたNCプログラムの末尾は '%' です。この '%' を読み込みの終了条件として下さい。<br/>
+                この末尾の '%' が送られてきた後にさらに読み込みを実行すると、
+            </p>
+                <ul>
+                    Series 15/15i では "%" のみが読み取れ、<br/>
+                    Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A では何も読み取れません。
+                </ul>
+                <span class="dd">例えば、</span><br/>
+                <span class="dd"></span><span class="dd">O1234 ;</span><br/>
+                <span class="dd"></span><span class="dd">G1 F0.3 W10. ;</span><br/>
+                <span class="dd"></span><span class="dd">M30 ;</span><br/>
+                <span class="dd"></span><span class="dd">%</span><br/>
+                
+            <p class="dd">
+                <ul>
+                    というプログラムを本関数で読み込むと、<br/>
+                    <br/>
+                    <li>バッファサイズが十分大きい場合</li><br/>
+                        Series 15/15i<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1回目</td><td>"%\nO1234\nG1F0.3W10.\nM30\n%"</td><td>(24文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2回目以降</td><td>"%"</td><td>(1文字)</td></tr>
+                        </table>
+                        Series Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1回目</td><td>"%\nO1234\nG1F0.3W10.\nM30\n%"</td><td>(24文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2回目以降</td><td>""</td><td>(0文字)</td></tr>
+                        </table>
+                        という文字列が得られます。<br/>
+                        <br/>
+                    <li>バッファサイズが24バイトよりも短い場合は次のようになります。</li><br/>
+                        バッファサイズが10バイトの場合<br/>
+                        Series 15/15i<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1回目</td><td>"%\nO1234\nG1"</td><td>(10文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2回目</td><td>"F0.3W10.\nM"</td><td>(10文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>3回目</td><td>"30\n%"</td><td>(4文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>4回目以降</td><td>"%"</td><td>(1文字)</td></tr>
+                        </table>
+                        Series Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A<br/>
+                        <table>
+                            <tr><td><span class="dd"></span></td><td>1回目</td><td>"%\nO1234\nG1"</td><td>(10文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>2回目</td><td>"F0.3W10.\nM"</td><td>(10文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>3回目</td><td>"30\n%"</td><td>(4文字)</td></tr>
+                            <tr><td><span class="dd"></span></td><td>4回目以降</td><td>""</td><td>(0文字)</td></tr>
+                        </table>
+                </ul>
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>upld</name>
+                    <type>out</type>
+                    <content>
+                        <p>ＮＣ指令データを返すODBUP構造体へのポインタです。</p>
+                        <p>ODBUP構造体は次の通りです。</p>
+<pre>
+typedef struct odbup {
+    short   dummy[2] ;              /* 未使用 */
+    char    data[MAX_RBUF] ;        /* ＮＣ指令データ */
+} ODBUP ;                       (MAX_RBUF : 最大リード文字数)
+</pre>
+                        <p>ODBUP構造体のリードバッファサイズ MAX_RBUF のデフォルト値は 256です。<br/>
+                            一度に読み取る文字数を更に大きくする場合には、カスタマイズする必要があります。
+                        </p>
+                        <p><img src="Program/upload_odbup_vc.gif"/></p>
+
+                    </content>
+                </item>
+                <item>
+                    <name>number </name>
+                    <type>in/out</type>
+                    <content>
+                        <p>読み取る文字数を指定する変数のアドレスを指定します。<br/>
+                            この変数(*number) に対して１回で入力する文字数をセットしてください。<br/>
+                            リード終了後、この変数(*number) に実際に読み取った文字数が再セットされます。
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_upstart.htm" target="_parent">cnc_upstart</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                ＮＣ指令データの読み取り文字数 number(*number) に 0 が指定されています。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 15i</li>
+                    0021=16(EDITモード) (必ず設定して下さい)<br/>
+                    0023=16(EDITモード以外) (必ず設定して下さい)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_upstart</name>
+            <file>Program/cnc_upstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_cupload</name>
+            <file>Program/cnc_cupload.htm</file>
+        </item>
+        <item>
+            <name>cnc_upend</name>
+            <file>Program/cnc_upend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

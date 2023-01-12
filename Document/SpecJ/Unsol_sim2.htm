@@ -1,0 +1,69 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type"
+content="text/html; charset=x-sjis">
+<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
+<title>制御用マクロ変数を使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D, PMi-Aのみ)</title>
+<link rel="stylesheet" type="text/css" href="fwlib32.css">
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+
+<hr>
+
+<h2>制御用マクロ変数を使用する場合(簡易方式)(30i/31i/32i/35i, 0i-D, PMi-Aのみ)</h2>
+
+<ul>
+
+<blockquote>
+
+   <p>NCプログラムにおいて、簡易方式で制御用マクロ変数を使用する場合について説明します。制御用マクロ変数には、カスタムマクロ変数とRTM変数がありますが、実行方法は同様です。</p>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>注) 送信用データとしてPMCアドレスを設定することもできます。以下の説明では、送信用データとしてマクロ変数を使用しています。</td></tr>
+            </table>
+<br/>
+<li>制御用マクロ変数の説明</li>
+
+    <p>CNC主導メッセージ通知機能を実行するための制御用マクロ変数の詳細を示します。制御用マクロ変数は１つです。</p>
+    <p>以下は、制御用マクロ変数番号として“#xxxx”(CNC系統番号は省略)を使用する場合を示しています。</p>
+
+<ul>
+	<dl compact>
+        <dt>REQ (#xxxx)</dt>
+        <table>
+            <tr><td>[名称]</td> <td>メッセージの送信要求変数 </td></tr>
+            <tr><td>[区分]</td> <td>入力/出力変数</td></tr>
+            <tr><td>[機能]</td> <td>ＣＮＣ主導メッセージの送信を要求します。</td></tr>
+            <tr><td>[動作]</td> <td>NCプログラムは、送信用マクロ変数へ送信メッセージを用意した後、本変数を“１”にすると、メッセージがパソコンへ送信されます。<br/>メッセージの応答の受信後、ＣＮＣ(通信ボード)が本信号を０クリアします。</td></tr>
+        </table>
+</ul>
+<br/>
+
+<li>制御用マクロ変数のタイムチャート</li>
+
+<p>制御用マクロ変数によるCNC主導メッセージ通知機能の実行について、タイムチャートにより説明します。</p>
+
+<p><img src="unsol_sim2chat.gif"></p>
+
+<ul>
+        <table class="dt">
+            <tr><td>①</td>  <td>:</td> <td>NCプログラムは、REQが“0”であることを確認した後、メッセージを用意し、REQを“１”とする。 </td></tr>
+            <tr><td>②</td>  <td>:</td> <td>REQが“１”になったので、通信ボードはメッセージを送信する。</td></tr>
+            <tr><td>③</td>  <td>:</td> <td>通信ボードは、メッセージの送信処理を完了する。  </td></tr>
+            <tr><td>④</td>  <td>:</td> <td>通信ボードは、メッセージの応答を受信した後、受信処理を完了する。</td></tr>
+            <tr><td>⑤</td>  <td>:</td> <td>通信ボードは、受信処理が完了したのでREQを“０”とする。</td></tr>
+        </table>
+</ul>
+<br/>
+</blockquote>
+
+</ul>
+
+<hr>
+
+<p><a href="fwlib32.htm">トップページ</a></p>
+</body>
+</html>

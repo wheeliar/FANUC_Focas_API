@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdlppfbdt</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlppfbdt(unsigned short FlibHndl, IDBLPPFBFG *rflag, short *number, IODBLPPFBDT *lppfbdt); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> 実出力推定方式パワーフィードバック機能で使用するデータを読出します。
+                データはIODBLPPFBDT内の各メンバに格納されます。 
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>rflag</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            読込むデータの種類と範囲を設定した構造体のポインタを指定します。
+                            指令周波数、指令デューティ、実出力を指定した場合、読込み開始/終了番号を設定して下さい。
+<pre>
+typedef struct idblppfbfg {
+    short   s_no;           /* 読込むデータ組番号       */
+    short   slct;           /* 読込むデータの種類       */
+    short   s_freq;         /* 読込み開始周波数番号     */
+    short   e_freq;         /* 読込み終了周波数番号     */
+    short   s_duty;         /* 読込み開始デューティ番号 */
+    short   e_duty;         /* 読込み終了デューティ番号 */
+} IDBLPPFBFG ;
+</pre>
+                        </p>
+                        <p>
+                            <dl>
+                                <dt>s_no</dt>
+                                    <dd>読込む指令ピークパワーデータ組の番号を指定します。</dd>
+                                    <dd>[データ範囲] 0 ～ 7 </dd>
+                                <dt>slct</dt>
+                                    <dd>読込むデータの種類を指定します。</dd>
+                                    <dd>データを読込むには、対応するデータのビットを"1"にして下さい。</dd>
+                                    <dd>対応するデータのビットが"0"の時は、そのデータは読込めません。</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>bit 0</td><td>：</td><td>指令ピークパワー値</td> </tr>
+                                        <tr> <td>bit 1</td><td>：</td><td>指令周波数</td> </tr>
+                                        <tr> <td>bit 2</td><td>：</td><td>指令デューティ</td> </tr>
+                                        <tr> <td>bit 3</td><td>：</td><td>実出力</td> </tr>
+                                        <tr> <td>bit 4 ～ 15</td><td>：</td><td>未使用</td> </tr>                                   
+                                    </table></dd>
+
+                                <dt>s_freq</dt>
+                                    <dd>読込みを開始したい周波数番号を指定します。</dd>
+                                    <dd>-1 を指定した場合、全周波数データを読込みます。</dd>
+                                    <dd>[データ範囲] -1, 0 ～ 9 </dd>
+
+                                <dt>e_freq</dt>
+                                    <dd>読込みを終了したい周波数番号を指定します。</dd>
+                                    <dd>s_freqに -1 が指定された場合、このデータは無視されます。(s_freq = 0 ～ 9 のとき有効)</dd>
+                                    <dd>[データ範囲] 0 ～ 9 </dd>
+
+                                <dt>s_duty</dt>
+                                    <dd>読込みを開始したいデューティ番号を指定します。</dd>
+                                    <dd>-1 を指定した場合、全デューティデータを読込みます。</dd>
+                                    <dd>[データ範囲] -1, 0 ～ 9 </dd>
+
+                                <dt>e_duty</dt>
+                                    <dd>読込みを終了したいデューティ番号を指定します。</dd>
+                                    <dd>s_dtyに -1 が指定された場合、このデータは無視されます。(s_freq = 0 ～ 9 のとき有効)</dd>
+                                    <dd>[データ範囲] 0 ～ 9 </dd>
+                            </dl>
+                        実出力パワーフィードバックのデータは、s_freq,e_freq,s_duty,e_dutyで指定された範囲のデータが読出しの対象になります。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                         読込む実出力推定方式パワーフィードバックのデータの組数のポインタを指定します。
+                         関数コール前に読たい個数を指定し、関数コール後に実際に読取った個数が設定されます。(1～8を指定して下さい)
+                        </p>
+                    </content>
+                </item>
+
+
+
+
+
+
+
+                <item>
+                    <name>lppfbdt</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            読込む実出力推定方式パワーフィードバックデータ組を返すIODBLPPFBDT構造体配列へのポインタです。
+                            本構造体のデータは、numberで指定した数分用意して下さい。
+                            IODBLPPFBDT構造体は次の通りです。
+<pre>
+typedef struct iodblppfbdt {
+    short   ppower;         /* ピークパワー */
+    short   dummy;          /* ダミー       */
+    short   freq[10];       /* 周波数       */
+    short   duty[10];       /* デューティ   */
+    short   rpower[10][10]; /* 実出力       */
+} IODBLPPFBDT ;
+</pre>
+                        </p>
+                        <p>
+                            <dl>
+                                <dt>ppower</dt>
+                                    <dd>指令ピークパワー値がセットされます。</dd>
+                                    <dd>[データ単位] W </dd>
+                                    <dd>[データ範囲] 0 ～ 9999 </dd>
+                                <dt>dummy</dt>
+                                    <dd>未使用部です。</dd>
+                                <dt>freq[10]</dt>
+                                    <dd>指令周波数がセットされます。</dd>
+                                    <dd>[データ単位] Hz </dd>
+                                    <dd>[データ範囲] 1 ～ 32767 </dd>
+                                    <dd>rflag.s_freq = 2, rflag.e_freq = 4 を指定した場合、freq[2]～freq[4] に値がセットされます。</dd>
+
+                                <dt>duty[10]</dt>
+                                    <dd>指令デューティがセットされます。</dd>
+                                    <dd>[データ単位] % </dd>
+                                    <dd>[データ範囲] 0 ～ 100 </dd>
+                                    <dd>rflag.s_duty = 2, rflag.e_duty = 4 を指定した場合、duty[2]～duty[4] に値がセットされます。</dd>
+
+                                <dt>rpower[10][10]</dt>
+                                    <dd>実出力がセットされます。</dd>
+                                    <dd>[データ単位] W </dd>
+                                    <dd>[データ範囲] -32768 ～ 32767 </dd>
+                                    <dd>[ i ][ j ] i:デューティの番号、j:周波数の番号</dd>
+
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                30i/31i-LB以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                データ個数(number)が不正です。
+            </content>
+        </item>
+        <item>
+           <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>読込むデータ組番号(s_no)の誤り</td></tr>
+                    <tr><td>2</td><td>：</td><td>読込むデータの種類(slct)の誤り</td></tr>
+                    <tr><td>3</td><td>：</td><td>読込み開始周波数番号(s_freq)の誤り</td></tr>
+                    <tr><td>4</td><td>：</td><td>読込み終了周波数番号(e_freq)の誤り</td></tr>
+                    <tr><td>5</td><td>：</td><td>読込み開始デューティ番号(s_duty)の誤り</td></tr>
+                    <tr><td>6</td><td>：</td><td>読込み終了デューティ番号(e_duty)の誤り</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り<br/>
+                レーザ発振器(パラメータNo.15030)の誤り<br/>
+                実出力推定方式パワーフィードバック機能が無効です。(パラメータPFB(No.29000#0)の誤り)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <div class="dd">No.15030</div>
+            <div class="dd">PFB(No.29000#0)</div>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrlppfbdt</name>
+            <file>Laser/cnc_wrlppfbdt.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

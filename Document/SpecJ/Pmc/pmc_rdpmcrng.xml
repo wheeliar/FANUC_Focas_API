@@ -1,0 +1,2439 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>pmc_rdpmcrng</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>
+                    FWLIBAPI short WINAPI pmc_rdpmcrng(unsigned short FlibHndl, short adr_type, short data_type,
+                                                       unsigned short s_number, unsigned short e_number, unsigned short length, IODBPMC *buf);
+                </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    指定されたPMCアドレス/範囲のPMCデータを読み取ります。<br/>
+                    <br/>
+                    MMCのアプリケーションとPMCのラダーソフトとの間のデータのやり取りに使用します。
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>adr_type</name>
+                        <type>in</type>
+                        <content>
+                            <p>リードするPMCアドレスの種類に対応した識別コードを指定します。</p>
+                            <ul>
+                                <li>Series 15 のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead>
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMC→CNCへの信号)</td>
+                                            <td>0000～0511</td>
+                                            <td>NA/NB/NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">1</td>
+                                            <td rowspan="2">F (CNC→PMCへの信号)</td>
+                                            <td>0000～0319</td>
+                                            <td>NA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511</td>
+                                            <td>NB/NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>NA/NB/NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>NA/NB/NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td rowspan="2">A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>NA/NB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0124</td>
+                                            <td>NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">5</td>
+                                            <td rowspan="3">R (内部リレー)</td>
+                                            <td>0000～0999,<br/>
+                                            2000～2999</td>
+                                            <td>NA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～1499,<br/>
+                                            9000～9117</td>
+                                            <td>NB</td>
+                                        </tr>
+                                            <td>0000～2999,<br/>
+                                            9000～9199</td>
+                                            <td>NB2</td>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td rowspan="2">T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>NA/NB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0299</td>
+                                            <td>NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">7</td>
+                                            <td rowspan="3">K (キープリレー)</td>
+                                            <td>0000～0018</td>
+                                            <td>NA</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0019</td>
+                                            <td>NB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0039,<br/>
+                                            0900～0909</td>
+                                            <td>NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td rowspan="2">C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>NA/NB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0199</td>
+                                            <td>NB2</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">9</td>
+                                            <td rowspan="2">D (データテーブル)</td>
+                                            <td>0000～2999</td>
+                                            <td>NA/NB</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～7999</td>
+                                            <td>NB2</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                        また、K0017～K0019、若しくはK0900～K0909に対しての書き込みは行わないで下さい。
+                                    </p>
+
+                                <li>Series 15i のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead>
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMC→CNCへの信号)</td>
+                                            <td>0000～0511,<br/>1000～1511</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNC→PMCへの信号)</td>
+                                            <td>0000～0511,<br/>1000～1511</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127,<br/>0200～0327</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127,<br/>0200～0327</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>A (メッセージ要求)</td>
+                                            <td>0000～0124</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>R (内部リレー)</td>
+                                            <td>0000～2999,<br/>9000～9199</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>T (可変タイマ)</td>
+                                            <td>0000～0299</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>K (キープリレー)</td>
+                                            <td>0000～0039,<br/>0900～0909</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>C (カウンタ)</td>
+                                            <td>0000～0199</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0000～7999</td>
+                                            <td>NB6</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                        また、K900番台に対しての書き込みは行わないで下さい。
+                                    </p>
+
+                                <li>Series 16/18 Model B/C のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td rowspan="2">0</td>
+                                            <td rowspan="2">G (PMC→CNCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">1</td>
+                                            <td rowspan="2">F (CNC→PMCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SSB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127,<br/>1000～1014,<br/>1020～1034</td>
+                                            <td>SA1/SB3/SB4/SB5/SB6/SC3/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127,<br/>1000～1019,<br/>1020～1039</td>
+                                            <td>SA1/SB3/SB4/SB5/SB6/SC3/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td rowspan="2">A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0124</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">5</td>
+                                            <td rowspan="3">R (内部リレー)</td>
+                                            <td>0000～0999,<br/>9000～9099</td>
+                                            <td>SA1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～1499,<br/>9000～9117</td>
+                                            <td>SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～2999,<br/>9000～9199</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td rowspan="2">T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0299</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td rowspan="2">K (キープリレー)</td>
+                                            <td>0000～0019</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0039,<br/>0900～0909</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td rowspan="2">C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0199</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">9</td>
+                                            <td rowspan="3">D (データテーブル)</td>
+                                            <td>0000～1859</td>
+                                            <td>SA1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～2999</td>
+                                            <td>SB3/SB5/SC3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～7999</td>
+                                            <td>SB4/SB6/SC4</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                        また、K0017～K0019, K900番台に対しての書き込みは行わないで下さい。
+                                    </p>
+
+                                <li>Series 21 Model B, Series 0i-A のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMC→CNCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNC→PMCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127,<br/>1000～1008</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127,<br/>1000～1011</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td rowspan="2">R (内部リレー)</td>
+                                            <td>0000～0999,<br/>9000～9099</td>
+                                            <td>SA1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0999,<br/>9000～9117</td>
+                                            <td>SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>K (キープリレー)</td>
+                                            <td>0000～0019</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SA3</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0000～1859</td>
+                                            <td>SA3</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                        また、K0017～K0019に対しての書き込みは行わないで下さい。
+                                    </p>
+
+                                <li>Series 16i/18i,0i-B(SB7) のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td rowspan="3">0</td>
+                                            <td rowspan="3">G (PMC→CNCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0767,<br/>1000～1767,<br/>
+                                                2000～2767</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">1</td>
+                                            <td rowspan="3">F (CNC→PMCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0767,<br/>1000～1767,<br/>2000～2767</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">2</td>
+                                            <td rowspan="2">Y (PMC→機械への信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>SB5/SB6/SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0200～0327</td>
+                                            <td>SB6/SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">3</td>
+                                            <td rowspan="2">X (機械→PMCへの信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>SB5/SB6/SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0200～0327</td>
+                                            <td>SB6/SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">4</td>
+                                            <td rowspan="3">A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0124</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0249,<br/>9000～9249</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">5</td>
+                                            <td rowspan="3">R (内部リレー)</td>
+                                            <td>0000～1499,<br/>9000～9117</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～2999,<br/>9000～9199</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～7999,<br/>9000～9499</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">6</td>
+                                            <td rowspan="3">T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0299</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0499,<br/>9000～9499</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">7</td>
+                                            <td rowspan="3">K (キープリレー)</td>
+                                            <td>0000～0019</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0039,<br/>0900～0909</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0099,<br/>0900～0919</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">8</td>
+                                            <td rowspan="3">C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0199</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0399,<br/>5000～5199</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="3">9</td>
+                                            <td rowspan="3">D (データテーブル)</td>
+                                            <td>0000～2999</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～7999</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～9999</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>E (拡張リレー)</td>
+                                            <td>0000～7999</td>
+                                            <td>SB7</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top">
+                                            <tr><td>・</td><td>アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                                            また、K0017～K0019, K900番台に対しての書き込みは行わないで下さい。</td></tr>
+                                            </colgroup>
+                                        </table>
+                                    </p>
+
+                                <li>Series 21i, 0i-B(SA1) のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMC→CNCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNC→PMCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td rowspan="2">R (内部リレー)</td>
+                                            <td>0000～0999,<br/>9000～9099</td>
+                                            <td>SA1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0999,<br/>9000～9117</td>
+                                            <td>SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>K (キープリレー)</td>
+                                            <td>0000～0019</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0000～1859</td>
+                                            <td>SA1/SA5</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                        また、K0017～K0019に対しての書き込みは行わないで下さい。
+                                    </p>
+
+                                <li>Series 0i-D のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>0i-D PMC</th>
+                                            <th>0i-D/0i Mate-D<br/>PMC/L</th>
+                                            <th>0i-D<br/>DCS PMC</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMCからCNCへの出力信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767(注1)<br/>
+                                                3000～3767(注1)<br/>
+                                                4000～4767(注1)<br/>
+                                                5000～5767(注1)<br/>
+                                                6000～6767(注1)<br/>
+                                                7000～7767(注1)<br/>
+                                                8000～8767(注1)<br/>
+                                                9000～9767(注1)
+                                            </td>
+                                            <td>0～767<br/>
+                                                1000～1767(注1)
+                                            </td>
+                                            <td>0～767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNCからPMCへの入力信号)</td>
+                                            <td>
+                                                0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767(注1)<br/>
+                                                3000～3767(注1)<br/>
+                                                4000～4767(注1)<br/>
+                                                5000～5767(注1)<br/>
+                                                6000～6767(注1)<br/>
+                                                7000～7767(注1)<br/>
+                                                8000～8767(注1)<br/>
+                                                9000～9767(注1)
+                                            </td>
+                                            <td>
+                                                0～767<br/>
+                                                1000～1767(注1)
+                                            </td>
+                                            <td>0～767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMCから機械への出力信号)</td>
+                                            <td>
+                                                0～127<br/>
+                                                200～327<br/>
+                                                400～527(注2)<br/>
+                                                600～727(注2)<br/>
+                                                1000～1127(注2)
+                                            </td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械からPMCへの入力信号)</td>
+                                            <td>
+                                                0～127<br/>
+                                                200～327<br/>
+                                                400～527(注2)<br/>
+                                                600～727(注2)<br/>
+                                                1000～1127(注2)
+                                            </td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・表示要求</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・状態表示</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                            <td>-</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td>R (内部リレー)</td>
+                                            <td>0～7999</td>
+                                            <td>0～1499</td>
+                                            <td>0～1499</td>
+                                        </tr>
+                                        <tr>
+                                            <td>R (システムリレー)</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ</td>
+                                            <td>0～449</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T (タイマ表示)<br/>&#160;&#160;&#160;・可変タイマ精度用(注3)</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9079</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・ユーザ領域</td>
+                                            <td>0～99</td>
+                                            <td>0～19</td>
+                                            <td>0～19</td>
+                                        </tr>
+                                        <tr>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・システム領域</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・可変カウンタ</td>
+                                            <td>0～399</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・固定カウンタ</td>
+                                            <td>5000～5199</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5039</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0～9999</td>
+                                            <td>0～2999</td>
+                                            <td>0～2999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>E (拡張リレー)</td>
+                                            <td>0～9999</td>
+                                            <td>0～9999</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top"></colgroup>
+                                            <colgroup valign="top"></colgroup>
+                                            <tr><td>注</td><td> </td></tr>
+                                            <tr><td>1</td>
+                                                <td>
+                                                    PMC 管理ソフトウェアのリザーブ領域です。
+                                                    ユーザプログラムでは使用しないでください。
+                                                </td>
+                                            </tr>
+                                            <tr><td>2</td>
+                                                <td>
+                                                    PMC 管理ソフトウェアのリザーブ領域です。この領域にI/O を割り付けることはできません。
+                                                    ユーザプログラムでは使用しないでください。
+                                                </td>
+                                            </tr>
+                                            <tr><td>3</td>
+                                                <td>可変タイマのタイマ精度設定に使用する領域です。</td>
+                                            </tr>
+                                            <tr><td>4</td>
+                                                <td>アドレス F,X の全領域、及び R9000番台に対しての書込みはできません。<br/>
+                                                また、K0017～K0019, K900番台に対しての書込みは行わないで下さい。</td>
+                                            </tr>
+                                        </table>
+                                    </p>
+
+                                <li>Series 30i/31i/32i-A のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr><th rowspan = "3">識別コード</th>
+                                            <th rowspan = "3">PMCアドレスの種類</th>
+                                            <th colspan = "4">30i/31i/32i-A PMC</th>
+                                            <th rowspan = "3">32i-A PMC/L</th> </tr>
+                                        <tr><th colspan = "3">第1, 第2, 第3PMC</th><th rowspan = "2">DSC PMC</th></tr>
+                                        <tr><th>PMCメモリA</th><th>PMCメモリB</th><th>PMCメモリC</th></tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMCからCNCへの出力信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                            <td>0～767<br/>
+                                                1000～1767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNCからPMCへの入力信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                            <td>0～767<br/>
+                                                1000～1767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMCから機械への出力信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械からPMCへの入力信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・表示要求</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                            <td>0～499</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・状態表示</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td>R (内部リレー)</td>
+                                            <td>0～1499</td>
+                                            <td>0～7999</td>
+                                            <td>0～15999</td>
+                                            <td>0～1499</td>
+                                            <td>0～1499</td>
+                                        </tr>
+                                        <tr>
+                                            <td>R (システムリレー)</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                            <td>-</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ</td>
+                                            <td>0～79</td>
+                                            <td>0～499</td>
+                                            <td>0～999</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ精度用(注2)</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9999</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9079</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・ユーザ領域</td>
+                                            <td>0～19</td>
+                                            <td>0～99</td>
+                                            <td>0～199</td>
+                                            <td>0～19</td>
+                                            <td>0～19</td>
+                                        </tr>
+                                        <tr>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・システム領域</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・可変カウンタ</td>
+                                            <td>0～79</td>
+                                            <td>0～399</td>
+                                            <td>0～799</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・固定カウンタ</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5199</td>
+                                            <td>5000～5399</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5039</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0～2999</td>
+                                            <td>0～9999</td>
+                                            <td>0～19999</td>
+                                            <td>0～2999</td>
+                                            <td>0～2999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>M (他PMC系統からの入力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11</td>
+                                            <td>N (他PMC系統への出力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>E (拡張リレー)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>(注4)</td>
+                                            <td>0～9999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>Z (システムリレー)</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0～499</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top"></colgroup>
+                                            <colgroup valign="top"></colgroup>
+                                            <tr><td>注</td><td> </td></tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>
+                                                    PMC 管理ソフトウェアのリザーブ領域です。
+                                                    ユーザプログラムでは使用しないでください。
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>可変タイマのタイマ精度設定に使用する領域です。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>多系統PMC 機能の共有メモリです。各プログラム間で同じ値を読み書きすることができます。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>デュアルチェックセーフティPMCには拡張リレーはありません。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5</td>
+                                                <td>アドレス F,X の全領域、及び R9000番台もしくはZのシステムリレーに対しての書込みはできません。<br/>
+                                                また、K0017～K0019, K900番台に対しての書込みは行わないで下さい。</td>
+                                            </tr>
+                                        </table>
+                                    </p>
+
+                                <li>Series 0i-F, 30i/31i/32i/35i-B, PMi-A のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr><th rowspan = "2">識別コード</th>
+                                            <th rowspan = "2">PMCアドレスの種類</th>
+                                            <th colspan = "4">第1～第5系統PMC</th><th rowspan = "2">DSC PMC</th>
+                                        </tr>
+                                        <tr><th>PMCメモリA</th><th>PMCメモリB</th><th>PMCメモリC</th><th>PMCメモリD</th></tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMCからCNCへの出力信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNCからPMCへの入力信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMCから機械への出力信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械からPMCへの入力信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・表示要求</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                            <td>0～499</td>
+                                            <td>0～749</td>
+                                            <td>0～249</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・状態表示</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9749</td>
+                                            <td>9000～9249</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td>R (内部リレー)</td>
+                                            <td>0～1499</td>
+                                            <td>0～7999</td>
+                                            <td>0～15999</td>
+                                            <td>0～59999</td>
+                                            <td>0～1499</td>
+                                        </tr>
+                                        <tr>
+                                            <td>R (システムリレー)</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>9000～9499</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ</td>
+                                            <td>0～79</td>
+                                            <td>0～499</td>
+                                            <td>0～999</td>
+                                            <td>0～999</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ精度用(注2)</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9999</td>
+                                            <td>9000～9999</td>
+                                            <td>9000～9079</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・ユーザ領域</td>
+                                            <td>0～19</td>
+                                            <td>0～99</td>
+                                            <td>0～199</td>
+                                            <td>0～299</td>
+                                            <td>0～19</td>
+                                        </tr>
+                                        <tr>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・システム領域</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・可変カウンタ</td>
+                                            <td>0～79</td>
+                                            <td>0～399</td>
+                                            <td>0～799</td>
+                                            <td>0～1199</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・固定カウンタ</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5199</td>
+                                            <td>5000～5399</td>
+                                            <td>5000～5599</td>
+                                            <td>5000～5039</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0～2999</td>
+                                            <td>0～9999</td>
+                                            <td>0～19999(注5)</td>
+                                            <td>0～59999(注5)</td>
+                                            <td>0～2999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>M (他PMC系統からの入力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11</td>
+                                            <td>N (他PMC系統への出力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>E (拡張リレー)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>(注4)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>Z (システムリレー)</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0～499</td>
+                                            <td>0～499</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top"></colgroup>
+                                            <colgroup valign="top"></colgroup>
+                                            <tr><td>注</td><td> </td></tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>
+                                                    PMC 管理ソフトウェアのリザーブ領域です。
+                                                    ユーザプログラムでは使用しないでください。
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>可変タイマのタイマ精度設定に使用する領域です。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>多系統PMC 機能の共有メモリです。各プログラム間で同じ値を読み書きすることができます。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>デュアルチェックセーフティPMCには拡張リレーはありません。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>5</td>
+                                                <td>全てのデータテーブル領域を保持するためには、「データテーブル拡張オプション」が必要な場合があります。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>6</td>
+                                                <td>アドレス F,X の全領域、及び R9000番台もしくはZのシステムリレーに対しての書込みはできません。<br/>
+                                                また、K0017～K0019, K900番台に対しての書込みは行わないで下さい。</td>
+                                            </tr>
+                                        </table>
+                                    </p>
+
+                                <li>Power Mate i のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr>
+                                            <th>識別コード</th>
+                                            <th>PMCアドレスの種類</th>
+                                            <th>参照可能領域</th>
+                                            <th>PMCの種類</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td rowspan="2">0</td>
+                                            <td rowspan="2">G (PMC→CNCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">1</td>
+                                            <td rowspan="2">F (CNC→PMCへの信号)</td>
+                                            <td>0000～0255,<br/>1000～1255</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0511,<br/>1000～1511,<br/>
+                                                2000～2511</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0000～0127,<br/>1000～1002,<br/>1020～1051</td>
+                                            <td>SB5/SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0000～0127,<br/>1000～1003,<br/>1020～1051</td>
+                                            <td>SB5/SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td rowspan="2">A (メッセージ要求)</td>
+                                            <td>0000～0024</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0124</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td rowspan="2">R (内部リレー)</td>
+                                            <td>0000～1499,<br/>9000～9117</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～2999,<br/>9000～9199</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td rowspan="2">T (可変タイマ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0299</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td rowspan="2">K (キープリレー)</td>
+                                            <td>0000～0019</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0039,<br/>0900～0909</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td rowspan="2">C (カウンタ)</td>
+                                            <td>0000～0079</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～0199</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">9</td>
+                                            <td rowspan="2">D (データテーブル)</td>
+                                            <td>0000～2999</td>
+                                            <td>SB5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>0000～7999</td>
+                                            <td>SB6</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top">
+                                            <tr>
+                                                <td>・</td>
+                                                <td>
+                                                    アドレス F,X の全領域、及び R9000番台に対しての書き込みはできません。<br/>
+                                                    また、K0017～K0019, K900番台に対しての書き込みは行わないで下さい。
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>・</td>
+                                                <td>各PMCが対応可能なCNCは、PMCのプログラミング説明書を参照して下さい。</td>
+                                            </tr>
+                                            </colgroup>
+                                        </table>
+                                    </p>
+                            </ul>
+                        </content>
+                    </item>
+                    <item>
+                        <name>data_type</name>
+                        <type>in</type>
+                        <content>
+                            PMCデータの型を指定します。<br/>
+                            PMC側のデータの型と同じものを指定して下さい。
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>バイト型</td></tr>
+                                <tr><td>1</td><td>:</td><td>ワード型</td></tr>
+                                <tr><td>2</td><td>:</td><td>ロング型</td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>s_number</name>
+                        <type>in</type>
+                        <content>
+                            リードを開始するPMCアドレス番号を指定します。
+                        </content>
+                    </item>
+                    <item>
+                        <name>e_number</name>
+                        <type>in</type>
+                        <content>
+                            リードを終了するPMCアドレス番号を指定します。
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            データブロック長を指定します。
+                            <table class="dd">
+                                <tr>
+                                    <td>data_typeが0(バイト型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N</td>
+                                </tr>
+                                <tr>
+                                    <td>data_typeが1(ワード型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N × 2</td>
+                                </tr>
+                                <tr>
+                                    <td>data_typeが2(ロング型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N × 4</td>
+                                </tr>
+                            </table>
+                            ※ Nは読み取るデータの個数
+                        </content>
+                    </item>
+                    <item>
+                        <name>buf</name>
+                        <type>out</type>
+                        <content>
+                            <p>データを返すIODBPMC構造体へのポインタです。IODBPMC構造体は次の通りです。<br/>
+                               Series 0i-F, 30i/31i/32i/35i-B, PMi-A で PMCメモリDを使用する場合は、コンパイル時に-Dオプションにて文字定数PMCMEMDを定義してください。</p>
+<pre>
+#if defined (PMCMEMD)
+typedef struct iodbpmc {
+    short           type_a ;   /* PMCアドレスの種類 */
+    short           type_d ;   /* PMCデータの型 */
+    unsigned short  datano_s ; /* 入力開始PMCアドレス */
+    unsigned short  datano_e ; /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;             /* N は読み取るデータの個数 */
+} IODBPMC ;
+#else
+typedef struct  iodbpmc {
+    short   type_a ;       /* PMCアドレスの種類 */
+    short   type_d ;       /* PMCデータの型 */
+    short   datano_s ;     /* 入力開始PMCアドレス */
+    short   datano_e ;     /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;             /* N は読み取るデータの個数 */
+} IODBPMC ;
+#endif
+</pre>
+                        </content>
+                    </item>
+
+                    <add>
+                        <p class="label">引数の指定例</p>
+                        <ol>
+                            <li>D0100(ワード型とします)を読み取る。</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>adr_type</td>
+                                        <td>9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data_type</td>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <td>s_number</td>
+                                        <td>100</td>
+                                    </tr>
+                                    <tr>
+                                        <td>e_number</td>
+                                        <td>101</td>
+                                    </tr>
+                                    <tr>
+                                        <td>length</td>
+                                        <td>8+2×1 (=10)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>buf.u.idata[0]</td>
+                                        <td>D0100の内容が格納される</td>
+                                    </tr>
+                                </table>
+
+                            <li>R0200～R0209(バイト型とします)を読み取る。</li>
+                                <table class="dd">
+                                    <tr>
+                                        <td>adr_type</td>
+                                        <td>5</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data_type</td>
+                                        <td>0</td>
+                                    </tr>
+                                    <tr>
+                                        <td>s_number</td>
+                                        <td>200</td>
+                                    </tr>
+                                    <tr>
+                                        <td>e_number</td>
+                                        <td>209</td>
+                                    </tr>
+                                    <tr>
+                                        <td>length</td>
+                                        <td>8+1×10 (=18)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>buf.u.cdata[0]<br/>
+                                        ～buf.u.cdata[9]</td>
+                                        <td>R0200～R0209の内容が格納される</td>
+                                    </tr>
+                                </table>
+                        </ol>
+                    </add>
+                </vc>
+            </common>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    <vc>
+                        <item>
+                            <name>FlibHndl</name>
+                            <type>in</type>
+                            <content>
+                                <p>ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                            </content>
+                        </item>
+                        <item>
+                            <name>adr_type</name>
+                            <type>in</type>
+                            <content>
+                                <p>リードするPMCアドレスの種類に対応した識別コードを指定します。</p>
+                                <ul>
+                                <li>Series 30i/31i/32i-A のPMCデータ参照可能領域</li>
+                                    <table border="1">
+                                        <thead> 
+                                        <tr><th rowspan = "3">識別コード</th>
+                                            <th rowspan = "3">PMCアドレスの種類</th>
+                                            <th colspan = "4">30i/31i/32i-A PMC</th>
+                                            <th rowspan = "3">32i-A PMC/L</th> </tr>
+                                        <tr><th colspan = "3">第1, 第2, 第3PMC</th><th rowspan = "2">DSC PMC</th></tr>
+                                        <tr><th>PMCメモリA</th><th>PMCメモリB</th><th>PMCメモリC</th></tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <tr>
+                                            <td>0</td>
+                                            <td>G (PMC→CNCへの信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                            <td>0～767<br/>
+                                                1000～1767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>F (CNC→PMCへの信号)</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767<br/>
+                                                1000～1767<br/>
+                                                2000～2767<br/>
+                                                3000～3767<br/>
+                                                4000～4767<br/>
+                                                5000～5767<br/>
+                                                6000～6767<br/>
+                                                7000～7767<br/>
+                                                8000～8767<br/>
+                                                9000～9767</td>
+                                            <td>0～767</td>
+                                            <td>0～767<br/>
+                                                1000～1767</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Y (PMC→機械への信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>X (機械→PMCへの信号)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127<br/>
+                                                200～327<br/>
+                                                400～527<br/>
+                                                600～727<br/>
+                                                1000～1127(注1)</td>
+                                            <td>0～127</td>
+                                            <td>0～127</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">4</td>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・表示要求</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                            <td>0～499</td>
+                                            <td>0～249</td>
+                                            <td>0～249</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A (メッセージ表示)<br/>&#160;&#160;&#160;・状態表示</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9249</td>
+                                            <td>9000～9249</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">5</td>
+                                            <td>R (内部リレー)</td>
+                                            <td>0～1499</td>
+                                            <td>0～7999</td>
+                                            <td>0～15999</td>
+                                            <td>0～1499</td>
+                                            <td>0～1499</td>
+                                        </tr>
+                                        <tr>
+                                            <td>R (システムリレー)</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                            <td>-</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9499</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">6</td>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ</td>
+                                            <td>0～79</td>
+                                            <td>0～499</td>
+                                            <td>0～999</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>T (タイマ)<br/>&#160;&#160;&#160;・可変タイマ精度用(注2)</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9499</td>
+                                            <td>9000～9999</td>
+                                            <td>9000～9079</td>
+                                            <td>9000～9079</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">7</td>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・ユーザ領域</td>
+                                            <td>0～19</td>
+                                            <td>0～99</td>
+                                            <td>0～199</td>
+                                            <td>0～19</td>
+                                            <td>0～19</td>
+                                        </tr>
+                                        <tr>
+                                            <td>K (キープリレー)<br/>&#160;&#160;&#160;・システム領域</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                            <td>900～999</td>
+                                        </tr>
+                                        <tr>
+                                            <td rowspan="2">8</td>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・可変カウンタ</td>
+                                            <td>0～79</td>
+                                            <td>0～399</td>
+                                            <td>0～799</td>
+                                            <td>0～79</td>
+                                            <td>0～79</td>
+                                        </tr>
+                                        <tr>
+                                            <td>C (カウンタ)<br/>&#160;&#160;&#160;・固定カウンタ</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5199</td>
+                                            <td>5000～5399</td>
+                                            <td>5000～5039</td>
+                                            <td>5000～5039</td>
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
+                                            <td>D (データテーブル)</td>
+                                            <td>0～2999</td>
+                                            <td>0～9999</td>
+                                            <td>0～19999</td>
+                                            <td>0～2999</td>
+                                            <td>0～2999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10</td>
+                                            <td>M (他PMC 系統からの入力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>11</td>
+                                            <td>N (他PMC 系統への出力信号)</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>0～767</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>E (拡張リレー)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>0～9999(注3)</td>
+                                            <td>(注4)</td>
+                                            <td>0～9999</td>
+                                        </tr>
+                                        <tr>
+                                            <td>13</td>
+                                            <td>Z (システムリレー)</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>0～499</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <p class="info">
+                                        <table>
+                                            <colgroup valign="top"></colgroup>
+                                            <colgroup valign="top"></colgroup>
+                                            <tr><td>注</td><td> </td></tr>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>
+                                                    PMC 管理ソフトウェアのリザーブ領域です。この領域にI/O を割り付けることはできません。
+                                                    ユーザプログラムでは使用しないでください。
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>可変タイマのタイマ精度設定に使用する領域です。ユーザプログラムでは使用しないでください。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>多系統PMC 機能の共有メモリです。各プログラム間で同じ値を読み書きすることができます。</td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>デュアルチェックセーフティPMCには拡張リレーはありません。</td>
+                                            </tr>
+                                        </table>
+                                    </p>
+                                </ul>
+                            </content>
+                        </item>
+                        <item>
+                            <name>data_type</name>
+                            <type>in</type>
+                            <content>
+                                PMCデータの型を指定します。<br/>
+                                PMC側のデータの型と同じものを指定して下さい。
+                                <table class="dd">
+                                    <tr><td>0</td><td>:</td><td>バイト型</td></tr>
+                                    <tr><td>1</td><td>:</td><td>ワード型</td></tr>
+                                    <tr><td>2</td><td>:</td><td>ロング型</td></tr>
+                                </table>
+                            </content>
+                        </item>
+                        <item>
+                            <name>s_number</name>
+                            <type>in</type>
+                            <content>
+                                リードを開始するPMCアドレス番号を指定します。
+                            </content>
+                        </item>
+                        <item>
+                            <name>e_number</name>
+                            <type>in</type>
+                            <content>
+                                リードを終了するPMCアドレス番号を指定します。
+                            </content>
+                        </item>
+                        <item>
+                            <name>length</name>
+                            <type>in</type>
+                            <content>
+                                データブロック長を指定します。
+                                <table class="dd">
+                                    <tr>
+                                        <td>data_typeが0(バイト型)の場合</td>
+                                        <td>:</td>
+                                        <td>length = 8 + N</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data_typeが1(ワード型)の場合</td>
+                                        <td>:</td>
+                                        <td>length = 8 + N × 2</td>
+                                    </tr>
+                                    <tr>
+                                        <td>data_typeが2(ロング型)の場合</td>
+                                        <td>:</td>
+                                        <td>length = 8 + N × 4</td>
+                                    </tr>
+                                </table>
+                                ※ Nは読み取るデータの個数
+                            </content>
+                        </item>
+                        <item>
+                            <name>buf</name>
+                            <type>out</type>
+                            <content>
+                                <p>データを返すIODBPMC構造体へのポインタです。IODBPMC構造体は次の通りです。<br/>
+                               Series 30i/31i/32i/35i-B, PMi-A で PMCメモリDを使用する場合は、コンパイル時に-Dオプションにて文字定数PMCMEMDを定義してください。</p>
+<pre>
+#if defined (PMCMEMD)
+typedef struct iodbpmc {
+    short           type_a ;   /* PMCアドレスの種類 */
+    short           type_d ;   /* PMCデータの型 */
+    unsigned short  datano_s ; /* 入力開始PMCアドレス */
+    unsigned short  datano_e ; /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;             /* N は読み取るデータの個数 */
+} IODBPMC ;
+#else
+typedef struct  iodbpmc {
+    short   type_a ;       /* PMCアドレスの種類 */
+    short   type_d ;       /* PMCデータの型 */
+    short   datano_s ;     /* 入力開始PMCアドレス */
+    short   datano_e ;     /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;             /* N は読み取るデータの個数 */
+} IODBPMC ;
+#endif
+</pre>
+                            </content>
+                        </item>
+
+                        <add>
+                            <p class="label">引数の指定例</p>
+                            <ol>
+                                <li>D0100(ワード型とします)を読み取る。</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>adr_type</td>
+                                            <td>9</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data_type</td>
+                                            <td>1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>s_number</td>
+                                            <td>100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>e_number</td>
+                                            <td>101</td>
+                                        </tr>
+                                        <tr>
+                                            <td>length</td>
+                                            <td>8+2×1 (=10)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>buf.u.idata[0]</td>
+                                            <td>D0100の内容が格納される</td>
+                                        </tr>
+                                    </table>
+
+                                <li>R0200～R0209(バイト型とします)を読み取る。</li>
+                                    <table class="dd">
+                                        <tr>
+                                            <td>adr_type</td>
+                                            <td>5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>data_type</td>
+                                            <td>0</td>
+                                        </tr>
+                                        <tr>
+                                            <td>s_number</td>
+                                            <td>200</td>
+                                        </tr>
+                                        <tr>
+                                            <td>e_number</td>
+                                            <td>209</td>
+                                        </tr>
+                                        <tr>
+                                            <td>length</td>
+                                            <td>8+1×10 (=18)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>buf.u.cdata[0]<br/>
+                                            ～buf.u.cdata[9]</td>
+                                            <td>R0200～R0209の内容が格納される</td>
+                                        </tr>
+                                    </table>
+                            </ol>
+                        </add>
+                    </vc>
+                </hssb>
+            </is>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NOPMC</name>
+                <content>
+                    PMCが存在しません。
+                </content>
+            </item>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    データブロック長の誤り<br/>
+                    IODBPMC構造体のサイズ(length)が不正です。
+                </content>
+            </item>
+            <item>
+                <name>EW_RANGE</name>
+                <content>
+                    アドレス範囲の誤り<br/>
+                    PMCアドレス番号(s_number, e_number)の指定が不適切です。
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>
+                    データ属性の誤り<br/>
+                    PMCアドレスの種類(adr_type)、またはPMCデータの型(data_type)の指定が不適切です。<br/>
+                </content>
+            </item>
+            <item class="xis">
+                <name>EW_PASSWD</name>
+                <content>
+                    指定された範囲のデータは保護されているため読み込めません。<br/>
+                    (Series 16i/18i/21i, 0i-A/B/C) 
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                <p class="dd">上記２つの機能は必要ありません。</p>
+                <p>イーサネットボードを使用のとき、</p>
+                <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>X</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>pmc_wrpmcrng</name>>
+                <file>Pmc/pmc_wrpmcrng.htm</file>
+            </item>
+            <item>
+                <name>pmc_rdpmcinfo</name>
+                <file>Pmc/pmc_rdpmcinfo.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

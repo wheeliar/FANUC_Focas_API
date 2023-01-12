@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrkeyhistry</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrkeyhistry(unsigned short FlibHndl, char key_code); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>指定されたキーコードをNC内の操作履歴に記録します。</p>
+             <span class="xis">
+             <p>
+                FS16i-MM/TT、FS18i-MM/TTおよびFS21i-MM/TTにおいて、cnc_setpath()により
+                系統２に切り換えて本関数を実行しても、キーの履歴は系統１の操作履歴に記
+                録されます。（系統１および系統２どちらから本関数を実行しても、系統１の
+                操作履歴に特に区別されることなく記録されます。）</p>
+             <p>本関数をローダで使用する場合は、ローダに対応したシステムが必要です。
+                ローダに対応していないシステムの場合、本関数を実行すると動作は保証されません。</p>
+             </span>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>key_code</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            操作履歴に記録するキーコードを指定します。<br/>
+                            指定可能なキーコード表を以下に示します。下表において、空欄に示されるキーコードを指定すると、EW_DATAのエラーとなります。<br/>
+                            なお、以下の32個のキーコードはファナック標準のキーボードでは未使用ですので、アプリケーションで自由なキーに割り付けることができます。<br/>
+                               <dd>・0x10-0x1F (user01-user16) の16個</dd>
+                               <dd>・0xD0-0xDF (user17-user32) の16個</dd><br/>
+                        </p>
+                            <span class="xis">
+                            <li>Series 16i/18i/21i</li>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr><th>　</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                                    <tr><td><b>0</b></td><td>&#160;</td><td>user01</td><td>SP</td><td>0</td><td>@</td><td>P</td><td>`</td><td>&#160;</td></tr>
+                                    <tr><td><b>1</b></td><td>&#160;</td><td>user02</td><td>!</td><td>1</td><td>A</td><td>Q</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>2</b></td><td>&#160;</td><td>user03</td><td>"</td><td>2</td><td>B</td><td>R</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>3</b></td><td>&#160;</td><td>user04</td><td>#</td><td>3</td><td>C</td><td>S</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>4</b></td><td>&#160;</td><td>user05</td><td>$</td><td>4</td><td>D</td><td>T</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>5</b></td><td>&#160;</td><td>user06</td><td>%</td><td>5</td><td>E</td><td>U</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>6</b></td><td>&#160;</td><td>user07</td><td>&amp;</td><td>6</td><td>F</td><td>V</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>7</b></td><td>&#160;</td><td>user08</td><td>'</td><td>7</td><td>G</td><td>W</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>8</b></td><td>&#160;</td><td>user09</td><td>(</td><td>8</td><td>H</td><td>X</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>9</b></td><td>&#160;</td><td>user10</td><td>)</td><td>9</td><td>I</td><td>Y</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>A</b></td><td>EOB</td><td>user11</td><td>*</td><td>:</td><td>J</td><td>Z</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>B</b></td><td>&#160;</td><td>user12</td><td>+</td><td>&#160;</td><td>K</td><td>[</td><td>&#160;</td><td>{</td></tr>
+                                    <tr><td><b>C</b></td><td>&#160;</td><td>user13</td><td>,</td><td>&lt;</td><td>L</td><td>\</td><td>&#160;</td><td>|</td></tr>
+                                    <tr><td><b>D</b></td><td>&#160;</td><td>user14</td><td>-</td><td>=</td><td>M</td><td>]</td><td>&#160;</td><td>}</td></tr>
+                                    <tr><td><b>E</b></td><td>&#160;</td><td>user15</td><td>.</td><td>&gt;</td><td>N</td><td>&#160;</td><td>&#160;</td><td>~</td></tr>
+                                    <tr><td><b>F</b></td><td>&#160;</td><td>user16</td><td>/</td><td>?</td><td>O</td><td>_</td><td>&#160;</td><td>&#160;</td></tr>
+                                </table>
+                                <br/>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr>
+                                        <th>&#160;</th><th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>0</b></td><td>&#160;</td><td>RESET</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user17</td><td>&#160;</td><td>[SF0]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>1</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user18</td><td>&#160;</td><td>[SF1]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>2</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user19</td><td>&#160;</td><td>[SF2]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>3</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user20</td><td>&#160;</td><td>[SF3]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>4</b></td><td>SHIFT</td><td>INSERT</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user21</td><td>&#160;</td><td>[SF4]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>5</b></td><td>&#160;</td><td>DELETE</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user22</td><td>&#160;</td><td>[SF5]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>6</b></td><td>CAN</td><td>ALTER</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user23</td><td>&#160;</td><td>[SF6]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>7</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user24</td><td>&#160;</td><td>[SF7]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>8</b></td><td>&#8594;</td><td>INPUT</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user25</td><td>POS</td><td>[SF8]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>9</b></td><td>&#8592;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user26</td><td>PROG</td><td>[SF9]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>A</b></td><td>&#8595;</td><td>HELP</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user27</td><td>OFFSET<br/>SETTING</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>B</b></td><td>&#8593;</td><td>CALC</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user28</td><td>SYSTEM</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>C</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user29</td><td>MESSAGE</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>D</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user30</td><td>GRAPH</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>E</b></td><td>Page&#8595;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user31</td><td>CUSTOM</td><td>[SFR]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>F</b></td><td>Page&#8593;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user32</td><td>FAPT</td><td>[SFL]</td>
+                                    </tr>
+                                </table>
+                                <br/>
+                            <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                            </span>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr><th>　</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th></tr>
+                                    <tr><td><b>0</b></td><td>&#160;</td><td>user01</td><td>SP</td><td>0</td><td>@</td><td>P</td><td>`</td><td>&#160;</td></tr>
+                                    <tr><td><b>1</b></td><td>&#160;</td><td>user02</td><td>!</td><td>1</td><td>A</td><td>Q</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>2</b></td><td>&#160;</td><td>user03</td><td>"</td><td>2</td><td>B</td><td>R</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>3</b></td><td>&#160;</td><td>user04</td><td>#</td><td>3</td><td>C</td><td>S</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>4</b></td><td>&#160;</td><td>user05</td><td>$</td><td>4</td><td>D</td><td>T</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>5</b></td><td>&#160;</td><td>user06</td><td>%</td><td>5</td><td>E</td><td>U</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>6</b></td><td>&#160;</td><td>user07</td><td>&amp;</td><td>6</td><td>F</td><td>V</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>7</b></td><td>&#160;</td><td>user08</td><td>'</td><td>7</td><td>G</td><td>W</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>8</b></td><td>&#160;</td><td>user09</td><td>(</td><td>8</td><td>H</td><td>X</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>9</b></td><td>TAB</td><td>user10</td><td>)</td><td>9</td><td>I</td><td>Y</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>A</b></td><td>EOB</td><td>user11</td><td>*</td><td>:</td><td>J</td><td>Z</td><td>&#160;</td><td>&#160;</td></tr>
+                                    <tr><td><b>B</b></td><td>&#160;</td><td>user12</td><td>+</td><td>;</td><td>K</td><td>[</td><td>&#160;</td><td>{</td></tr>
+                                    <tr><td><b>C</b></td><td>&#160;</td><td>user13</td><td>,</td><td>&lt;</td><td>L</td><td>\</td><td>&#160;</td><td>|</td></tr>
+                                    <tr><td><b>D</b></td><td>&#160;</td><td>user14</td><td>-</td><td>=</td><td>M</td><td>]</td><td>&#160;</td><td>}</td></tr>
+                                    <tr><td><b>E</b></td><td>&#160;</td><td>user15</td><td>.</td><td>&gt;</td><td>N</td><td>&#160;</td><td>&#160;</td><td>~</td></tr>
+                                    <tr><td><b>F</b></td><td>&#160;</td><td>user16</td><td>/</td><td>?</td><td>O</td><td>_</td><td>&#160;</td><td>&#160;</td></tr>
+                                </table>
+                                <br/>
+                                <table border="1" width="60%">
+                                    <col span="9" width="10%" align="center"/>
+                                    <tr>
+                                        <th>&#160;</th><th>8</th><th>9</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th>
+                                    </tr>
+                                    <tr>
+                                        <td><b>0</b></td><td>&#160;</td><td>RESET</td><td>[SVF9]</td><td>&#160;</td><td>&#160;</td><td>user17</td><td>&#160;</td><td>[SHF1]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>1</b></td><td>&#160;</td><td>&#160;</td><td>[SVF8]</td><td>&#160;</td><td>&#160;</td><td>user18</td><td>&#160;</td><td>[SHF2]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>2</b></td><td>&#160;</td><td>&#160;</td><td>[SVF7]</td><td>&#160;</td><td>&#160;</td><td>user19</td><td>&#160;</td><td>[SHF3]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>3</b></td><td>&#160;</td><td>&#160;</td><td>[SVF6]</td><td>&#160;</td><td>&#160;</td><td>user20</td><td>&#160;</td><td>[SHF4]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>4</b></td><td>SHIFT</td><td>INSERT</td><td>[SVF5]</td><td>&#160;</td><td>&#160;</td><td>user21</td><td>AUX</td><td>[SHF5]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>5</b></td><td>&#160;</td><td>DELETE</td><td>[SVF4]</td><td>&#160;</td><td>&#160;</td><td>user22</td><td>&#160;</td><td>[SHF6]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>6</b></td><td>CAN</td><td>ALTER</td><td>[SVF3]</td><td>&#160;</td><td>&#160;</td><td>user23</td><td>&#160;</td><td>[SHF7]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>7</b></td><td>&#160;</td><td>ALT</td><td>[SVF2]</td><td>&#160;</td><td>&#160;</td><td>user24</td><td>&#160;</td><td>[SHF8]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>8</b></td><td>&#8594;</td><td>INPUT</td><td>[SVF1]</td><td>&#160;</td><td>&#160;</td><td>user25</td><td>POS</td><td>[SHF9]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>9</b></td><td>&#8592;</td><td>CALC</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user26</td><td>PROG</td><td>[SHF10]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>A</b></td><td>&#8595;</td><td>HELP</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user27</td><td>OFFSET<br/>SETTING</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>B</b></td><td>&#8593;</td><td>CTRL</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user28</td><td>SYSTEM</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>C</b></td><td>&#160;</td><td>ABC/abc</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user29</td><td>MESSAGE</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>D</b></td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user30</td><td>GRAPH</td><td>&#160;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>E</b></td><td>Page&#8595;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user31</td><td>CUSTOM</td><td>[FR]</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>F</b></td><td>Page&#8593;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>&#160;</td><td>user32</td><td>CUSTOM2</td><td>[FL]</td>
+                                    </tr>
+                                </table>
+                            <span class="xis">
+                        <p>
+                            <br/>
+                            なお、幾つかのキーコードはファナック標準のキーボードには存在しないため、CNC側の操作履歴画面ではそれぞれ以下のように表示されます。(P_ は本関数によって記録されたキーであることを示します。P_は、30iシリーズ, 0i-D/F, PMi-Aでは表示されません。)<br/>
+                        </p>
+                            <table border="1" width="40%">
+                                <col span="3" align="center"/>
+                                <tr>
+                                    <th>キーコード</th><th>操作履歴画面での表示(16i/18i21i)</th><th>操作履歴画面での表示(30i/31i/32i,0i-D/F,PMi-A)</th>
+                                </tr>
+                                <tr><td><b>0x10-0x1F</b></td><td>P_</td><td>0x10-0x1F</td></tr>
+                                <tr><td><b>0x5E</b>( ^ )</td><td>&#160;</td><td>0x5E</td></tr>
+                                <tr><td><b>0x60</b>( ` )</td><td>P_</td><td>0x60</td></tr>
+                                <tr><td><b>0x7B</b>( { )</td><td>P_;</td><td>0x7B</td></tr>
+                                <tr><td><b>0x7C</b>( | )</td><td>P_&lt;</td><td>0x7C</td></tr>
+                                <tr><td><b>0x7D</b>( } )</td><td>P_=</td><td>0x7D</td></tr>
+                                <tr><td><b>0x7E</b>( ~ )</td><td>P_&gt;</td><td>~</td></tr>
+                                <tr><td><b>0x9B</b>     </td><td>P_&lt;POS&gt;</td><td>&lt;CTRL&gt;</td></tr>
+                                <tr><td><b>0xD0</b>     </td><td>P_&lt;mark&gt;</td><td>0xD0</td></tr>
+                                <tr><td><b>0xD1</b>     </td><td>P_&lt;FAPT&gt;</td><td>0xD1</td></tr>
+                                <tr><td><b>0xD2</b>     </td><td>P_&lt;SF0&gt;</td><td>0xD2</td></tr>
+                                <tr><td><b>0xD3</b>     </td><td>P_&lt;SF1&gt;</td><td>0xD3</td></tr>
+                                <tr><td><b>0xD4</b>     </td><td>P_&lt;SF2&gt;</td><td>0xD4</td></tr>
+                                <tr><td><b>0xD5</b>     </td><td>P_&lt;SF3&gt;</td><td>0xD5</td></tr>
+                                <tr><td><b>0xD6</b>     </td><td>P_&lt;SF4&gt;</td><td>0xD6</td></tr>
+                                <tr><td><b>0xD7</b>     </td><td>P_&lt;SF5&gt;</td><td>0xD7</td></tr>
+                                <tr><td><b>0xD8</b>     </td><td>P_&lt;SF6&gt;</td><td>0xD8</td></tr>
+                                <tr><td><b>0xD9</b>     </td><td>P_&lt;SF7&gt;</td><td>0xD9</td></tr>
+                                <tr><td><b>0xDA</b>     </td><td>P_&lt;SF8&gt;</td><td>0xDA</td></tr>
+                                <tr><td><b>0xDB</b>     </td><td>P_&lt;SF9&gt;</td><td>0xDB</td></tr>
+                                <tr><td><b>0xDC-0xDF</b></td><td>P_</td><td>0xDC-0xDF</td></tr>
+                            </table>
+                            </span>
+                            <span class="ois">
+                        <p>
+                            <br/>
+                            なお、幾つかのキーコードはファナック標準のキーボードには存在しないため、CNC側の操作履歴画面ではそれぞれ以下のように表示されます。<br/>
+                        </p>
+                            <table border="1" width="40%">
+                                <col span="" align="center"/>
+                                <tr>
+                                    <th>キーコード</th><th>操作履歴画面での表示</th>
+                                </tr>
+                                <tr><td><b>0x10-0x1F</b></td><td>0x10-0x1F</td></tr>
+                                <tr><td><b>0x5E</b>( ^ )</td><td>0x5E</td></tr>
+                                <tr><td><b>0x60</b>( ` )</td><td>0x60</td></tr>
+                                <tr><td><b>0x7B</b>( { )</td><td>0x7B</td></tr>
+                                <tr><td><b>0x7C</b>( | )</td><td>0x7C</td></tr>
+                                <tr><td><b>0x7D</b>( } )</td><td>0x7D</td></tr>
+                                <tr><td><b>0x7E</b>( ~ )</td><td>~</td></tr>
+                                <tr><td><b>0x9B</b>     </td><td>&lt;CTRL&gt;</td></tr>
+                                <tr><td><b>0xD0</b>     </td><td>0xD0</td></tr>
+                                <tr><td><b>0xD1</b>     </td><td>0xD1</td></tr>
+                                <tr><td><b>0xD2</b>     </td><td>0xD2</td></tr>
+                                <tr><td><b>0xD3</b>     </td><td>0xD3</td></tr>
+                                <tr><td><b>0xD4</b>     </td><td>0xD4</td></tr>
+                                <tr><td><b>0xD5</b>     </td><td>0xD5</td></tr>
+                                <tr><td><b>0xD6</b>     </td><td>0xD6</td></tr>
+                                <tr><td><b>0xD7</b>     </td><td>0xD7</td></tr>
+                                <tr><td><b>0xD8</b>     </td><td>0xD8</td></tr>
+                                <tr><td><b>0xD9</b>     </td><td>0xD9</td></tr>
+                                <tr><td><b>0xDA</b>     </td><td>0xDA</td></tr>
+                                <tr><td><b>0xDB</b>     </td><td>0xDB</td></tr>
+                                <tr><td><b>0xDC-0xDF</b></td><td>0xDC-0xDF</td></tr>
+                            </table>
+                            </span>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>CNC側で本関数がサポートされていません。<br/>
+                     CNC側の版数を確認してください。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データエラー<br/>
+                     key_codeで指定されたコードが不正です。<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>CNCパラメータの誤り<br/>
+                    <li>
+                        操作履歴機能が無効となっています。
+                    </li>
+                    <li>
+                        操作履歴のサンプリングが行われていません。
+                    </li>
+            </content>
+        </item>
+        <item>
+            <name>EW_BUFFER</name>
+            <content>
+                バッファフル<br/>
+                履歴記録用バッファが一杯です。<br/>
+                CNC側で履歴への記録処理が終了するまで待つか、リトライしてください。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <span class="xis">
+            <ul type="disc">
+                <li>Series 16/18/21, 16i/18i/21i<br/></li>
+                 3106#7(設定の影響を受けます)<br/>
+                 3112#5
+            </ul>
+            </span>
+            <ul type="disc">
+                <span class="xis">
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A<br/></li>
+                </span>
+                 3195#5=0(設定の影響を受けます)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

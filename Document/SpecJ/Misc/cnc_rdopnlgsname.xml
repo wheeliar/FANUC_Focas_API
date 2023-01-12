@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdopnlgsname</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdopnlgsname(unsigned short FlibHndl, short slct_data, IODBRDNA *brdna);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+  ソフトオペパネの汎用信号名称のリードを行います。
+</p>
+      </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slct_data</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            データ選択フラグを指定します。
+                        </p>
+<table class="dd">
+    <tr><td>bit 0</td><td>:</td><td>汎用出力信号1</td></tr>
+    <tr><td>bit 1</td><td>:</td><td>汎用出力信号2</td></tr>
+    <tr><td>bit 2</td><td>:</td><td>汎用出力信号3</td></tr>
+    <tr><td>bit 3</td><td>:</td><td>汎用出力信号4</td></tr>
+    <tr><td>bit 4</td><td>:</td><td>汎用出力信号5</td></tr>
+    <tr><td>bit 5</td><td>:</td><td>汎用出力信号6</td></tr>
+    <tr><td>bit 6</td><td>:</td><td>汎用出力信号7</td></tr>
+    <tr><td>bit 7</td><td>:</td><td>汎用出力信号8</td></tr>
+</table>
+<ul style="list-style-type:none">
+    <li>※ bit8～bit15は未使用</li>
+    <li>※ 各信号に対応するビットを0にすると、その信号名称はリードされません。その信号名称をリードする時は、対応するビットを1にして下さい。</li>
+</ul>
+                    </content>
+                </item>
+                <item>
+                    <name>brdna</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            ソフトウエアオペレーターズパネルの汎用信号を返すIODBRDNA構造体へのポインタです。 IODBRDNA構造体は次の通りです。
+                        </p>
+
+<pre>
+typedef struct iodbrdna {
+     short    datano;         /* 未使用 */
+     short    type;           /* データ選択フラグ */
+     char     sgnl1_name[9];  /* 汎用信号 1 名称 (ASCII) */
+     char     sgnl2_name[9];  /* 汎用信号 2 名称 (ASCII) */
+     char     sgnl3_name[9];  /* 汎用信号 3 名称 (ASCII) */
+     char     sgnl4_name[9];  /* 汎用信号 4 名称 (ASCII) */
+     char     sgnl5_name[9];  /* 汎用信号 5 名称 (ASCII) */
+     char     sgnl6_name[9];  /* 汎用信号 6 名称 (ASCII) */
+     char     sgnl7_name[9];  /* 汎用信号 7 名称 (ASCII) */
+     char     sgnl8_name[9];  /* 汎用信号 8 名称 (ASCII) */
+} IODBRDNA ;
+</pre>
+<dl>
+    <dt>datano</dt>
+        <dd>未使用</dd>
+    <dt>type</dt>
+        <dd>処理が行われたデータ選択フラグが設定されます。</dd>
+    <dt>sgnl1_name</dt>
+        <dd>汎用信号1名称(ASCII)が設定されます。</dd>
+    <dt>sgnl2_name</dt>
+        <dd>汎用信号2名称(ASCII)が設定されます。</dd>
+    <dt>sgnl3_name</dt>
+        <dd>汎用信号3名称(ASCII)が設定されます。</dd>
+    <dt>sgnl4_name</dt>
+        <dd>汎用信号4名称(ASCII)が設定されます。</dd>
+    <dt>sgnl5_name</dt>
+        <dd>汎用信号5名称(ASCII)が設定されます。</dd>
+    <dt>sgnl6_name</dt>
+        <dd>汎用信号6名称(ASCII)が設定されます。</dd>
+    <dt>sgnl7_name</dt>
+        <dd>汎用信号7名称(ASCII)が設定されます。</dd>
+    <dt>sgnl8_name</dt>
+        <dd>汎用信号8名称(ASCII)が設定されます。</dd>
+        <dd><br/></dd>
+        <dd>名称の最後(sgnl?_name[8])には、NULL文字('\0')がセットされます。</dd>
+</dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+           </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>本機能には拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                 <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>O</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+             <fs0if>O</fs0if>
+             <fs15>H</fs15>
+            <fs15i>X</fs15i>
+             <fs16>H</fs16>
+             <fs18>H</fs18>
+             <fs21>H</fs21>
+           <fs16ia>O</fs16ia>
+           <fs18ia>O</fs18ia>
+           <fs21ia>O</fs21ia>
+           <fs16ib>O</fs16ib>
+           <fs18ib>O</fs18ib>
+           <fs21ib>O</fs21ib>
+           <fs30ia>O</fs30ia>
+           <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+             <fs0if>X</fs0if>
+             <fs15>X</fs15>
+            <fs15i>X</fs15i>
+             <fs16>X</fs16>
+             <fs18>X</fs18>
+             <fs21>X</fs21>
+           <fs16ia>X</fs16ia>
+           <fs18ia>X</fs18ia>
+           <fs21ia>X</fs21ia>
+           <fs16ib>X</fs16ib>
+           <fs18ib>X</fs18ib>
+           <fs21ib>X</fs21ib>
+           <fs30ia>X</fs30ia>
+           <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdopnlsgnl</name>
+            <file>misc/cnc_rdopnlsgnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wropnlsgnl</name>
+            <file>misc/cnc_wropnlsgnl.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdopnlgnrl</name>
+            <file>misc/cnc_rdopnlgnrl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wropnlgnrl</name>
+            <file>misc/cnc_wropnlgnrl.htm</file>
+        </item>
+        <item>
+            <name>cnc_wropnlgsname</name>
+            <file>misc/cnc_wropnlgsname.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

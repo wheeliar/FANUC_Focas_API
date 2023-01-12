@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_dnc</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dnc(unsigned short FlibHndl,char *data, unsigned short number);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側で直接運転(DNC運転)を実行するためのNC指令データを出力します。</p>
+            <p>CNC側のデータ処理が遅れてデータが出力できない場合は出力できるまでライブラリの中で待ちます。<br/>
+            待ちたくない場合は、<a href="Program/cnc_cdnc.htm" target="_parent">cnc_cdnc</a>関数を使用して下さい。</p>
+            
+            <p>DNC運転を行う手順を以下に示します。</p>
+            <p><img src="Program/dnc_pro.gif"/></p>
+            <p>Series 15の場合、パラメータ20番を『15』に設定する必要があります。この設定をしなくてもエラーにはなりません。</p>
+            <p>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i の場合、DI:DMMC&#60;G042#7&#62;=1にする必要があります。この設定をしなくてもエラーにはなりません。</p>
+            <p>データの転送用に 256バイトのバッファが、Series 15 では16個あり、Series 16/18/21, 16i/18i/21i, 0i,   Power Mate iでは 4個あります。<br/>
+                １回のコールではデータサイズには無関係に必ず１個のバッファが使用されます。<br/>
+                このため、１回の呼び出しにて転送できる最大サイズは 256バイトとなります。</p>
+            <p><img src="Program/buff.gif"/></p>
+            <p>Series 16/18/21, 16i/18i/21i, 0i の場合、ＮＣのパラメータ設定(No.8706#0=1)により高速ＤＮＣ運転用となります。<br/>
+                この場合は、データの転送用に４０Ｋバイトのバッファが１個用意され、リングバッファとして使用されますのでバッファが一杯になるまでは何度でもデータの出力が行えます。</p>
+                <p><img src="Program/dnc_buff.gif"/></p>
+                <p>CNC へのデータ転送の速度を重視しているため、エラー(EW_DATA) は一般的には遅れて返ります。<br/>
+                    すなわち、ある時のエラーは実際には数回前に出力されたデータに対するものになります。<br/>
+                    また、終了前の数回分のデータに対するエラーは『運転用ＮＣ指令データの出力の終了』で返されます。</p>
+            <p>
+                <b>運転用NC指令データのフォーマット</b>
+                <br/><br/>
+                CNC側に指令するNCプログラムは以下のようなフォーマットのASCIIコードの文字列です。<br/>
+                <br/>
+                <ul>
+                    LF NC指令1 LF NC指令2 LF ... LF Mxx LF %<br/>
+                    <br/>
+                    ただし
+                    <table>
+                    <tr><td>LF      </td><td>0x0A ('\n': EOB)</td></tr>
+                    <tr><td>Mxx  </td><td>DNC運転終了をあらわすＭコード(M02,M30など)</td></tr>
+                    </table>
+                </ul>
+                <p>NC指令全体の先頭には LF を、末尾には '%' を付加して下さい。<br/>
+                    各NC指令の末尾には LF を付加します。<br/>
+                    例えば、<br/>
+                    <ul>
+                        M3 S2000 ;<br/>
+                        T14 ;<br/>
+                        G0 X10. ;<br/>
+                        G0 Z-5. ;<br/>
+                        M30 ;
+                    </ul>
+                    という指令を実行する時は、<br/>
+                    <ul>
+                        cnc_dnc( "\nM3S2000\nT14\nG0X10.\nG0Z-5.\nM30\n%", 32 ) ;
+                    </ul>
+                    と指定します。一連の指令を複数のcnc_dnc関数にに分けて指令することもできます。<br/>
+                    上記の指令は、<br/>
+                    <ul>
+                        cnc_dnc( "\n", 1 ) ;<br/>
+                        cnc_dnc( "M3S2000\n", 8 ) ;<br/>
+                        cnc_dnc( "T14\n", 4 ) ;<br/>
+                        cnc_dnc( "G0X10.\n", 7 ) ;<br/>
+                        cnc_dnc( "G0Z-5.\n", 7 )  ;<br/>
+                        cnc_dnc( "M30\n", 4 ) ;<br/>
+                        cnc_dnc( "%", 1 ) ;
+                    </ul>
+                    と書くこともできます。
+                 </p>
+            </p>
+            <br/>
+            <table  border="2" bordercolorlight="Black" bordercolordark="Black">
+                <tr><td>注1) DNC運転では、Power Mate i-H のG130機能は使用できません。</td></tr>
+            </table>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ＮＣ指令データの文字数を指定します。(1～256)
+                        </p>
+                        <p>(Series 16/18/21, 16i/18i/21i, 0i の高速DNC運転の場合、1～40959)</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data </name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ＮＣ指令データの先頭アドレスを指定します。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                リセット、停止要求<br/>
+                『RESET or STOP』 が押されました。<br/>
+                <a href="Program/cnc_dncend.htm" target="_parent">cnc_dncend</a>関数をコールして下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                <a href="Program/cnc_dncstart.htm" target="_parent">cnc_dncstart</a>関数が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                データブロック長(number)が 256バイトを超えています<br/>
+                (Series 16/18/21, 16i/18i/21i, 0i の高速DNC運転の場合、40959)。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+            <li>Series 15</li>
+                0020 = 15 (必ず設定して下さい)<br/>
+                0000#0 (設定の影響を受けます)<br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i</li>
+                0000#0 (設定の影響を受けます)<br/>
+                8706#0 (設定の影響を受けます)(このパラメータは第１系統でのみ有効です。第１系統以外では、0を設定して下さい。)<br/>
+            <br/>
+            <li>Power Mate i</li>
+                0000#0 (設定の影響を受けます)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <ul>
+                <li>Series 15<br/>
+                    TAPEモードにする必要があります。
+                </li>
+                <li>Series 16/18/21, 16i/18i/21i, 0i, Power Mate i<br/>
+                    MEMモードで、DI:DMMC&#60;G042#7&#62;=1 にする必要があります。</li>
+            </ul>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_dncstart</name>
+            <file>Program/cnc_dncstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdnc</name>
+            <file>Program/cnc_cdnc.htm</file>
+        </item>
+        <item>
+            <name>cnc_dncend</name>
+            <file>Program/cnc_dncend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

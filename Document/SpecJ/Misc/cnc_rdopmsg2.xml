@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdopmsg2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdopmsg2(unsigned short FlibHndl,short type,short length,OPMSG2 *opmsg);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>
+                CNCのオペレータメッセージの内容を読み出します。オペレータメッセージはOPMSG2内のdataに格納されます。
+                本関数は、Series 16/18/21, 16i/18i/21i, 0i, 30i, PMi-Aにおいて、外部オペレータメッセージ４個の場合に使用できます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                            <p>
+                                オペレータメッセージの種類を指定します。
+                            </p>
+                            <table class="dd">
+                                <colgroup align="right">
+                                    <tr><td>&#160;0</td> <td>:</td> <td>第１メッセージ</td>    </tr>
+                                    <tr><td>&#160;1</td> <td>:</td> <td>第２メッセージ</td>    </tr>
+                                    <tr><td>&#160;2</td> <td>:</td> <td>第３メッセージ</td>    </tr>
+                                    <tr><td>&#160;3</td> <td>:</td> <td>第４メッセージ</td>    </tr>
+                                    <tr><td>-1</td>      <td>:</td> <td>全メッセージ</td>      </tr>
+                                </colgroup>
+                            </table>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                            <p>
+                                データブロック長(OPMSG2構造体のサイズ)を指定します。
+                            </p>
+                                <p class="dd"><b>単一メッセージ(第1～4メッセージ)</b></p>
+                                <p class="dd"><img src="misc/opm_2.gif"></img></p>
+                                <p class="dd"><b>全メッセージ</b></p>
+                                <p class="dd"><img src="misc/opm_2_wal.gif"></img></p>
+                    </content>
+                </item>
+                <item>
+                    <name>opmsg</name>
+                    <type>out</type>
+                    <content>
+                            <p>
+                                オペレータメッセージを返すOPMSG2構造体へのポインタです。OPMSG2構造体は次の通りです。
+                            </p>
+<pre><![CDATA[
+typedef struct opmsg2 {
+     short  datano ;         /* オペレータメッセージ番号 */
+     short  type ;           /* オペレータメッセージの種類 */
+     short  char_num ;       /* メッセージ文字数 */
+     char  data[MSG_SIZE] ;  /* オペレータメッセージ文字列 */
+} OPMSG2 ;                   /* MSG_SIZE : メッセージ文字数 */
+]]></pre>
+                            <dl>
+                                <dt>datano</dt>
+                                    <dd>オペレータメッセージ番号がセットされます。</dd>
+                                    <ul>
+                                    <ul>
+                                        <li type="circle">
+                                            メッセージあり
+                                        </li>
+                                            <dl>
+                                                <dd>番号なしのとき : 0</dd>
+                                                <dd>番号ありのとき : 2000 ～ 2099</dd>
+                                            </dl>
+                                        <li type="circle">
+                                            メッセージなし
+                                        </li>
+                                            <dl>
+                                                <dd>-1</dd>
+                                            </dl>
+                                    </ul>
+                                    </ul>
+                                <dt>type</dt>
+                                    <dd>オペレータメッセージの種類がセットされます。</dd>
+                                    <ul>
+                                        <table class="dd">
+                                            <colgroup align="right">
+                                            <tr> <td>0～3</td> <td>:</td> <td>第1～4メッセージ</td> </tr>
+                                            </colgroup>
+                                        </table>
+                                    </ul>
+                                <dt>char_num</dt>
+                                    <dd>オペレータメッセージ文字数がセットされます。</dd>
+                                        <ul>
+                                            <table class="dd">
+                                                <colgroup align="right">
+                                                <tr>
+                                                    <td>1～64</td>
+                                                    <td>:</td>
+                                                    <td>オペレータメッセージ</td>
+                                                </tr>
+                                                </colgroup>
+                                            </table>
+                                        </ul>
+                                    <dd>文字数には終端の'\0'が含まれます。</dd>
+                                    <dt>data</dt>
+                                        <dd>オペレータメッセージ文字列がセットされます。終端に'\0'がセットされます。</dd>
+                                        <dd>メッセージは以下の文字コードで取得されます。</dd>
+                                        <ul>
+                                            <table class="dd">
+                                                <tr><td>英語                  </td> <td>:</td> <td>ASCII           </td> </tr>
+                                                <tr><td>日本語                </td> <td>:</td> <td>シフトJIS       </td> </tr>
+                                                <tr><td>中国語(繁体字)        </td> <td>:</td> <td>シフトJIS       </td> </tr>
+                                                <tr><td>中国語(簡体字)        </td> <td>:</td> <td>GB2312          </td> </tr>
+                                                <tr><td>韓国語                </td> <td>:</td> <td>コードページ949 </td> </tr>
+                                                <tr><td>ロシア語              </td> <td>:</td> <td>コードページ1251</td> </tr>
+                                                <tr><td>トルコ語              </td> <td>:</td> <td>コードページ1254</td> </tr>
+                                                <tr><td>その他のヨーロッパ言語</td> <td>:</td> <td>欧州文字コード  </td> </tr>
+                                            </table>
+                                        </ul>
+                                        <dd>注1) 30iシリーズ, 0i-D/F, PMi-A以外では、日本語と英語以外のメッセージは正しく取得できません。</dd>
+                                        <dd>注2) FOCAS2/Ethernetの場合、韓国語は正しく取得できません。(30i-B、0i-F、PMi-Aを除く)</dd>
+                            </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                OPMSG2構造体のサイズ(length)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                オペレータメッセージの種類(type)の指定が不適切です
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                必要なNCオプションがありません。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                ＣＮＣパラメータの誤り<br/>
+                <ul style="margin-top:0;margin-bottom:0">
+                    <li>Series 30i/31i/32i, 0i-D/F, PMi-A以外</li>
+                    3207#0=0になっています。
+                    <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    11931#1=1になっています。
+                </ul>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <cmn></cmn>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+            イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。<br/><br/>
+            但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。<br/><br/>
+            組込みイーサネットを使用のとき、<br/>
+            <p class="dd">上記２つの機能は必要ありません。</p>
+            イーサネットボードを使用のとき、<br/>
+            <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            外部メッセージ<br/>
+            外部データ入力
+        </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A以外</li>
+                    3207#0=1(必ず設定して下さい)
+                <li>Series 30i/31i/32i, 0i-D/F, PMi-A</li>
+                    11931#1=0(必ず設定して下さい)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>O</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference></reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

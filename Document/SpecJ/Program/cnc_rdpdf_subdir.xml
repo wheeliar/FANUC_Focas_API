@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpdf_subdir</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpdf_subdir(unsigned short FlibHndl, short *num_dir, IDBPDFSDIR *pdf_sdir_in, ODBPDFSDIR *pdf_sdir_out);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定のフォルダ中のサブフォルダに関する情報を読み出します。<br/>
+                CNC側が編集中(バックグラウンド編集状態を含む)の場合は、実行が待たされます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_dir</name>
+                    <type>in/out</type>
+                    <content>
+                        <table>
+                            <tr><td>in</td><td>:</td><td>読み取るフォルダの最大個数を指令します。</td></tr>
+                            <tr><td>out</td><td>:</td><td>実際に読み取ったフォルダ個数が設定されます。</td></tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_sdir_in</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            フォルダの設定値を渡すIDBPDFSDIR構造体へのポインタです。<br/>
+                            IDBPDFSDIR構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct idbpdfsdir {
+    /* input */
+    char        path[212];      /* パス名文字列 */
+    short       req_num;        /* 要求エントリ番号 */
+    short       dummy;
+} IDBPDFSDIR ;
+</pre>
+                        <dl>
+                            <dt>path</dt>
+                                <dd>ドライブ名＋フォルダ名の文字列を設定します。</dd>
+                                <dd>終端はNULLを設定します。</dd>
+                                <dd>フォルダ名の指定方法の詳細については、「<a href="./general.htm#DriveName" target="_parent">ライブラリ全般 &quot;FS30i, 0i-D/F, PMi-Aのフォルダ名/ファイル名の指定方法について&quot;</a>」を参照してください。</dd>
+
+                            <dt>req_num</dt>
+                                <dd>何番目のサブフォルダの情報が欲しいかを設定します。</dd>
+                                <dd>0から始め+1づつインクリメントしていきます。(最初のサブフォルダは0番です)</dd>
+                        </dl>
+                    </content>
+                </item>
+                <item>
+                    <name>pdf_sdir_out</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            サブフォルダ情報を返すODBPDFSDIR構造体へのポインタです。<br/>
+                            ODBPDFSDIR構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odbpdfsdir {
+    /* output */
+    short       sub_exist;      /* サブフォルダの有無 */
+    short       dummy;
+    char        d_f[36];        /* フォルダ名文字列 */
+} ODBPDFSDIR ;
+</pre>
+                        <dl>
+                            <dt>sub_exist</dt>
+                                <dd>取得されたサブフォルダ中に、ファイルやサブフォルダ（孫フォルダ）が存在するかを表します。</dd>
+                                <dd><table class="dd">
+                                <tr><td>ビット0</td><td>:</td><td>サブフォルダ(孫フォルダ)が存在します。</td></tr>
+                                <tr><td>ビット1</td><td>:</td><td>ファイルが存在します。</td></tr>
+                                <tr><td>ビット2～15</td><td>:</td><td>未使用</td></tr>
+                                </table></dd>
+                            <dt>d_f</dt>
+                                <dd>サブフォルダ名文字列です。</dd>
+                                <dd>終端はNULLになっています。</dd>
+                        </dl>
+                        <table>
+                            <colgroup valign="top"/>
+                            <colgroup valign="top"/>
+                            <tr><td>※</td><td>dummyは、使用しません。</td></tr>
+                            <tr><td>※</td><td>最初の要求から最後の要求までの間に、サブフォルダの作成／削除等の編集が行われた場合は、要求された時点でのデータに基づいてデータを返します。</td></tr>
+                        </table>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/>
+                NCが使用中です。
+            </content>
+        </item>
+<!-- fwapiの不具合のため、以下のエラーにならない
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                データ(req_num)に対するサブフォルダは存在しません。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                フォルダ名(path)のフォーマットが不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                プロテクト<br/>
+                指定したフォルダは表示できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否
+            </content>
+        </item>
+-->
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+    <is_parameter></is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdpdf_alldir</name>
+            <file>Program/cnc_rdpdf_alldir.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpdf_subdirn</name>
+            <file>Program/cnc_rdpdf_subdirn.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

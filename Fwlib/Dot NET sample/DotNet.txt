@@ -1,0 +1,26 @@
+
+                               DotNetJ.TXT File
+                   README file for Fwlib32.cs & Fwlib32.vb
+       Copyright(C), FANUC CORPORATION, 2004-2011. All Rights Reserved.
+
+
+This document provides the information about "Fwlib32.cs" and "Fwlib32.vb".
+Please read this document before using these files.
+Since the functions of all FOCAS2 is not defined, add the function not defined
+in this file.
+
+------------------------------------------------------------------------------
+
+  - FWLIB32.CS : The header file for Visual C# .NET.
+  - FWLIB32.VB : The header file for Visual Basic .NET.
+
+These files are samples for Visual C# .NET or Visual Basic .NET.
+
+Maximum control axes number and Maximum spindle number are defined as follows
+in these files.
+
+  - Maximum control axes number : 32 axes
+  - Maximum spindle number      : 8
+
+Please correct and use the content if necessary.
+

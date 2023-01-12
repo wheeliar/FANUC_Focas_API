@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_loadtorq</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_loadtorq( unsigned short FlibHndl, short motor, short axis, short longth, ODBLOAD *torq );</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>サーボモータあるいは主軸モータの異常負荷トルクデータ(推定負荷トルク)を読み出します。データは符号付のバイナリ形式でODBLOAD内に格納されます。<br/>
+                   motor には読みだすモータの種類を指定します。<br/>
+                   axisに ALL_AXES を指定することにより全軸の読み取りを一度に行うことができます。その際、各軸の異常負荷トルクデータはODBLOAD内の data 配列に格納されます。</p>
+
+            <table class="dt">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                <tr>
+                    <td>(1)</td>
+                    <td>サーボモータの場合<br/>
+                        data には負荷電流値をディジタル値に換算した値( 0～+/-7282 )がバイナリ形式で格納されます。この値から以下の計算式で負荷電流値を求めることができます。<br/>
+                        負荷電流値 = data * N / 7282 [Apeak]<br/>
+                        ただし、N は以下の値です。</td>
+                        <table border="1" class="dd">
+                            <tr><td>パラメータ No.2165 の値</td><td>N の値</td></tr>
+                            <tr><td>20 未満</td>    <td>パラメータNo.2165の値</td></tr>
+                            <tr><td>20 以上</td>   <td>パラメータNo.2165の値 / 10 * 10<br/>(1の位を切り捨てる)</td></tr>
+                       </table>
+                </tr><br/>
+                </colgroup>
+                </colgroup>
+            </table>
+
+            <table class="dt">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                <tr>
+                    <td>(2)</td>
+                    <td>主軸モータの場合<br/>
+                        -16384～+16384 の値が格納されます。この値から以下の計算式で最大トルクに対する比率を求めることができます。<br/>
+                        最大トルクに対する比率 = data / 16384 * 100 [%]</td>
+                </tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>motor</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                読みだすモータの種類を指定します。
+                            </p>
+                            <table border="0" class="dd">
+                                <tr><td>0</td><td>：</td><td>サーボモータ</td></tr>
+                                <tr><td>1</td><td>：</td><td>主軸モータ</td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>axis</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                読み出す軸番号を指定します。
+                            </p>
+                            <table border="0" class="dd">
+                                <tr><td>ALL_AXES </td><td>：</td><td>全軸指定(ALL_AXES : -1)</td></tr>
+                                <tr><td>1～m     </td><td>：</td><td>１軸指定(m :現在の制御軸数)</td></tr>
+                            </table>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                データブロック長(ODBLOAD構造体のサイズ)を指定します。<br/>(= 4+2*(読み出す軸数))
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>torq</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                                異常負荷トルクデータを格納するODBLOAD構造体へのポインタです。ODBLOAD構造体は次の通りです。
+                            </p>
+<pre>
+typedef struct odbload {
+    short   datano ;        /* モータ種別 */
+    short   type ;          /* 軸番号 */
+    short   data[N] ;       /* 異常負荷トルクデータ */
+} ODBLOAD ;                 /* N は最大制御軸数 */
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    データブロック長の誤り<br/>
+                    ODBLOAD構造体のサイズ(length)が不正です。
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>
+                    データ属性の誤り<br/>
+                    軸番号(axis)の指定が不適切です。
+                </content>
+            </item>
+            <item>
+                <name>EW_NOOPT</name>
+                <content>
+                    オプションなし<br/>
+                    異常負荷検出機能、拡張ドライバ/ライブラリ機能が必要です。
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </hssb>
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                    <p class="dd">上記２つの機能は必要ありません。</p>
+                <p>イーサネットボードを使用のとき、</p>
+                    <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+            <need>
+                異常負荷検出機能
+            </need>
+
+            <!-- 30i(WinCE) -->
+            <is>
+                <hssb>
+                    以下の機能が必要です。
+                    <ul type="disc">
+                        <li>異常負荷検出機能</li>
+                        <li>拡張ドライバ/ライブラリ機能</li>
+                    </ul>
+                </hssb>
+            </is>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter>
+            <type>
+                <ul type="disc">
+                    <li>Series 30i</li>
+                        No.2165<br/>
+                </ul>
+            </type>
+        </parameter>
+        <!-- 30i(WinCE) -->
+        <is_parameter>
+            <type>
+                <ul>
+                    No.2165
+                </ul>
+            </type>
+        </is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+        <!-- 30i(WinCE) -->
+        <is_mode></is_mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>X</fs30isa>
+                    <fs30isb>X</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+    <reference>
+    </reference>
+
+
+
+    </func>
+</root>

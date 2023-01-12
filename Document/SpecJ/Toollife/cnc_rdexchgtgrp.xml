@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdexchgtgrp</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdexchgtgrp(unsigned short FlibHndl,short *num_grp, ODBEXGP *exgrp); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>工具交換信号が出ているグループの番号を若い順に取得します。</p>
+             <p>
+                工具寿命管理Ｂにおいて工具グループ番号任意設定機能が使用されている場合は、各グループに設定されている任意グループ番号も取得されます。
+             </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+           <vc>
+               <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>num_grp</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            取得する個数が格納されているshort型変数へのポインタを指定します。<br/>
+                            取得する個数に０以下を指定するとエラーとなります。
+                            本関数を実行すると、実際に取得された個数がセットされます。
+                            なお、要交換工具グループが１つもない場合は０がセットされます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>exgrp</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            取得した要交換工具グループ番号を格納するODBEXGP構造体の配列への
+                            列へのポインタを指定します。<br/>
+                            *num_grpで指定された個数分の配列が用意されていない場合、本関数の動作は保証されません。<br/>
+                            ODBEXGP構造体は次の通りです。
+<pre>
+typedef struct odbexgp {
+    long    grp_no;     // 工具グループ番号
+    long    opt_grpno;  // 任意グループ番号
+} ODBEXGP;
+</pre>
+                        <dl>
+                            <dt>grp_no</dt>
+                            <dd>工具グループ番号</dd>
+                            <ul>
+                                工具交換信号が出ている工具グループ番号がセットされます。
+                            </ul>
+                            <dt>opt_grpno</dt>
+                            <dd>任意グループ番号</dd>
+                            <ul>
+                                工具交換信号が出ている工具グループに設定されている任意グル
+                                ープ番号がセットされます。
+                                工具グループ番号任意設定機能が使用されていない場合および任
+                                意グループ番号が設定されていない場合は０がセットされます。
+                            </ul>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                CNC側が本関数に対応していません。
+            </content>
+        </item>
+        <item>
+           <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                取得個数（*num_grp）に０以下の値が指定されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                工具寿命管理機能、及び拡張ドライバ/ライブラリ機能が必要です。<br/>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+
+        <need>
+            <p>
+            工具寿命管理機能、または工具寿命管理Ｂ機能
+            </p>
+        </need>
+        <type>
+            <li>Series 16i/18i/21i<br/>
+                <p>512組(M系)/128組(T系)の影響を受けます。 </p>
+            </li>
+            <li>Series 0i-F, 30i<br/>
+                <p>工具寿命管理組数追加の影響を受けます。</p>
+                <table>
+                    <tr> <td>工具寿命管理</td>        <td>:</td><td>システム全体で256組(M系/T系共)</td></tr>
+                    <tr> <td>工具寿命管理組数追加</td><td>:</td><td>システム全体で1024組(M系/T系共)</td></tr>
+                </table>
+            </li>
+        </type>
+
+        <is>
+        <hssb>
+            <p>本機能には、工具寿命管理、及び拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>また、工具寿命管理組数追加の影響を受けます。</p>
+            <table>
+                <tr><td>  </td><td>工具寿命管理</td>        <td>:</td><td>システム全体で256組(M系/T系共)</td></tr>
+                <tr><td>  </td><td>工具寿命管理組数追加</td><td>:</td><td>システム全体で1024組(M系/T系共)</td></tr>
+            </table>
+        </hssb>
+        </is>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul type="disc">
+                <li>Series 16i/18i/21i</li>
+                    6800#0,#1<br/>
+                    6802#5 (任意グループ番号機能)<br/>
+                <li>Series 30i</li>
+                    6800#0,#1<br/>
+                    6802#5 (任意グループ番号機能)<br/>
+                    6805#4 (工具寿命管理B機能)<br/>
+                    6813<br/>
+                <li>Series 0i-D</li>
+                    6800#0,#1<br/>
+                    6813<br/>
+                    8132#0=1 (必ず設定して下さい)
+                <li>Series 0i-F</li>
+                    6800#0,#1<br/>
+                    6802#5 (任意グループ番号機能)<br/>
+                    6805#4 (工具寿命管理B機能)<br/>
+                    6813<br/>
+                    8132#0=1 (必ず設定して下さい)
+            </ul>
+        </type>
+    </parameter>
+    <is_parameter>
+        <type>
+        <table>
+           <tr><td></td><td>6800#0,#1</td><td>(設定の影響を受けます)</td></tr>
+           <tr><td></td><td>6805#4</td><td>(工具寿命管理B機能)</td></tr>
+           <tr><td></td><td>6802#5</td><td>(任意グループ番号機能)</td></tr>
+        </table>
+        </type>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+    <!-- 30i(WinCE) -->
+    <is_mode></is_mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_rdpmcparam</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdpmcparam(unsigned short FlibHndl, long *length, char *buff);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            PMCパラメータ（タイマ、カウンタ、キープリレー、データ）をテープフォーマットで読込みます。<br/>
+            <br/>
+            本関数を実行する場合、CNCのモードをEDITモードにして下さい。<br/>
+            読み込まれるPMCパラメータのフォーマットを以下に示します。<br/>
+            <br/>
+            <span class="xis">
+            PMCがSB5／SB6の場合
+            <table class="dd">
+                <tr><td>%；</td><td></td></tr>
+                <tr><td>N60xxx Pnnnnn；</td><td>タイマ（T）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N61xxx Pnnnnn；</td><td>カウンタ（C）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N62xxx Pnnnnn；</td><td> キープリレー（K）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N63xxx Pnnnnn；</td><td>データ（D）のデータテーブル制御</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N64xxx Pnnnnn；</td><td>データ（D）のデータ</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>%；</td><td></td></tr>
+            </table>
+            <br/>
+            PMCがSB7の場合
+            <table class="dd">
+                <tr><td>%；</td><td></td></tr>
+                <tr><td>(PMC=SB7,MSID=0);</td><td>ヘッダ</td></tr>
+                <tr><td>N60xxx Pnnnnn；</td><td>タイマ（T）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N61xxx Pnnnnn；</td><td>カウンタ（C）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N62xxx Pnnnnn；</td><td> キープリレー（K）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N63xxx Pnnnnn；</td><td>データ（D）のデータテーブル制御</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N64xxx Pnnnnn；</td><td>データ（D）のデータ</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N69xxx Pnnnnn；</td><td>拡張メモリ（E）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>%；</td><td></td></tr>
+            </table>
+            <br/>
+            PMCが30i/31i/32i用の場合
+            </span>
+            <table class="dd">
+                <tr><td>%；</td><td></td></tr>
+                <tr><td>(PMC=30I-A,MSID=1);</td><td>ヘッダ</td></tr>
+                <tr><td>N60xxxx Pnnnnn；</td><td>タイマ（T）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N61xxxx Pnnnnn；</td><td>カウンタ（C）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N62xxxx Pnnnnn；</td><td> キープリレー（K）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N63xxxx Pnnnnn；</td><td>データ（D）のデータテーブル制御</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N64xxxx Pnnnnn；</td><td>データ（D）のデータ</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>N69xxxx Pnnnnn；</td><td>拡張メモリ（E）</td></tr>
+                <tr><td align="center">：</td><td></td></tr>
+                <tr><td>%；</td><td></td></tr>
+            </table>
+        <span class="dd">
+        <p>31i/32iの場合、ヘッダ部は以下のようになります。</p>
+            <table class="dd">
+                    <tr><td>31i</td><td>:</td><td>(PMC=31I-A,MSID=1);</td></tr>
+                    <tr><td>32i</td><td>:</td><td>(PMC=32I-A,MSID=1);</td></tr>
+                </table>
+        </span>
+        <span class="dd">
+        <p>PMCのユニットタイプによってヘッダ部は以下のようになります。</p>
+            <table class="dd">
+                    <tr><td>第1PMC                       </td><td>:</td><td>(PMC=30I-A,MSID=1);</td></tr>
+                    <tr><td>第2PMC                       </td><td>:</td><td>(PMC=30I-A,MSID=2);</td></tr>
+                    <tr><td>第3PMC                       </td><td>:</td><td>(PMC=30I-A,MSID=3);</td></tr>
+                    <tr><td>デュアルチェックセーフティPMC</td><td>:</td><td>(PMC=30I-A,MSID=9);</td></tr>
+                </table>
+        </span>
+            <br/>
+
+            <span class="dd">※"；"はEOB（= 0x0A）を示します。</span><br/>
+            <br/>
+            *lengthの指定によりEOBまで読込めない場合、そのデータの手前のデータまでを読み込みます。<br/>
+            また、１個もデータを読込めない場合は、EW_LENGTHのエラーとなります。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in/out</type>
+                    <content>
+                        読込む文字数がセットされているlong型変数へのポインタを指定します。<br/>
+                        本関数を実行して正常終了（EW_OK）した場合、実際に読込まれた文字数が*lengthにセットされます。
+                    </content>
+                </item>
+                <item>
+                    <name>buff</name>
+                    <type>out</type>
+                    <content>
+                        読込んだＰＭＣパラメータを格納する領域へのポインタを指定します。<br/>
+                        本ポインタで指定された領域のサイズが、*lengthで指定されたサイズより小さい場合、本関数の動作は保証されません。
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_RESET</name>
+            <content>
+                停止要求<br/>
+                全てのPMCパラメータが読込まれました。
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                関数未実行<br/>
+                関数<a href="Pmc/pmc_rdprmstart.htm" target="_parent">pmc_rdprmstart</a>が実行されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                読込みサイズ（*length）に0以下の値が指定されました。<br/>
+                指定されたサイズでは、１個もデータを読込めません。
+            </content>
+        </item>
+        <item>
+            <name>EW_PATH</name>
+            <content>
+                PMCユニットタイプの誤り<span class="xis">(30i/31i/32iのみ)</span><br/>
+                PMCのユニットタイプが変更されました。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCのモードの誤り<br/>
+                CNCのモードがEDITモード以外です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>EDITモードで使用できます。</cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>pmc_rdprmstart</name>
+            <file>Pmc/pmc_rdprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_rdprmend</name>
+            <file>Pmc/pmc_rdprmend.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmstart</name>
+            <file>Pmc/pmc_wrprmstart.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrpmcparam</name>
+            <file>Pmc/pmc_wrpmcparam.htm</file>
+        </item>
+        <item>
+            <name>pmc_wrprmend</name>
+            <file>Pmc/pmc_wrprmend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

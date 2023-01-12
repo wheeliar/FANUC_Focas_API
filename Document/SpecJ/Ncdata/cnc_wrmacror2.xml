@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrmacror2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrmacror2(unsigned short FlibHndl, unsigned long s_no, unsigned long *num, double *data);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>s_noで指定された番号から*numで指定された個数分カスタムマクロ変数を書き換えます。データはdouble型でdata内に格納します。<a href="ncdata/cnc_setmactype.htm" target="_parent">cnc_setmactype</a> の設定には影響されません。</p>
+
+            <p>書き換え可能なカスタムマクロ変数の種類は以下の通りです。<br/>
+                ローカル変数(#1～#33)は書き換えできません。</p>
+
+            <table class="dd">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                <tr>
+                    <td>(1)</td>
+                    <td>コモン変数 (#100～#999)<br/>
+                        書き換え範囲は <a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a>関数の説明を参照して下さい。</td>
+                </tr>
+                <tr>
+                    <td>(2)</td>
+                    <td>コモン変数 (#98000～#98499)<br/>
+                        書き換え範囲は <a href="ncdata/cnc_rdmacroinfo.htm" target="_parent">cnc_rdmacroinfo</a>関数の説明を参照して下さい。</td>
+                </tr>
+                </colgroup>
+                </colgroup>
+            </table>
+
+            <p>なお、カスタムマクロ変数には『空』という特殊な値がありますが、以下で表します。</p>
+
+            <p class="dd">0xFFFFFFFFFFFFFFFF</p>
+
+            <p>カスタムマクロ変数の詳細については、CNCの取扱説明書を参照して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き込む先頭のカスタムマクロ番号を指定します。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>num</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>書き込むカスタムマクロの個数へのポインタを指定します。<br/>
+                            関数呼出し後には、実際に書き込まれた個数が格納されます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き込むカスタムマクロのデータへのポインタを指定します。</p>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>カスタムマクロ変数の個数(*num)が0以下です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>カスタムマクロ変数番号(s_no)の指定が不適切です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>カスタムマクロ機能が必要です。</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>プロテクトエラー<br/>プロテクトされている変数を書き込もうとしました。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>カスタムマクロ</need>
+        <type>
+            カスタムマクロコモン変数追加<br/>
+            組込みマクロ機能<br/>
+            カスタマクロコモン変数追加1000個<br/>
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+<!--        <li>Series 30i, 0i-D/F, PMi-A</li> -->
+            6031, 6032 (設定の影響を受けます)
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdmacro</name>
+            <file>ncdata/cnc_rdmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacro</name>
+            <file>ncdata/cnc_wrmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror</name>
+            <file>ncdata/cnc_rdmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmacror</name>
+            <file>ncdata/cnc_wrmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacror2</name>
+            <file>ncdata/cnc_rdmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdmacroinfo</name>
+            <file>ncdata/cnc_rdmacroinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_getmactype</name>
+            <file>ncdata/cnc_getmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setmactype</name>
+            <file>ncdata/cnc_setmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

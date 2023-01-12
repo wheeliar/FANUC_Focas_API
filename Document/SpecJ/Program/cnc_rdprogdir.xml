@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdprogdir</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdprogdir(unsigned short FlibHndl,short type, short datano_s,short datano_e,unsigned short length, PRGDIR *prgdir);</prottype>
+        <prottype><br/><br/></prottype>
+        <prottype>プログラム番号8桁の場合<br/>
+                  FWLIBAPI short WINAPI cnc_rdprogdir(unsigned short FlibHndl,short type, long datano_s,long datano_e,unsigned short length, PRGDIR *prgdir);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側に登録されている全ての加工プログラムのプログラム番号一覧を読み出します。</p>
+            <p>指定されたプログラム番号から、指定された個数のプログラム番号、コメント、使用文字数を読み出します。</p>
+            <p>datano_s, datano_e にそれぞれ読み出し開始プログラム番号、読み出し終了プログラム番号をセットします。全てのプログラムを読み出すには datano_s=1, datano_e=9999 とします。type で読み出すプログラム一覧の形式を指定します。</p>
+            <p>なお、Series 15/15i のtype=1では、範囲指定は無効で常に全プログラムが読み出されます。</p>
+            <p>Series 16/18, 16i/18i,Power Mate i ではプログラム番号8桁の場合も使用出来ますが、APIを8桁対応に切り替える必要があります。Series 15iでは必ずAPIを8桁対応に切り替えて下さい。(詳しくは「<a href="general.htm#O8" target="_parent">プログラム番号8桁対応</a>」を参照して下さい)</p>
+            <br/>
+            <b>リードデータのフォーマット</b>
+            <p>CNC側から読み込まれるプログラムディレクトリ情報は以下のようなフォーマットのASCIIコードの文字列です。</p>
+            <ul>
+            type=0  Oxxxx Oxxxx ... %<br/>
+            <br/>
+            type=1  % LF Oxxxx (コメント) LF Oxxxx (コメント) LF ... LF %<br/>
+            <br/>
+            type=2  Oxxxx (コメント) 使用文字数 Oxxxx (コメント) 使用文字数 ... %<br/>
+            <br/>
+                ただし
+                <table border="1">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                        <tr><td>LF</td><td>0x0A ('\n': EOB)</td></tr>
+                        <tr><td>Oxxxx</td><td>プログラム番号。<br/>昇順にソートされます。数字部分は先行する'0'が省略されたASCII文字列です。("O1"～"O9999")</td></tr>
+                        <tr><td>使用文字数</td><td>先行する'0'が省略されたASCII文字列です。<br/>この数値は80文字単位に切り上げられています。</td></tr>
+                        <tr><td>コメント</td><td>プログラム番号の直後に記憶されているものが格納されます。<br/>コメント本体の最大長は48文字です。(前後のカッコを含めると最大50文字)48文字以上のコメントが記憶されている場合は、48文字を越えた部分は出力されません。プログラムにコメントがない場合はカッコのみ("()")が格納されます。</td></tr>
+                    </colgroup>
+                    </colgroup>
+                </table>
+            <br/>
+            いずれの指定でも、プログラムが全く登録されていない場合や、指定された範囲のプログラムが存在しない場合は '%' のみが出力されます。<br/>
+            <br/>
+            バッファに書き込まれた文字列の終端には NULL文字('\x00')は付加されません。<br/>
+            <br/>
+            CNC側に以下のプログラムが登録されている時、datano_s=1, datano_e=9999として本関数を実行した時に読み取れる内容は次のようになります。<br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>プログラム番号(コメント)</td><td>文字数</td></tr>
+                    <tr><td>O0012 (TEST) ;</td><td>420</td></tr>
+                    <tr><td>O0200 (WORK1);</td><td>352</td></tr>
+                    <tr><td>O0201 ;</td><td>537</td></tr>
+                    <tr><td>O9001 (SUB-PRO1) ;</td><td>781</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            <br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>type</td><td>読み取れる内容</td></tr>
+                    <tr><td>0</td><td>"O12O200O201O9001%"</td></tr>
+                    <tr><td>1</td><td>"%\nO12(TEST)\nO200(WORK1)\nO201()\nO9001(SUB-PRO1)\n%"</td></tr>
+                    <tr><td>2</td><td>"O12(TEST)420O200(WORK1)352O201()537O9001(SUB-PRO1)781%"</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            <br/>
+            バッファサイズ(length)が小さい場合は、指定された長さまで読み出されます。<br/>
+            バッファサイズが15バイトの場合は以下の通りです。<br/>
+            <table border="1">
+                <colgroup valign="top">
+                <colgroup valign="top">
+                    <tr><td>type</td><td>読み取れる内容</td></tr>
+                    <tr><td>0</td><td>"O12O200O201O900"</td></tr>
+                    <tr><td>1</td><td>"%\nO12(TEST)\nO20"</td></tr>
+                    <tr><td>2</td><td>"O12(TEST)420O20"</td></tr>
+                </colgroup>
+                </colgroup>
+            </table>
+            </ul>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                       <content>
+                            <table class="dd">
+                                <tr>
+                                    <td>0   </td><td>:  </td><td>プログラム番号のみ</td>
+                                </tr>
+                                <tr>
+                                    <td>1   </td><td>:  </td><td>プログラム番号とコメント</td>
+                                </tr>
+                                <tr>
+                                    <td>2   </td><td>:  </td><td>プログラム番号、コメント、及び使用文字数</td>
+                                </tr>
+                           </table>
+                        </content>
+                </item>
+                <item>
+                    <name>datano_s</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            開始プログラム番号のポインタを指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>datano_e</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            終了プログラム番号を指定します。 
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ブロック長(バッファサイズ)を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>prgdir</name>
+                    <type>out</type>
+                    <content>
+                          <p>プログラムディレトクリを返すPRGDIR構造体へのポインタです。<br/>
+                             PRGDIR構造体は次の通りです。</p>
+<pre>
+typedef struct prgdir {
+    char    prg_data[MAX_PBUF] ;   /* ディレトクリデータ */
+} PRGDIR ;                      (MAX_PBUF : 最大リード文字数)
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可(Series 15i,16/18, 16i/18i, Power Mate i)<br/>
+                プログラム番号8桁用として作成されていません。<br/>
+                <a href="general.htm#O8" target="_parent">「プログラム番号8桁対応」</a>を参照して下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データブロック長の誤り<br/>
+                読み取り個数(num_prog)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                開始プログラム番号(datano_s)、終了プログラム番号(datano_e)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>
+                データ属性の誤り<br/>
+                出力フォーマット(type)が不正です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>
+            <p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+       
+       <type>
+            <li> Series 15/15i</li><br/>
+            <ul>
+                プログラム名称４８文字<br/>
+                このオプションが無い場合、プログラム名称は最大１６文字です。
+            </ul>
+       </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdprogdir2</name>
+            <file>Program/cnc_rdprogdir2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogdir3</name>
+            <file>Program/cnc_rdprogdir2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdprogdir4</name>
+            <file>Program/cnc_rdprogdir4.htm</file>
+        </item>
+    </reference>
+
+
+
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rd5axmandt</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_rd5axmandt(unsigned short FlibHndl, ODB5AXMAN *buf);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>５軸加工手動送りデータを読み出します。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                           ５軸加工手動送り工具先端座標情報を返すODB5AXMAN構造体へのポインタです。
+                            ODB5AXMAN構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct odb5axman {
+    short   type1; /* 第１直線軸の軸番号 */
+    short   type2; /* 第２直線軸の軸番号 */
+    short   type3; /* 第３直線軸の軸番号 */
+    long    data1; /* 第１直線軸の工具先端位置 */
+    long    data2; /* 第２直線軸の工具先端位置 */
+    long    data3; /* 第３直線軸の工具先端位置 */
+    long    c1;    /* 工具先端中心 C1 */
+    long    c2;    /* 工具先端中心 C2 */
+    long    dummy; /* 未使用 */
+    long    td;    /* 工具軸基準 TD */
+    long    r1;    /* 工具軸基準 R1 */
+    long    r2;    /* 工具軸基準 R2 */
+    long    vr;    /* テーブル基準 VR */
+    long    h1;    /* テーブル基準 H1 */
+    long    h2;    /* テーブル基準 H2 */
+} ODB5AXMAN ;
+</pre>
+                        <dl>
+                            <dt>type1</dt>
+                                <dd>第１直線軸の軸番号</dd>
+                            <dt>type2</dt>
+                                <dd>第２直線軸の軸番号</dd>
+                            <dt>type3</dt>
+                                <dd>第３直線軸の軸番号</dd>
+                            <dt>data1</dt>
+                                <dd>第１直線軸の工具先端位置<br/>
+                                    工具先端座標が設定されます。<br/>
+                                    単位は type1 に設定された軸の絶対座標の単位と同じです。</dd>
+                            <dt>data2</dt>
+                                <dd>第２直線軸の工具先端位置<br/>
+                                    工具先端座標が設定されます。<br/>
+                                    単位は type2 に設定された軸の絶対座標の単位と同じです。</dd>
+                            <dt>data3</dt>
+                                <dd>第３直線軸の工具先端位置<br/>
+                                    工具先端座標が設定されます。<br/>
+                                    単位は type3 に設定された軸の絶対座標の単位と同じです。</dd>
+                            <dt>c1</dt>
+                                <dd>工具先端中心 C1 のパルス量が設定されます。<br/>
+                                    単位はパラメータ No.19681に設定された軸の絶対座標の単位と同じです。</dd>
+                            <dt>c2</dt>
+                                <dd>工具先端中心 C2 のパルス量が設定されます。<br/>
+                                    単位はパラメータ No.19686に設定された軸の絶対座標の単位と同じです。</dd>
+                            <dt>dummy</dt>
+                                <dd>未使用</dd>
+                            <dt>td</dt>
+                                <dd>工具軸基準 TD のパルス量が設定されます。</dd>
+                            <dt>r1</dt>
+                                <dd>工具軸基準 R1 のパルス量が設定されます。</dd>
+                            <dt>r2</dt>
+                                <dd>工具軸基準 R2 のパルス量が設定されます。</dd>
+                            <dt>vr</dt>
+                                <dd>テーブル基準 VR のパルス量が設定されます。</dd>
+                            <dt>h1</dt>
+                                <dd>テーブル基準 H1 のパルス量が設定されます。</dd>
+                            <dt>h2</dt>
+                                <dd>テーブル基準 H2 のパルス量が設定されます。</dd>
+
+                            <br/>
+                            <p>td,r1,r2,vr,h1,h2 の単位はパラメータ No.19697の値により異なります。対応する type1,type2,type3 に設定された軸の絶対座標の単位と同じです。</p><br/>
+
+                            <table border="1" class="dd">
+                              <tr><td>パラメータNo.19697の設定値</td><td>td および vr</td><td>r1 および h1</td><td>r2 および h2</td></tr>
+                              <tr><td>           1              </td><td>   type1    </td><td>   type2    </td><td>   type3    </td></tr>
+                              <tr><td>           2              </td><td>   type2    </td><td>   type3    </td><td>   type1    </td></tr>
+                              <tr><td>           3              </td><td>   type3    </td><td>   type1    </td><td>   type2    </td></tr>
+                            </table>
+
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                     ５軸加工用手動送り機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能および、５軸加工用手動送り機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <div class="dd">19681, 19686, 19697 </div><br/>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rd5axovrlap</name>
+            <file>position/cnc_rd5axovrlap.htm</file>
+        </item>
+        <item>
+            <name>cnc_clr5axpls</name>
+            <file>position/cnc_clr5axpls.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

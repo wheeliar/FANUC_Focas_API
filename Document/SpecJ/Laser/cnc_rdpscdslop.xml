@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpscdslop</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpscdslop(unsigned short FlibHndl,short s_no, short *number, IODBSLOP *slope); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> 加工条件ファイルのスロープ制御データを読み出します。
+                データはIODBSLOP内の各メンバに格納されます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>s_no</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            読み込むデータ組番号を指定します。
+                            <table border="0" class="dd">
+                                <tr> <td>301 ～  305</td><td>　スロープ制御データ組み番号(UP/DOWN)</td>   </tr>
+                            </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>number</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                            スロープ制御データ個数のポインタを指定します。
+                            関数コール前に読みたい個数を指定し、関数コール後に実際に読み取った個数が設定されます。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slope</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            加工条件ファイルスロープ制御データ組を返すIODBSLOP構造体配列へのポインタです。
+                            IODBSLOP構造体は次の通りです。
+                        </p>
+<pre>
+typedef struct iodbslop {
+    long    slct;       /* データ有効フラグ */
+    long    upleng;     /* ステップ(UP)距離 */
+    short   upsp[10];   /* ステップ(UP)パワー1～10 */
+    long    dwleng;     /* ステップ(DOWN)距離 */
+    short   dwsp[10];   /* ステップ(DOWN)パワー1～10 */
+    short   reserve[10];/* リザーブ */
+} IODBSLOP ;
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                                <dd>データ有効フラグがセットされます。</dd>
+                            <dd><table border ="0" class="dd">
+                                <tr> <td>bit 0</td><td>：</td><td>ステップ(UP)距離</td> </tr>
+                                <tr> <td>bit 1</td><td>：</td><td>ステップ(UP)パワー1</td> </tr>
+                                <tr> <td>bit 2</td><td>：</td><td>ステップ(UP)パワー2</td> </tr>
+                                <tr> <td>bit 3</td><td>：</td><td>ステップ(UP)パワー3</td> </tr>
+                                <tr> <td>bit 4</td><td>：</td><td>ステップ(UP)パワー4</td> </tr>
+                                <tr> <td>bit 5</td><td>：</td><td>ステップ(UP)パワー5</td> </tr>
+                                <tr> <td>bit 6</td><td>：</td><td>ステップ(UP)パワー6</td> </tr>
+                                <tr> <td>bit 7</td><td>：</td><td>ステップ(UP)パワー7</td> </tr>
+                                <tr> <td>bit 8</td><td>：</td><td>ステップ(UP)パワー8</td> </tr>
+                                <tr> <td>bit 9</td><td>：</td><td>ステップ(UP)パワー9</td> </tr>
+                                <tr> <td>bit10</td><td>：</td><td>ステップ(UP)パワー10</td> </tr>
+                                <tr> <td>bit11</td><td>：</td><td>ステップ(DOWN)距離</td> </tr>
+                                <tr> <td>bit12</td><td>：</td><td>ステップ(DOWN)パワー1</td> </tr>
+                                <tr> <td>bit13</td><td>：</td><td>ステップ(DOWN)パワー2</td> </tr>
+                                <tr> <td>bit14</td><td>：</td><td>ステップ(DOWN)パワー3</td> </tr>
+                                <tr> <td>bit15</td><td>：</td><td>ステップ(DOWN)パワー4</td> </tr>
+                                <tr> <td>bit16</td><td>：</td><td>ステップ(DOWN)パワー5</td> </tr>
+                                <tr> <td>bit17</td><td>：</td><td>ステップ(DOWN)パワー6</td> </tr>
+                                <tr> <td>bit18</td><td>：</td><td>ステップ(DOWN)パワー7</td> </tr>
+                                <tr> <td>bit19</td><td>：</td><td>ステップ(DOWN)パワー8</td> </tr>
+                                <tr> <td>bit20</td><td>：</td><td>ステップ(DOWN)パワー9</td> </tr>
+                                <tr> <td>bit21</td><td>：</td><td>ステップ(DOWN)パワー10</td> </tr>
+                                <tr> <td>bit22 ～ 31</td><td>：</td><td>リザーブ</td> </tr>
+                            </table></dd>
+                            <dd>※  各データに対応するビットが0の時は、そのデータは無効になります。</dd>
+                            <dt>up_leng</dt>
+                                <dd>ステップ(UP)距離がセットされます。</dd>
+                            <dt>upsp</dt>
+                                <dd>ステップ(UP)パワーがセットされます。</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>upsp[0]</td><td>：</td><td>ステップパワー1</td> </tr>
+                                    <tr> <td>upsp[1]</td><td>：</td><td>ステップパワー2</td> </tr>
+                                    <tr> <td></td><td></td><td>：</td> </tr>
+                                    <tr> <td>upsp[8]</td><td>：</td><td>ステップパワー9</td> </tr>
+                                    <tr> <td>upsp[9]</td><td>：</td><td>ステップパワー10</td> </tr>
+                                </table></dd>
+                            <dt>dw_leng</dt>
+                                <dd>ステップ(DOWN)距離がセットされます。 </dd>
+                            <dt>dwsp</dt>
+                                <dd>ステップ(DOWN)パワーがセットされます。</dd>
+                                <dd><table border="0" class="dd">
+                                    <tr> <td>dwsp[0]</td><td>：</td><td>ステップパワー1</td> </tr>
+                                    <tr> <td>dwsp[1]</td><td>：</td><td>ステップパワー2</td> </tr>
+                                    <tr> <td></td><td></td><td>：</td> </tr>
+                                    <tr> <td>dwsp[8]</td><td>：</td><td>ステップパワー9</td> </tr>
+                                    <tr> <td>dwsp[9]</td><td>：</td><td>ステップパワー10</td> </tr>
+                                </table></dd>
+                            <dt>reserve</dt>
+                                <dd>リザーブです。</dd>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                16i/18i-L以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>
+                データ長の誤り<br/>
+                データ個数(number)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                開始番号(s_no)が不正です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                加工条件設定機能、スロープ制御機能、及び拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need><li>加工条件設定機能</li>
+              <li>スロープ制御機能</li>
+        </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrpscdslop</name>
+            <file>Laser/cnc_wrpscdslop.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

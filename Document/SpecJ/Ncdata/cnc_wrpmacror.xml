@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrpmacror</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrpmacror(unsigned short FlibHndl, unsigned short length, IODBPR *pmacror);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>datano_s, datano_eで指定された範囲のPコードマクロ変数(マクロエグゼキュータ用変数)を書き換えます。データは符号付のバイナリ形式でIODBPR内に格納します。 </p>
+
+            <p><a href="ncdata/cnc_setpmactype.htm" target="_parent">cnc_setpmactype</a>関数により、書き換えるPコードマクロ変数の型を切り換えることができます。ただし、整数形式のPコードマクロ変数の場合、この関数による型の指定は無効で、10進形式浮動小数点型に固定です。</p>
+
+            <ul>
+                <li>10進形式浮動小数点型(データ形式=M*10**(-E))</li><br/>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>変数値(=M)<br/>
+                        符号付の4バイトバイナリ形式<br/>
+                        (有効範囲: 999999999～-999999999, ただし、整数形式は-32768～32767) </td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>小数点以下桁数(=E)<br/>
+                        符号付の2バイトバイナリ形式<br/>
+                        (有効範囲:-128～127, ただし、整数形式は0)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                <br/>
+                <li>2進形式浮動小数点型(データ形式=M*2**(-E))</li><br/>
+                <table>
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>mcr_val</td>
+                        <td>:</td>
+                        <td>変数値(=M)<br/>
+                        符号付の4バイトバイナリ形式<br/>
+                        (有効範囲:制限なし)</td>
+                    </tr>
+                    <tr>
+                        <td>dec_val</td>
+                        <td>:</td>
+                        <td>小数点以下桁数(=E)<br/>
+                        符号付の2バイトバイナリ形式<br/>
+                        (有効範囲:-128～127)</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+
+            </ul>
+
+            <p>なお、Pコードマクロ変数には『空』という特殊な値がありますが、10進形式浮動小数点型/2進形式浮動小数点型ともに以下で表します。</p>
+
+            <blockquote>
+                <p>mcr_val = 0<br/>
+                dec_val = -1</p>
+            </blockquote>
+
+            <p>Pコードマクロ変数の詳細については、マクロエグゼキュータのプログラミング説明書を参照して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>length</name>
+                    <type>in</type>
+                    <content>
+                        <p>データブロック長(IODBPR構造体のサイズ)を指定します。</p>
+
+                        <p class="dd">12+8×(書き換えるPコードマクロ変数の個数)</p>
+
+                        <p><b>IODBPR</b></p>
+
+                        <p><img src="ncdata/pmacro.gif"/></p>
+
+                        <p>Nは書き換えるPコードマクロ変数の個数です。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>pmacror</name>
+                    <type>in</type>
+                    <content>
+                        <p>Pコードマクロ変数を格納するIODBPR構造体へのポインタです。 IODBPR構造体は次の通りです。</p>
+
+<pre>
+typedef struct iodbpr {
+        long  datano_s ; /* ライト開始Pコードマクロ変数番号 */
+        short dummy ;    /* 未使用 */
+        long  datano_e ; /* ライト終了Pコードマクロ変数番号 */
+        struct {
+                long  mcr_val ; /* Pコードマクロ変数値 */
+                short dec_val ; /* 小数点以下桁数 */
+        } data[N] ;             /* N は書き換える変数の個数 */
+} IODBPR ;
+</pre>
+                        <dl>
+                            <dt>datano_s</dt>
+                            <dd>ライトを開始するPコードマクロ変数番号を指定します。</dd>
+                            <br/>
+                            <dt>datano_e</dt>
+                            <dd>ライトを終了するPコードマクロ変数番号を指定します。</dd>
+                            <br/>
+                            <dt>mcr_val</dt>
+                            <dd>Pコードマクロ変数の変数値/仮数部を指定します。</dd>
+                            <br/>
+                            <dt>dec_val</dt>
+                            <dd>Pコードマクロ変数の小数点以下桁数/指数部を指定します。</dd>
+                            <br/>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_LENGTH</name>
+            <content>データブロック長の誤り<br/>IODBPR構造体のサイズ(length)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>Pコードマクロ変数番号(datano_s, datano_e)の指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>Pコードマクロ変数値が有効範囲を越えています。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>マクロエグゼキュータ機能が必要です。</content>
+        </item>
+        <item class="xis">
+            <name>EW_PASSWD</name>
+            <content>指定されたPコードマクロ変数は保護されているため書き込めません。<br/>
+                    ( Series 16i/18i/21i, 0i-A/B/C )</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+        <need>
+            マクロエグゼキュータ機能
+        </need>
+        <type class="xis">
+            <li>Series 16/18, 16i/18i</li>
+            高速サイクル加工機能が関係します。
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <add>
+            <p>ただし、マクロコンパイラ用のコンパイルパラメータは関係します。コンパイルパラメータの詳細は、マクロエグゼキュータのプログラミング説明書を参照して下さい。</p>
+        </add>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdpmacro</name>
+            <file>ncdata/cnc_rdpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacro</name>
+            <file>ncdata/cnc_wrpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror</name>
+            <file>ncdata/cnc_rdpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror2</name>
+            <file>ncdata/cnc_rdpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror2</name>
+            <file>ncdata/cnc_wrpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacroinfo</name>
+            <file>ncdata/cnc_rdpmacroinfo.htm</file>
+        </item>
+        <item>
+            <name>cnc_getpmactype</name>
+            <file>ncdata/cnc_getpmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setpmactype</name>
+            <file>ncdata/cnc_setpmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+        <vc>
+<pre>
+以下のプログラムは指定された範囲のPコードマクロ変数を書き換えます。
+
+#include "fwlib32.h"
+
+/* start is start variable number to be written. */
+/* value is array of value to be written. */
+/* number is number of variable. */
+short example( long start, long *value, short number )
+{
+        IODBPR *pmacror ;
+        short ret ;
+        long idx ;
+        pmacror = (IODBPR *)malloc( 12+8*number ) ;
+        pmacror-&#62;datano_s = start ;
+        pmacror-&#62;datano_e = start + number - 1 ;
+        for ( idx = 0 ; idx &#60; number ; idx++ ) {
+                pmacror-&#62;data[idx].mcr_val = value[idx] ;
+                pmacror-&#62;data[idx].dec_val = 0 ;
+        }
+        ret = cnc_wrpmacror( h, 12+8*number, pmacror ) ;
+        free( pmacror ) ;
+        return ( ret ) ;
+}
+</pre>
+        </vc>
+    </example>
+
+
+
+  </func>
+</root>

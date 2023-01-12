@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdpmacroinfo2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdpmacroinfo2(unsigned short FlibHndl, ODBPMINF2 *pminf2);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>Ｐコードマクロ変数(マクロエグゼキュータ用変数)の使用可能な個数、及び変数のタイプを読み出します。</p>
+            <p>対話マクロ変数と高速サイクル加工変数が共存されている場合、cnc_rdpmacroinfo関数では、20,000番台以降のＰコードマクロ変数の情報が取得できませんので、本関数を使用して下さい。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>pminf2</name>
+                    <type>out</type>
+                    <content>
+                        <p>Pコードマクロ変数情報を返すODBPMINF2構造体へのポインタです。 ODBPMINF2構造体は次の通りです。</p>
+                        <p>なお、以下の説明に出てくるパラメータは、マクロコンパイラ用のコンパイルパラメータのことであり、CNCのパラメータではありません。</p>
+                        <p>コンパイルパラメータの詳細は、マクロエグゼキュータのプログラミング説明書を参照してください。</p>
+<pre>
+typedef struct odbpminf2 {
+    long    use_no1;  /*  10,000番台の個数              */
+    long    use_no2;  /*  20,000番以降の個数            */
+    long    use_no20; /*  高速サイクル加工変数の個数    */
+    short   v1_type;  /*  10,000番台のタイプ            */
+    short   v2_type;  /*  20,000番台以降のタイプ        */
+    short   v20_type; /*  高速サイクル加工変数のタイプ  */
+} ODBPMINF2;
+</pre>
+                            <dl>
+                                <dt>use_no1</dt>
+                                <dd>10,000番台の使用可能なPコードマクロ変数の個数が格納されます。<br/>
+                                    なお、CNCのコントロールソフトの系列/版数によっては6000個が返りますが、その場合も有効個数は以下になります。
+                                    <p class="dd">(パラメータ9037の値×100)個</p>
+                                </dd>
+
+                                <dt>use_no2</dt>
+                                <dd>20,000番以降の使用可能なPコードマクロ変数の個数が格納されます。<br/>
+                                </dd>
+
+                                <dt>use_no20</dt>
+                                <dd>使用可能な高速サイクル加工用変数の個数が格納されます。高速サイクル加工用変数とは、下記のＰコードマクロ変数を指します。</dd>
+                                <ul>
+                                     <li>Series 16i/18i</li>
+                                     <table>
+                                         <tr><td>#20000 </td><td>～</td><td>#85535 </td></tr>
+                                         <tr><td>#200000</td><td>～</td><td>#986432</td></tr>
+                                     </table>
+                                     <br/>
+                                </ul>
+                                <ul>
+                                     <li>Series 30i/31i/32i, 0i-D, PMi-A</li>
+                                     <table>
+                                         <tr><td>#20000  </td><td>～</td><td>#85535  </td></tr>
+                                         <tr><td>#200000 </td><td>～</td><td>#986432 </td></tr>
+                                         <tr><td>#2000000</td><td>～</td><td>#3999999</td></tr>
+                                     </table>
+                                </ul>
+
+                                <dt>v1_type</dt>
+                                <dd>10,000番台のＰコードマクロ変数のタイプが格納されます。</dd>
+                                <ul>
+                                     <table>
+                                         <tr><td>0</td><td>:</td><td>タイプＡ(浮動小数点形式)</td></tr>
+                                         <tr><td>1</td><td>:</td><td>タイプＢ(整数形式)      </td></tr>
+                                     </table>
+                                </ul>
+                                <dd>use_no1 が 0 の場合、本データは無効です。</dd>
+
+                                <dt>v2_type</dt>
+                                <dd>20,000番以降のＰコードマクロ変数のタイプが格納されます。</dd>
+                                <ul>
+                                    <table>
+                                        <tr><td>0</td><td>:</td><td>タイプA(浮動小数点形式)</td></tr>
+                                        <tr><td>1</td><td>:</td><td>タイプB(整数形式)</td></tr>
+                                        <tr><td>2</td><td>:</td><td>タイプC(整数形式：高速サイクル加工1)</td></tr>
+                                        <tr><td>3</td><td>:</td><td>タイプD(整数形式：高速サイクル加工2)</td></tr>
+                                    </table>
+                                </ul>
+                                <dd>use_no2 が 0 の場合、本データは無効です。</dd>
+
+                                <dt>v20_type</dt>
+                                <dd>高速サイクル加工用変数のタイプが格納されます。</dd>
+                                <ul>
+                                    <table>
+                                        <tr><td>2</td><td>:</td><td>タイプC(整数形式：高速サイクル加工1)</td></tr>
+                                        <tr><td>3</td><td>:</td><td>タイプD(整数形式：高速サイクル加工2)</td></tr>
+                                    </table>
+                                </ul>
+                                <dd>use_no20 が 0 の場合、本データは無効です。</dd>
+
+                            </dl>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>マクロエグゼキュータ機能が必要です。</content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <need>
+            マクロエグゼキュータ機能
+        </need>
+        <type class="xis">
+            <li>Series 16i/18i, 30i/31i/32i</li>
+            高速サイクル加工機能が関係します。
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+             <fs0ia>X</fs0ia>
+             <fs0ib>X</fs0ib>
+             <fs0id>O</fs0id>
+              <fs0if>O</fs0if>
+              <fs15>X</fs15>
+             <fs15i>X</fs15i>
+              <fs16>X</fs16>
+              <fs18>X</fs18>
+              <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+              <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdpmacro</name>
+            <file>ncdata/cnc_rdpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacro</name>
+            <file>ncdata/cnc_wrpmacro.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror</name>
+            <file>ncdata/cnc_rdpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror</name>
+            <file>ncdata/cnc_wrpmacror.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdpmacror2</name>
+            <file>ncdata/cnc_rdpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrpmacror2</name>
+            <file>ncdata/cnc_wrpmacror2.htm</file>
+        </item>
+        <item>
+            <name>cnc_getpmactype</name>
+            <file>ncdata/cnc_getpmactype.htm</file>
+        </item>
+        <item>
+            <name>cnc_setpmactype</name>
+            <file>ncdata/cnc_setpmactype.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

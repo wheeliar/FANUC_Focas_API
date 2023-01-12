@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pbm_rd_param</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbm_rd_param( unsigned short FlibHndl, short type, T_SLVSLT_IND *slvslt_ind, OUT_PBMPRM *param ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>PROFIBUS機能マスタ機能のパラメータを取得します。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+
+                <item>
+                    <name>type</name>
+                    <type>in</type>
+                    <content>
+                        <p>取得するパラメータの種類を指定します。なお、パラメータの種類によってはslvslt_indを使用します。<br/>
+                           取得可能なパラメータの種類は、以下の通りです。
+                        <table border="0">
+                            <tr><td>0</td><td>：</td><td>バス・パラメータ      </td></tr>
+                            <tr><td>1</td><td>：</td><td>モード用アドレス割付け</td></tr>
+                        </table>
+                        <p>/* スレーブ局毎のパラメータ */</p>
+                        <table border="0">
+                            <tr><td>20</td><td>：</td><td>スレーブ補助パラメータ</td></tr>
+                            <tr><td>21</td><td>：</td><td>スレーブ・パラメータ  </td></tr>
+                            <tr><td>22</td><td>：</td><td>診断データの割付け    </td></tr>
+                        </table>
+                        <p>/* スロット毎のパラメータ */</p>
+                        <table border="0">
+                            <tr><td>40</td><td>：</td><td>モジュール・データ   </td></tr>
+                            <tr><td>41</td><td>：</td><td>DI/DO用アドレス割付け</td></tr>
+                        </table>
+
+                        <p>(注)slvslt_indの使用について</p>
+                        <table border="0">
+                            <tr><td> 0～  1</td><td>：</td><td>slvslt_indは未使用。 </td></tr>
+                            <tr><td>20～ 22</td><td>：</td><td>slvslt_ind.slv_noのみ使用。</td></tr>
+                            <tr><td>40～ 41</td><td>：</td><td>slvslt_ind.slv_no、slvslt_ind.slt_noを使用。</td></tr>
+                        </table>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>slvslt_ind</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            T_SLVSLT_IND構造体へのポインタを指定します。
+                            本構造体は、typeにおいてスレーブ局番、及びスロット番号を指定する場合に使用します。
+<pre>
+typedef struct _T_SLVSLT_IND{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+} T_SLVSLT_IND;
+</pre>
+                            <dl>
+                            <dt>slv_no</dt>
+                                <dd>スレーブ局番を指定します。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>slt_no</dt>
+                                <dd>スロット番号を指定します。範囲）0 ～ 127</dd>
+                                <dd>単位）なし</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>param</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            取得したパラメータを格納するためのOUT_PRFPRM構造体へのポインタを指定します。
+
+<pre>
+/*-マスタ機能のパラメータ-----------------------------------*/
+typedef struct _OUT_PBMPRM{
+    union {
+        T_BUS_PARA          bus_para;
+        T_MODE_ADDR_ALLOC   mode_addr_alloc;
+        T_SLAVE_SUB_PARA    slv_sub_para;
+        T_SLAVE_PARA        slv_para;
+        T_DGN_ADDR_ALLOC    dgn_addr_alloc;
+        T_MODULE_DATA       module_data;
+        T_DIDO_ADDR_ALLOC   dido_addr_alloc;
+    } prm;
+} OUT_PBMPRM;
+
+/*-バス・パラメータ-----------------------------------------*/
+typedef struct _T_BUS_PARA
+{
+    unsigned char   fdl_add;                 /* station no. */
+    unsigned char   baud_rate;
+    unsigned short  tsl;
+    unsigned short  min_tsdr;
+    unsigned short  max_tsdr;
+    unsigned char   tqui;
+    unsigned char   tset;
+    unsigned long   ttr;
+    unsigned char   g;
+    unsigned char   hsa;
+    unsigned char   max_retry_limit;
+    unsigned char   bp_flag;
+    unsigned short  min_slave_interval;
+    unsigned short  poll_timeout;
+    unsigned short  data_control_time;
+    unsigned char   reserved[6];
+    char            master_class2_name[32];
+    T_MAS_USR       mas_usr;
+} T_BUS_PARA;
+
+/* マスタ・ユーザ・データ */
+typedef struct _T_MAS_USR
+{
+    unsigned short  master_user_data_len;
+    unsigned char   master_user_data[62];
+} T_MAS_USR;
+
+/*-モード用アドレス割付け-----------------------------------*/
+typedef struct _T_MODE_ADDR_ALLOC
+{
+    unsigned char       md_path;
+    unsigned char       md_kind;
+    unsigned short      md_top_address;
+    unsigned char       md_size;
+    unsigned char       pad;
+} T_MODE_ADDR_ALLOC;
+
+/*-スレーブ補助パラメータ-----------------------------------*/
+typedef struct _T_SLAVE_SUB_PARA
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       slv_enable;
+    unsigned char       slt_num;
+} T_SLAVE_SUB_PARA;
+
+/*-スレーブ・パラメータ-------------------------------------*/
+typedef struct _T_SLAVE_PARA
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       sl_flag;
+    unsigned char       slave_type;
+    unsigned char       reserved[12];
+    T_PRM_DATA          prm_data;
+    T_CFG_DATA          cfg_data;
+    T_SLV_USR_DATA      slv_usr;
+} T_SLAVE_PARA;
+
+/* パラメータ・データ*/
+typedef struct _T_PRM_DATA
+{
+    unsigned char   station_status;
+    unsigned char   wd_fact_1;
+    unsigned char   wd_fact_2;
+    unsigned char   min_tsdr;
+    unsigned short  ident_number;
+    unsigned char   group_ident;
+    unsigned char   pad;
+    T_USR_PRM_DATA  usr_prm;
+} T_PRM_DATA;
+
+/* ユーザ・パラメータ・データ */
+typedef struct _T_USR_PRM_DATA
+{
+    unsigned short  user_prm_data_len;
+    unsigned char   user_prm_data[201];
+    unsigned char   pad;
+} T_USR_PRM_DATA;
+
+/* コンフィグ・データ */
+typedef struct _T_CFG_DATA
+{
+    unsigned short  cfg_data_len;
+    unsigned char   cfg_data[128];
+} T_CFG_DATA;
+
+/* スレーブ・ユーザ・データ */
+typedef struct _T_SLV_USR_DATA
+{
+    unsigned short  slave_user_data_len;
+    unsigned char   slave_user_data[30];
+} T_SLV_USR_DATA;
+
+/*-診断データの割付け---------------------------------------*/
+typedef struct _T_DGN_ADDR_ALLOC
+{
+    T_SLAVE_IND_PARA    slv_ind_para;
+    unsigned char       dgn_path;
+    unsigned char       dgn_kind;
+    unsigned short      dgn_top_address;
+    unsigned char       dgn_size;
+    unsigned char       pad;
+} T_DGN_ADDR_ALLOC;
+
+/*-モジュール・データ---------------------------------------*/
+typedef struct _T_MODULE_DATA
+{
+    T_SLOT_IND_PARA     slt_ind_para;
+    unsigned short      module_len;
+    unsigned char       module_data[128];
+} T_MODULE_DATA;
+
+/*-DI/DOデータの割付け--------------------------------------*/
+typedef struct _T_DIDO_ADDR_ALLOC
+{
+    T_SLOT_IND_PARA     slt_ind_para;
+    unsigned char       di_path;
+    unsigned char       do_path;
+    unsigned char       di_kind;
+    unsigned char       do_kind;
+    unsigned short      di_top_address;
+    unsigned short      do_top_address;
+    unsigned char       di_size;
+    unsigned char       do_size;
+    unsigned char       module_type;
+    unsigned char       pad;
+} T_DIDO_ADDR_ALLOC;
+
+/* スレーブ指示パラメータ */
+typedef struct _T_SLAVE_IND_PARA
+{
+    unsigned char   slv_idx;
+    unsigned char   slv_no;
+} T_SLAVE_IND_PARA;
+
+/* スロット指示パラメータ */
+typedef struct _T_SLOT_IND_PARA
+{
+    unsigned char   slv_no;
+    unsigned char   slt_no;
+} T_SLOT_IND_PARA;
+</pre>
+
+                        <dl>
+                        <p>/*-バス・パラメータ-----------------------------------------*/</p>
+                            <dt>prm.bus_para.fdl_add</dt>
+                                <dd>PROFIBUS規格のパラメータ"FDL_Add"です。マスタ局(自局)の局番です。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.bus_para.baud_rate</dt>
+                                <dd>PROFIBUS規格のパラメータ"Baud_rate"です。</dd>
+                                <dd><table border="0">
+                                    <tr><td>0</td><td>：</td><td>  9.6  Kbps</td></tr>
+                                    <tr><td>1</td><td>：</td><td> 19.2  Kbps</td></tr>
+                                    <tr><td>2</td><td>：</td><td> 93.75 Kbps</td></tr>
+                                    <tr><td>3</td><td>：</td><td>187.5  Kbps</td></tr>
+                                    <tr><td>4</td><td>：</td><td>500.0  Kbps</td></tr>
+                                    <tr><td>6</td><td>：</td><td>  1.5  Mbps</td></tr>
+                                    <tr><td>7</td><td>：</td><td>  3.0  Mbps</td></tr>
+                                    <tr><td>8</td><td>：</td><td>  6.0  Mbps</td></tr>
+                                    <tr><td>9</td><td>：</td><td> 12.0  Mbps</td></tr>
+                                </table></dd>
+
+                            <dt>prm.bus_para.tsl</dt>
+                                <dd>PROFIBUS規格のパラメータ"T SL"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.min_tsdr</dt>
+                                <dd>PROFIBUS規格のパラメータ"min T SDR"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.max_tsdr</dt>
+                                <dd>PROFIBUS規格のパラメータ"max T SDR"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.tqui</dt>
+                                <dd>PROFIBUS規格のパラメータ"T QUI"です。範囲）0 ～ 255</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.tset</dt>
+                                <dd>PROFIBUS規格のパラメータ"T SET"です。範囲）1 ～ 255</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.ttr</dt>
+                                <dd>PROFIBUS規格のパラメータ"T TR"です。範囲）1 ～ 16777215</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.bus_para.g</dt>
+                                <dd>PROFIBUS規格のパラメータ"G"です。範囲）1 ～ 100</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.bus_para.hsa</dt>
+                                <dd>PROFIBUS規格のパラメータ"HSA"です。範囲）2 ～ 126</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.bus_para.max_retry_limit</dt>
+                                <dd>PROFIBUS規格のパラメータ"max_retry_limit"です。範囲）1 ～ 8</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.bus_para.bp_flag</dt>
+                                <dd>PROFIBUS規格のパラメータ"Bp_Flag"です。</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7   </td><td>：</td><td>Error_Action_Flag</td></tr>
+                                    <tr><td>bit6～0</td><td>：</td><td>リザーブ。</td></tr>
+                                </table></dd>
+
+                            <dt>prm.bus_para.min_slave_interval</dt>
+                                <dd>PROFIBUS規格のパラメータ"Min_Slave_Interval"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）100 μsec</dd>
+
+                            <dt>prm.bus_para.poll_timeout</dt>
+                                <dd>PROFIBUS規格のパラメータ"Poll_Timeout"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）1 msec</dd>
+
+                            <dt>prm.bus_para.data_control_time</dt>
+                                <dd>PROFIBUS規格のパラメータ"Data_Control_Time"です。範囲）1 ～ 65535</dd>
+                                <dd>単位）10 msec</dd>
+
+                            <dt>prm.bus_para.reserved[n]（n : 0 ～ 6)</dt>
+                                <dd>未使用です。</dd>
+
+                            <dt>prm.bus_para.master_class2_name[n]（n : 0 ～ 31)</dt>
+                                <dd>PROFIBUS規格のパラメータ"Master_Class2_Name"です。</dd>
+                                <dd>３２文字のアスキー文字です。</dd>
+
+                        <p>/* マスタ・ユーザ・データ */</p>
+                            <dt>prm.bus_para.mas_usr.master_user_data_len</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Master_User_Data_Len" - 2です。範囲）0 ～ 62</dd>
+                                 <dd>単位）byte</dd>
+
+                            <dt>prm.bus_para.mas_usr.master_user_data[n]（n : 0 ～ 61)</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Master_User_Data"です。</dd>
+
+                        <br/>
+                        <p>/*-モード用アドレス割付け-----------------------------------*/</p>
+                            <dt>prm.mode_addr_alloc.md_path</dt>
+                                 <dd>PMCの系統番号です。範囲）1 ～ 3</dd>
+                                 <dd>単位）なし</dd>
+
+                            <dt>prm.mode_addr_alloc.md_kind</dt>
+                                 <dd>モード指示の先頭アドレスのPMC領域名側です。設定可能領域 : R,E</dd>
+
+                            <dt>prm.mode_addr_alloc.md_top_address</dt>
+                                 <dd>モード指示の先頭アドレスのアドレス側です。</dd>
+                                 <dd>範囲）PMC領域名に依存します。</dd>
+
+                            <dt>prm.mode_addr_alloc.md_size</dt>
+                                 <dd>未使用です。</dd>
+
+                            <dt>prm.mode_addr_alloc.pad</dt>
+                                 <dd>未使用です。</dd>
+
+                        <br/>
+                        <p>/*-スレーブ補助パラメータ-----------------------------------*/</p>
+                            <dt>prm.slv_sub_para.slv_ind_para.slv_idx</dt>
+                                <dd>スレーブインデックス番号です。範囲）0 ～ 47</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.slv_sub_para.slv_ind_para.slv_no</dt>
+                                <dd>スレーブ局番です。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.slv_sub_para.slv_enable</dt>
+                                <dd>スレーブ局との通信の有効・無効を表します。</dd>
+                                <dd><table border="0">
+                                    <tr><td>0x00</td><td>：</td><td>無効</td></tr>
+                                    <tr><td>0xff</td><td>：</td><td>有効</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_sub_para.slt_num</dt>
+                                 <dd>I/Oモジュールを配置するスロット数です。範囲）1 ～ 128</dd>
+                                 <dd>単位）なし。</dd>
+
+                        <br/>
+                        <p>/*-スレーブ・パラメータ-------------------------------------*/</p>
+                            <dt>prm.slv_para.slv_ind_para.slv_idx</dt>
+                                 <dd>スレーブインデックス番号です。範囲）0 ～ 47</dd>
+                                 <dd>単位）なし</dd>
+
+                            <dt>prm.slv_para.slv_ind_para.slv_no</dt>
+                                 <dd>スレーブ局番です。範囲）0 ～ 125</dd>
+                                 <dd>単位）なし</dd>
+
+                            <dt>prm.slv_para.sl_flag</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Sl_Flag"です。</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7   </td><td>：</td><td>Active  </td></tr>
+                                    <tr><td>bit6   </td><td>：</td><td>New_Prm </td></tr>
+                                    <tr><td>bit5～0</td><td>：</td><td>リザーブ</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.slave_type</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Slave_Type"です。範囲）0 ～ 255</dd>
+                                 <dd>単位）なし</dd>
+
+                            <dt>prm.slv_para.reserved[n]（n : 0 ～ 11)</dt>
+                                 <dd>未使用です。</dd>
+
+                        <p>/* パラメータ・データ */</p>
+                            <dt>prm.slv_para.prm_data.station_status</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Station_status"です。</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7   </td><td>：</td><td>Lock_Req  </td></tr>
+                                    <tr><td>bit6   </td><td>：</td><td>Unlock_Req</td></tr>
+                                    <tr><td>bit5   </td><td>：</td><td>Sync_Req  </td></tr>
+                                    <tr><td>bit4   </td><td>：</td><td>Freeze_Req</td></tr>
+                                    <tr><td>bit3   </td><td>：</td><td>WD_On     </td></tr>
+                                    <tr><td>bit2～0</td><td>：</td><td>リザーブ  </td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.prm_data.wd_fact_1</dt>
+                                <dd>PROFIBUS規格のパラメータ"WD_Fact_1"です。範囲）1 ～ 255</dd>
+                                <dd>単位）msec</dd>
+
+                            <dt>prm.slv_para.prm_data.wd_fact_2</dt>
+                                <dd>PROFIBUS規格のパラメータ"WD_Fact_2"です。範囲）1 ～ 255</dd>
+                                <dd>単位）msec</dd>
+
+                            <dt>prm.slv_para.prm_data.min_tsdr</dt>
+                                <dd>PROFIBUS規格のパラメータ"min T SDR"です。範囲）0 ～ 255</dd>
+                                <dd>単位）bit time</dd>
+
+                            <dt>prm.slv_para.prm_data.ident_number</dt>
+                                <dd>PROFIBUS規格のパラメータ"Ident_Number"です。</dd>
+
+                            <dt>prm.slv_para.prm_data.group_ident</dt>
+                                <dd>PROFIBUS規格のパラメータ"Group_Ident"です。</dd>
+                                <dd><table border="0">
+                                    <tr><td>bit7</td><td>：</td><td>グループ８</td></tr>
+                                    <tr><td>bit6</td><td>：</td><td>グループ７</td></tr>
+                                    <tr><td>bit5</td><td>：</td><td>グループ６</td></tr>
+                                    <tr><td>bit4</td><td>：</td><td>グループ５</td></tr>
+                                    <tr><td>bit3</td><td>：</td><td>グループ４</td></tr>
+                                    <tr><td>bit2</td><td>：</td><td>グループ３</td></tr>
+                                    <tr><td>bit1</td><td>：</td><td>グループ２</td></tr>
+                                    <tr><td>bit0</td><td>：</td><td>グループ１</td></tr>
+                                </table></dd>
+
+                            <dt>prm.slv_para.prm_data.pad</dt>
+                                <dd>未使用です。</dd>
+
+                        <p>/* ユーザ・パラメータ・データ */</p>
+                            <dt>prm.slv_para.prm_data.usr_prm.user_prm_data_len</dt>
+                                <dd>PROFIBUS規格のパラメータ"User_Prm_Data"の長さです。範囲）0 ～ 201</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.slv_para.prm_data.usr_prm.user_prm_data[n]（n : 0 ～ 200)</dt>
+                                <dd>PROFIBUS規格のパラメータ"User_Prm_Data"です。</dd>
+
+                            <dt>prm.slv_para.prm_data.usr_prm.pad</dt>
+                                <dd>未使用です。</dd>
+
+                        <p>/* コンフィグ・データ */</p>
+                            <dt>prm.slv_para.cfg_data.cfg_data_len</dt>
+                                <dd>PROFIBUS規格のパラメータ"Cfg_Data_Len" - 2です。範囲）0 ～ 128</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.slv_para.cfg_data.cfg_data[n]（n : 0 ～ 127)</dt>
+                                 <dd>PROFIBUS規格のパラメータ"Cfg_Data"です。</dd>
+
+                        <p>/* スレーブ・ユーザ・データ */</p>
+                            <dt>prm.slv_para.slv_usr.slave_user_data_len</dt>
+                                <dd>PROFIBUS規格のパラメータ"Slave_User_Data_Len" - 2です。範囲）0 ～ 30</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.slv_para.slv_usr.slave_user_data[n]（n : 0 ～ 29)</dt>
+                                <dd>PROFIBUS規格のパラメータ"Slave_User_Data"です。</dd>
+
+                        <br/>
+                        <p>/*-診断データの割付け---------------------------------------*/</p>
+                            <dt>prm.dgn_addr_alloc.slv_ind_para.slv_idx</dt>
+                                <dd>スレーブインデックス番号です。範囲）0 ～ 47</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dgn_addr_alloc.slv_ind_para.slv_no</dt>
+                                <dd>スレーブ局番です。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_path</dt>
+                                <dd>PMCの系統番号です。範囲）1 ～ 3</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_kind</dt>
+                                <dd>診断データの先頭アドレスのPMC領域名側です。設定可能領域 : R,E</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_top_address</dt>
+                                <dd>診断データの先頭アドレスのアドレス側です。範囲）PMC領域名に依存します。</dd>
+
+                            <dt>prm.dgn_addr_alloc.dgn_size</dt>
+                                <dd>診断データのサイズです。範囲）0 ～ 244</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.dgn_addr_alloc.pad</dt>
+                                <dd>未使用です。</dd>
+
+                        <br/>
+                        <p>/*-モジュール・データ---------------------------------------*/</p>
+                            <dt>prm.module_data.slt_ind_para.slv_no</dt>
+                                <dd>スレーブ局番です。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.module_data.slt_ind_para.slt_no</dt>
+                                <dd>スロット番号です。範囲）0 ～ 127</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.module_data.module_len</dt>
+                                <dd>PROFIBUS規格のパラメータ"module"</dd>
+                                <dd>(GSDファイル中のパラメータ)の長さです。範囲）0 ～ 128</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.module_data.module_data[n]（n : 0 ～ 127)</dt>
+                                <dd>PROFIBUS規格のパラメータ"module"</dd>
+                                <dd>(GSDファイル中のパラメータ)です。</dd>
+
+                        <br/>
+                        <p>/*-DI/DOデータの割付け--------------------------------------*/</p>
+                            <dt>prm.dido_addr_alloc.slt_ind_para.slv_no</dt>
+                                <dd>スレーブ局番です。範囲）0 ～ 125</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dido_addr_alloc.slt_ind_para.slt_no</dt>
+                                <dd>スロット番号です。範囲）0 ～ 127</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dido_addr_alloc.di_path</dt>
+                                <dd>PMCの系統番号です。範囲）1 ～ 3</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dido_addr_alloc.do_path</dt>
+                                <dd>PMCの系統番号です。範囲）1 ～ 3</dd>
+                                <dd>単位）なし</dd>
+
+                            <dt>prm.dido_addr_alloc.di_kind</dt>
+                                <dd>DIデータの先頭アドレスのPMC領域名側です。設定可能領域 : R,E</dd>
+
+                            <dt>prm.dido_addr_alloc.do_kind</dt>
+                                <dd>DOデータの先頭アドレスのPMC領域名側です。設定可能領域 : R,E</dd>
+
+                            <dt>prm.dido_addr_alloc.di_top_address</dt>
+                                <dd>DIデータの先頭アドレスのアドレス側です。範囲）PMC領域名に依存します。</dd>
+
+                            <dt>prm.dido_addr_alloc.do_top_address</dt>
+                                <dd>DOデータの先頭アドレスのアドレス側です。範囲）PMC領域名に依存します。</dd>
+
+                            <dt>prm.dido_addr_alloc.di_size</dt>
+                                <dd>DIデータのサイズです。範囲）0 ～ 244</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.dido_addr_alloc.do_size</dt>
+                                <dd>DOデータのサイズです。範囲）0 ～ 244</dd>
+                                <dd>単位）byte</dd>
+
+                            <dt>prm.dido_addr_alloc.module_type</dt>
+                                <dd>モジュールのタイプです。</dd>
+                                <dd><table border="0">
+                                    <tr><td>1  </td><td>：</td><td>入力のみ。</td></tr>
+                                    <tr><td>2  </td><td>：</td><td>出力のみ。</td></tr>
+                                    <tr><td>3  </td><td>：</td><td>入力・出力ともにあり。</td></tr>
+                                    <tr><td>4  </td><td>：</td><td>入力・出力ともになし。</td></tr>
+                                    <tr><td>200</td><td>：</td><td>入力・出力のサイズオーバ。</td></tr>
+                                    <tr><td>201</td><td>：</td><td>PROFIBUS規格違反。</td></tr>
+                                    <tr><td>255</td><td>：</td><td>未設定。</td></tr>
+                                </table></dd>
+
+                            <dt>prm.dido_addr_alloc.pad</dt>
+                                <dd>未使用です。</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no
+                <table border="0">
+                    <tr><td>2</td><td>：</td><td>データ範囲外</td></tr>
+                    <tr><td>5</td><td>：</td><td>データ拒否  </td></tr>
+                </table>
+                ODBERR構造体のメンバ err_dtno
+                <table border="0">
+                    <tr><td>1</td><td>：</td><td>スレーブ局番の誤り    </td></tr>
+                    <tr><td>2</td><td>：</td><td>スロット番号の誤り    </td></tr>
+                    <tr><td>3</td><td>：</td><td>パラメータの種類の誤り</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no
+                <table border="0">
+                    <tr><td>40</td><td>：</td><td>PROFIBUS マスタボードがない    </td></tr>
+                    <tr><td>41</td><td>：</td><td>PROFIBUS マスタ機能がない      </td></tr>
+                    <tr><td>42</td><td>：</td><td>PROFIBUS マスタ機能用SRAMがない</td></tr>
+                </table>
+                ODBERR構造体のメンバ err_dtno
+                <table border="0">
+                    <tr><td>なし</td><td></td><td></td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>
+                パラメータの取得に失敗しました。<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no
+                <table border="0">
+                    <tr><td>10</td><td>：</td><td>File SRAMからの読み取りに失敗した</td></tr>
+                </table>
+                ODBERR構造体のメンバ err_dtno
+                <table border="0">
+                    <tr><td>なし</td><td></td><td></td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <need>PROFIBUS-DPマスタ機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>O</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>pbm_wr_param</name>
+            <file>Profibus/pbm_wr_param.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

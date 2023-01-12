@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>pmc_wrpmcrng</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI pmc_wrpmcrng(unsigned short FlibHndl, short length,IODBPMC *buf);</prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    指定されたPMCアドレス/範囲のPMCデータを書き込みます。<br/>
+                    <br/>
+                    MMCのアプリケーションとPMCのラダーソフトとの間のデータのやり取りに使用します。 
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>length</name>
+                        <type>in</type>
+                        <content>
+                            データブロック長を指定します。
+                            <table class="dd">
+                                <tr>
+                                    <td>type_dが0(バイト型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N</td>
+                                </tr>
+                                <tr>
+                                    <td>type_dが1(ワード型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N × 2</td>
+                                </tr>
+                                <tr>
+                                    <td>type_dが2(ロング型)の場合</td>
+                                    <td>:</td>
+                                    <td>length = 8 + N × 4</td>
+                                </tr>
+                            </table>
+                            ※ Nは書き換えるデータの個数
+                        </content>
+                    </item>
+                    <item>
+                        <name>buf</name>
+                        <type>in</type>
+                        <content>
+                            <p
+                                >書き換えるデータを指定するIODBPMC構造体へのポインタです。<br/>
+                                IODBPMC構造体は次の通りです。<br/>
+                                Series 0i-F, 30i/31i/32i/35i-B, PMi-A で PMCメモリDを使用する場合は、コンパイル時に-Dオプションにて文字定数PMCMEMDを定義してください。</p>
+<pre>
+#if defined (PMCMEMD)
+typedef struct iodbpmc {
+    short           type_a ;   /* PMCアドレスの種類 */
+    short           type_d ;   /* PMCデータの型 */
+    unsigned short  datano_s ; /* 入力開始PMCアドレス */
+    unsigned short  datano_e ; /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;           /* N は書き換えるデータの個数 */
+} IODBPMC ;
+#else
+typedef struct  iodbpmc {
+    short   type_a ;       /* PMCアドレスの種類 */
+    short   type_d ;       /* PMCデータの型 */
+    short   datano_s ;     /* 入力開始PMCアドレス */
+    short   datano_e ;     /* 入力終了PMCアドレス */
+    union {
+        char    cdata[N] ; /* PMCデータ(バイト型) */
+        short   idata[N] ; /*          (ワード型) */
+        long    ldata[N] ; /*          (ロング型) */
+    } u ;           /* N は書き換えるデータの個数 */
+} IODBPMC ;
+#endif
+</pre>
+                        <dl>
+                            <dt>type_a</dt>
+                                <dd>ライトするPMCアドレスの種類に対応した識別コードを指定します。</dd>
+                            <dt>type_d</dt>
+                                <dd>PMCデータの型を指定します。<br/>
+                                    PMC側のデータの型と同じものを指定して下さい。</dd>
+                                <table class="dd">
+                                    <tr>
+                                        <td>0</td>
+                                        <td>:</td>
+                                        <td>バイト型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>:</td>
+                                        <td>ワード型</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>:</td>
+                                        <td>ロング型</td>
+                                    </tr>
+                                </table>
+                            <dt>datano_s</dt>
+                                <dd>ライトを開始するPMCアドレス番号を指定します。</dd>
+                            <dt>datano_e</dt>
+                                <dd>ライトを終了するPMCアドレス番号を指定します。</dd>
+                        </dl>
+                        指定できるアドレスの種類、開始アドレス、終了アドレスは「PMCの任意データのリード(範囲指定)
+                        (<a href="Pmc/pmc_rdpmcrng.htm" target="_parent">pmc_rdpmcrng</a>)」の「PMCデータ参照可能領域」を参照して下さい。
+                    </content>
+                </item>
+
+                <add>
+                    <p class="label">引数の指定例</p>
+                    <ol>
+                        <li>D0100 (ワード型とします) に 250 を書き込む。</li>
+                            <table class="dd">
+                                <tr>
+                                    <td>buf.type_a</td>
+                                    <td>9</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.type_d</td>
+                                    <td>1</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.datano_s</td>
+                                    <td>100</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.datano_e</td>
+                                    <td>101</td>
+                                </tr>
+                                <tr>
+                                    <td>length</td>
+                                    <td>8+2×1 (=10)</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.u.idata[0]</td>
+                                    <td>250</td>
+                                </tr>
+                            </table>
+             
+                        <li>R0200～R0209 (バイト型とします) のすべてに 0 を書き込む。</li>
+                            <table class="dd">
+                                <tr>
+                                    <td>buf.type_a</td>
+                                    <td>5</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.type_d</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.datano_s</td>
+                                    <td>200</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.datano_e</td>
+                                    <td>209</td>
+                                </tr>
+                                <tr>
+                                    <td>length</td>
+                                    <td>8+1×10 (=18)</td>
+                                </tr>
+                                <tr>
+                                    <td>buf.u.cdata[0]<br/>
+                                    ～buf.u.cdata[9]</td>
+                                    <td>すべて 0</td>
+                                </tr>
+                            </table>
+                    </ol>
+                </add>
+            </vc>
+        </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <item>
+                <name>EW_NOPMC</name>
+                <content>
+                    PMCが存在しません。
+                </content>
+            </item>
+            <item>
+                <name>EW_LENGTH</name>
+                <content>
+                    データブロック長の誤り<br/>
+                    IODBPMC構造体のサイズ(length)が不正です。
+                </content>
+            </item>
+            <item>
+                <name>EW_RANGE</name>
+                <content>
+                    アドレス範囲の誤り<br/>
+                    PMCアドレス番号(datano_s, datano_e)の指定が不適切です。
+                </content>
+            </item>
+            <item>
+                <name>EW_ATTRIB</name>
+                <content>
+                    データ属性の誤り<br/>
+                    PMCアドレスの種類(type_a)、またはPMCデータの型(type_d)の指定が不適切です。
+                </content>
+            </item>
+            <item class="xis">
+                <name>EW_PASSWD</name>
+                <content>
+                    指定された範囲のデータは保護されているため読み込めません。<br/>
+                    (Series 16i/18i/21i, 0i-A/B/C) 
+                </content>
+            </item>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+            
+            <ethr>
+                <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                <p>但し、FS16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                <p>組込みイーサネットを使用のとき、</p>
+                <p class="dd">上記２つの機能は必要ありません。</p>
+                <p>イーサネットボードを使用のとき、</p>
+                <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>O</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>H</fs0ia>
+                <fs0ib>O</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>H</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>O</fs16ia>
+                <fs18ia>O</fs18ia>
+                <fs21ia>O</fs21ia>
+                <fs16ib>O</fs16ib>
+                <fs18ib>O</fs18ib>
+                <fs21ib>O</fs21ib>
+                <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>H</fs16>
+                <fs18>H</fs18>
+                <fs21>H</fs21>
+                <fs16ia>H</fs16ia>
+                <fs18ia>H</fs18ia>
+                <fs21ia>H</fs21ia>
+                <fs16ib>H</fs16ib>
+                <fs18ib>H</fs18ib>
+                <fs21ib>H</fs21ib>
+                <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>O</fs16i>
+                <fs18i>O</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>O</d>
+                <h>O</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>pmc_rdpmcrng</name>>
+                <file>Pmc/pmc_rdpmcrng.htm</file>
+            </item>
+            <item>
+                <name>pmc_rdpmcinfo</name>
+                <file>Pmc/pmc_rdpmcinfo.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

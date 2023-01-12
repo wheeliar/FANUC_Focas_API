@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrpunchtl_ex</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_wrpunchtl_ex(unsigned short FlibHndl, short len, IODBPUNCH1_EX *buf);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>指定された工具登録番号に対応する各種工具登録データ(工具番号, 工具パンチ回数, 工具形状など)を書込みます。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>len</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            書込むデータのサイズを指定します。(= 8 + (2,4,8)のいずれか))
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>buf</name>
+                    <type>in/out</type>
+                    <content>
+                        <p>
+                           各種工具登録データ(工具番号, 工具パンチ回数, 工具形状など)を指定するIODBPUNCH1_EX構造体へのポインタです｡
+                        </p>
+<pre>
+typedef struct iodbpunch1_ex {
+    unsigned short  number ;            /* データ番号(N)    */
+    unsigned short  attr ;              /* データ属性(M)    */
+    union {
+        unsigned short  u2data ;        /* 符号なし2バイト  */
+        short           s2data ;        /* 符号付き2バイト  */
+        unsigned long   u4data ;        /* 符号なし4バイト  */
+        long            s4data ;        /* 符号付き4バイト  */
+        unsigned long   u8data[2] ;     /* 符号なし8バイト  */
+    } u ;
+    short           decimal ;           /* 小数点以下桁数   */
+    short           reserve ;           /* リザーブ         */
+} IODBPUNCH1_EX ;
+</pre>
+                        <dl>
+                            <dt>number</dt>
+                                <dd>
+                                    工具データ登録番号を指定します。
+                                </dd>
+                            <dt>attr</dt>
+                                <dd>
+                                    書込むデータの種類を指定します。
+                                </dd>
+                            <dt>buf.u</dt>
+                                <dd>
+                                    書込むデータをそれぞれの形式に合わせて指定します。
+                                </dd>
+                                <dd>
+                                    指定可能なデータ番号、データ属性および書込みを行なうデータの種類は以下の表のようになります。
+                                </dd>
+                                <dd>(a) 工具データ設定機能が無効の場合</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>書き込むデータの種類</th> <th>number</th>
+                                        <th>attr</th> <th>格納先メンバ</th><th>値の範囲</th>
+                                    </tr>
+                                    <tr> <td >使用工具数</td>                    <td>0</td>  <td>0</td>  <td>u2data</td>           <td>0～136</td>                      </tr>
+                                    <tr> <td >タレット割り出し数</td>            <td>0</td>  <td>1</td>  <td>u2data</td>           <td>0～136</td>                      </tr>
+                                    <tr> <td >原点工具番号</td>                  <td>0</td>  <td>2</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >タレット軸移動量</td>              <td>0</td>  <td>3</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >総パンチ回数</td>                  <td>0</td>  <td>4</td>  <td>u8data</td>           <td>0～999999999999999999</td>       </tr>
+                                    <tr> <td >工具番号</td>                      <td>Nr</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >パンチ回数</td>                    <td>Nr</td> <td>1</td>  <td>u4data</td>           <td>0～65535</td>                    </tr>
+                                    <tr> <td >X軸工具位置補正量</td>             <td>Nr</td> <td>2</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >Y軸工具位置補正量</td>             <td>Nr</td> <td>3</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >タレット割り出し位置</td>          <td>Nr</td> <td>4</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >ツールチェンジ用工具番号</td>      <td>Nr</td> <td>5</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >工具寿命</td>                      <td>Nr</td> <td>6</td>  <td>u4data</td>           <td>0～65535</td>                    </tr>
+                                    <tr> <td >グラフィック描画用工具形状(C)</td> <td>Nr</td> <td>7</td>  <td>u2data</td>           <td>0～99</td>                       </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(I)</td> <td>Nr</td> <td>8</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(J)</td> <td>Nr</td> <td>9</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具角度(K)</td> <td>Nr</td> <td>10</td> <td>u4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nr: 工具登録番号 ( =1～136 )</dd>
+
+                                <dd>※マルチツール制御用</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>書き込むデータの種類</th> <th>number</th>
+                                        <th>attr</th> <th>格納先メンバ</th><th>値の範囲</th>
+                                    </tr>
+                                    <tr> <td >小工具番号</td>                    <td>Nm</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >小工具割り出し角度</td>            <td>Nm</td> <td>1</td>  <td>s4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                    <tr> <td >Y軸工具位置補正量</td>             <td>Nm</td> <td>2</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具形状(C)</td> <td>Nm</td> <td>3</td>  <td>u2data</td>           <td>0～99</td>                       </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(I)</td> <td>Nm</td> <td>4</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(J)</td> <td>Nm</td> <td>5</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具角度(K)</td> <td>Nm</td> <td>6</td>  <td>u4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nm: マルチツール工具登録番号 + 200( =201～264 )</dd>
+
+
+
+
+
+                                <dd>(b) 工具データ設定機能が有効の場合</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>書き込むデータの種類</th> <th>number</th>
+                                        <th>attr</th> <th>格納先メンバ</th><th>値の範囲</th>
+                                    </tr>
+                                    <tr> <td >使用工具数</td>                    <td>0</td>  <td>0</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >タレット割り出し数</td>            <td>0</td>  <td>1</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >原点工具番号</td>                  <td>0</td>  <td>2</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                 </tr>
+                                    <tr> <td >タレット軸移動量</td>              <td>0</td>  <td>3</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >総パンチ回数</td>                  <td>0</td>  <td>4</td>  <td>u8data</td>           <td>0～999999999999999999</td>       </tr>
+                                    <tr> <td >工具番号</td>                      <td>Nr</td> <td>0</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                 </tr>
+                                    <tr> <td >パンチ回数</td>                    <td>Nr</td> <td>1</td>  <td>u2data/u4data</td>    <td>0～999999999</td>                </tr>
+                                    <tr> <td >X軸工具位置補正量</td>             <td>Nr</td> <td>2</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >Y軸工具位置補正量</td>             <td>Nr</td> <td>3</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >タレット割り出し位置</td>          <td>Nr</td> <td>4</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >ツールチェンジ用工具番号</td>      <td>Nr</td> <td>5</td>  <td>u2data/u4data</td>    <td>0～99999999</td>                 </tr>
+                                    <tr> <td >工具寿命</td>                      <td>Nr</td> <td>6</td>  <td>u2data/u4data</td>    <td>0～999999999</td>                </tr>
+                                    <tr> <td >グラフィック描画用工具形状(C)</td> <td>Nr</td> <td>7</td>  <td>u2data</td>           <td>0～99</td>                       </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(I)</td> <td>Nr</td> <td>8</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(J)</td> <td>Nr</td> <td>9</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具角度(K)</td> <td>Nr</td> <td>10</td> <td>u4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                    <tr> <td >小工具割り出し角度</td>            <td>Nr</td> <td>11</td> <td>s4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                    <tr> <td >マルチツール半径</td>              <td>Nr</td> <td>12</td> <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nr: 工具登録番号 ( =1～工具登録個数 )</dd>
+                                <dd>マルチツール制御機能が有効かつ、パラメータCMT(No.16282#5)が1の場合は、工具データとして書き込める工具登録番号は5000番までです。</dd>
+
+                                <dd>※マルチツール制御用</dd>
+                                <ul>
+                                <table border="1">
+                                    <colgroup>
+                                    <colgroup width="100">
+                                    <tr>
+                                        <th>書き込むデータの種類</th> <th>number</th>
+                                        <th>attr</th> <th>格納先メンバ</th><th>値の範囲</th>
+                                    </tr>
+                                    <tr> <td >小工具番号</td>                    <td>Nm</td> <td>0</td>  <td>u2data</td>           <td>0～9999</td>                     </tr>
+                                    <tr> <td >小工具割り出し角度</td>            <td>Nm</td> <td>1</td>  <td>s4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                    <tr> <td >Y軸工具位置補正量</td>             <td>Nm</td> <td>2</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具形状(C)</td> <td>Nm</td> <td>3</td>  <td>u2data</td>           <td>0～99</td>                       </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(I)</td> <td>Nm</td> <td>4</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具寸法(J)</td> <td>Nm</td> <td>5</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >グラフィック描画用工具角度(K)</td> <td>Nm</td> <td>6</td>  <td>u4data , decimal</td> <td>IS-Bの場合、0.0～359.999</td>    </tr>
+                                    <tr> <td >マルチツール半径</td>              <td>Nm</td> <td>7</td>  <td>u4data , decimal</td> <td>標準パラメータ設定表(B)参照</td> </tr>
+                                    <tr> <td >X軸工具位置補正量</td>             <td>Nm</td> <td>8</td>  <td>s4data , decimal</td> <td>標準パラメータ設定表(A)参照</td> </tr>
+                                </colgroup>
+                                </colgroup>
+                                </table>
+                                </ul>
+                            <br/>
+                                <dd>Nm: マルチツール工具登録番号 + 5000( =5001～5000＋登録個数 )</dd>
+                                <dd>
+                                    グラフィック機能が無効の場合は、工具データ設定機能、マルチツール制御機能に関係なく以下の項目の書き込みはできません。
+                                </dd>
+                                <dd>・グラフィック描画用工具形状(C)</dd>
+                                <dd>・グラフィック描画用工具寸法(I)</dd>
+                                <dd>・グラフィック描画用工具寸法(J)</dd>
+                                <dd>・グラフィック描画用工具角度(K)</dd>
+                        </dl>
+
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>0i-PD/PF、30i/31i-LB、30i/31i-PB以外では使用できません。</content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>開始番号(number)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_ATTRIB</name>
+            <content>データ属性の誤り<br/>データ属性(attr)が不正です。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>データの誤り<br/>工具データの指定が不適切です。</content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし
+            <br/>拡張ドライバ/ライブラリ機能が必要です。
+            <br/>パンチプレス機能オプション、パラメータALA(No.16242#0)の設定が必要です。(Series 30i/31i-LBの場合)
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <type>
+                <li>マルチツール機能    </li>
+                <li>グラフィック機能    </li>
+                <li>工具データ設定機能  </li>
+        </type>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 0i-PD/PF、30i/31i-LB、30i/31i-PB</li>
+            <div class="dd">16280#0,#1,#2,#3,#4,#5,#6,#7</div>
+            <div class="dd">16281#4</div>
+            <div class="dd">16282#1,#2,#3,#5,#6</div>
+            <div class="dd">16284, 16285, 16286</div>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rd2punchtl_ex</name>
+            <file>Punch/cnc_rd2punchtl_ex.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

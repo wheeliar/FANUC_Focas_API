@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+
+    <!-- 関数名 -->
+    <title>cnc_dwnstart</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_dwnstart(unsigned short FlibHndl);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>CNC側にNC指令データ(NCプログラム)の登録(ダウンロード)開始を要求します。<br/>
+            (ダウンロードを行う前に必ず実行する必要があります)</p>
+            <p>
+            Series 15/15iでは、CNCがバックグラウンド編集中の場合、実行が待たされ
+            ます。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_BUSY</name>
+            <content>
+                ビジィ<br/><br/>
+                Series15/15i
+                <ul style="margin-top:0">
+                    <li>
+                        cnc_dwnstart(<a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a>)関数を実行済みです。<BR/>
+                    <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a>(<a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>)関数にて前回の出力を終了させて下さい。
+                    </li>
+                </ul>
+                Series16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A
+                <ul style="margin-top:0">
+                    <li>cnc_dwnstart(<a href="Program/cnc_vrfstart.htm" target="_parent">cnc_vrfstart</a>)関数を実行済みです。<br/>
+                    <a href="Program/cnc_dwnend.htm" target="_parent">cnc_dwnend</a>(<a href="Program/cnc_vrfend.htm" target="_parent">cnc_vrfend</a>)関数にて前回の出力を終了させて下さい。
+                    </li>
+                    <li>CNCがバックグラウンド編集中<br/>
+                        CNC側の裏編集を終了させて下さい。</li>
+                    <li>CNCがアラーム(PS000,PS101)状態<br/>
+                        CNC側のアラームを解除して下さい。</li>
+                    <li>CNCがMDIモード<br/>
+                        CNCのモードをMDI以外にして下さい。</li>
+                </ul>
+            </content>
+        </item>
+        <item>
+            <name>EW_FUNC</name>
+            <content>パラメータ(No.20,22:入力機器)の設定が正しく行われていません(Series 15/15i)。</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>ライトプロテクト<br/><li>プロテクトKEY(DI)がOFFになっています。</li></content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 15/15i</li>
+            <ul>
+                0020=16(EDITモード) (必ず設定して下さい)<br/>
+                0022=16(EDITモード以外) (必ず設定して下さい)<br/>
+                0000#0 (設定の影響を受けます)<br/>
+                2200#1,#3,#4 (設定の影響を受けます)<br/>
+                0011#0,2201#0 (設定の影響を受けます)<br/>
+                2210,2211,2212,2213 (設定の影響を受けます)<br/>
+            </ul>
+            <li>Series 16i/18i/21i, 0i, 30i, PMi-A</li>
+            <ul>
+                0000#0 (設定の影響を受けます)<br/>
+                3201#2,#5,#6 (設定の影響を受けます)<br/>
+                3202#0,#4 (設定の影響を受けます)<br/>
+                3210,3211 (設定の影響を受けます)<br/>
+                3290#7 (設定の影響を受けます)<br/>
+            </ul>
+            <li>Series 16i/18i-W, Power Mate i</li>
+            <ul>
+                0000#0 (設定の影響を受けます)<br/>
+                3201#2,#5,#6 (設定の影響を受けます)<br/>
+                3202#0,#4 (設定の影響を受けます)<br/>
+                3290#7 (設定の影響を受けます)<br/>
+            </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            <li>Series 15/15i すべてのモードで使用できます。</li>
+                <span class="dd">(モードに応じたパラメータ設定を行う必要があります)</span><br/>
+            <br/>
+            <li>Series 16/18/21, 16i/18i/21i, 0i, 30i, Power Mate i, PMi-A</li>
+                <span class="dd">MDI 以外のモードで使用できます。</span>
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>H</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>H</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>H</fs16i>
+            <fs18i>H</fs18i>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>H</d>
+            <h>H</h>
+            <a>H</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_download</name>
+            <file>Program/cnc_download.htm</file>
+        </item>
+        <item>
+            <name>cnc_cdownload</name>
+            <file>Program/cnc_cdownload.htm</file>
+        </item>
+        <item>
+            <name>cnc_dwnend</name>
+            <file>Program/cnc_dwnend.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

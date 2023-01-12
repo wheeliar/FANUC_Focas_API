@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+    <func>
+
+
+        <!-- 関数名 -->
+        <title>cnc_sysinfo_ex</title>
+
+
+
+        <!-- 関数宣言 -->
+        <declare>
+            <!-- Visual C++の宣言 -->
+            <vc>
+                <include>#include "fwlib32.h"</include>
+                <prottype>FWLIBAPI short WINAPI cnc_sysinfo_ex(unsigned short FlibHndl, ODBSYSEX *sys); </prottype>
+            </vc>
+        </declare>
+
+
+
+        <!-- 解説 -->
+        <doc>
+            <cmn>
+                <p>
+                    マシニングセンタ系あるいは旋盤系などの区別、系統情報、制御軸数などのCNC固有のシステム情報を読み出します。
+                </p>
+                <p>
+                    CNC側のシステムソフトウェアとPMC側との適合性の確認、CNC側の絶対位置座標値、機械位置座標値などの座標値データを読み出す時の軸数の取得などに使用します。
+                </p>
+            </cmn>
+        </doc>
+
+
+
+        <!-- 引数 -->
+        <argument>
+            <common>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>sys</name>
+                        <type>out</type>
+                        <content>
+                            <p/>CNCシステム情報を返すODBSYSEX構造体へのポインタです。
+                            <p/>ODBSYSEX構造体は次の通りです。
+<pre>
+typedef struct odbsysex {
+    short max_axis;       /* 最大制御軸数         */
+    short max_spdl;       /* 最大主軸数           */
+    short max_path;       /* 最大系統数           */
+    short max_mchn;       /* 最大機械グループ数   */
+    short ctrl_axis;      /* 制御軸数             */
+    short ctrl_srvo;      /* 制御サーボ軸数       */
+    short ctrl_spdl;      /* 制御主軸数           */
+    short ctrl_path;      /* 制御系統数           */
+    short ctrl_mchn;      /* 制御機械数           */
+    short reserved[3];
+
+    struct {
+        short system;     /* システム種類         */
+        short group;      /* システムグループ種類 */
+        short attrib;     /* 系統属性             */
+        short ctrl_axis;  /* 系統内制御軸数       */
+        short ctrl_srvo;  /* 系統内制御サーボ軸数 */
+        short ctrl_spdl;  /* 系統内制御主軸数     */
+        short mchn_no;    /* 機械グループ番号     */
+        short reserved;
+    } path[MAX_PATH];
+} ODBSYSEX;
+</pre>
+                            <dl>
+                                <dt>max_axis</dt>
+                                    <dd>CNCシステム全体にて制御可能な最大軸数</dd>
+                                <dt>max_spdl</dt>
+                                    <dd>CNCシステム全体にて制御可能な最大主軸数</dd>
+                                <dt>max_path</dt>
+                                    <dd>CNCシステム全体にて制御可能な最大系統数</dd>
+                                <dt>max_mchn</dt>
+                                    <dd>CNCシステム全体にて制御可能な最大機械グループ</dd>
+                                <br/>
+                                <dt>ctrl_axis</dt>
+                                    <dd>CNCシステム全体の現在の制御軸数</dd>
+                                <dt>ctrl_srvo</dt>
+                                    <dd>CNCシステム全体の現在のサーボ軸数<br/>
+                                        ※制御軸数と同じ値が取得されます。</dd>
+                                <dt>ctrl_spdl</dt>
+                                    <dd>CNCシステム全体の現在の主軸数</dd>
+                                <dt>ctrl_path</dt>
+                                    <dd>現在の系統数</dd>
+                                <dt>ctrl_mchn</dt>
+                                    <dd>現在の機械グループ数</dd>
+
+                                <dt>path</dt>
+                                    <dd>系統毎に固有の情報がmax_path分の配列に格納されます。</dd>
+                                    <dl>
+                                        <dt>system</dt>
+                                        <dd>システム種類</dd>
+                                        <dd><table>
+                                            <tr> <td>0x0000</td> <td>:</td> <td>なし                     </td> </tr>
+                                            <tr> <td>0x204D</td> <td>:</td> <td>(= ' M') マシニングセンタ</td> </tr>
+                                            <tr> <td>0x2054</td> <td>:</td> <td>(= ' T') 旋盤            </td> </tr>
+<!--                                        <tr> <td>0x2050</td> <td>:</td> <td>(= ' P') パンチプレス    </td> </tr> -->
+<!--                                        <tr> <td>0x204C</td> <td>:</td> <td>(= ' L') レーザ          </td> </tr> -->
+                                            <tr> <td>0x2057</td> <td>:</td> <td>(= ' W') ワイアカット    </td> </tr>
+                                        </table></dd>
+                                        <dt>group</dt>
+                                        <dd>システムグループ種類</dd>
+                                        <dd><table>
+                                            <tr> <td>0</td> <td>:</td> <td>なし                        </td> </tr>
+                                            <tr> <td>1</td> <td>:</td> <td>マシニングセンタ系のグループ</td> </tr>
+                                            <tr> <td>2</td> <td>:</td> <td>旋盤系のグループ            </td> </tr>
+                                        </table></dd>
+                                        <dt>attrib</dt>
+                                        <dd>系統属性</dd>
+                                        <dd><table>
+                                            <tr> <td>0</td> <td>:</td> <td>CNC   </td> </tr>
+                                            <tr> <td>1</td> <td>:</td> <td>ローダ</td> </tr>
+                                        </table></dd>
+                                        <dt>ctrl_axis</dt>
+                                        <dd>系統内制御軸数</dd>
+                                        <dt>ctrl_srvo</dt>
+                                          <dd>系統内サーボ軸数<br/>
+                                              ※制御軸数と同じ値が取得されます。</dd>
+                                        <dt>ctrl_spdl</dt>
+                                          <dd>系統内主軸数</dd>
+                                        <dt>mchn_no</dt>
+                                          <dd>機械グループ番号</dd>
+                                     </dl>
+                            </dl>
+                        </content>
+                    </item>
+                </vc>
+            </common>
+        </argument>
+
+
+
+        <!-- 戻り値 -->
+        <errcode>
+            <add></add>
+        </errcode>
+
+
+
+        <!-- CNCオプション -->
+        <option>
+            <hssb>この機能にオプションは必要ありません。</hssb>
+            <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+                  <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+                  <p>組込みイーサネットを使用のとき、</p>
+                     <p class="dd">上記２つの機能は必要ありません。</p>
+                  <p>イーサネットボードを使用のとき、</p>
+                      <p class="dd">イーサネット機能のみ必要です。</p>
+            </ethr>
+        </option>
+
+
+
+        <!-- CNCパラメータ -->
+        <parameter></parameter>
+        <is_parameter></is_parameter>
+
+
+
+        <!-- CNCモード -->
+        <mode></mode>
+        <is_mode></is_mode>
+
+
+
+        <!-- 対応機種 -->
+        <support>
+            <!-- M（ミリング） -->
+            <m>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </t>
+            <!-- LC（ローダ制御） -->
+            <lc>
+                <fs0ia>X</fs0ia>
+                <fs0ib>X</fs0ib>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs15>X</fs15>
+                <fs15i>X</fs15i>
+                <fs16>X</fs16>
+                <fs18>X</fs18>
+                <fs21>X</fs21>
+                <fs16ia>X</fs16ia>
+                <fs18ia>X</fs18ia>
+                <fs21ia>X</fs21ia>
+                <fs16ib>X</fs16ib>
+                <fs18ib>X</fs18ib>
+                <fs21ib>X</fs21ib>
+                <fs30ia>X</fs30ia>
+                <fs30ib>X</fs30ib>
+            </lc>
+            <!-- P（パンチプレス） -->
+            <p>
+                <fs0id>O</fs0id>
+                <fs0if>O</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </p>
+            <!-- L（レーザ） -->
+            <l>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>X</fs30ia>
+                <fs30ib>O</fs30ib>
+            </l>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs0id>X</fs0id>
+                <fs0if>X</fs0if>
+                <fs16i>X</fs16i>
+                <fs18i>X</fs18i>
+                <fs30ia>O</fs30ia>
+                <fs30ib>O</fs30ib>
+            </w>
+            <!-- PM（パワーメート） -->
+            <pw>
+                <d>X</d>
+                <h>X</h>
+                <a>O</a>
+            </pw>
+            <!-- 30i(WinCE) -->
+            <is>
+                <m>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </m>
+                <t>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </t>
+                <!-- W（ワイヤカット） -->
+                <w>
+                    <fs30isa>O</fs30isa>
+                    <fs30isb>O</fs30isb>
+                </w>
+            </is>
+        </support>
+
+
+
+        <!-- 参照 -->
+        <reference>
+            <item>
+                <name>cnc_sysinfo</name>
+                <file>misc/cnc_sysinfo.htm</file>
+            </item>
+        </reference>
+
+
+
+    </func>
+</root>

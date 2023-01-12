@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdlcmddat</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdlcmddat(unsigned short FlibHndl, ODBLCMDT *cmddat); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p> レーザ指令値データを読み出します。
+                データはODBLCMDT内の各メンバに格納されます。
+            </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>  
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>cmddat</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            レーザ指令値データを返すODBLCMDT構造体へのポインタです。
+                            ODBLCMDT構造体は次の通りです。
+<pre>
+・Series 16i/18i-Lの場合
+typedef struct iodblcmdt {
+    short   slct;       /* データ有効フラグ */
+    long    feed;       /* 実速度 */
+    short   power;      /* 実ピーク値 */
+    short   freq;       /* 実周波数 */
+    short   duty;       /* 実デューティ */
+    short   g_kind;     /* アシストガス種類指令値 */
+    short   g_ready_t;  /* アシストガス整定時間 */
+    short   g_press;    /* 実アシストガス圧 */
+    short   error;      /* 基準変位量指令値 */
+    long    dsplc;      /* 工具径補正量指令値 */
+    short   reserve[7]; /* リザーブ */
+} ODBLCMDT ;
+
+・Series 30i/31i-LBの場合
+typedef struct iodblcmdt {
+    short   slct;       /* データ有効フラグ             */
+    long    feed;       /* 速度指令値                   */
+    short   power;      /* ピーク値指令値               */
+    short   freq;       /* 周波数指令値                 */
+    short   duty;       /* デューティ指令値             */
+    short   g_kind;     /* アシストガス種類指令値       */
+    short   g_ready_t;  /* アシストガス整定時間         */
+    short   g_press;    /* アシストガス圧指令値         */
+    short   error;      /* 基準変位量指令値             */
+    long    dsplc;      /* 工具径補正量指令値データ部   */
+    long    error2；    /* 基準変位量指令値2データ部    */
+    char    gap_axis；  /* ギャップ制御軸の設定         */
+    char    feed_dec；  /* 小数点以下桁部               */
+    char    dsplc_dec； /* 小数点以下桁部               */
+    char    error2_dec；/* 小数点以下桁部               */
+    short   reserve[3]; /* リザーブ                     */
+} ODBLCMDT ;
+</pre>
+                            <dl>
+                                <dt>slct</dt>
+                                    <dd>データ有効フラグがセットされます。</dd>
+                                    <dd><table border="0" class="dd">
+                                        <tr> <td>bit 0</td><td>：</td><td>実速度</td> </tr>
+                                        <tr> <td>bit 1</td><td>：</td><td>実ピーク値</td> </tr>
+                                        <tr> <td>bit 2</td><td>：</td><td>実周波数</td> </tr>
+                                        <tr> <td>bit 3</td><td>：</td><td>実デューティ</td> </tr>
+                                        <tr> <td>bit 4</td><td>：</td><td>アシストガス種類指令値</td> </tr>
+                                        <tr> <td>bit 5</td><td>：</td><td>アシストガス整定時間</td> </tr>
+                                        <tr> <td>bit 6</td><td>：</td><td>実アシストガス圧</td> </tr>
+                                        <tr> <td>bit 7</td><td>：</td><td>基準変位量指令値</td> </tr>
+                                        <tr> <td>bit 8</td><td>：</td><td>工具径補正量指令値</td> </tr>
+                                        <tr> <td>bit 9 ～ 15</td><td>：</td><td>リザーブ</td> </tr>
+                                    </table></dd>
+                                    <dd>※  各データに対応するビットが0の時は、そのデータは無効になります。</dd>
+                                <dt>feed</dt>
+                                    <dd>実速度がセットされます。</dd>
+                                <dt>power</dt>
+                                    <dd>実ピーク値がセットされます。</dd>
+                                <dt>freq</dt>
+                                    <dd>実周波数がセットされます。</dd>
+                                <dt>duty</dt>
+                                    <dd>実デューティがセットされます。</dd>
+                                <dt>g_kind</dt>
+                                    <dd>アシストガス種類指令値がセットされます。</dd>
+                                <dt>g_ready_t</dt>
+                                    <dd>アシストガス整定時間がセットされます。</dd>
+                                <dt>g_press</dt>
+                                    <dd>実アシストガス圧がセットされます。</dd>
+                                <dt>error</dt>
+                                    <dd>基準変位量指令値がセットされます。</dd>
+                                <dt>dsplc</dt>
+                                    <dd>工具径補正量指令値がセットされます。</dd>
+                                <dt>error2</dt>
+                                    <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                    <dd>基準変位量指令値2がセットされます。</dd>
+                                <dt>gap_axis</dt>
+                                    <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                    <dd>ギャップ制御軸が第1ギャップ制御軸、第2ギャップ制御軸どちらで指令されているかセットされます。</dd>
+                                    <dd>gap_axisは以下のように設定されます。</dd>
+                                    <ul>
+                                    <table border="1">
+                                        <colgroup>
+                                        <colgroup width="100">
+                                        <tr>
+                                            <th>gap_axis</th> <th>ギャップ制御軸の設定 </th>
+                                        </tr>
+                                        <tr> <td >0</td><td>第2ギャップ制御軸</td>  </tr>
+                                        <tr> <td >1</td><td>第1ギャップ制御軸</td> </tr>
+                                        <tr> <td >-1</td><td>ギャップ制御軸が無効</td> </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </table>
+                                    </ul>
+                                <dt>feed_dec</dt>
+                                    <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                    <dd>速度指令値の小数点以下桁数をセットします。</dd>
+                                <dt>dsplc_dec</dt>
+                                    <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                    <dd>速度指令値の小数点以下桁数をセットします。</dd>
+                                <dt>error2_dec</dt>
+                                    <dd>・Series 30i/31i-LBの場合のみ使用可能</dd>
+                                    <dd>速度指令値の小数点以下桁数をセットします。</dd>
+                                    <dd>以下に対応するデータ部を示します。</dd>
+                                    <ul>
+                                    <table border="1">
+                                        <colgroup>
+                                        <colgroup width="100">
+                                        <tr>
+                                            <th>小数点以下桁数部</th> <th>対応するデータ部</th>
+                                        </tr>
+                                        <tr> <td >feed_dec</td><td>feed</td>  </tr>
+                                        <tr> <td >dsplc_dec</td><td>dsplc</td>  </tr>
+                                        <tr> <td >error2_dec</td><td>error2</td>  </tr>
+                                    </colgroup>
+                                    </colgroup>
+                                    </table>
+                                    </ul>
+                                <dt>reserve</dt>
+                                    <dd>リザーブです。</dd>
+                            </dl>
+                        </p>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>
+                使用不可<br/>
+                16i/18i-L、30i/31i-LB以外では使用できません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                パラメータの誤り(Series 30i/31i-LBのみ)<br/>
+                レーザ発振器(パラメータNo.15030)の誤り
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <li>Series 30i/31i-LB</li>
+            <span class="dd">No.15030</span>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>-</fs0ia>
+            <fs0ib>-</fs0ib>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs15>-</fs15>
+            <fs15i>-</fs15i>
+            <fs16>-</fs16>
+            <fs18>-</fs18>
+            <fs21>-</fs21>
+            <fs16ia>-</fs16ia>
+            <fs18ia>-</fs18ia>
+            <fs21ia>-</fs21ia>
+            <fs16ib>-</fs16ib>
+            <fs18ib>-</fs18ib>
+            <fs21ib>-</fs21ib>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>-</fs0id>
+            <fs0if>-</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>-</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>-</fs16i>
+            <fs18i>-</fs18i>
+            <fs30ia>-</fs30ia>
+            <fs30ib>-</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>-</d>
+            <h>-</h>
+            <a>-</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

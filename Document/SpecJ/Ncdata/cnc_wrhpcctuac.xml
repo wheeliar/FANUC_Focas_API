@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_wrhpcctuac</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_wrhpcctuac(unsigned short FlibHndl, IODBHPAC *hpac);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>高速高精度加工調整データ(加速度入力)の書き込みを行います。</p>
+
+            <p>Series 15iでは本関数を使用できません。本関数の機能はパラメータのライト( <a href="ncdata/cnc_wrparam.htm" target="_parent">cnc_wrparam</a>、または <a href="ncdata/cnc_wrparas.htm" target="_parent">cnc_wrparas</a> )で代用可能です。本関数でライトできるデータに対応するNCパラメータについては、NCの操作説明書、およびパラメータ説明書を参照して下さい。</p>
+
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <hssb>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>hpac</name>
+                    <type>in</type>
+                    <content>
+                        <p>書き込む高速高精度加工調整データ(加速度入力)を指定するIODBHPAC構造体へのポインタです。IODBHPAC構造体は次の通りです。</p>
+
+<pre>
+typedef struct iodbhpac {
+    struct {
+        short   slct;       /* データ有効フラグ */
+        short   diff;       /* 未使用 */
+        short   fine;       /* 仕上げ度 */
+        short   acc_lv;     /* 加減速レベル */
+        long    bipl;       /* 補間前加減速加速度 */
+        short   aipl;       /* 補間後時定数 */
+        long    corner;     /* コーナ速度差 */
+        long    clamp;      /* クランプ加速度 */
+        long    c_acc;      /* 円弧半径による速度クランプの
+                                                  加速度 */
+        long    foward;     /* フィードフォワード係数 */
+        long    reserve[8]; /* 未使用 */
+     }tune[3]
+ } IODBHPAC ;
+ 
+ hpac.tune[0].slct ～ hpac.tune[0].reserve：仕上げ用調整データ
+ hpac.tune[1].slct ～ hpac.tune[1].reserve：中仕上げ用調整データ
+ hpac.tune[2].slct ～ hpac.tune[2].reserve：荒加工用調整データ
+</pre>
+                        <dl>
+                            <dt>slct</dt>
+                            <dd>データ選択フラグを指定します。<br/>
+                                <br/>
+                                <table class="dd">
+                                    <tr>
+                                        <td>bit 0</td>
+                                        <td>:</td>
+                                        <td>仕上げ度</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 1</td>
+                                        <td>:</td>
+                                        <td>加減速レベル</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 2</td>
+                                        <td>:</td>
+                                        <td>補間前加減速加速度</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 3</td>
+                                        <td>:</td>
+                                        <td>補間後時定数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 4</td>
+                                        <td>:</td>
+                                        <td>コーナ速度差</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 5</td>
+                                        <td>:</td>
+                                        <td>クランプ加速度</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 6</td>
+                                        <td>:</td>
+                                        <td>円弧半径による速度クランプの加速度</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 7</td>
+                                        <td>:</td>
+                                        <td>フィードフォワード係数</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bit 8～15</td>
+                                        <td>:</td>
+                                        <td>未使用</td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                ※  データを書き込むには、そのデータに対応するビットを１にして下さい。
+                            </dd>
+                            <br/>
+
+                            <dt>diff</dt>
+                            <dd>未使用</dd>
+                            <br/>
+
+                            <dt>fine</dt>
+                            <dd>仕上げ度を指定します。</dd>
+                            <br/>
+
+                            <dt>acc_lv</dt>
+                            <dd>加減速レベルを指定します。</dd>
+                            <br/>
+
+                            <dt>bipl</dt>
+                            <dd>補間前加減速加速度を指定します。</dd>
+                            <br/>
+
+                            <dt>aipl</dt>
+                            <dd>補間後時定数を指定します。</dd>
+                            <br/>
+
+                            <dt>corner</dt>
+                            <dd>コーナ速度差を指定します。</dd>
+                            <br/>
+
+                            <dt>clamp</dt>
+                            <dd>クランプ加速度を指定します。</dd>
+                            <br/>
+
+                            <dt>c_acc</dt>
+                            <dd>円弧半径による速度クランプの加速度を指定します。</dd>
+                            <br/>
+
+                            <dt>foward</dt>
+                            <dd>フィードフォワード係数を指定します。</dd>
+                            <br/>
+
+                            <dt>reserve[8]</dt>
+                            <dd>未使用です。</dd>
+                            <br/>
+
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </hssb>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>使用不可<br/>T系では使用できません。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                高速高精度加工調整データ(IODBHPAC)の指定が不適切です。<br/>
+                この戻り値に対して、より詳細な情報を得るには <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。<br/>
+
+                <table class="dd">
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>仕上げ度の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>:</td>
+                        <td>加減速レベルの誤り</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>:</td>
+                        <td>補間前加減速加速度の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>:</td>
+                        <td>補間後時定数の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>:</td>
+                        <td>コーナ速度差の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>:</td>
+                        <td>クランプ加速度の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>:</td>
+                        <td>円弧半径による速度クランプの加速度の誤り</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>:</td>
+                        <td>フィードフォワード係数の誤り</td>
+                    </tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>拡張ドライバ/ライブラリ機能が必要です。</content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>書き込み禁止<br/>プロテクト KEY(DI/KEY2) がOFFになっています。パラメータの書き込みが禁止になっています。</content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>CNCのモードの誤り<br/>MDIモードではありません。</content>
+        </item>
+        <add></add>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>MDIモードで使用できます。</cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_rdhpccset</name>
+            <file>ncdata/cnc_rdhpccset.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhpccset</name>
+            <file>ncdata/cnc_wrhpccset.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdhpcctupr</name>
+            <file>ncdata/cnc_rdhpcctupr.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrhpcctupr</name>
+            <file>ncdata/cnc_wrhpcctupr.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdhpcctuac</name>
+            <file>ncdata/cnc_rdhpcctuac.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

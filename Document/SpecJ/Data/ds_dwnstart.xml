@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>ds_dwnstart</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI ds_dwnstart(unsigned short FlibHndl, char *dtsv_file, short user);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            データサーバにファイルの登録(ダウンロード)開始を要求します。<br/>
+            (ダウンロードを行う前に必ず実行する必要があります)<br/>
+            本関数は、ファストイーサネット専用の機能です。組み込みイーサネットとイーサネットボードでは使用できません。
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>dtsv_file</name>
+                    <type>in</type>
+                    <content>
+                        <p>データサーバ側のファイル名へのポインタ</p>
+                           データサーバ側のファイル名指定について以下に示します。
+                        <ul>
+                            <li>ASCII文字列を使用して下さい。</li>
+                            <li>ファイル名の最後は NULLで終了して下さい。</li>
+                            <li>パスを含めた指定は行えません。</li>
+                                 (データサーバのディレクトリ"\NCDATA"に、ファイルが作成されます。)
+                            <li>ワイルドカード('*', '?')は使用できません。</li>
+                            <li>MS-DOS形式にて指定して下さい。</li>
+                                (ファイル名 8文字+'.'+拡張子 3文字+NULLの13文字以内)
+                            <p class="dd">例〉      "XXXXXXXX.XXX" + NULL</p>
+                                ただし、現在はO番号をファイル名として管理しています。
+                            <p class="dd">例〉      "O0001" + NULL</p>
+                        </ul>
+                    </content>
+                </item>
+                <item>
+                    <name>user</name>
+                    <type>in</type>
+                    <content>
+                        データサーバのタスクチャンネルの指定(11～17)<br/>
+                        この設定により、データサーバにある８つのタスクチャンネルのうち、パーソナルコンピュータがどのチャンネルを使用してファイルを転送するかを指定します。<br/>
+                        11から17までの値が指定可能です。<br/>
+                        <br/>
+                        データサーバは、各種ユーザ(NC、パーソナルコンピュータ、PMC、C言語エグゼキュータ)に対して、最大８つのサービスを行うことができます。<br/>
+                        データサーバがどのユーザに対してサービスを行うかを、NCパラメータ(No.941～No.948)に下記のユーザ番号を指定することによって設定します。<br/>
+                        <br/>
+                        <li>ユーザ番号</li>
+                        <table class="dd">
+                            <tr><td>0</td><td>：</td><td>無効</td></tr>
+                            <tr><td>1</td><td>：</td><td>CNCの第1系統</td></tr>
+                            <tr><td>2</td><td>：</td><td>CNCの第2系統</td></tr>
+                            <tr><td>3</td><td>：</td><td>CNCの第3系統</td></tr>
+                            <tr><td>4</td><td>：</td><td>CNCの第4系統</td></tr>
+                            <tr><td>5</td><td>：</td><td>CNCの第5系統</td></tr>
+                            <tr><td>6</td><td>：</td><td>CNCの第6系統</td></tr>
+                            <tr><td>7</td><td>：</td><td>CNCの第7系統</td></tr>
+                            <tr><td>8</td><td>：</td><td>CNCの第8系統</td></tr>
+                        </table>
+                        <br/>
+                        <table class="dd">
+                            <tr><td>11</td><td>：</td><td>パソコン機能No.1</td></tr>
+                            <tr><td>12</td><td>：</td><td>パソコン機能No.2</td></tr>
+                            <tr><td>13</td><td>：</td><td>パソコン機能No.3</td></tr>
+                            <tr><td>14</td><td>：</td><td>パソコン機能No.4</td></tr>
+                            <tr><td>15</td><td>：</td><td>パソコン機能No.5</td></tr>
+                            <tr><td>16</td><td>：</td><td>パソコン機能No.6</td></tr>
+                            <tr><td>17</td><td>：</td><td>パソコン機能No.7</td></tr>
+                        </table>
+                        <br/>
+                        <table class="dd">
+                            <tr><td>21</td><td>：</td><td>PMC</td></tr>
+                            <tr><td>31</td><td>：</td><td>C-EXE</td></tr>
+                        </table>
+                        <br/>
+                        <li>CNCﾊﾟﾗﾒｰﾀ 8点(ﾊﾞｲﾄ形)</li>
+                        <table class="dd">
+                            <tr><td>NO.941</td><td>：</td><td>第1チャンネル用</td></tr>
+                            <tr><td>NO.942</td><td>：</td><td>第2チャンネル用</td></tr>
+                            <tr><td>NO.943</td><td>：</td><td>第3チャンネル用</td></tr>
+                            <tr><td>NO.944</td><td>：</td><td>第4チャンネル用</td></tr>
+                            <tr><td>NO.945</td><td>：</td><td>第5チャンネル用</td></tr>
+                            <tr><td>NO.946</td><td>：</td><td>第6チャンネル用</td></tr>
+                            <tr><td>NO.947</td><td>：</td><td>第7チャンネル用</td></tr>
+                            <tr><td>NO.948</td><td>：</td><td>第8チャンネル用</td></tr>
+                        </table>
+                        <br/>
+                        NCパラメータ(No.941～No.948)には、前もってユーザ番号を設定しておいて下さい。<br/>
+                        (全て無効の場合、CNCの第1系統が第1チャンネルを使用することになります。)<br/>
+                        <br/>
+                        本パラメータに パソコン機能のユーザ(11～17)を設定する場合、CNCで使用するチャンネルも系統毎に指定する必要があります。<br/>
+                        ユーザ番号を設定しない場合、CNC、データサーバ間の操作ができませんので注意して下さい。<br/>
+                        <li>設定例</li>
+                        <table class="dd">
+                            <tr><td>第１チャンネル(No.941)</td><td>：</td><td>１  (CNCの第1系統)</td></tr>
+                            <tr><td>第２チャンネル(No.942)</td><td>：</td><td>２  (CNCの第2系統)</td></tr>
+                            <tr><td>第３チャンネル(No.943)</td><td>：</td><td>１１(パソコン機能No.1)</td></tr>
+                            <tr><td>第４チャンネル(No.944)</td><td>：</td><td>１２(パソコン機能No.2)</td></tr>
+                        </table>
+                    </content>
+                </item>
+            </cmn>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+       <item>
+            <name>EW_BUSY</name>
+            <content>
+                <a href="Data/ds_dwnstart.htm" target="_parent">ds_dwnstart</a>関数を実行済みです。<br/>
+                <a href="Data/ds_dwnend.htm" target="_parent">ds_dwnend</a>関数にて前回の出力を終了させて下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_PARAM</name>
+            <content>
+                タスクチャンネル設定異常<br/>
+                ・NCのパラメータ(No.941～948)に、パソコン機能に対応する11～17の設定が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                タスクチャンネル設定異常<br/>
+                ・関数において、パソコン機能に対応する11～17以外の引数の指定がされています。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                ・拡張ドライバ/ライブラリ機能が必要です。<br/>
+                ・データサーバ機能が必要です。<br/>
+                ・ハードディスクが装着されていません。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>
+                ・データサーバが処理中ですのでリトライして下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_DTSRVR</name>
+            <content>
+                データサーバのエラー<br/>
+                この戻り値に対して、より詳細な情報を得るには <a href="misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a> 関数を実行して下さい。ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。<br/>
+                詳しくはイーサネットボード・データサーバボード取扱説明書を参照して下さい。
+                <table class="dd">
+                    <tr><td>0xf000，0xfe00～</td><td>:</td><td>データサーバが返すエラーコード</td></tr>
+                    <tr><td>1</td>               <td>:</td><td>データサーバの処理タイムアウト</td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr>
+              <p>イーサネット機能とデータサーバ機能が必要です。</p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>ds_download</name>
+            <file>Data/ds_download.htm</file>
+        </item>
+        <item>
+            <name>ds_dwnend</name>
+            <file>Data/ds_dwnend.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

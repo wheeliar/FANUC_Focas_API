@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdmdipntr</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdmdipntr(unsigned short FlibHndl, ODBMDIP *mdip);</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>MDI運転中プログラムに関連する実行ポインタ情報を獲得します。<br/>
+                獲得できる内容は以下の項目です。</p>
+            <ul>
+                <li>実行中のプログラム番号</li>
+                    MDI運転の場合、基本的に0となります。(Series 16i/18i-Wの場合は -1 です)<br/>
+                    実行中のプログラムがサブプログラムの場合、サブプログラム番号となります。<br/>
+                <br/>
+                <li>実行ブロックポインタ</li>
+                    現在実行中のブロックポインタです。<br/>
+                <br/>
+                <li>先読みプログラム番号</li>
+                    先読みしているプログラム番号です。<br/>
+                    MDI運転の場合、基本的に0となり、サブプログラムを先読みしている場合、そのプログラム番号となります。<br/>
+                <br/>
+                <li>先読みブロックポインタ</li>
+                    先読みしているプログラム内の最後のブロックポインタです。
+            </ul>
+            <p>Series 15/15iでは、先読みブロックポインタ以外は無効です(常に0が読めます)。<br/>
+               Series 16i/18i-Wの場合は、「先読みプログラム番号」、「先読みブロックポインタ」は無効です。<br/>
+               Series 30i, 0i-D/F, PMi-Aの場合は、「実行中のプログラム番号」、「実行ブロックポインタ」は無効です。</p>
+            <p>プログラム番号8桁の場合も使用出来ますが、APIを8桁対応に切り替える必要があります。Series 15/15iでは必ずAPIを8桁対応に切り替えて下さい。(詳しくは「<a href="general.htm#O8" target="_parent">プログラム番号8桁対応</a>」を参照して下さい)</p>
+        </cmn>
+
+        <is>
+            <p>MDI運転中プログラムに関連する実行ポインタ情報を獲得します。<br/>
+                獲得できる内容は以下の項目です。</p>
+            <ul>
+                <li>先読みプログラム番号</li>
+                    MDI運転の場合、0となります
+                <li>先読みブロックポインタ</li>
+                    先読みしているプログラム内の最後のブロックポインタです。
+            </ul>
+            <p>プログラム番号8桁の場合も使用出来ますが、APIを8桁対応に切り替える必要があります。
+               (詳しくは「<a href="general.htm#O8" target="_parent">プログラム番号8桁対応</a>」を参照して下さい)</p>
+        </is>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mdip</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                        実行ポインタ情報を返すODBMDIP構造体へのポインタです。<br/>
+                        ODBMDIP構造体は次の通りです。</p>
+<pre>
+<b>プログラム番号4桁</b>
+typedef struct odbmdip {
+     short  mdiprog;    /* 実行中のプログラム番号 */
+     long   mdipntr;    /* 実行ブロックポインタ */
+     short  crntprog;   /* 先読みプログラム番号 */
+     long   crntpntr;   /* 先読みブロックポインタ */
+} ODBMDIP ;
+
+<b>プログラム番号8桁</b>
+typedef struct odbmdip {
+     long   mdiprog;    /* 実行中のプログラム番号 */
+     long   mdipntr;    /* 実行ブロックポインタ */
+     long   crntprog;   /* 先読みプログラム番号 */
+     long   crntpntr;   /* 先読みブロックポインタ */
+} ODBMDIP ;
+</pre>
+                    </content>
+                </item>
+            </vc>
+        </common>
+
+        <is>
+            <hssb>
+                <vc>
+                    <item>
+                        <name>FlibHndl</name>
+                        <type>in</type>
+                        <content>
+                            <p>
+                                ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                            </p>
+                        </content>
+                    </item>
+                    <item>
+                        <name>mdip</name>
+                        <type>out</type>
+                        <content>
+                            <p>
+                            実行ポインタ情報を返すODBMDIP構造体へのポインタです。<br/>
+                            ODBMDIP構造体は次の通りです。</p>
+    <pre>
+<b>プログラム番号4桁</b>
+typedef struct odbmdip {
+     short  mdiprog;    /* 未使用 */
+     long   mdipntr;    /* 未使用 */
+     short  crntprog;   /* 先読みプログラム番号   */
+     long   crntpntr;   /* 先読みブロックポインタ */
+} ODBMDIP ;
+
+<b>プログラム番号8桁</b>
+typedef struct odbmdip {
+     long   mdiprog;    /* 未使用 */
+     long   mdipntr;    /* 未使用 */
+     long   crntprog;   /* 先読みプログラム番号   */
+     long   crntpntr;   /* 先読みブロックポインタ */
+} ODBMDIP ;
+</pre>
+                        </content>
+                    </item>
+                </vc>
+            </hssb>
+        </is>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item class="xis">
+            <name>EW_FUNC</name>
+            <content>
+                使用不可 (Series 15i,16/18, 16i/18i, Power Mate i)<br/>
+                プログラム番号8桁用として作成されていません。<br/>
+            <a href="general.htm#O8" target="_parent">「プログラム番号8桁対応」</a>を参照して下さい。
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                拡張ドライバ/ライブラリ機能が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_MODE</name>
+            <content>
+                CNCモードの誤り<br/>
+                MDIモードに変更して下さい。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+
+        <type>
+            <li>Series 16i/18i-W</li>
+            <span class="dd">3203# = 1 (必ず設定します)</span>
+        </type>
+    </parameter>
+
+    <is_parameter>
+    </is_parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+        <cmn>
+            本機能はMDIモードで使用する必要があります。
+        </cmn>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>E</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>H</fs16ia>
+            <fs18ia>H</fs18ia>
+            <fs21ia>H</fs21ia>
+            <fs16ib>H</fs16ib>
+            <fs18ib>H</fs18ib>
+            <fs21ib>H</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+        
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrmdiprog</name>
+            <file>Program/cnc_wrmdiprog.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrmdipntr</name>
+            <file>Program/cnc_wrmdipntr.htm</file>
+        </item>
+    </reference>
+
+
+
+  </func>
+</root>

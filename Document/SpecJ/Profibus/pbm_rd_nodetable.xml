@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pbm_rd_nodetable</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pbm_rd_nodetable( unsigned short FlibHndl, short node, char  *table ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>マスタ機能が管理しているスレーブ局の一覧を取得します。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>node</name>
+                    <type>in</type>
+                    <content>
+                        <p>取得したいスレーブ局番を指定します。</p>
+                        <p>-1 を指定した場合、全スレーブ局(126局)分の情報を取得できます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>table</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            取得したスレーブ局の状態を返す変数へのポインタを指定します。<br/>
+                            nodeに-1 を指定した場合は、126バイト以上の領域のポインタを指定する必要があります。<br/>
+                            nodeに０以上のスレーブ局番を指定した場合は、そのスレーブ局番に関する１バイト分のデータを返します。
+                        </p>
+                        <table border="0" >
+                            <tr><td>0x00</td><td>：</td><td>無効なスレーブ局番              </td></tr>
+                            <tr><td>0x01</td><td>：</td><td>有効なスレーブ局番（正常通信中）</td></tr>
+                            <tr><td>0x02</td><td>：</td><td>有効なスレーブ局番（通信異常）  </td></tr>
+                            <tr><td>0xff</td><td>：</td><td>マスタ局番(自ノード)            </td></tr>
+                        </table>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>オプションなし<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no
+                <table border="0">
+                    <tr><td>40</td><td>：</td><td>PROFIBUS マスタボードがない    </td></tr>
+                    <tr><td>41</td><td>：</td><td>PROFIBUS マスタ機能がない      </td></tr>
+                    <tr><td>42</td><td>：</td><td>PROFIBUS マスタ機能用SRAMがない</td></tr>
+                </table>
+                ODBERR構造体のメンバ err_dtno
+                <table border="0">
+                    <tr><td>なし</td><td></td><td></td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>実行拒否<br/>
+                パラメータの取得に失敗しました。<br/>
+                この戻り値に対して、より詳細な情報を得るには
+                <a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。<br/>
+                ODBERR構造体のメンバ err_no
+                <table border="0">
+                    <tr><td>10</td><td>：</td><td>File SRAMからの読み取りに失敗した</td></tr>
+                </table>
+                ODBERR構造体のメンバ err_dtno
+                <table border="0">
+                    <tr><td>なし</td><td></td><td></td></tr>
+                </table>
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <need>PROFIBUS-DPマスタ機能</need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <p>
+            <fs0id>H</fs0id>
+            <fs0if>H</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </p>
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>H</fs30ib>
+        </l>
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>H</a>
+        </pw>
+        <!-- 30i(WinCE) -->
+        <is>
+            <!-- M（ミリング） -->
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <!-- T（旋盤） -->
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>pbm_rd_nodeinfo</name>
+            <file>Profibus/pbm_rd_nodeinfo.htm</file>
+        </item>
+        <item>
+            <name>pbm_rd_slot</name>
+            <file>Profibus/pbm_rd_slot.htm</file>
+        </item>
+        <item>
+            <name>pbm_rd_slotinfo</name>
+            <file>Profibus/pbm_rd_slotinfo.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>

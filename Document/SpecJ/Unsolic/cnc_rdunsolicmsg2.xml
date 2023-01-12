@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_rdunsolicmsg2</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_rdunsolicmsg2( short bill, IDBUNSOLICMSG2 *data2 );</prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+<p>
+CNC主導メッセージデータの読み込みを行います。 本関数は、Series 30i/31i/32i, 0i-D/F, PMi-Aでのみ有効です。Visual Basic では、使用できません。本関数を使用する場合は、Visual C++ をご使用下さい。 <br/>
+本機能の詳細については、<a href="./Unsolic.htm" target="_parent">CNC主導メッセージ通知機能</a>を参照下さい。
+</p>
+<p>
+本関数の引数には、ライブラリハンドルは必要ありません。
+</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <vc>
+                <item>
+                    <name>bill</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            メッセージデータ読込みのためのハンドルを指定します。 このデータは、<a href="UnSolic/cnc_unsolicstart.htm" target="_parent">cnc_unsolicstart</a>関数で取得した値か、メッセージ受信関数の引数(lParam)で通知される値を指定します。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>data</name>
+                    <type>out</type>
+                    <content>
+                        <p>
+                            CNC主導メッセージデータを読み込むためのIDBUNSOLICMSG2構造体へのポインタ を指定します。IDBUNSOLICMSG2構造体は以下の通りです。 
+                        </p>
+<pre>
+typedef struct idbunsolicmsg2 {
+    unsigned short      getnum;
+    char                dummy[2];
+    UNSOLICMSG_TYPE_MSG get[3];
+} IDBUNSOLICMSG2 ;
+
+typedef struct unsolicmsg_type_msg {
+    unsigned short      type;
+    char                dummy1[2];
+    union {
+        typedef {
+            unsigned short  path;
+            char            dummy2[2];
+            unsigned long   size;
+            void            *data;
+        } pmc;
+        typedef {
+            unsigned short  path;
+            char            dummy3[2];
+            unsigned long   num;
+            void            *data;
+        } macro;
+    } msg;
+} UNSOLICMSG_TYPE_MSG ;
+</pre>
+                        <dl>
+                            <dt>getnum</dt>
+                                <dd>取得数</dd>
+                                <dd>取得したメッセージの個数です。</dd>
+                                <dd>範囲）1 ～ 3</dd>
+
+                            <dt>get[n].msg.type</dt>
+                                <dd>取得メッセージ種類</dd>
+                                    <table class="dd">
+                                        <tr><td>1</td> <td>:</td> <td>ＰＭＣデータ</td></tr>
+                                        <tr><td>3</td> <td>:</td> <td>カスタムマクロ変数</td></tr>
+                                        <tr><td>4</td> <td>:</td> <td>非保持型ＲＴＭ変数</td></tr>
+                                        <tr><td>5</td> <td>:</td> <td>保持型ＲＴＭ変数(0i-F,30i/31i/32iのみ)</td></tr>
+                                    </table>
+
+                            <dt>get[n].msg.pmc.path</dt>
+                                <dd>取得メッセージのＰＭＣ系統番号</dd>
+                                <dd>この値は、"取得メッセージ種類"が"1"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 3（有効なＰＭＣ系統番号に依存します。）</dd>
+
+                            <dt>get[n].msg.pmc.size</dt>
+                                <dd>取得メッセージのＰＭＣサイズ(バイト)</dd>
+                                <dd>この値は、"取得メッセージ種類"が"1"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なＰＭＣ領域、及び"送信数"に依存します。）</dd>
+
+                            <dt>get[n].msg.pmc.data</dt>
+                                <dd>取得メッセージのＰＭＣデータ格納用バッファへのポインタ</dd>
+                                <dd>このデータのサイズは、cnc_wrunsolicprm2関数の"送信用パラメータのＰＭＣサイズ(バイト)"で設定したサイズ分確保する必要があります。</dd>
+                                <dd>この値は、"取得メッセージ種類"が"1"の場合のみ有効です。</dd>
+
+                            <dt>get[n].msg.macro.path</dt>
+                                <dd>取得メッセージのＣＮＣ系統番号</dd>
+                                <dd>この値は、"取得メッセージ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+                                <dd>範囲）1 ～ 3（有効なＣＮＣ系統番号に依存します。）</dd>
+
+                            <dt>get[n].msg.macro.num</dt>
+                                <dd>取得メッセージのマクロ変数個数</dd>
+                                <dd>この値は、"取得メッセージ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+                                <dd>範囲）（有効なマクロ変数領域、及び"送信数"に依存します。）</dd>
+
+                            <dt>get[n].msg.macro.data</dt>
+                                <dd>取得メッセージのマクロ変数格納用バッファへのポインタ</dd>
+                                <dd>このデータのサイズは、cnc_wrunsolicprm2関数の"送信用パラメータのマクロ変数個数"で設定したサイズ分確保する必要があります。</dd>
+                                <dd>この値は、"取得メッセージ種類"が"3"、"4"、または"5"の場合のみ有効です。</dd>
+
+                            <dt>設定例)</dt>
+                                    <table class="dd">
+                                         <tr><td>IPアドレス         </td> <td>:</td> <td>192.168.0.1                          </td></tr>
+                                         <tr><td>ポート番号         </td> <td>:</td> <td>8196                                 </td></tr>
+                                         <tr><td>制御方式           </td> <td>:</td> <td>簡易方式                             </td></tr>
+                                         <tr><td>制御用パラメータ   </td> <td>:</td> <td>ＰＭＣアドレス"1:R2000"              </td></tr>
+                                         <tr><td>リトライ回数       </td> <td>:</td> <td>3回                                  </td></tr>
+                                         <tr><td>タイムアウト時間   </td> <td>:</td> <td>10秒                                 </td></tr>
+                                         <tr><td>送信数             </td> <td>:</td> <td>3個                                  </td></tr>
+                                         <tr><td>送信用パラメータ[0]</td> <td>:</td> <td>ＰＭＣ領域"1:R2100-1:R2149"          </td></tr>
+                                         <tr><td>送信用パラメータ[1]</td> <td>:</td> <td>カスタムマクロ変数領域"1:3011"       </td></tr>
+                                         <tr><td>送信用パラメータ[2]</td> <td>:</td> <td>非保持型ＲＴＭ変数領域"1:0-1:4"      </td></tr>
+
+                                        <tr><td><br/></td></tr>
+
+
+                                        <tr><td>IDBUNSOLICMSG2 data2;<br/>
+                                                char    msg1[50];                   // msg1格納用バッファ<br/>
+                                                double  msg2[2];                    // msg2格納用バッファ<br/>
+                                                double  msg3[5];                    // msg3格納用バッファ<br/></td></tr>
+                                    </table>
+                                    <table class="dd">
+                                        <tr><td>data2.get[0].msg.pmc.data   = msg1;</td> <td>//</td> <td>1:R2100-1:2149の内容</td></tr>
+                                        <tr><td>data2.get[1].msg.macro.data = msg2;</td> <td>//</td> <td>1:3011の内容        </td></tr>
+                                        <tr><td>data2.get[2].msg.macro.data = msg3;</td> <td>//</td> <td>1:0-1:4の内容       </td></tr>
+                                    </table>
+                        </dl>
+                    </content>
+                </item>
+            </vc>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>本関数は使用できません。</content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+              指定されたメッセージデータ読込みのためのハンドル(bill)用のメッセージは送信されていません。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr><p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 0i-D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <dd>上記２つの機能は必要ありません。</dd>
+              <p>イーサネットボードを使用のとき、</p>
+              <dd>イーサネット機能のみ必要です。</dd>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <fast>
+          <ul>
+              No.904#4=1   :ＣＮＣ主導メッセージ通知機能(必ず設定して下さい)<br/>
+              No.904#5     :（DNSクライアント機能を利用する場合、1に設定して下さい）<br/>
+              No.14880#4=1 :ＣＮＣ主導メッセージ通知機能(組込みEthernet(内蔵ポート))<br/>
+              No.14880#5   :(DNSクライアント機能を利用する場合、1に設定して下さい)(組込みEthernet(内蔵ポート))<br/>
+          </ul>
+        </fast>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>E</fs30ia>
+            <fs30ib>E</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>E</fs0id>
+            <fs0if>E</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>E</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>E</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_wrunsolicprm</name>
+            <file>Unsolic/cnc_wrunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_wrunsolicprm2</name>
+            <file>Unsolic/cnc_wrunsolicprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicprm</name>
+            <file>Unsolic/cnc_rdunsolicprm.htm</file>
+        </item>
+        <item>
+            <name>cnc_rdunsolicprm2</name>
+            <file>Unsolic/cnc_rdunsolicprm2.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstart</name>
+            <file>Unsolic/cnc_unsolicstart.htm</file>
+        </item>
+        <item>
+            <name>cnc_unsolicstop</name>
+            <file>Unsolic/cnc_unsolicstop.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>pmc_rdalmmsg</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI pmc_rdalmmsg(unsigned short FlibHndl, short s_number, short *read_num, short *exist, ODBPMCALM *pmcalm); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>PMCのアラームメッセージを読み取ります。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                    </content>
+                </item>
+                <item>
+                    <name>s_number</name>
+                    <type>in</type>
+                    <content>
+                       リードするPMCアラームメッセージの取得開始番号(=1～)を指定します。
+                    </content>
+                </item>
+                <item>
+                    <name>read_num</name>
+                    <type>in/out</type>
+                    <content>
+                        読み取るアラームの個数へのポインタを指定します。<br/>
+                        関数コール前に読み取るアラームの個数を指定し、関数コール後に実際に読み取った個数が設定されます。
+                    </content>
+                </item>
+                <item>
+                    <name>exist</name>
+                    <type>out</type>
+                    <content>
+                        read_numで指定した数より多くアラームが発生している場合に'1'を返します。
+                        <table class="dd">
+                            <tr>
+                                <td>-1 </td><td>: </td><td>アラームなし</td>
+                            </tr>
+                            <tr>
+                                <td>0 </td><td>: </td><td>全てのアラームを読み込んだ。</td>
+                            </tr>
+                            <tr>
+                                <td>1 </td><td>: </td><td>まだアラームが存在する。</td>
+                            </tr>
+                        </table>
+                        <br/>
+                        まだアラームが存在する場合、s_number = s_number + read_numとし、もう１度、本関数を呼出す事で、残りのアラームを読み取る事ができます。
+                    </content>
+                </item>
+                <item>
+                    <name>pmcalm</name>
+                    <type>out</type>
+                    <content>
+                        データを返すODBPMCALM構造体へのポインタです。<br/>
+                        この配列は(*read_num)で指定した数分必要です。ODBPMCALM構造体は次の通りです。
+
+<pre>
+typedef struct  odbpmcalm {
+        char    almmsg[128] ;    /* アラームメッセージ */
+} ODBPMCALM ;
+</pre>
+
+                        <dl>
+                            <dt>almmsg</dt>
+                                <dd>アラームメッセージ文字列がセットされます。<br/>
+                                    メッセージの終端は、NULL('\0')となります。<br/>
+                                    <span class="xis">
+                                    アラームメッセージは、fwpmcalm.iniに記述されています。(30i, 0i-D/F, PMi-Aを除く)<br/>
+                                    fwpmcalm.iniファイル内のメッセージを変更することで、任意のアラームメッセージを取得する事ができます。<br/>
+                                    fwpmcalm.iniは、アプリケーションのあるフォルダかシステムフォルダにコピーしてください。<br/>
+                                    このファイルが存在しない場合、ライブラリは、内部に持つデフォルトのメッセージを出力します。<br/>
+                                    </span>
+                                </dd>
+                        </dl>
+                        <span class="xis">
+                        <dl>
+                            <dt>fwpmcalm.iniファイルは次のような形式です。</dt>
+                                <dd>[セクション]</dd>
+                                <dd>キー = "アラームメッセージ文字列"</dd>
+                        <br/>
+                                <dd>セクション</dd>
+                        <table class="dd">
+                                    <tr>
+                                        <td>PMC-NA</td><td> : </td><td>PMC-NA用のメッセージである事を示します。</td>
+                                    </tr>
+                                    <tr>
+                                        <td>OTHERS</td><td> : </td><td>PMC-NA以外用のメッセージである事を示します。</td>
+                                    </tr>
+                        </table>
+                                <dd>キー</dd>
+                        <table class="dd">
+                                    キーは次の形式で定義されています。
+                                    <tr>
+                                        <td>エラーメッセージの場合</td><td>: </td><td>ERxx (xxはエラー番号)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>ワーニングメッセージの場合</td><td> : </td><td>WNxx (xxはワーニング番号)</td>
+                                    </tr>
+                        </table>
+                        <table class="dd">
+                                    同一の番号が複数ある場合、キーの後に続けて '_x'(x=1,2,...)が記述されています。
+                        </table>
+                                <dd>アラームメッセージ文字列</dd>
+                        <table class="dd">
+                                    任意の文字列を最大128文字(終端のNULLを含む)まで指定できます。<br/>
+                                    文字列中に';'は使用できません。<br/>
+                                    また、メッセージ中にグループ番号等が表示されるアラームは、メッセージ中に '%02d'(10進数の場合)、'%02x'(16進数の場合)が記述されています。
+                        </table>
+                        <br/>
+                                <dd>例：</dd>
+                        <table class="dd">
+                                    <tr><td>[OTHERS]</td></tr>
+                                    <tr><td>ER01</td><td> = </td><td>"ER01 PROGRAM DATA ERROR"</td></tr>
+                                    <tr><td>ER35_1</td><td> = </td><td>"ER35 TOO MUCH OUTPUT DATA IN GROUP(%02d)"</td></tr>
+                                    <tr><td>WN01</td><td> = </td><td>"WN01 LADDER MAX SIZE ERROR"</td></tr>
+                        </table>
+                        <br/>
+                                <dd>fwpmcalm.iniファイル変更の注意点</dd>
+                        <table class="dd">
+                                    <tr><td>1)</td><td>セクション／キーは変更しないで下さい。</td></tr>
+                                    <tr><td>2)</td><td>キーは削除可能です。削除した場合、ライブラリが用意している固定メッセージが取得されます。</td></tr>
+                                    <tr><td>3)</td><td>アラームメッセージ文字列の変更は可能ですが、新しいキーの追加はできません。</td></tr>
+                        </table>
+
+                        </dl>
+                        </span>
+                    </content>
+                </item>
+            </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_NOPMC</name>
+            <content>
+                PMCが存在しません。
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>
+                データ番号の誤り<br/>
+                メッセージの取得開始番号(s_number)の指定が不適切です。
+            </content>
+        </item>
+        <item>
+            <name>EW_DATA</name>
+            <content>
+                データの誤り<br/>
+                データ(read_num)が設定可能範囲を越えています。 
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb>拡張ドライバ/ライブラリ機能が必要です。</hssb>
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、Series 16i/18i/21i-B, 0i-B/C/D/F, Series 30i, PMi-A に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+              <p><ul>上記２つの機能は必要ありません。</ul></p>
+              <p>イーサネットボードを使用のとき、</p>
+              <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter></parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode></mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>O</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>H</fs0ia>
+            <fs0ib>O</fs0ib>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs15>H</fs15>
+            <fs15i>X</fs15i>
+            <fs16>H</fs16>
+            <fs18>H</fs18>
+            <fs21>H</fs21>
+            <fs16ia>O</fs16ia>
+            <fs18ia>O</fs18ia>
+            <fs21ia>O</fs21ia>
+            <fs16ib>O</fs16ib>
+            <fs18ib>O</fs18ib>
+            <fs21ib>O</fs21ib>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>O</fs0id>
+            <fs0if>O</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>O</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>O</fs16i>
+            <fs18i>O</fs18i>
+            <fs30ia>O</fs30ia>
+            <fs30ib>O</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>O</d>
+            <h>O</h>
+            <a>O</a>
+        </pw>
+
+        <!-- 30i(WinCE) -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <!-- W（ワイヤカット） -->
+            <w>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+  </func>
+</root>

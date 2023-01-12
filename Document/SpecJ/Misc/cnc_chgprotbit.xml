@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_chgprotbit</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>
+            FWLIBAPI short WINAPI cnc_chgprotbit(unsigned short FlibHndl, short user_id, unsigned char *pattern, long keyword);
+        </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn>
+            <p>各種NCデータの保護状態(保護パターンデータ)を変更します。
+            <br/>保護パターンデータは各種NCデータに対応するフラグを集めたビットパターンデータであり、MTB殿向け、エンドユーザ殿向けの2種類あります。<br/>
+            このデータは現場NC上で設定され、Ethernetのアプリケーション起動時にEthernetライブラリによって、そのプロセス毎に読み込まれています(保護パターンデータのコピーイメージ)。
+            <br/>この関数では、保護パターンデータのコピーイメージを変更できます。保護パターンデータのコピーイメージはプロセス毎に独立しており、その変更は、本関数を発行したプロセスが保持しているものに対してのみ有効です。</p>
+
+            <p>変更の際には、NC上で設定したパスワードと同じキーワードを引数に指定してください。特にキーワードに０を指定した場合には、保護パターンデータのコピーイメージはNC上で設定したオリジナルの状態にリセットされます。
+            <br/>なお、正しくないキーワードが指定された場合、エラーコードEW_PASSWDで戻ります。 </p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <ethr>
+            <cmn>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>user_id</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            NCデータを保護するデータの設定者(MTB殿､エンドユーザ殿)を指定します。 
+                        </p>
+                        <table class="dd">
+                            <tr>
+                                <td>1</td>
+                                <td>:</td>
+                                <td>MTB 殿</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>:</td>
+                                <td>エンドユーザ殿</td>
+                            </tr>
+                        </table>
+                    </content>
+                </item>
+                <item>
+                    <name>pattern</name>
+                    <type>in/out</type>
+                    <content>
+                        <div class="dd">
+                            保護を外すNCデータを指定したビットパターンを格納するデータへのポインタです。データを格納するには４バイトの連続した領域を確保して下さい。<br/>
+                            ビットに1を設定すると、対応するNCデータの保護を外すことを意味します。<br/>
+                            各ビットの意味は次の通りです。
+                        </div>
+                        <ul>
+                            <table border="1">
+                                <tr>
+                                    <td>pattern[0]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>ビット0</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(PMCラダー)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット1</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(C言語エグゼキュータ)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット2</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(マクロエグゼキュータ/オーダメードマクロ)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット3</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(PMC C-LANGUAGE)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット4</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(保守情報)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット5</td>
+                                            <td>:</td>
+                                            <td>FROMユーザファイル(組込み型マクロ機能)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット6</td>
+                                            <td>:</td>
+                                            <td>(リザーブ)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット7</td>
+                                            <td>:</td>
+                                            <td>SRAM全体イメージ</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[1]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>ビット0</td>
+                                            <td>:</td>
+                                            <td>NCプログラム</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット1</td>
+                                            <td>:</td>
+                                            <td>Pコードマクロ変数</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット2</td>
+                                            <td>:</td>
+                                            <td>NCパラメータ</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット3</td>
+                                            <td>:</td>
+                                            <td>PMCパラメータ(R [内部リレー]、T [可変タイマ]、K [キープリレー]、C [カウンタ]、D [データテーブル])</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ビット4～7</td>
+                                            <td>:</td>
+                                            <td>(リザーブ)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[2]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>ビット0～7</td>
+                                            <td>:</td>
+                                            <td>(リザーブ)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>pattern[3]</td>
+                                    <td>
+                                    <table>
+                                        <colgroup valign="top" width="56">
+                                        <colgroup align="center" valign="top">
+                                        <colgroup valign="top">
+                                        <tr>
+                                            <td>ビット0～7</td>
+                                            <td>:</td>
+                                            <td>(リザーブ)</td>
+                                        </tr>
+                                        </colgroup>
+                                        </colgroup>
+                                        </colgroup>
+                                    </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            </ul>
+                            <p>関数実行後には、更新された現在の各種NCデータの保護状態を示すビットパターンが返されます。</p>
+                    </content>
+                </item>
+                <item>
+                    <name>keyword</name>
+                    <type>in</type>
+                    <content>
+                        <p>NCに送信するキーワードです。最大８桁の10進数を指定できます。<br/>
+                        NCに保存されているパスワードと一致した場合、patternに指定したビットパターンに対応するNCデータの保護が外れます。<br/>
+                        特に、keywordに0を指定した場合には、保護パターンデータのコピーイメージはNC上で設定したオリジナルの状態にリセットされます。
+                        </p>
+                    </content>
+                </item>
+            </cmn>
+        </ethr>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+            <name>EW_FUNC</name>
+            <content>この関数は使用できません。<br/>
+            NCコントロールソフトウェア、またはイーサネットファームウェアが本関数をサポートしていない旧版のものです。 
+            </content>
+        </item>
+        <item>
+            <name>EW_NUMBER</name>
+            <content>データ番号の誤り<br/>
+                    user_idの値が範囲外です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PASSWD</name>
+            <content>与えられたキーワードが正しくありません。<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                 <table>
+                    <colgroup align="center" valign="top">
+                    <colgroup align="center" valign="top">
+                    <colgroup valign="top">
+                    <tr>
+                        <td>0</td>
+                        <td>:</td>
+                        <td>EW_PASSWD以外のエラー</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>:</td>
+                        <td>キーワード不一致(試行制限回数内)</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>:</td>
+                        <td>試行制限回数(3回)を超えた</td>
+                    </tr>
+                    </colgroup>
+                    </colgroup>
+                    </colgroup>
+                </table>
+                err_no = 2であるとき、ODBERR構造体のメンバerr_dtno に試行カウンタの値が返されます。
+                この場合には、NCの電源を再投入することによって試行カウンタをリセットする必要があります。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <ethr>
+            <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+            <p>但し、Series 16i/18i/21i-B, 0i-B/C に関しては次のようになります。</p>
+            <p>組込みイーサネットを使用のとき、</p>
+            <p><ul>上記２つの機能は必要ありません。</ul></p>
+            <p>イーサネットボードを使用のとき、</p>
+            <p><ul>イーサネット機能のみ必要です。</ul></p>
+        </ethr>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            <ul>
+                <li>Series 16i/18i/21i, 0i<br/></li>
+                    <table>
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <colgroup valign="top">
+                        <tr>
+                            <td>No.250～253</td><td>:</td><td>EthernetにおけるNCデータへのアクセスにおいて、各ビットに対応するデータを
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>アクセス可能とします。</td></tr>
+                                <tr><td>1</td><td>:</td><td>アクセス禁止とします。</td></tr>
+                            </table>
+                            各ビットの意味は下表を参照下さい。</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.254</td><td>:</td><td>Ethernet用パスワード(MTB殿用)</td></tr>
+
+                        <tr>
+                            <td>No.255</td><td>:</td><td>Ethernet用キーワード(MTB殿用)
+                            <table class="dd">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr><td/><td>パラメータNo.250～253,254の変更を許可するためのパスワードとキーワード。</td></tr>
+                                <tr><td>※</td><td>本パラメータは、MTB殿が設定します。</td></tr>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>No.260～263</td><td>:</td><td>EthernetにおけるNCデータへのアクセスにおいて、各ビットに対応するデータを
+                            <table class="dd">
+                                <tr><td>0</td><td>:</td><td>アクセス可能とします。</td></tr>
+                                <tr><td>1</td><td>:</td><td>アクセス禁止とします。</td></tr>
+                            </table>
+                            各ビットの意味は下表を参照下さい。</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.264</td><td>:</td><td>Ethernet用パスワード(エンドユーザ殿用)</td>
+                        </tr>
+
+                        <tr>
+                            <td>No.265</td><td>:</td><td>Ethernet用キーワード(エンドユーザ殿用)
+                            <table class="dd">
+                                <colgroup valign="top">
+                                <colgroup valign="top">
+                                <tr><td/><td>パラメータNo.260～263,264の変更を許可するためのパスワードとキーワード。</td></tr>
+                                <tr><td>※</td><td>本パラメータは、エンドユーザ殿が設定します。</td></tr>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        </colgroup>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                </ul>
+                <ul>
+                    <table border="1">
+                        <tr>
+                            <td>No.250<br/>
+                            No.260</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>ビット0</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(PMCラダー)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット1</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(C言語エグゼキュータ)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット2</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(マクロエグゼキュータ/オーダメードマクロ)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット3</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(PMC C-LANGUAGE)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット4</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(保守情報)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット5</td>
+                                    <td>:</td>
+                                    <td>FROMユーザファイル(組込み型マクロ機能)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット6</td>
+                                    <td>:</td>
+                                    <td>(リザーブ)</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット7</td>
+                                    <td>:</td>
+                                    <td>SRAM全体イメージ</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.251<br/>
+                            No.261</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>ビット0</td>
+                                    <td>:</td>
+                                    <td>NCプログラム</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット1</td>
+                                    <td>:</td>
+                                    <td>Pコードマクロ変数</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット2</td>
+                                    <td>:</td>
+                                    <td>NCパラメータ</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット3</td>
+                                    <td>:</td>
+                                    <td>PMCパラメータ(R [内部リレー]、T [可変タイマ]、K [キープリレー]、C [カウンタ]、D [データテーブル])</td>
+                                </tr>
+                                <tr>
+                                    <td>ビット4～7</td>
+                                    <td>:</td>
+                                    <td>(リザーブ)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.252<br/>
+                            No.262</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>ビット0～7</td>
+                                    <td>:</td>
+                                    <td>(リザーブ)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>No.253<br/>
+                            No.263</td>
+                            <td>
+                            <table>
+                                <colgroup valign="top" width="56">
+                                <colgroup align="center" valign="top">
+                                <colgroup valign="top">
+                                <tr>
+                                    <td>ビット0～7</td>
+                                    <td>:</td>
+                                    <td>(リザーブ)</td>
+                                </tr>
+                                </colgroup>
+                                </colgroup>
+                                </colgroup>
+                            </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <colgroup align="top" valign="top">
+                        <colgroup valign="top">
+                        <tr><td>注)</td><td>i Series Model-Aでは、No.252,253,262,263 はありません。</td></tr>
+                        </colgroup>
+                        </colgroup>
+                    </table>
+                    </ul>
+        </type>
+    </parameter>
+
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>E</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>E</fs16ia>
+            <fs18ia>E</fs18ia>
+            <fs21ia>E</fs21ia>
+            <fs16ib>E</fs16ib>
+            <fs18ib>E</fs18ib>
+            <fs21ib>E</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>E</fs16i>
+            <fs18i>E</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>E</d>
+            <h>E</h>
+            <a>X</a>
+        </pw>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+        <item>
+            <name>cnc_getlockstat</name>
+            <file>Misc/cnc_getlockstat.htm</file>
+        </item>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example></example>
+
+
+
+  </func>
+</root>

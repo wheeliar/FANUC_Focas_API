@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="Shift_JIS"?>
+<?xml-stylesheet type="text/xsl" href="../Fmethod_xsl/fmethod_he_c.xsl"?>
+
+<root>
+  <func>
+
+
+    <!-- 関数名 -->
+    <title>cnc_reg_toolstrage</title>
+
+
+
+    <!-- 関数宣言 -->
+    <declare>
+      <!-- Visual C++の宣言 -->
+      <vc>
+        <include>#include "fwlib32.h"</include>
+        <prottype>FWLIBAPI short WINAPI cnc_reg_toolstrage( unsigned short FlibHndl, unsigned char mode, IODBTLMAG *mag ); </prottype>
+      </vc>
+    </declare>
+
+
+
+    <!-- 解説 -->
+    <doc>
+        <cmn><p>工具管理データに格納マガジン番号、格納ポット番号を登録または解除します｡</p>
+             <p>ポットに付いている工具に格納マガジン、格納ポットを予約しておくことにより、その工具を他のポット、主軸位置または待機位置に移動しても、空いたポットに他の工具を取り付けることが出来なくなります。</p>
+             <p>これにより移動していた工具を元のポットに戻す際他の工具がそのポットを占有しているという状況を回避できます｡</p><br/>
+
+             <p>登録は指定したマガジン、ポットをそこに取り付けられている工具の格納マガジン、格納ポットとして登録します｡</p>
+             <p>解除は指定したマガジン、ポットに取り付けられている工具に登録されている格納マガジン、格納ポットをクリアします。</p><br/>
+
+             <p>マガジン内の全てのポットに付いている工具について格納先の登録を行うことが出来ます｡</p>
+             <p>全てのマガジンに付いている工具について格納先の登録を行うことが出来ます｡</p><br/>
+
+             <p>工具の取り付けられていないマガジン、ポットに対しては登録／解除を行いません。</p>
+        </cmn>
+    </doc>
+
+
+
+    <!-- 引数 -->
+    <argument>
+        <common>
+            <vc>
+                <item>
+                    <name>FlibHndl</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            ライブラリハンドルです。詳細は、「<a href="handle.htm" target="_parent">ライブラリハンドル</a>」を参照して下さい。
+                        </p>
+                    </content>
+                </item>
+                <item>
+                    <name>mode</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            指定したマガジン、ポットの格納先を登録するか解除するかを指定します。
+                        </p>
+                        <table class="dd">
+                            <tr><td>0</td><td>:</td><td>登録</td></tr>
+                            <tr><td>1</td><td>:</td><td>解除</td></tr>
+                        </table>
+                    </content>
+
+                </item>
+                <item>
+                    <name>mag</name>
+                    <type>in</type>
+                    <content>
+                        <p>
+                            登録/解除する工具管理データ番号を指定するIODBTLMAG構造体へのポインタです。
+                            IODBTLMAG構造体は次の通りです。
+<pre>
+typedef struct  iodbtlmag {
+    short magazine;     /* マガジン番号 */
+    short pot;          /* ポット番号 */
+    short tool_index;   /* 工具管理データ番号 */
+} IODBTLMAG;
+</pre>
+                        <dl>
+                            <dt>magazine</dt>
+                            <dd>マガジン番号を指定します。</dd>
+                            <dd>工具が取り付けられている全マガジン、ポットを指定する場合は、マガジン番号に-1を設定します。</dd>
+                            <dd>全マガジンまたはマガジン内の全ポット指定の場合、以下の条件は無視されます。</dd>
+                            <dd>・工具の取り付けられていないマガジン、ポット。</dd>
+                            <dd>・引数、工具管理番号の指定。</dd>
+                            <dt>pot</dt>
+                            <dd>ポット番号を指定します。</dd>
+                            <dd>指定したマガジン内の全ポットを指定する場合は、ポット番号に-1を設定します。 </dd>
+                            <dt>tool_index</dt>
+                            <dd>指定したマガジン、ポットの格納先とする工具管理番号を指定します。（未対応）</dd>
+                            <dd>格納先の解除をする場合、本引数の設定は不要です。</dd>
+                        </dl>
+                        </p>
+                    </content>
+                </item>
+           </vc>
+        </common>
+    </argument>
+
+
+
+    <!-- 戻り値 -->
+    <errcode>
+        <item>
+           <name>EW_DATA</name>
+            <content>
+                IODBTLMNG構造体内のメンバに誤りがあります。<br/>
+                この戻り値に対して、より詳細な情報を得るには<a href="Misc/cnc_getdtailerr.htm" target="_parent">cnc_getdtailerr</a>関数を実行して下さい。
+                ODBERR構造体のメンバ err_no に下記詳細ステータスがセットされます。
+                <table border="0">
+                    <tr><td>0</td><td>：</td><td>EW_DATA 以外のエラー</td></tr>
+                    <tr><td>17</td><td>：</td><td>マガジン番号の誤り</td></tr>
+                    <tr><td>18</td><td>：</td><td>ポット番号の誤り</td></tr>
+                    <tr><td>27</td><td>：</td><td>既に格納先として登録されているマガジン、ポットに対して登録の指定をしました。</td></tr>
+                </table>
+            </content>
+        </item>
+        <item>
+            <name>EW_NOOPT</name>
+            <content>
+                オプションなし<br/>
+                工具管理機能64組、240組、1000組のいずれかのオプションと工具管理拡張B機能のオプションの設定が必要です。
+            </content>
+        </item>
+        <item>
+            <name>EW_PROT</name>
+            <content>
+                ライトプロテクト<br/>
+                工具管理データテーブルが書込み禁止状態です。
+            </content>
+        </item>
+        <item>
+            <name>EW_REJECT</name>
+            <content>
+                CNC側の処理実行拒否<br/>
+                マガジン、ポットの格納先の登録が行えませんでした。指定したポットに工具がありません。
+            </content>
+        </item>
+    </errcode>
+
+
+
+    <!-- CNCオプション -->
+    <option>
+        <hssb><p>拡張ドライバ/ライブラリ機能が必要です。</p>
+        </hssb>
+
+        <ethr>
+              <p>イーサネット機能と拡張ドライバ/ライブラリ機能が必要です。</p>
+              <p>但し、FS16i/18i/21i-B, 0i-F, 30i に関しては次のようになります。</p>
+              <p>組込みイーサネットを使用のとき、</p>
+                  <p class="dd">上記２つの機能は必要ありません。</p>
+              <p>イーサネットボードを使用のとき、</p>
+                  <p class="dd">イーサネット機能のみ必要です。</p>
+        </ethr>
+        <need>
+            <p>
+            工具管理機能64組、240組、1000組のいずれかのオプションと工具管理拡張B機能のオプションが必要です。
+            </p>
+        </need>
+    </option>
+
+
+
+    <!-- CNCパラメータ -->
+    <parameter>
+        <type>
+            工具管理機能マガジンプロパティ/ポットプロパティを使用する場合には、パラメータNo.13210#1の設定が必要です。<br/>
+        </type>
+    </parameter>
+
+
+    <!-- CNCモード -->
+    <mode>
+    </mode>
+
+
+
+    <!-- 対応機種 -->
+    <support>
+        <!-- M（ミリング） -->
+        <m>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </m>
+        <!-- T（旋盤） -->
+        <t>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>H</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>H</fs30ia>
+            <fs30ib>H</fs30ib>
+        </t>
+        <!-- LC（ローダ制御） -->
+        <lc>
+            <fs0ia>X</fs0ia>
+            <fs0ib>X</fs0ib>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs15>X</fs15>
+            <fs15i>X</fs15i>
+            <fs16>X</fs16>
+            <fs18>X</fs18>
+            <fs21>X</fs21>
+            <fs16ia>X</fs16ia>
+            <fs18ia>X</fs18ia>
+            <fs21ia>X</fs21ia>
+            <fs16ib>X</fs16ib>
+            <fs18ib>X</fs18ib>
+            <fs21ib>X</fs21ib>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </lc>
+        <!-- P（パンチプレス） -->
+        <p>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </p>
+        <!-- L（レーザ） -->
+        <l>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </l>
+        <!-- W（ワイヤカット） -->
+        <w>
+            <fs0id>X</fs0id>
+            <fs0if>X</fs0if>
+            <fs16i>X</fs16i>
+            <fs18i>X</fs18i>
+            <fs30ia>X</fs30ia>
+            <fs30ib>X</fs30ib>
+        </w>
+        <!-- PM（パワーメート） -->
+        <pw>
+            <d>X</d>
+            <h>X</h>
+            <a>X</a>
+        </pw>
+        <!-- is -->
+        <is>
+            <m>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </m>
+            <t>
+                <fs30isa>O</fs30isa>
+                <fs30isb>O</fs30isb>
+            </t>
+            <w>
+                <fs30isa>X</fs30isa>
+                <fs30isb>X</fs30isb>
+            </w>
+        </is>
+    </support>
+
+
+
+    <!-- 参照 -->
+    <reference>
+    </reference>
+
+
+
+    <!-- プログラム例 -->
+    <example>
+    </example>
+
+
+
+  </func>
+</root>
