@@ -22,3 +22,6 @@ FANUC focas1/2 API 开发包
 17. PMC: Function related to PMC PMC相关的函数
 18. PMC: Function Reference related to PROFIBUS-DP PROFIBUS-DP相关的函数
 19. CNC: Function related to others 其他的
+
+
+更多函数说明请查看在线文档 https://www.woody.vip/fanuc/FWLIB32.HTM, https://www.inventcom.net/fanuc-focas-library/general/fwlib32
